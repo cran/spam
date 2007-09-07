@@ -1,0 +1,122 @@
+useDynLib(spam)
+
+importFrom("graphics",image)
+importFrom("graphics",plot)           
+
+
+# Next two paragraphs are from Matrix....
+# Currently, group generics need to be explicitly imported (Bug?):
+importFrom("methods", #Arith,Compare,
+           Math, Math2, Summary#, Complex
+           )
+
+## workaround S4-Group(generic|method) quirk: R/AllGeneric.R
+## needs setGeneric(*, group=) and this for all non-Primitives :
+export(
+       ## "Math"
+       "log",
+       "gamma",
+       "lgamma",
+
+       ## "Math2"
+       "round",
+       "signif",
+
+       ## "Summary"
+       "max",
+       "min",
+       "range",
+       "prod",
+       "sum",
+       "any",
+       "all"
+)
+
+
+# Generic functions
+export("todo",
+       "spam.history",
+       ".Spam",
+       "is.spam",
+
+       "as.spam.matrix",
+       "as.spam.numeric",
+       "as.spam.spam",
+       "as.matrix.spam",
+       "spam.numeric",
+       
+       "diag.of.spam",
+       "diag.spam",
+       "diag.spam<-",
+       "rbind.spam",
+       "cbind.spam",
+       "upper.tri.spam",
+       "lower.tri.spam",
+       "t.spam",
+
+       "determinant.spam",
+       "determinant.spam.chol.NgPeyton",
+       
+       "print.spam",
+       "summary.spam",
+       "print.spam.chol.NgPeyton",
+       "summary.spam.chol.NgPeyton"
+       )
+
+
+# export the two classes
+exportClasses("spam",
+              "spam.chol.NgPeyton")
+
+exportMethods(
+              "Math",
+              "Math2",
+              "Summary",
+
+              "show",
+              "print",
+              "image",
+              "display",
+
+              "spam",
+              "as.spam",
+              
+              "summary",
+              "length",
+              "length<-",
+              "c",
+              "dim",
+              "dim<-",
+              "rbind",
+              "cbind",
+              "as.spam",
+              "spam",
+              "as.matrix",
+              "determinant",
+              "t",
+              "diag",
+              "diag<-",
+              "diag<-",
+              "upper.tri",
+              "lower.tri",
+              "norm",
+
+              "chol",
+              "ordering",
+              "forwardsolve",
+              "backsolve",
+              "solve",
+              
+              
+              "[",
+              "[<-",
+
+              "%*%",
+              "%d*%",
+              "%d+%",
+              "-",
+              "+",
+              "*",
+              "/",
+              "&",
+              "|")
