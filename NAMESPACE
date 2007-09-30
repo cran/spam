@@ -34,14 +34,20 @@ export(
 
 
 # Generic functions
-export("todo",
+export("dcheck",
+       "icheck",
+
+       "todo",
        "spam.history",
        ".Spam",
        "is.spam",
+	
+	"validspamobject",
 
        "as.spam.matrix",
        "as.spam.numeric",
        "as.spam.spam",
+       "as.spam.chol.NgPeyton",
        "as.matrix.spam",
        "spam.numeric",
        
@@ -56,6 +62,14 @@ export("todo",
 
        "determinant.spam",
        "determinant.spam.chol.NgPeyton",
+       "chol.spam",
+       "solve.spam",
+       "forwardsolve.spam",
+       "backsolve.spam",
+       
+       "plot.spam",
+       "display.spam",
+       "image.spam",
        
        "print.spam",
        "summary.spam",

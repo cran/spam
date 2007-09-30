@@ -10,10 +10,18 @@
 ########################################################################
 ########################################################################
 
-setClass("spam.chol.NgPeyton",representation(nrow="numeric",nnzlindx="numeric",
-	nsuper="numeric",lindx="numeric",xlindx="numeric",nnzl="numeric",
-	lnz="numeric",xlnz="numeric",invp="numeric",perm="numeric",
-	xsuper="numeric"))
+setClass("spam.chol.NgPeyton",
+         representation(nrow="integer",nnzlindx="integer",
+                        nsuper="integer",lindx="integer",xlindx="integer",nnzl="integer",
+                        lnz="numeric",xlnz="integer",invp="integer",perm="integer",
+                        xsuper="integer"),
+         # the prototype corresponds to the cholesky of '1'
+         prototype=prototype(nrow=as.integer(1),nnzlindx=as.integer(1),
+           nsuper=as.integer(1),lindx=as.integer(1),xlindx=as.integer(c(1,2)),
+           nnzl=as.integer(1),lnz=1.0,xlnz=as.integer(c(1,2)),
+           invp=as.integer(1),perm=as.integer(1),xsuper=as.integer(c(1,2))
+           )
+         )
 
 
 ########################################################################
@@ -23,7 +31,7 @@ print.spam.chol.NgPeyton <- function(x,...) {
                 "x", x@nrow, " with ",x@nnzl," nonzero elements.", sep = ""), fill=TRUE)
   cat("  (The object is supposed to be used with: 'as.spam', 'backsolve' or 'forwardsolve'.)\n", fill=TRUE)
   cat("Class 'spam.chol.NgPeyton'\n")
-  invisible(x)
+  invisible(NULL)
 }
 summary.spam.chol.NgPeyton <- function(object,...) {
   dens <- object@nnzl/(object@nrow^2) * 100
@@ -40,93 +48,28 @@ setMethod("show","spam.chol.NgPeyton", function(object) {
                 "x", object@nrow, " with ",object@nnzl," nonzero elements.", sep = ""), fill=TRUE)
   cat("  (The object is supposed to be used with: 'as.spam', 'backsolve' or 'forwardsolve'.)\n", fill=TRUE)
   cat("Class 'spam.chol.NgPeyton'\n")
-  invisible(object)
+  invisible(NULL)
         })
 
 setMethod("print","spam.chol.NgPeyton", print.spam.chol.NgPeyton)
 setMethod("summary","spam.chol.NgPeyton",summary.spam.chol.NgPeyton)
 
-auxiliarycholNgPeyton <- function(x,nrow,memory){
-  nnzdmax <- x@rowpointers[nrow+1]-1
-  nnzdsm <- nnzdmax + nrow + 1
-  iwmax <- 7*nrow+3
-  level <- 8
-
-  if(is.null(memory$nsubmax))
-    nsubmax <- nnzdmax
-  else {
-    nsubmax <- memory$nsubmax
-    memory$nsubmax <- NULL
-  }
-  if(is.null(memory$nnzlmax))
-    nnzlmax <- max(4*nnzdmax,floor(.2*nnzdmax^1.3))
-  else {
-    nnzlmax <- memory$nnzlmax
-    memory$nnzlmax <- NULL
-  }
-  
-  if(is.null(memory$tmpmax))
-    tmpmax <- 500*nrow
-  else {
-    tmpmax <- memory$tmpmax 
-    memory$tmpmax <- NULL
-  }
-  if(is.null(memory$cache))
-    cache <- 64
-  else {
-    cache <- memory$cache 
-    memory$cache <- NULL
-  }
-
-  if (length( memory)>0 )
-    warning("The components ", paste("'",names(memory),"'",sep='',collapse=",")," of the argument 'memory'\npassed to 'chol' are not meaningful and hence ignored.",call.=FALSE)
-  
-  return(.Fortran("cholmod",
-                nrow = icheck(nrow),
-                nnzdmax = as.integer(nnzdmax),
-                d =  dcheck(x@entries),
-                jd = x@colindices,
-                id = x@rowpointers,
-                nnzdsm = as.integer(nnzdsm),
-                dsub = double(nnzdsm),
-                jdsub = integer(nnzdsm),
-                nsub = integer(1),
-                nsubmax = as.integer(nsubmax),
-                lindx = integer(nsubmax),
-                xlindx = integer(nrow+1),
-                nsuper = integer(1),
-                nnzlmax = as.integer(nnzlmax),
-                lnz = double(nnzlmax),
-                xlnz = integer(nrow+1),
-                invp = integer(nrow),
-                perm = integer(nrow),
-                iwmax = as.integer(iwmax),
-                iwork = integer(iwmax),
-                colcnt = integer(nrow),
-                snode = integer(nrow),
-                xsuper = integer(nrow+1),
-                split = integer(nrow),
-                tmpmax = as.integer(tmpmax),
-                tmpvec = double(tmpmax),
-                cachsz = as.integer(cache),
-                level = as.integer(level),
-                ierr = integer(1),
-                PACKAGE = "spam") )
-}
-
-
-
-
-
 
 
 "as.spam.chol.NgPeyton" <- function(x, eps = .Spam$eps){
-  ja <- .Fortran('calcja',
-                 x@nrow, x@nsuper, x@xsuper, x@lindx, x@xlindx, x@xlnz,
-                 xja=as.integer(numeric(x@nnzl)),
-                  PACKAGE = "spam")$xja
-  return(new('spam',entries=x@lnz, colindices=ja, rowpointers=x@xlnz, dimension=c(x@nrow,x@nrow)))
-  }
+  newx <- new("spam")
+  slot(newx,"entries",check=FALSE) <- x@lnz
+  slot(newx,"colindices",check=FALSE) <- .Fortran('calcja',
+                           x@nrow, x@nsuper, x@xsuper, x@lindx, x@xlindx, x@xlnz,
+                           xja=vector("integer",x@nnzl),
+                           NAOK = !.Spam$safemode,
+                           DUP=FALSE,
+                           PACKAGE = "spam")$xja
+  slot(newx,"rowpointers",check=FALSE) <- x@xlnz
+  slot(newx,"dimension",check=FALSE) <- c(x@nrow,x@nrow)
+  return(newx)
+}
+
 setMethod("as.spam","spam.chol.NgPeyton", as.spam.chol.NgPeyton)
 
 
@@ -164,21 +107,25 @@ setMethod("ordering","spam",function(x,inv=FALSE)
               stop("ordering is defined for square matrices only")
             if(inv)return(dim(x)[1]:1) else return(1:dim(x)[1]) })
 
-
+ 
 "chol" <- function(x, ...) UseMethod("chol")
 "chol.default" <- base::chol
 setGeneric("chol")
 setMethod("chol","matrix",base::chol)
-setMethod("chol","spam", function(x, #pivot = FALSE,
-        method="NgPeyton",
-        ordering="MinDeg",                          
-        memory=list(),
-	eps = .Spam$eps, ...){
+
+chol.spam <- function(x, #pivot = FALSE,
+                                  method="NgPeyton",
+                                  ordering="MinDeg",                          
+                                  memory=list(),
+                                  eps = .Spam$eps, ...){
 
   nrow <- x@dimension[1]
   if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
-  if(norm(t(x)-x,type='sup') > 2*eps) stop("Input matrix to 'chol' not symmetric")
 
+  if(.Spam$safemode) {
+    if(norm(t(x)-x,type='sup') > (2+eps)*eps) stop("Input matrix to 'chol' not symmetric (up to (2+eps)*eps in 'sup'-norm")
+  }
+  
   if (method != "NgPeyton")
     warning(gettextf("method = '%s' is not supported. Using 'NgPeyton'",
                      method), domain = NA)
@@ -194,28 +141,100 @@ setMethod("chol","spam", function(x, #pivot = FALSE,
 
 #  if (!is.null(ordering)) 
 
-  z <- auxiliarycholNgPeyton(x,nrow,memory)
-  
-  if (z$ierr != 0){
-    if(z$ierr == 9) mess <- "singularity problem"
-    else if(z$ierr == 4) mess <- paste("Increase nnzlmax (currently set to ",z$nnzlmax,')',sep='')
-    else if(z$ierr == 5) mess <- paste("Increase nsubmax (currently set to ",z$nsubmax,')',sep='')
-    else if(z$ierr %in% c(8,10)) mess <- paste("Increase tmpmax (currently set to ",z$tmpmax,')',sep='')
-    else mess <- "insufficient space"
-    stop(mess)
+  nnzdmax <- x@rowpointers[nrow+1]-1
+  nnzdsm <- nnzdmax + nrow + 1
+  iwmax <- 7*nrow+3
+  level <- 8
+
+  if(is.null(memory$nsubmax))
+    nsubmax <- nnzdmax
+  else {
+    nsubmax <- memory$nsubmax
+    memory$nsubmax <- NULL
   }
-  nnzl <- z$xlnz[length(z$xlnz)]-1
-  nnzlindx <- z$nsub
-
+  if(is.null(memory$nnzlmax))
+    nnzlmax <- max(4*nnzdmax,floor(.2*nnzdmax^1.3))
+  else {
+    nnzlmax <- memory$nnzlmax
+    memory$nnzlmax <- NULL
+  }
   
-  invisible(new("spam.chol.NgPeyton",nrow=z$nrow,nnzlindx=nnzlindx,
-      nsuper=z$nsuper,lindx=z$lindx[1:nnzlindx],xlindx=z$xlindx,
-      nnzl=icheck(nnzl),lnz=z$lnz[1:nnzl],xlnz=z$xlnz,invp=z$invp,
-      perm=z$perm,xsuper=z$xsuper))
-})
+  if(is.null(memory$tmpmax))
+    tmpmax <- 500*nrow
+  else {
+    tmpmax <- memory$tmpmax 
+    memory$tmpmax <- NULL
+  }
+  if(is.null(memory$cache))
+    cache <- 64
+  else {
+    cache <- memory$cache 
+    memory$cache <- NULL
+  }
 
-setMethod("solve","spam",
-function (a, b, ...) {
+  if (length( memory)>0 )
+    warning("The components ", paste("'",names(memory),"'",sep='',collapse=",")," of the argument 'memory'\npassed to 'chol' are not meaningful and hence ignored.",call.=FALSE)
+  
+  z <- .Fortran("cholmod",
+                   nrow = nrow,                   #1
+                   nnzdmax = as.integer(nnzdmax),
+                   d =  dcheck(x@entries),
+                   jd = x@colindices,
+                   id = x@rowpointers,
+                   nnzdsm = as.integer(nnzdsm),
+                   dsub = vector("double",nnzdsm),
+                   jdsub = vector("integer",nnzdsm),
+                   nnzlindx = vector("integer",1),            #9 formerly nnzlindx <- z$nsub
+                   nsubmax = as.integer(nsubmax),
+                   lindx = vector("integer",nsubmax),     #11
+                   xlindx = vector("integer",nrow+1),     #
+                   nsuper = vector("integer",1),          #
+                   nnzlmax = as.integer(nnzlmax),#
+                   lnz = vector("double",nnzlmax),        #
+                   xlnz = vector("integer",nrow+1),     #
+                   invp = vector("integer",nrow),       #
+                   perm = vector("integer",nrow),       #18
+                   iwmax = as.integer(iwmax),
+                   iwork = vector("integer",iwmax),
+                   colcnt = vector("integer",nrow),
+                   snode = vector("integer",nrow),
+                   xsuper = vector("integer",nrow+1),   #23
+                   split = vector("integer",nrow),
+                   tmpmax = as.integer(tmpmax),
+                   tmpvec = vector("double",tmpmax),
+                   cachsz = as.integer(cache),
+                   level = as.integer(level),
+                   ierr = vector("integer",1),           #29
+                NAOK = !.Spam$safemode,
+                   DUP=FALSE,PACKAGE = "spam")
+  
+  z[c(2:8,10,19:22,24:28)] <- NULL
+  
+  if(z$ierr == 4) stop(paste("Increase 'nnzlmax' with 'NgPeyton' method (currently set to ",nnzlmax,")",sep=""),call.=FALSE)
+  if(z$ierr == 5) stop(paste("Increase 'nsubmax' with 'NgPeyton' method (currently set to ",nsubmax,")",sep=""),call.=FALSE)
+  if(z$ierr %in% c(8,10)) stop(paste("Increase 'tmpmax' with 'NgPeyton' method (currently set to ",tmpmax,")",sep=""),call.=FALSE)
+  if(z$ierr>0&z$ierr!=9) stop("Insufficient space for 'NgPeyton' method",call.=FALSE)
+  if(z$ierr == 9) stop("singularity problem") 
+  nnzl <- as.integer(z$xlnz[length(z$xlnz)]-1)
+
+  newx <- new("spam.chol.NgPeyton")
+  slot(newx,"nrow",check=FALSE) <- nrow
+  slot(newx,"nnzlindx",check=FALSE) <- z$nnzlindx
+  slot(newx,"nsuper",check=FALSE) <- z$nsuper
+  slot(newx,"lindx",check=FALSE) <- z$lindx[1:z$nnzlindx]
+  slot(newx,"xlindx",check=FALSE) <- z$xlindx
+  slot(newx,"nnzl",check=FALSE) <- nnzl
+  slot(newx,"lnz",check=FALSE) <- z$lnz[1:nnzl]
+  slot(newx,"xlnz",check=FALSE) <- z$xlnz
+  slot(newx,"invp",check=FALSE) <- z$invp
+  slot(newx,"perm",check=FALSE) <- z$perm
+  slot(newx,"xsuper",check=FALSE) <- z$xsuper
+  
+  
+  invisible(newx)
+}
+
+solve.spam <- function (a, b, ...) {
   nr <- a@dimension[1]
   nc <- a@dimension[2]
   if (nc != nr)      stop("'A' must be square")
@@ -233,84 +252,105 @@ function (a, b, ...) {
   if (is(a,"spam.chol.NgPeyton"))
       # The following is a fast way to perform:
       #     z <- backsolve(a,forwardsolve( t(a),b))
-    z <- .Fortran("bckslv", m = icheck(nr), nnzlindx = icheck(a@nnzlindx),
-                  icheck(a@nsuper), as.integer(p), icheck(a@lindx),
-                  icheck(a@xlindx), icheck(a@nnzl), dcheck(a@lnz),
-                  icheck(a@xlnz), icheck(a@invp), icheck(a@perm),
-                  icheck(a@xsuper), double(nr), sol = double(nr*p), as.double(b),
+    z <- .Fortran("bckslv", m = nr, nnzlindx = a@nnzlindx,
+                  a@nsuper, as.integer(p), a@lindx,
+                  a@xlindx, a@nnzl, dcheck(a@lnz),
+                  a@xlnz, a@invp, a@perm,
+                  a@xsuper, double(nr), sol = vector("double",nr*p), as.double(b),DUP=FALSE,
+                  NAOK = !.Spam$safemode,
                   PACKAGE = "spam")$sol
   else z <- backsolve(a,forwardsolve( t(a),b))
   
   if ( p!=1)    dim(z) <- c(nr,p)
   return( z)
-})
-
-setMethod("backsolve","spam.chol.NgPeyton",
-function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
+}
+backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
 #       r: chol.spam.NgPeyton structure as returned by chol.
 #       x: rhs  may be a matrix in dense form
 #  subroutine backsolve(m,nsuper,nrhs,lindx,xlindx,lnz,xlnz,xsuper,b)
-        m <- r@nrow
-        if(!is.matrix(x)) x <- as.matrix(x)
-        if(nrow(x)!=m)stop("Cholesky factor not conformable with x")
-        p <- ncol(x)
-        if (!.Spam$bcksl) {
-        z <- .Fortran("backsolve", m = icheck(m), 
-                icheck(r@nsuper), as.integer(p),  icheck(r@lindx),
-                icheck(r@xlindx), dcheck(r@lnz),  icheck(r@xlnz),  
-                icheck(r@xsuper), sol =  as.double(x),
-                      PACKAGE="spam")$sol
-      }else{
-        z <- .Fortran("bckslb", m = icheck(m), nnzlindx = icheck(r@nnzlindx),
-                icheck(r@nsuper), as.integer(p),  icheck(r@lindx),
-                icheck(r@xlindx), icheck(r@nnzl), dcheck(r@lnz),
-                icheck(r@xlnz),   icheck(r@invp), icheck(r@perm),
-                icheck(r@xsuper), double(m), sol = double(m*p), as.double(x),
-                      PACKAGE="spam")$sol
-      }
-        if (p>1)
-          dim(z) <- c(nrow(x),p)
-        return(z)
-        })
-
-setMethod("forwardsolve","spam.chol.NgPeyton",
-function(l, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
+  m <- r@nrow
+  if(is.vector(x)) {
+    n <- length(x)
+    p <- as.integer(1)
+  } else {
+    if(!is.matrix(x)) x <- as.matrix(x)
+    n <- nrow(x)
+    p <- ncol(x)
+  }
+  if(n!=m)stop("Cholesky factor not conformable with x")
+  if (!.Spam$bcksl) {
+    z <- .Fortran("backsolve", m = m, 
+                  r@nsuper, as.integer(p),  r@lindx,
+                  r@xlindx, dcheck(r@lnz),  r@xlnz,  
+                  r@xsuper, sol =  as.double(x),#DUP=FALSE,
+                  NAOK = !.Spam$safemode,
+                  PACKAGE="spam")$sol
+  }else{
+    z <- .Fortran("bckslb", m = m, nnzlindx = icheck(r@nnzlindx),
+                  r@nsuper, as.integer(p),  r@lindx,
+                  r@xlindx, r@nnzl, dcheck(r@lnz),
+                  r@xlnz,   r@invp, r@perm,
+                  r@xsuper, double(m), sol = vector("double",m*p), as.double(x),DUP=FALSE,
+                  NAOK = !.Spam$safemode,
+                  PACKAGE="spam")$sol
+  }
+  if (p>1)
+    dim(z) <- c(m,p)
+  return(z)
+}
+forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
 #       l: chol.spam.NgPeyton structure as returned by chol
 #       x: rhs  may be a matrix in dense form
-        m <- l@nrow
-        if(!is.matrix(x)) x <- as.matrix(x)
-        if(nrow(x)!=m) stop("Cholesky factor not conformable with x")
-        p <- ncol(x)
-        if (!.Spam$bcksl) {
-        z <- .Fortran("forwardsolve", m = icheck(m), 
-                icheck(l@nsuper), as.integer(p), icheck(l@lindx),
-                icheck(l@xlindx), dcheck(l@lnz), icheck(l@xlnz), 
-                icheck(l@xsuper), sol = as.double(x),
-                      PACKAGE="spam")$sol
-      }else{
-        z <- .Fortran("bckslf", m = icheck(m), nnzlindx = icheck(l@nnzlindx),
-                icheck(l@nsuper), as.integer(p),  icheck(l@lindx),
-                icheck(l@xlindx), icheck(l@nnzl), dcheck(l@lnz),
-                icheck(l@xlnz),   icheck(l@invp), icheck(l@perm),
-                icheck(l@xsuper), double(m), sol = double(m*p), as.double(x),
-                      PACKAGE="spam")$sol
-      }
-        if (p>1)
-          dim(z) <- c(nrow(x),p)
-        return(z)
-        })
+  m <- l@nrow
+  if(is.vector(x)) {
+    n <- length(x)
+    p <- as.integer(1)
+  } else {
+    if(!is.matrix(x)) x <- as.matrix(x)
+    n <- nrow(x)
+    p <- ncol(x)
+  }
+  if(n!=m) stop("Cholesky factor not conformable with x")
+  if (!.Spam$bcksl) {
+    z <- .Fortran("forwardsolve", m = m, 
+                  l@nsuper, as.integer(p), l@lindx,
+                  l@xlindx, dcheck(l@lnz), l@xlnz, 
+                  l@xsuper, sol = as.double(x),#DUP=FALSE,
+                  NAOK = !.Spam$safemode,
+                  PACKAGE="spam")$sol
+  }else{
+    z <- .Fortran("bckslf", m = m, nnzlindx = l@nnzlindx,
+                  l@nsuper, as.integer(p),  l@lindx,
+                  l@xlindx, l@nnzl, dcheck(l@lnz),
+                  l@xlnz,   l@invp, l@perm,
+                  l@xsuper, double(m), sol = vector("double",m*p), as.double(x),DUP=FALSE,
+                  NAOK = !.Spam$safemode,
+                  PACKAGE="spam")$sol
+  }
+  if (p>1)
+    dim(z) <- c(m,p)
+  return(z)
+}
+
+
+
+setMethod("chol","spam", chol.spam)
+setMethod("solve","spam",solve.spam)
+
+setMethod("backsolve","spam.chol.NgPeyton",backsolve.spam)
+setMethod("forwardsolve","spam.chol.NgPeyton",forwardsolve.spam)
 
 ######################################################################
 ######################################################################
 
-determinant.spam <- function(x,  logarithm = TRUE,
-        method="NgPeyton",
-        ordering="MinDeg",                          
-        memory=list(),
-	eps = .Spam$eps, ...){
+determinant.spam <- function(x, logarithm = TRUE, method="NgPeyton",
+                             ordering="MinDeg", memory=list(),eps =
+  .Spam$eps, ...){
   
   nrow <- x@dimension[1]
-  if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
+if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
+
+if (.Spam$safemode)
   if(norm(t(x)-x,type='sup') > 2*eps) stop("Input matrix to chol() not symmetric",call.=FALSE)
 
   if (method != "NgPeyton")
@@ -326,21 +366,88 @@ determinant.spam <- function(x,  logarithm = TRUE,
     warning(gettextf("ordering = '%s' is not supported. Using 'MinDeg'",
                      method), domain = NA)
 
+
+
   logdet <- list()
 
-  z <- auxiliarycholNgPeyton(x,nrow,memory)
+  nnzdmax <- x@rowpointers[nrow+1]-1
+  nnzdsm <- nnzdmax + nrow + 1
+  iwmax <- 7*nrow+3
+  level <- 8
 
- 
-  if (z$ierr != 0){
-    if(z$ierr == 9) {
+  if(is.null(memory$nsubmax))
+    nsubmax <- nnzdmax
+  else {
+    nsubmax <- memory$nsubmax
+    memory$nsubmax <- NULL
+  }
+  if(is.null(memory$nnzlmax))
+    nnzlmax <- max(4*nnzdmax,floor(.2*nnzdmax^1.3))
+  else {
+    nnzlmax <- memory$nnzlmax
+    memory$nnzlmax <- NULL
+  }
+  
+  if(is.null(memory$tmpmax))
+    tmpmax <- 500*nrow
+  else {
+    tmpmax <- memory$tmpmax 
+    memory$tmpmax <- NULL
+  }
+  if(is.null(memory$cache))
+    cache <- 64
+  else {
+    cache <- memory$cache 
+    memory$cache <- NULL
+  }
+
+  if (length( memory)>0 )
+    warning("The components ", paste("'",names(memory),"'",sep='',collapse=",")," of the argument 'memory'\npassed to 'chol' are not meaningful and hence ignored.",call.=FALSE)
+  
+  z <- .Fortran("cholmod",
+                   nrow = nrow,                   #1
+                   nnzdmax = as.integer( nnzdmax),
+                   d =  dcheck( x@entries),
+                   jd = x@colindices,
+                   id = x@rowpointers,
+                   nnzdsm = as.integer( nnzdsm),
+                   dsub = vector("double",nnzdsm),
+                   jdsub = vector("integer",nnzdsm),
+                   nnzlindx = vector("integer",1),            #9 formerly nnzlindx <- z$nsub
+                   nsubmax = as.integer( nsubmax),
+                   lindx = vector("integer",nsubmax),     #11
+                   xlindx = vector("integer",nrow+1),     #
+                   nsuper = vector("integer",1),          #
+                   nnzlmax = as.integer( nnzlmax),#
+                   lnz = vector("double",nnzlmax),        #
+                   xlnz = vector("integer",nrow+1),     #
+                   invp = vector("integer",nrow),       #
+                   perm = vector("integer",nrow),       #18
+                   iwmax = as.integer( iwmax),
+                   iwork = vector("integer",iwmax),
+                   colcnt = vector("integer",nrow),
+                   snode = vector("integer",nrow),
+                   xsuper = vector("integer",nrow+1),   #23
+                   split = vector("integer",nrow),
+                   tmpmax = as.integer( tmpmax),
+                   tmpvec = vector("double",tmpmax),
+                   cachsz = as.integer( cache),
+                   level = as.integer( level),
+                   ierr = vector("integer",1),           #29
+                NAOK = !.Spam$safemode,
+                   DUP=FALSE,PACKAGE = "spam")
+  
+  z[c(2:8,10,19:22,24:28)] <- NULL
+  
+  if(z$ierr == 4) stop(paste("Increase 'nnzlmax' with 'NgPeyton' method (currently set to ",nnzlmax,")",sep=""),call.=FALSE)
+  if(z$ierr == 5) stop(paste("Increase 'nsubmax' with 'NgPeyton' method (currently set to ",nsubmax,")",sep=""),call.=FALSE)
+  if(z$ierr %in% c(8,10)) stop(paste("Increase 'tmpmax' with 'NgPeyton' method (currently set to ",tmpmax,")",sep=""),call.=FALSE)
+  if(z$ierr>0&z$ierr!=9) stop("Insufficient space for 'NgPeyton' method",call.=FALSE)
+  if(z$ierr == 9) {
+                                        # all other errors trapped 
       warning("singularity problem or matrix not positive definite",call.=FALSE)
       logdet$modulus <- NA
-    }
-    else if(z$ierr == 4) stop("Increase nnzlmax with 'NgPeyton' method",call.=FALSE)
-    else if(z$ierr == 5) stop("Increase nsubmax with 'NgPeyton' method",call.=FALSE)
-    else if(z$ierr %in% c(8,10)) stop("Increase tmpmax with 'NgPeyton' method",call.=FALSE)
-    else stop("Insufficient space for 'NgPeyton' method",call.=FALSE)
-  } else{
+   } else{
     k <- z$xlnz
     tmp <- 2* sum( log(z$lnz[k[-length(k)]]))
     if (logarithm) logdet$modulus <- tmp else logdet$modulus <- exp(tmp)

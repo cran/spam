@@ -1,5 +1,4 @@
 \name{chol}
-\alias{spam.chol}
 \alias{chol.spam}
 \alias{chol,ANY-method}
 \alias{chol,matrix-method}

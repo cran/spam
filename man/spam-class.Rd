@@ -4,8 +4,6 @@
 \alias{spam-class}
 \alias{as.matrix,spam-method}
 \alias{as.matrix.spam}
-\alias{print-methods}
-\alias{print,spam-method}
 \alias{[<-,spam,missing,missing,numeric-method}
 \alias{[<-,spam,missing,vector,numeric-method}
 \alias{[<-,spam,vector,missing,numeric-method}
@@ -38,7 +36,6 @@
 \alias{plot,spam,spam-method}
 \alias{rbind,spam-method}
 \alias{show,spam-method}
-\alias{summary,spam-method}
 \alias{upper.tri,spam-method}
 
 \title{Class "spam"}

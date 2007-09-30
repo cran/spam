@@ -1,18 +1,15 @@
 \name{spam solve}
-\alias{spam.solve}
 \alias{solve.spam}
 \alias{backsolve-methods}
 \alias{backsolve,ANY-method}
 \alias{backsolve,matrix-method}
 \alias{backsolve}
-\alias{spam.backsolve}
 \alias{backsolve.spam}
 \alias{backsolve.default}
 \alias{forwardsolve-methods}
 \alias{forwardsolve,ANY-method}
 \alias{forwardsolve,matrix-method}
 \alias{forwardsolve}
-\alias{spam.forwardsolve}
 \alias{forwardsolve.spam}
 \alias{forwardsolve.default}
 \alias{solve}

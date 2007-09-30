@@ -1,0 +1,41 @@
+			Dear Emacs, please make this -*-Text-*- mode!
+	**************************************************
+	*						 *
+	*	    SPAM VERSION 0.12  			 *
+	*						 *
+	**************************************************
+
+
+    o   Updated NAMESPACE and DESCRIPTION file.
+
+    o	print and summary pass back NULL instead of the 
+	object.
+
+    o   Changed to prod(x@dimension) instead of nrow*ncol to 
+	overcome integer overflow for very large matrices.
+
+    o   Introduced a prototype in the definition of spam 
+	and spam.chol.*.
+
+    o   .Spam$safemode also determines if a spam object is 
+	tested for validity, as well as for NAOK.
+
+    o   In many functions sparse matrix construction is 
+	done manually using slots (and check=FALSE, if 
+	approprate).
+
+    o	Increased the value of symmetry criteria to 
+	(2+eps)*eps, as each element can be off by eps, 
+	subtraction leads to a 2*eps offset and yet we are 
+	symmetric.
+
+    o   Major restructuration of chol/det with elimination
+	of auxiliarychol. 
+
+    o	Methods chol/backsolve/forwarsolve now call the *.spam
+	functions.
+
+    o 	Many internal changes to favour speed and efficiency.
+
+    o 	Bug fix in .spam.elemul. occuring when the result is the 
+	zero matrix.

@@ -4,10 +4,6 @@
 \alias{backsolve,spam.chol.NgPeyton-method}
 \alias{forwardsolve,spam.chol.NgPeyton-method}
 \alias{show,spam.chol.NgPeyton-method}
-\alias{print,spam.chol.NgPeyton-method}
-\alias{summary,spam.chol.NgPeyton-method}
-\alias{print.spam.chol.NgPeyton}
-\alias{summary.spam.chol.NgPeyton}
 
 \title{Class "spam.chol.NgPeyton"}
 \description{Result of a Cholesky decomposition with the \code{NgPeyton}
@@ -33,7 +29,8 @@ pp. 1034-1056.
 \author{Reinhard Furrer}
 
 
-\seealso{\code{\link{ordering}} and \code{\link{chol}}}
+\seealso{\code{\link{print.spam}}
+  \code{\link{ordering}} and \code{\link{chol}}}
 }
 \examples{
 x <- spam( c(4,3,0,3,5,1,0,1,4),3)

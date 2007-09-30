@@ -80,8 +80,6 @@
 \alias{[,spam,ANY,ANY-method}
 \alias{t.spam}
 \alias{plot.spam}
-\alias{print.spam}
-\alias{summary.spam}
 \alias{subset.spam}
 \alias{assign.spam}
 \title{Basic Linear Algebra for Sparse Matrices}
