@@ -24,8 +24,9 @@
 }
 %\references{}
 \seealso{\code{\link{image}}, \code{\link{.Spam}}}
-}
 \examples{
+set.seed(13)
+
 nz <- 8
 ln <- nz
 smat <- spam(0,ln,ln)

@@ -70,6 +70,7 @@ cholS <- chol( Sigma)
 iord <- ordering(cholS, inv=TRUE)
 
 R <- as.spam(cholS)[,iord]
+set.seed(13)
 mvsample <- array(rnorm(N*n),c(N,n)) \%*\% R
 
 # 'mvsample' is of class 'spam'. We need to transform it to a

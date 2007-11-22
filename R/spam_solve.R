@@ -107,11 +107,16 @@ setMethod("ordering","spam",function(x,inv=FALSE)
               stop("ordering is defined for square matrices only")
             if(inv)return(dim(x)[1]:1) else return(1:dim(x)[1]) })
 
+
+if(paste(R.version$major, R.version$minor, sep=".") < "2.6") 
+{
  
 "chol" <- function(x, ...) UseMethod("chol")
 "chol.default" <- base::chol
 setGeneric("chol")
 setMethod("chol","matrix",base::chol)
+
+}
 
 chol.spam <- function(x, #pivot = FALSE,
                                   method="NgPeyton",
@@ -146,34 +151,26 @@ chol.spam <- function(x, #pivot = FALSE,
   iwmax <- 7*nrow+3
   level <- 8
 
-  if(is.null(memory$nsubmax))
-    nsubmax <- nnzdmax
-  else {
-    nsubmax <- memory$nsubmax
+  if(is.null(memory$nsubmax))    nsubmax <- nnzdmax  else {
+    nsubmax <- max(memory$nsubmax,nnzdmax)
     memory$nsubmax <- NULL
   }
-  if(is.null(memory$nnzlmax))
-    nnzlmax <- max(4*nnzdmax,floor(.2*nnzdmax^1.3))
-  else {
+  if(is.null(memory$nnzlmax))    nnzlmax <- max(4*nnzdmax,floor(.2*nnzdmax^1.3))  else {
     nnzlmax <- memory$nnzlmax
     memory$nnzlmax <- NULL
   }
   
-  if(is.null(memory$tmpmax))
-    tmpmax <- 500*nrow
-  else {
+  if(is.null(memory$tmpmax))    tmpmax <- 500*nrow  else {
     tmpmax <- memory$tmpmax 
     memory$tmpmax <- NULL
   }
-  if(is.null(memory$cache))
-    cache <- 64
-  else {
+  if(is.null(memory$cache))    cache <- 64  else {
     cache <- memory$cache 
     memory$cache <- NULL
   }
 
   if (length( memory)>0 )
-    warning("The components ", paste("'",names(memory),"'",sep='',collapse=",")," of the argument 'memory'\npassed to 'chol' are not meaningful and hence ignored.",call.=FALSE)
+    warning("The component(s) ", paste("'",names(memory),"'",sep='',collapse=",")," of the argument 'memory'\npassed to function 'chol' are not meaningful and hence ignored.",call.=FALSE)
   
   z <- .Fortran("cholmod",
                    nrow = nrow,                   #1
@@ -205,8 +202,8 @@ chol.spam <- function(x, #pivot = FALSE,
                    cachsz = as.integer(cache),
                    level = as.integer(level),
                    ierr = vector("integer",1),           #29
-                NAOK = !.Spam$safemode,
-                   DUP=FALSE,PACKAGE = "spam")
+                NAOK = .Spam$safemode,
+                   DUP=!FALSE,PACKAGE = "spam")
   
   z[c(2:8,10,19:22,24:28)] <- NULL
   
@@ -265,7 +262,7 @@ solve.spam <- function (a, b, ...) {
   return( z)
 }
 backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
-#       r: chol.spam.NgPeyton structure as returned by chol.
+#       r: spam.chol.NgPeyton structure as returned by chol.
 #       x: rhs  may be a matrix in dense form
 #  subroutine backsolve(m,nsuper,nrhs,lindx,xlindx,lnz,xlnz,xsuper,b)
   m <- r@nrow
@@ -299,7 +296,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
   return(z)
 }
 forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
-#       l: chol.spam.NgPeyton structure as returned by chol
+#       l: spam.chol.NgPeyton structure as returned by chol
 #       x: rhs  may be a matrix in dense form
   m <- l@nrow
   if(is.vector(x)) {
@@ -312,7 +309,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
   }
   if(n!=m) stop("Cholesky factor not conformable with x")
   if (!.Spam$bcksl) {
-    z <- .Fortran("forwardsolve", m = m, 
+    z <- .Fortran("forwardsolv", m = m, 
                   l@nsuper, as.integer(p), l@lindx,
                   l@xlindx, dcheck(l@lnz), l@xlnz, 
                   l@xsuper, sol = as.double(x),#DUP=FALSE,
@@ -348,15 +345,15 @@ determinant.spam <- function(x, logarithm = TRUE, method="NgPeyton",
   .Spam$eps, ...){
   
   nrow <- x@dimension[1]
-if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
+  if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
 
-if (.Spam$safemode)
-  if(norm(t(x)-x,type='sup') > 2*eps) stop("Input matrix to chol() not symmetric",call.=FALSE)
-
+  if (.Spam$safemode)
+    if(norm(t(x)-x,type='sup') > 2*eps) stop("Input matrix to chol() not symmetric",call.=FALSE)
+  
   if (method != "NgPeyton")
     warning(gettextf("method = '%s' is not supported. Using 'NgPeyton'",
                      method), domain = NA)
-
+  
   if (is.numeric(ordering)) {
     if (length(ordering) != nrow)
       stop("Permutation defined in 'ordering' is of wrong length",call.=FALSE)
@@ -365,7 +362,7 @@ if (.Spam$safemode)
   if (ordering != "MinDeg")
     warning(gettextf("ordering = '%s' is not supported. Using 'MinDeg'",
                      method), domain = NA)
-
+  
 
 
   logdet <- list()
@@ -375,15 +372,11 @@ if (.Spam$safemode)
   iwmax <- 7*nrow+3
   level <- 8
 
-  if(is.null(memory$nsubmax))
-    nsubmax <- nnzdmax
-  else {
-    nsubmax <- memory$nsubmax
+  if(is.null(memory$nsubmax))  nsubmax <- nnzdmax  else {
+    nsubmax <- max(memory$nsubmax,nnzdmax)
     memory$nsubmax <- NULL
   }
-  if(is.null(memory$nnzlmax))
-    nnzlmax <- max(4*nnzdmax,floor(.2*nnzdmax^1.3))
-  else {
+  if(is.null(memory$nnzlmax))    nnzlmax <- max(4*nnzdmax,floor(.2*nnzdmax^1.3))  else {
     nnzlmax <- memory$nnzlmax
     memory$nnzlmax <- NULL
   }

@@ -73,6 +73,7 @@ pp. 1034-1056.
 \examples{
 # Generate multivariate form a covariance inverse:
 # (usefull for GRMF)
+set.seed(13)
 n <- 25    # dimension
 N <- 1000  # sample size
 Sigmainv <- .25^abs(outer(1:n,1:n,"-"))

@@ -1,6 +1,33 @@
 			Dear Emacs, please make this -*-Text-*- mode!
 	**************************************************
 	*						 *
+	*	    SPAM VERSION 0.13  			 *
+	*						 *
+	**************************************************
+
+
+    o   Updated NAMESPACE (for versions > 2.5).
+
+    o	Some changes in help files.
+    
+    o	Cleaned Fortran source files (eliminated unused 
+	subroutines and used the posted complier output to 
+	straighten details). 
+
+    o	Implemented more efficient transpose Fortran code.
+        This also eliminates a bug when transposing a 1 row 
+	matrix.
+
+    o	Eliminated bug when assigning with a 1 row matix.
+
+    o	Eliminated bug when plotting a 1 row matix.
+
+    o	Minor R code cleaning.
+
+
+
+	**************************************************
+	*						 *
 	*	    SPAM VERSION 0.12  			 *
 	*						 *
 	**************************************************

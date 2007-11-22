@@ -13,7 +13,6 @@ tag=NULL){
      cat( "testing: ", tag, fill=TRUE)}
 
   denom<-   ifelse( relative, mean( abs(c(xtrue))),1.0)
-
   test.value <- sum( abs(c(xtest) - c( xtrue) ) ) /denom
   if(   test.value < tol ){
           cat("** PASSED test at tolerance ", tol, fill=TRUE)}
@@ -65,7 +64,16 @@ test.for.zero(round(ks,2),round(kf,2))
 
 
 ########################################################################
+cat("Testing transpose\n")
+rvec <- 1:n
+test.for.zero( t(ss), t(ss))
+test.for.zero( t(matrix(rvec,nrow=1)),t(spam(rvec,nrow=1)))
+test.for.zero( t(matrix(rvec,ncol=1)),t(spam(rvec,ncol=1)))
+
+
+########################################################################
 # Add/subtract operations:
+cat("Testing add/subtracting\n")
 test.for.zero(ss+ss,tt+tt)
 test.for.zero(ss-ss,tt-tt,rel=FALSE)
 test.for.zero(ss+tt,tt+tt)
@@ -141,13 +149,18 @@ test.for.zero(ss3|0,tt3|0)
 
 
 # subassigning:
+cat("Testing assigning\n")
 rw <- 1:3
 cl <- c(1,3)
 
-test.for.zero(ss[1,] <- 1,tt[1,] <- 1)      # ok
-test.for.zero(ss[1,2] <- 1,tt[1,2] <- 1)    # ok
-test.for.zero(ss[1,] <- 1:m,tt[1,] <- 1:m)  # ok
-test.for.zero(ss[3:1,] <- 1:m,tt[3:1,] <- 1:m)# ok
+ss[1,] <- 1;tt[1,] <- 1
+test.for.zero(ss,tt)
+ss[1,2] <- 1;tt[1,2] <- 1
+test.for.zero(ss,tt)
+ss[1,] <- 1:m;tt[1,] <- 1:m
+test.for.zero(ss,tt)
+ss[3:1,] <- 1:m;tt[3:1,] <- 1:m
+test.for.zero(ss,tt)
 
 
 if (F) { # do not run
@@ -173,19 +186,27 @@ if (F) { # do not run
 
   ss[ array(sample(1:15,24,rep=T),c(12,2))]  # works not because out of bounds
 }
+ss[cbind(1,1)] <- 4;tt[cbind(1,1)] <- 4
+test.for.zero(ss,tt)
+ss[rbind(dim(ss))] <- 4;tt[rbind(dim(tt))] <- 4
+test.for.zero(ss,tt)
+
+ss[rbind(c(1,1),dim(ss))] <- c(0.1,0.1);tt[rbind(c(1,1),dim(tt))] <- c(0.1,0.1)
+test.for.zero(ss,tt)
+
+
+rw <- c(1,3);cl <- 1:3;
+ss[rw,cl] <- 1:3;tt[rw,cl] <- 1:3
+test.for.zero(ss,tt)
+rw <- c(3,1);cl <- 1:3; 
+ss[rw,cl] <- 1:3;tt[rw,cl] <- 1:3
+test.for.zero(ss,tt)
 
 
 
-rw <- c(1,3);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
-rw <- c(3,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
-rw <- c(3,1,2,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
-
-
-
-tmp <- cbind(sample(1:3,24,rep=T),sample(1:5,24,rep=T))
-test.for.zero(ss[tmp],tt[tmp])
 
 # subsetting:
+cat("Testing subsetting\n")
 test.for.zero(ss[],tt[])      # ok
 test.for.zero(ss[,],tt[,])    # ok
 test.for.zero(ss[1,],tt[1,])  # ok
@@ -198,6 +219,8 @@ rw <- c(1,3);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
 rw <- c(3,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
 rw <- c(3,1,2,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
 
+tmp <- cbind(sample(1:3,24,rep=T),sample(1:5,24,rep=T))
+test.for.zero(ss[tmp],tt[tmp])
 
 
 # Matrix multiplication operations:
@@ -218,16 +241,16 @@ test.for.zero(upper.tri(ss,F),upper.tri(tt,F)&tt!=0)
 
 
 if (F) {# only works for full matrices
-test.for.zero(ss/tt,tt/tt)
-test.for.zero(ss/ss,tt/tt)
+  test.for.zero(ss/tt,tt/tt)
+  test.for.zero(ss/ss,tt/tt)
 
-kk <- tt/tt
-kk[is.na(kk)] <- 0
-test.for.zero(ss/tt,kk)
-test.for.zero(ss/ss,kk)
+  kk <- tt/tt
+  kk[is.na(kk)] <- 0
+  test.for.zero(ss/tt,kk)
+  test.for.zero(ss/ss,kk)
 
-test.for.zero(ss^tt,tt^tt)
-test.for.zero(ss^ss,tt^tt)
+  test.for.zero(ss^tt,tt^tt)
+  test.for.zero(ss^ss,tt^tt)
 }
 
 # maybe not all of them make sense

@@ -1,5 +1,4 @@
 \name{spam internal}
-\alias{auxiliarycholNgPeyton}
 \alias{dcheck}
 \alias{icheck}
 \title{
@@ -17,8 +16,8 @@
 \details{The functions are listed here for a better understanding of the
   code (to fulfill the tutorial style paradigm).\cr
 
-  \code{auxiliarycholNgPeyton(x, nrow, memory)} The essential
-  Cholesky factorization used by \code{chol}, \code{det}.
+  \code{validspamobject(object)} A few sanity checks if \code{object}
+  is a proper \code{spam} object.
 
   \code{dcheck(x)}, \code{icheck(x)} testing and forcing of \code{x}
   to doubles and

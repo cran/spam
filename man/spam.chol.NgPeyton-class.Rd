@@ -27,11 +27,8 @@ pp. 1034-1056.
 
 }
 \author{Reinhard Furrer}
-
-
 \seealso{\code{\link{print.spam}}
   \code{\link{ordering}} and \code{\link{chol}}}
-}
 \examples{
 x <- spam( c(4,3,0,3,5,1,0,1,4),3)
 cf <- chol( x)

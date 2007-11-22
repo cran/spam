@@ -38,7 +38,6 @@ c     b -- the solution
       double precision lnz(*),b(m,nrhs)
       integer j
 c
-c      write(*,*)"forwardsolve"
       do j = 1,nrhs
          call blkslf(nsuper,xsuper,xlindx,lindx,xlnz,lnz,b(1,j))
       enddo
@@ -60,8 +59,6 @@ C
 C***********************************************************************
       subroutine bckslf(m,nsubmax,nsuper,nrhs,lindx,xlindx,nnzlmax,lnz,
      &                   xlnz,invp,perm,xsuper,newrhs,sol,b)
-c        1         2         3         4         5         6         7
-c23456789012345678901234567890123456789012345678901234567890123456789012
 c Sparse least squares solver via Ng-Peyton's sparse Cholesky 
 c    factorization for sparse symmetric positive definite
 c INPUT:
@@ -98,27 +95,20 @@ c23456789012345678901234567890123456789012345678901234567890123456789012
      &        xsuper(m+1)
       double precision lnz(nnzlmax),b(m,nrhs),newrhs(m),sol(m,nrhs)
 c Call blkslv: Numerical solution
-c
-c      write(*,*)"forwardsolve"
       do j = 1,nrhs
          do i = 1,m
             newrhs(i) = b(perm(i),j)
-c            newrhs(i) = b(i,j)
          enddo
          call blkslf(nsuper,xsuper,xlindx,lindx,xlnz,lnz,newrhs)
          do i = 1,m
-c            sol(i,j) = newrhs(i)
             sol(i,j) = newrhs(invp(i))
          enddo
       enddo
-  100 continue
       return
       end
 C***********************************************************************
       subroutine bckslb(m,nsubmax,nsuper,nrhs,lindx,xlindx,nnzlmax,lnz,
      &                   xlnz,invp,perm,xsuper,newrhs,sol,b)
-c        1         2         3         4         5         6         7
-c23456789012345678901234567890123456789012345678901234567890123456789012
 c Sparse least squares solver via Ng-Peyton's sparse Cholesky 
 c    factorization for sparse symmetric positive definite
 c INPUT:
@@ -148,34 +138,25 @@ c     y -- an m-vector of least squares solution
 c WORK ARRAYS:
 c     b -- an m-vector, usually the rhs of the equality constraint
 c          X'a = (1-tau)X'e in the rq setting
-c        1         2         3         4         5         6         7
-c23456789012345678901234567890123456789012345678901234567890123456789012
       integer nnzlmax,nsubmax,nsuper,nrhs,lindx(nsubmax),xlindx(m+1),
      &        invp(m),perm(m),xlnz(m+1),
      &        xsuper(m+1)
       double precision lnz(nnzlmax),b(m,nrhs),newrhs(m),sol(m,nrhs)
 c Call blkslv: Numerical solution
-c
-c      write(*,*)"backsolve"
       do j = 1,nrhs
          do i = 1,m
             newrhs(i) = b(perm(i),j)
-c            newrhs(i) = b(i,j)
          enddo
          call blkslb(nsuper,xsuper,xlindx,lindx,xlnz,lnz,newrhs)
          do i = 1,m
             sol(i,j) = newrhs(invp(i))
-c            sol(i,j) = newrhs(i)
          enddo
       enddo
-  100 continue
       return
       end
 C***********************************************************************
       subroutine bckslv(m,nsubmax,nsuper,nrhs,lindx,xlindx,nnzlmax,lnz,
      &                   xlnz,invp,perm,xsuper,newrhs,sol,b)
-c        1         2         3         4         5         6         7
-c23456789012345678901234567890123456789012345678901234567890123456789012
 c Sparse least squares solver via Ng-Peyton's sparse Cholesky 
 c    factorization for sparse symmetric positive definite
 c INPUT:
@@ -205,16 +186,12 @@ c     y -- an m-vector of least squares solution
 c WORK ARRAYS:
 c     b -- an m-vector, usually the rhs of the equality constraint
 c          X'a = (1-tau)X'e in the rq setting
-c        1         2         3         4         5         6         7
-c23456789012345678901234567890123456789012345678901234567890123456789012
       integer nnzlmax,nsubmax,nsuper,nrhs,lindx(nsubmax),xlindx(m+1),
      &        invp(m),perm(m),xlnz(m+1),
      &        xsuper(m+1)
       double precision lnz(nnzlmax),b(m,nrhs),newrhs(m),sol(m,nrhs)
 
 c Call blkslv: Numerical solution
-c
-c      write(*,*)"solve"
       do j = 1,nrhs
          do i = 1,m
             newrhs(i) = b(perm(i),j)
@@ -224,6 +201,5 @@ c      write(*,*)"solve"
             sol(i,j) = newrhs(invp(i))
          enddo
       enddo
-  100 continue
       return
       end

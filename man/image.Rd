@@ -28,10 +28,11 @@
   The code is based on  \code{\link[graphics]{image}} of \code{graphics}.
 }
 \examples{
+set.seed(13)
 nz <- 8
 ln <- nz
 smat <- spam(0,ln,ln)
-smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
+smat[ cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
 
 par(mfcol=c(1,2),pty='s')
 .Spam$imagesize <- 1000

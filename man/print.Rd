@@ -32,12 +32,15 @@
 }
 %\references{}
 \seealso{\code{\link{.Spam}}}
-}
 \examples{
+set.seed(14)
 nz <- 8
 ln <- nz
 smat <- spam(0,ln,ln)
-smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
+
+tt <- cbind(sample(ln,nz),sample(ln,nz))
+print(tt)
+smat[tt] <- 1:nz
 
 par(mfcol=c(1,2),pty='s')
 .Spam$printsize <- 1000

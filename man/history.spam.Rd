@@ -8,6 +8,7 @@
   spam.history()
 }
 \details{This list is maintained for releases 0.05 and higher.
+  \item{}{0.13: Minor bug fixes. }
   \item{}{0.12: Many internal changes. Start maintaining a proper
     CHANGELOG file.}
   \item{}{0.11: Considerable help file improvements. Changes in

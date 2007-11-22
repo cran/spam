@@ -34,6 +34,7 @@
 \alias{lower.tri,spam-method}
 \alias{plot,spam,missing-method}
 \alias{plot,spam,spam-method}
+\alias{Summary,spam-method}
 \alias{rbind,spam-method}
 \alias{show,spam-method}
 \alias{upper.tri,spam-method}
@@ -63,55 +64,74 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
 }
 \section{Methods}{
   \describe{
-    \item{as.matrix}{\code{signature(x = "spam")}: ... }
-    \item{as.spam}{\code{signature(x = "spam")}: ... }
-    \item{[<-}{\code{signature(x = "spam", i = "missing", j = "missing", value = "numeric")}: ... }
-    \item{[<-}{\code{signature(x = "spam", i = "missing", j = "vector", value = "numeric")}: ... }
-    \item{[<-}{\code{signature(x = "spam", i = "vector", j = "missing", value = "numeric")}: ... }
-    \item{[<-}{\code{signature(x = "spam", i = "vector", j = "vector", value = "numeric")}: ... }
-    \item{[<-}{\code{signature(x = "spam", i = "matrix", j = "missing", value = "numeric")}: ... }
-    \item{[<-}{\code{signature(x = "spam", i = "matrix", j = "matrix", value = "numeric")}: ... }
-    \item{[<-}{\code{signature(x = "spam", i = "spam", j = "missing", value = "numeric")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "missing", j = "missing")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "missing", j = "vector")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "vector", j = "missing")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "vector", j = "vector")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "matrix", j = "missing")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "matrix", j = "matrix")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "spam", j = "missing")}: ... }
-    \item{[}{\code{signature(x = "spam", i = "ANY")}: ... }
-    \item{\%*\%}{\code{signature(x = "spam", y = "spam")}: ... }
-    \item{\%*\%}{\code{signature(x = "spam", y = "matrix")}: ... }
-    \item{\%*\%}{\code{signature(x = "spam", y = "numeric")}: ... }
-    \item{\%*\%}{\code{signature(x = "matrix", y = "spam")}: ... }
-    \item{\%*\%}{\code{signature(x = "numeric", y = "spam")}: ... }
-    \item{c}{\code{signature(x = "spam")}: ... }
-    \item{cbind}{\code{signature(deparse.level = "spam")}: ... }
-    \item{chol}{\code{signature(x = "spam")}: ... }
-    \item{diag}{\code{signature(x = "spam")}: ... }
-    \item{dim<-}{\code{signature(x = "spam")}: ... }
-    \item{dim}{\code{signature(x = "spam")}: ... }
-    \item{image}{\code{signature(x = "spam")}: ... }
-    \item{initialize}{\code{signature(.Object = "spam")}: ... }
-    \item{length<-}{\code{signature(x = "spam")}: ... }
-    \item{length}{\code{signature(x = "spam")}: ... }
-    \item{lower.tri}{\code{signature(x = "spam")}: ... }
-    \item{Math}{\code{signature(x = "spam")}: ... }
-    \item{norm}{\code{signature(x = "spam")}: ... }
-    \item{plot}{\code{signature(x = "spam", y = "missing")}: ... }
-    \item{plot}{\code{signature(x = "spam", y = "spam")}: ... }
-    \item{print}{\code{signature(x = "spam")}: ... }
-    \item{rbind}{\code{signature(deparse.level = "spam")}: ... }
-    \item{show}{\code{signature(object = "spam")}: ... }
-    \item{solve}{\code{signature(a = "spam")}: ... }
-    \item{summary}{\code{signature(object = "spam")}: ... }
-    \item{t}{\code{signature(x = "spam")}: ... }
-    \item{upper.tri}{\code{signature(x = "spam")}: ... }
+    \item{as.matrix}{\code{signature(x = "spam")}:
+      transforming a sparse
+      matrix into a regular matrix.}
+    \item{as.spam}{\code{signature(x = "spam")}:
+      cleaning of a sparse matrix.}
+    \item{[<-}{\code{signature(x = "spam", i,j, value)}:
+      assigning a
+      sparse matrix. The negative vectors are not implemented yet. }
+    \item{[}{\code{signature(x = "spam", i, j)}:
+      subsetting a
+      sparse matrix. The negative vectors are not implemented yet. }
+    \item{\%*\%}{\code{signature(x, y)}:
+      matrix multiplication, all combinations of sparse with full
+      matrices or vectors are implemented.}
+    \item{c}{\code{signature(x = "spam")}:
+      vectorizes the sparse matrix and takes account of the zeros. Hence
+    the lenght of the result is \code{prod(dim(x))}.}
+    \item{cbind}{\code{signature(x = "spam")}: binds sparse matrices.}
+    \item{chol}{\code{signature(x = "spam")}:
+    see \code{\link{chol}} for details.}
+    \item{diag}{\code{signature(x = "spam")}: 
+    see \code{\link{diag}} for details.}
+    \item{dim<-}{\code{signature(x = "spam")}: Is not implemented and
+      causes an error.}
+    \item{dim}{\code{signature(x = "spam")}: gives the dimension of the
+      sparse matrix.}
+    \item{image}{\code{signature(x = "spam")}:
+      see \code{\link{image}} for details.}
+%    \item{initialize}{\code{signature(.Object = "spam")}: ... }
+    \item{length<-}{\code{signature(x = "spam")}: Is not implemented and
+      causes an error.}
+    \item{length}{\code{signature(x = "spam")}: gives the number of
+      non-zero elements.}
+    \item{lower.tri}{\code{signature(x = "spam")}: see \code{\link{lower.tri}} for details. }
+    \item{Math}{\code{signature(x = "spam")}: see \code{\link{Math}} for details.}
+    \item{Math2}{\code{signature(x = "spam")}: see \code{\link{Math2}} for details. }
+    \item{norm}{\code{signature(x = "spam")}: calculates the norm of a matrix.}
+    \item{plot}{\code{signature(x = "spam", y)}: same functionality as
+      the ordinary \code{plot}. }
+    \item{print}{\code{signature(x = "spam")}: see \code{\link{print}} for details.}
+    \item{rbind}{\code{signature(x = "spam")}: binds sparse
+      matrices.}
+%    \item{show}{\code{signature(object = "spam")}: ... }
+    \item{solve}{\code{signature(a = "spam")}: see \code{\link{solve}} for details.}
+    \item{summary}{\code{signature(object = "spam")}: small summary
+      statement of the sparse matrix.}
+    \item{Summary}{\code{signature(x = "spam")}:
+      All functions of the \code{Summary} class (like \code{min}, \code{max},
+      \code{range}...) operate on the vector \code{x@entries} and return the
+      result thereof. See Examples.
+    }
+    \item{t}{\code{signature(x = "spam")}: transpose of a sparse matrix.}
+    \item{upper.tri}{\code{signature(x = "spam")}: see \code{\link{lower.tri}} for details.}
   }
 }
+%\section{Details}{
+%All functions of the \code{Summary} class (like \code{min}, \code{max},
+%\code{range}...) operate on the vector \code{x@entries} and return the
+%  result thereof.
+%}
 %\references{}
-\author{Reinhard Furrer}
+\author{Reinhard Furrer, some of the Fortran code is based on A. George,
+  J. Liu, E. S. Ng, B.W Peyton and Y. Saad (alphabetical)}
 %\note{}
 %\seealso{}
-%\examples{}
+\examples{
+smat <- diag.spam(runif(15))
+range(smat)
+cos(smat)
+}
 \keyword{classes}

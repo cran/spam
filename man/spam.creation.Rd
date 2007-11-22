@@ -49,11 +49,14 @@ a sparse matrix object of class \code{spam}.
 }
 \examples{
 # old message, do not loop, when you create a large sparse matrix
+set.seed(13)
 nz <- 128
 ln <- nz^2
 smat <- spam(0,ln,ln)
-system.time(for (i in 1:nz) smat[sample(ln,1),sample(ln,1)] <- i)
-system.time(smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz)
+is <- sample(ln,nz) 
+js <- sample(ln,nz) 
+system.time(for (i in 1:nz) smat[is[i], js[i]] <- i)
+system.time(smat[cbind(is,js)] <- 1:nz)
 
 getClass("spam")
 

@@ -10,6 +10,8 @@ importFrom("methods", #Arith,Compare,
            Math, Math2, Summary#, Complex
            )
 
+if(paste(R.version$major, R.version$minor, sep=".") < "2.6") 
+{
 ## workaround S4-Group(generic|method) quirk: R/AllGeneric.R
 ## needs setGeneric(*, group=) and this for all non-Primitives :
 export(
@@ -31,7 +33,7 @@ export(
        "any",
        "all"
 )
-
+}
 
 # Generic functions
 export("dcheck",

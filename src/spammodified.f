@@ -1,3 +1,44 @@
+      subroutine notzero (ja,ia,nrow,ncol,nnz,nz,jao,iao)
+c Return the structure of the zero entries in ra,ja,ia, in 
+c  compressed sparse row format via rao, jao, iao.
+c INPUT:
+c     ja, ia -- sparse structure of the matrix A
+c     nrow -- number of rows in `a'
+c     ncol -- number of columns in `a'
+c     nnz -- number of non-zero elements
+c     nz -- number of zero elements
+c OUTPUT:
+c     jao, iao --  sparse structure of the zero entries
+c WORK ARRAY:
+c     colmn -- logical vector of length ncol
+
+      implicit none
+      integer ja(nnz),ia(nrow+1),jao(nz),iao(nrow+1),
+     &        nrow,ncol,nnz,nz,inz
+      logical colmn(ncol)
+      integer i,j,k
+      inz = 0
+      iao(1) = 1
+      do i = 1,nrow
+         iao(i+1) = iao(i)
+         do k = 1,ncol
+            colmn(k) = .true.
+         enddo
+         do j = ia(i),ia(i+1)-1
+            colmn(ja(j)) = .false.
+         enddo
+         do k = 1,ncol
+            if(colmn(k)) then
+               inz = inz + 1
+               jao(inz) = k
+               iao(i+1) = iao(i+1) + 1
+            endif
+         enddo
+      enddo
+      return
+      end
+
+
       subroutine setdiagmat (nrow, n, a, ja, ia, diag, iw) 
       implicit none
       integer nrow, n
@@ -257,9 +298,9 @@ c-----------------------------------------------------------------------
 c------------end-of-setdiagmat------------------------------------------
       end
 c-----------------------------------------------------------------------
-      subroutine diagmua (nrow, a, ja, ia, diag)
+      subroutine diagmua (nrow, a, ia, diag)
       implicit none
-      integer          nrow, ja(*), ia(nrow+1)
+      integer          nrow, ia(nrow+1)
       double precision a(*),  diag(nrow), scal
 c-----------------------------------------------------------------------
 c performs the matrix by matrix product A = Diag * A  (in place) 
@@ -268,7 +309,8 @@ c-----------------------------------------------------------------------
 c on entry:
 c ---------
 c nrow	= integer. The row dimension of A
-c a, ja, ia   = Matrix A in compressed sparse row format.
+c a, ia   = Matrix A in compressed sparse row format.
+c           (ja is not needed) 
 c 
 c diag = diagonal matrix stored as a vector diag(1:n)
 c
@@ -435,7 +477,7 @@ c-----------------------------------------------------------------------
       return
       end
 
-      subroutine constructia(nrow,ia,ir)
+      subroutine constructia(nrow,nir,ia,ir)
 c     
 c     constructs from a regular row index vector a sparse ia vector.
 c     note that a regular column index vector corresponds to the 
@@ -448,25 +490,23 @@ c     Reinhard Furrer 2006-09-13
 c-----------------------------------------------------------------------
 
       implicit none
-      integer nrow
+      integer nrow,nir
       integer ia(nrow+1),ir(*)
 
-      integer i,k,tmp
+      integer i,k
 
       k=1
       ia(1)=1
       do i=1,nrow
-         tmp=0
  5       continue
          if (ir(k) .eq. i) then
-            tmp=tmp+1 
             k=k+1
-            goto 5
-         else
-            ia(i+1)=ia(i)+tmp
+            if (k .le. nir) goto 5
          endif
+         ia(i+1)=k
       enddo
 
+      ia(nrow+1)=nir+1
       
       return
       end   
@@ -788,11 +828,11 @@ c-----------------------------------------------------------------------
 
 
 c-----------------------------------------------------------------------
-      subroutine spamdnscsr(nrow,ncol,nzmax,dns,ndns,a,ja,ia,eps)
+      subroutine spamdnscsr(nrow,ncol,dns,ndns,a,ja,ia,eps)
 
       implicit none
       integer i,j,next
-      integer nrow,ncol,nzmax,ndns,ia(*),ja(*)
+      integer nrow,ncol,ndns,ia(*),ja(*)
       double precision dns(ndns,*),a(*),eps
 c-----------------------------------------------------------------------
 c Dense         to    Compressed Row Sparse
@@ -1069,213 +1109,6 @@ c-----------------------------------------------------------------------
       end
 
 
- 
-
-c=======================================================================
-c Sparse Matrix Multiplication Package
-c
-c Randolph E. Bank and Craig C. Douglas
-c
-c na.bank@na-net.ornl.gov and na.cdouglas@na-net.ornl.gov
-c
-c Compile this with the following command (or a similar one):
-c
-c     f77 -c -O smmp.f
-c
-c=======================================================================
-        subroutine symbmm 
-     *                   (n, m, l, 
-     *                    ia, ja, diaga, 
-     *                    ib, jb, diagb,
-     *                    ic, jc, diagc,
-     *                    index)
-c
-            integer       ia(*), ja(*), diaga,
-     *                    ib(*), jb(*), diagb,
-     *                    ic(*), jc(*), diagc,
-     *                    index(*)
-c
-c       symbolic matrix multiply c=a*b
-c
-        maxlmn = max(l,m,n)
-        do 10 i=1,maxlmn
-   10       index(i)=0
-        if (diagc.eq.0) then
-            ic(1)=1
-        else
-            ic(1)=n+2
-        endif
-        minlm = min(l,m)
-        minmn = min(m,n)
-c
-c    main loop
-c
-        do 50 i=1,n
-            istart=-1
-            length=0
-c
-c    merge row lists
-c
-            do 30 jj=ia(i),ia(i+1)
-c    a = d + ...
-                if (jj.eq.ia(i+1)) then
-                    if (diaga.eq.0 .or. i.gt.minmn) goto 30
-                    j = i
-                else
-                    j=ja(jj)
-                endif
-c    b = d + ...
-                if (index(j).eq.0 .and. diagb.eq.1 .and. j.le.minlm)then
-                    index(j)=istart
-                    istart=j
-                    length=length+1
-                endif
-                do 20 k=ib(j),ib(j+1)-1 
-                    if(index(jb(k)).eq.0) then
-                        index(jb(k))=istart
-                        istart=jb(k)
-                        length=length+1
-                    endif
-   20           continue
-   30       continue
-c
-c   row i of jc
-c
-            if (diagc.eq.1 .and. index(i).ne.0) length = length - 1
-            ic(i+1)=ic(i)+length
-            do 40 j= ic(i),ic(i+1)-1
-                if (diagc.eq.1 .and. istart.eq.i) then
-                    istart = index(istart)
-                    index(i) = 0
-                endif
-                jc(j)=istart
-                istart=index(istart)
-                index(jc(j))=0
-   40       continue
-            index(i) = 0
-   50   continue
-        return
-        end
-        subroutine numbmm 
-     *                   (n, m, l,
-     *                    ia, ja, diaga, a,
-     *                    ib, jb, diagb, b,
-     *                    ic, jc, diagc, c,
-     *                    temp)
-c
-            integer       ia(*), ja(*), diaga,
-     *                    ib(*), jb(*), diagb,
-     *                    ic(*), jc(*), diagc 
-c
-            double precision    a(*), b(*), c(*), temp(*)
-c
-c       numeric matrix multiply c=a*b
-c
-        maxlmn = max(l,m,n)
-        do 10 i = 1,maxlmn
- 10         temp(i) = 0.
-        minlm = min(l,m)
-        minln = min(l,n)
-        minmn = min(m,n)
-c
-c   c = a*b
-c
-        do 50 i = 1,n
-             do 30 jj = ia(i),ia(i+1)
-c    a = d + ...
-                if (jj.eq.ia(i+1)) then
-                    if (diaga.eq.0 .or. i.gt.minmn) goto 30
-                    j = i
-                    ajj = a(i)
-                else
-                    j=ja(jj)
-                    ajj = a(jj)
-                endif
-c    b = d + ...
-                if (diagb.eq.1 .and. j.le.minlm) 
-     *              temp(j) = temp(j) + ajj * b(j)
-                do 20 k = ib(j),ib(j+1)-1
- 20                 temp(jb(k)) = temp(jb(k)) + ajj * b(k)
- 30         continue
-c    c = d + ...
-            if (diagc.eq.1 .and. i.le.minln) then
-                c(i) = temp(i)
-                temp(i) = 0.
-            endif
-            do 40 j = ic(i),ic(i+1)-1
-                c(j) = temp(jc(j))
- 40             temp(jc(j)) = 0.
- 50     continue
-        return
-        end
-        subroutine smmptransp
-     *                   (n, m,
-     *                    ia, ja, diaga, a,
-     *                    ib, jb,        b,
-     *                    move)
-c
-        implicit none
-            integer       n,m,i,j,index,
-     *                    ia(*), ja(*), diaga,
-     *                    ib(*), jb(*),
-     *                    move  
-c
-            double precision          a(*), b(*)
-c
-c       compute b = a(transpose)
-c
-c       first make ib
-c
-        do 10 i=1,m+1
-   10       ib(i)=0
-        if (move.eq.1) then
-            do 15 i =1,m+1
-   15           b(i) = 0.
-        endif
-        if (diaga.eq.1) then
-            ib(1)=m + 2
-        else
-            ib(1)=1
-        endif
-c
-c       count indices for each column 
-c
-        do 30 i=1,n   
-            do 20 j=ia(i),ia(i+1)-1
-                ib(ja(j)+1)=ib(ja(j)+1)+1
-   20       continue
-   30   continue
-        do 40 i=1,m
-   40      ib(i+1)=ib(i)+ib(i+1)
-c
-c       now make jb
-c
-        do 60 i=1,n   
-            do 50 j=ia(i),ia(i+1)-1
-                index=ja(j)
-                jb(ib(index))=i
-                if (move.eq.1) b(ib(index)) = a(j)
-                ib(index)=ib(index)+1
-   50       continue
-   60   continue
-c
-c       now fixup ib 
-c
-        do 70 i=m,2,-1
-   70       ib(i)=ib(i-1)
-        if (diaga.eq.1) then
-            if (move.eq.1) then
-                j = min(n,m)
-                do 80 i = 1,j
-   80               b(i) = a(i)
-            endif
-            ib(1)=m + 2
-        else
-            ib(1)=1
-        endif
-        return
-        end
-c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
 c-
 c- Modified by P. T. Ng from sparsekit
@@ -1565,7 +1398,7 @@ c
             endif
  300     continue
          do 301 k=ic(ii), len
-	    iw(jc(k)) = 0
+            iw(jc(k)) = 0
  301     continue
          ic(ii+1) = len+1
  500  continue
@@ -1660,7 +1493,7 @@ c
             endif
  300     continue
          do 301 k=ic(ii), len
-	    iw(jc(k)) = 0
+            iw(jc(k)) = 0
  301     continue
          ic(ii+1) = len+1
  500  continue
@@ -1713,3 +1546,70 @@ c     cholcja (integer)        ja for cholesky factor
       RETURN
       END
 
+
+
+
+
+
+      subroutine transpose(n,m,a,ja,ia,ao,jao,iao)
+
+      implicit none
+      integer n,m,ia(n+1),iao(m+1),ja(*),jao(*)
+      double precision  a(*),ao(*)
+
+
+      integer i,j,k,next
+c-----------------------------------------------------------------------
+c     Transposition
+c     similar to csrcsc from sparsekit
+c----------------------------------------------------------------------- 
+c on entry:
+c----------
+c n	= number of rows of CSR matrix.
+c m    = number of columns of CSC matrix.
+c a	= real array of length nnz (nnz=number of nonzero elements in input 
+c         matrix) containing the nonzero elements.
+c ja	= integer array of length nnz containing the column positions
+c 	  of the corresponding elements in a.
+c ia	= integer of size n+1. ia(k) contains the position in a, ja of
+c	  the beginning of the k-th row.
+c
+c on return:
+c ---------- 
+c ao	= real array of size nzz containing the "a" part of the transpose
+c jao	= integer array of size nnz containing the column indices.
+c iao	= integer array of size n+1 containing the "ia" index array of
+c	  the transpose. 
+c
+c----------------------------------------------------------------------- 
+c----------------- compute lengths of rows of transp(A) ----------------
+      do  i=1, n
+         do  k=ia(i), ia(i+1)-1 
+            j = ja(k)+1
+            iao(j) = iao(j)+1
+         enddo
+      enddo
+c---------- compute pointers from lengths ------------------------------
+      iao(1) = 1
+      do  i=1,m
+         iao(i+1) = iao(i) + iao(i+1)
+      enddo
+c--------------- now do the actual copying ----------------------------- 
+      do  i=1,n
+         do  k=ia(i),ia(i+1)-1 
+            j = ja(k) 
+            next = iao(j)
+            ao(next) = a(k)
+            jao(next) = i
+            iao(j) = next+1
+         enddo
+      enddo
+c-------------------------- reshift iao and leave ---------------------- 
+      do  i=m,1,-1
+         iao(i+1) = iao(i)
+      enddo
+      iao(1) = 1
+c-----------------------------------------------------------------------
+      end
+c-----------------------------------------------------------------------
+ 
