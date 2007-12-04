@@ -13,8 +13,8 @@ c WORK ARRAY:
 c     colmn -- logical vector of length ncol
 
       implicit none
-      integer ja(nnz),ia(nrow+1),jao(nz),iao(nrow+1),
-     &        nrow,ncol,nnz,nz,inz
+      integer nrow,ncol,nnz,nz,inz,
+     & ja(nnz),ia(nrow+1),jao(nz),iao(nrow+1)
       logical colmn(ncol)
       integer i,j,k
       inz = 0

@@ -13,8 +13,8 @@ function (lib, pkg)
                         version=list(major=0,
                           minor=.13,
                           year=2007,
-                          month=10,
-                          day=10),
+                          month=12,
+                          day=03),
                         
                         safemode=TRUE,             # verify double and integer formats. 
                         bcksl=TRUE                 # what type of back/forwardsolve?
@@ -26,7 +26,7 @@ function (lib, pkg)
 function (lib, pkg)
 {
   cat("Package 'spam' is loaded.  Version ",
-      .Spam$version$major+.Spam$version$minor," (",
+      .Spam$version$major+.Spam$version$minor,"-1 (",
       .Spam$version$year,"-",
       sprintf("%02d",.Spam$version$month),"-",
       sprintf("%02d",.Spam$version$day),").",

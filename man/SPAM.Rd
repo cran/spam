@@ -39,7 +39,6 @@ package.
   \code{\link[Matrix]{Matrix}} and
   \code{\link[SparseM]{SparseM.ontology}}.
 }
-\examples{
-}
+%\examples{}
 \author{Reinhard Furrer}
 \keyword{documentation}
