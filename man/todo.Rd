@@ -11,9 +11,6 @@
 \details{This is a non exhaustive list of where we need to work on spam
   (of course the list is in random order):\cr
 
-  - nicer \code{.Spam} handling (without causing the warning, results
-  from my poor NAMESPACE understanding)\cr
-  
   - extend demo(s)\cr
   
   - write vignette\cr

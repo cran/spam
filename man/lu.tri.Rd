@@ -17,16 +17,18 @@ upper.tri(x, diag = FALSE)
 \details{Often not only the structure of the matrix is required but the
   entries as well. For compatibility, the default is only a structure
   consisting of ones (representing \code{TRUE}s). Setting the flag
-  \code{.Spam$trivalues} to \code{TRUE}, the function returns the actual
-  values.
+  \code{spam.getOption('trivalues')} to \code{TRUE},
+%  \code{.Spam$trivalues} to \code{TRUE},
+  the function returns the actual values.
   }
-\seealso{\code{\link{.Spam}} and \code{\link{diag}}}
+\seealso{\code{\link{spam.options}} and \code{\link{diag}}}
 \examples{
 smat <- spam( c( 1,2,0,3,0,0,0,4,5),3)
 upper.tri( smat)
 upper.tri( smat, diag=TRUE)
 
-.Spam$trivalues <- TRUE
+%.Spam$trivalues <- TRUE
+spam.options(trivalues=TRUE)
 upper.tri( smat)
 
 }

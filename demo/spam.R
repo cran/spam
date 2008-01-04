@@ -55,7 +55,7 @@ display(smat, main="'scatterplot'-type display, very efficient")
 
 
 
-.Spam$imagesize <- prod(smat@dimension)+1
+spam.options(imagesize=prod(smat@dimension)+1)
 display(smat, main="'image'-type display, may be slow and heavy")
 
 par(opar)

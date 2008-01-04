@@ -26,12 +26,13 @@
   is no real need to pass any object back. We also do not see the need
   of defining a \code{summary.spam} class with a proper \code{print}
   method.}
-\details{\code{.Spam$printsize} determines  if the sparse matrix is
+\details{\code{spam.getOption('printsize')%.Spam$printsize
+ } determines  if the sparse matrix is
   coerced into a matrix and the printed as an array or if
   only the non-zero elements of the matrix are given.
 }
 %\references{}
-\seealso{\code{\link{.Spam}}}
+\seealso{\code{\link{spam.options}}}
 \examples{
 set.seed(14)
 nz <- 8
@@ -43,9 +44,11 @@ print(tt)
 smat[tt] <- 1:nz
 
 par(mfcol=c(1,2),pty='s')
-.Spam$printsize <- 1000
+%.Spam$printsize <- 1000
+spam.options(printsize=1000)
 print(smat)
-.Spam$printsize <- 10
+%.Spam$printsize <- 10
+spam.options(printsize=10)
 print(smat)
 summary(smat)
 

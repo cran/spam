@@ -15,9 +15,9 @@ ss <- as.spam(tt)
 
 
 par(mfcol=c(1,2))
-.Spam$imagesize=10
+spam.options(imagesize=10)
 display(ss)
-.Spam$imagesize=n*m+1
+spam.options(imagesize=n*m+1)
 display(ss)
 
 
@@ -40,18 +40,18 @@ ss@entries <- 1:nl
 z <- ss
 br <- c(seq(0.1,max(z)/2,l=nl),max(z))
 par(mfcol=c(1,2))
-.Spam$imagesize=1000
+spam.options(imagesize=1000)
 image(z, breaks=br,col=tim.colors(nl))
-.Spam$imagesize=10
+spam.options(imagesize=10)
 image(z, breaks=br,col=tim.colors(nl))
 
 
 nl <- length(ss)
 ss@entries <- 1:nl
 par(mfcol=c(1,2))
-.Spam$imagesize=1000
+spam.options(imagesize=1000)
 image(ss, col=tim.colors(nl))
-.Spam$imagesize=10
+spam.options(imagesize=10)
 image(ss, col=tim.colors(nl))
 
 

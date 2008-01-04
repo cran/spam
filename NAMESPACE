@@ -41,8 +41,10 @@ export("dcheck",
 
        "todo",
        "spam.history",
-       ".Spam",
+#       ".Spam",
        "is.spam",
+       "spam.options",
+       "spam.getOption",
 	
 	"validspamobject",
 

@@ -1,40 +1,5 @@
-".onLoad" <-
-function (lib, pkg)
-{
-  library.dynam("spam",pkg, lib)
-  ### IMPROVEME
-    assign(".Spam",list(eps=.Machine$double.eps,   # smaller than this is considered as zero
-                        drop=FALSE,                # drop passed to subset functions
-                        printsize=100,             # the max size which we print as regular matrices
-                        imagesize=10000,           # the max size which we display as regular matrices
-                        trivalues=FALSE,           # with upper./lower/.tri return values (TRUE) or only structure?
-                        cex=1200,                  # scaling factor for scatter displays
-                        
-                        version=list(major=0,
-                          minor=.13,
-                          year=2007,
-                          month=12,
-                          day=03),
-                        
-                        safemode=TRUE,             # verify double and integer formats. 
-                        bcksl=TRUE                 # what type of back/forwardsolve?
-                        
-                        ), env = .GlobalEnv)
-}
 
-".onAttach" <-
-function (lib, pkg)
-{
-  cat("Package 'spam' is loaded.  Version ",
-      .Spam$version$major+.Spam$version$minor,"-1 (",
-      .Spam$version$year,"-",
-      sprintf("%02d",.Spam$version$month),"-",
-      sprintf("%02d",.Spam$version$day),").",
-      "\nType demo( spam) for some demos,",
-      " help( Spam) for an overview of this library.\n",
-      sep='',fill=TRUE)
 
-}
 todo <- function() help( "spam.todo")
 spam.history <- function() help("spam.history")
 

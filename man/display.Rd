@@ -15,15 +15,17 @@
     to \code{image.default}/\code{plot}.}
 }
 %\value{}
-\details{\code{.Spam$imagesize} determines  if the sparse matrix is
+\details{\code{spam.getOption('imagesize')%.Spam$imagesize
+ } determines  if the sparse matrix is
   coerced into a matrix and the plotted with \code{image.default} or if
   the matrix is simply represented as a scatterplot with
   \code{pch="."}. The points are scaled according to
-  \code{cex*.Spam$cex/(nrow+ncol)}. For some devices or for non-square matrices,
+  \code{cex*spam.getOption('cex')/(nrow+ncol)%cex*.Spam$cex/(nrow+ncol)
+ }. For some devices or for non-square matrices,
   \code{cex} needs probably some adjustment.
 }
 %\references{}
-\seealso{\code{\link{image}}, \code{\link{.Spam}}}
+\seealso{\code{\link{image}}, \code{\link{spam.options}}}
 \examples{
 set.seed(13)
 
@@ -33,9 +35,11 @@ smat <- spam(0,ln,ln)
 smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
 
 par(mfcol=c(1,2),pty='s')
-.Spam$imagesize <- 1000
+%.Spam$imagesize <- 1000
+spam.options(imagesize=1000)
 display(smat)
-.Spam$imagesize <- 10
+%.Spam$imagesize <- 10
+spam.options(imagesize=10)
 display(smat)
 
 

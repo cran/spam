@@ -5,6 +5,15 @@
 	*						 *
 	**************************************************
 
+                CHANGES IN R VERSION 0.13-2
+
+    o   New spam.options and getOption functions. .Spam
+        as a variable is not visible anymore. 
+
+    o	Retrieving information from the DESCRIPTION file directly
+	(thanks to Roger Bivand).
+
+
                 CHANGES IN R VERSION 0.13-1
 
     o   Minor Fortran Changes for g77 compatibility. Thanks to 

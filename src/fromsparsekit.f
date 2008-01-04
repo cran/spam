@@ -1,4 +1,93 @@
 c-----------------------------------------------------------------------
+      subroutine amask (nrow,ncol,a,ja,ia,jmask,imask,
+     *                  c,jc,ic,iw,nzmax,ierr)
+c---------------------------------------------------------------------
+      real*8 a(*),c(*)
+      integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*),imask(nrow+1)
+      logical iw(ncol)
+c-----------------------------------------------------------------------
+c This subroutine builds a sparse matrix from an input matrix by
+c extracting only elements in positions defined by the mask jmask, imask
+c-----------------------------------------------------------------------
+c On entry:
+c---------
+c nrow  = integer. row dimension of input matrix
+c ncol  = integer. Column dimension of input matrix.
+c
+c a,
+c ja,
+c ia    = matrix in Compressed Sparse Row format
+c
+c jmask,
+c imask = matrix defining mask (pattern only) stored in compressed
+c         sparse row format.
+c
+c nzmax = length of arrays c and jc. see ierr.
+c
+c On return:
+c-----------
+c
+c a, ja, ia and jmask, imask are unchanged.
+c
+c c
+c jc,
+c ic    = the output matrix in Compressed Sparse Row format.
+c
+c ierr  = integer. serving as error message.c
+c         ierr = 1  means normal return
+c         ierr .gt. 1 means that amask stopped when processing
+c         row number ierr, because there was not enough space in
+c         c, jc according to the value of nzmax.
+c
+c work arrays:
+c-------------
+c iw    = logical work array of length ncol.
+c
+c note:
+c------ the  algorithm is in place: c, jc, ic can be the same as
+c a, ja, ia in which cas the code will overwrite the matrix c
+c on a, ja, ia
+c
+c-----------------------------------------------------------------------
+      ierr = 0
+      len = 0
+      do 1 j=1, ncol
+         iw(j) = .false.
+ 1    continue
+c     unpack the mask for row ii in iw
+      do 100 ii=1, nrow
+c     save pointer in order to be able to do things in place
+         do 2 k=imask(ii), imask(ii+1)-1
+            iw(jmask(k)) = .true.
+ 2       continue
+c     add umasked elemnts of row ii
+         k1 = ia(ii)
+         k2 = ia(ii+1)-1
+         ic(ii) = len+1
+         do 200 k=k1,k2
+            j = ja(k)
+            if (iw(j)) then
+               len = len+1
+               if (len .gt. nzmax) then
+                  ierr = ii
+                  return
+               endif
+               jc(len) = j
+               c(len) = a(k)
+            endif
+ 200     continue
+c
+         do 3 k=imask(ii), imask(ii+1)-1
+            iw(jmask(k)) = .false.
+ 3       continue
+ 100  continue
+      ic(nrow+1)=len+1
+c
+      return
+c-----end-of-amask -----------------------------------------------------
+c-----------------------------------------------------------------------
+      end
+c-----------------------------------------------------------------------
       subroutine aplsb1 (nrow,ncol,a,ja,ia,s,b,jb,ib,c,jc,ic,
      *     nzmax,ierr)
       real*8 a(*), b(*), c(*), s
