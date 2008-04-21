@@ -1,6 +1,6 @@
 Package:  spam
-Version:  0.13-2
-Date:     2008-01-04
+Version:  0.13-3
+Date:     2008-04-21
 Author:   Reinhard Furrer
 Maintainer:  Reinhard Furrer <rfurrer@mines.edu>
 Depends: R (>= 2.4), methods
@@ -14,4 +14,4 @@ LazyData: Yes
 License: GPL | file LICENSE
 Title: SPArse Matrix
 URL: http://www.mines.edu/~rfurrer/software/spam/
-Packaged: Fri Jan  4 22:16:31 2008; rfurrer
+Packaged: Tue Apr 22 04:14:12 2008; rfurrer

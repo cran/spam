@@ -587,8 +587,7 @@ c     Reinhard Furrer 2006-09-13
 c-----------------------------------------------------------------------
 c
 c     Local
-      integer i,j,k
-      double precision  oldia(nrow+1)
+      integer i,j,k, oldia(nrow+1)
 
       do  i = 1, nrow+1
          oldia(i) = ia(i)

@@ -149,7 +149,7 @@ setMethod("c","spam", function(x,...,recursive=TRUE){
 ########################################################################
 # diag and derivatives
 "diag.spam" <-
-function(x=1, nrow, ncol=n)
+function(x=1, nrow, ncol)
 {
   if (is.spam(x)) return( diag.of.spam( x, nrow, ncol))
 
@@ -163,14 +163,16 @@ function(x=1, nrow, ncol=n)
     x <- 1
   }
   else n <- length(x)
-    if (!missing(nrow))
-      n <- as.integer(nrow)
+  if (!missing(nrow))
+    n <- as.integer(nrow)
+  if(missing(ncol))
+    ncol <- n
   p <- as.integer(ncol)
 
   m <- min(n, p)
 
   newx <- new("spam")
-  slot(newx,"entries",check=FALSE) <- numeric(m)
+  slot(newx,"entries",check=FALSE) <- vector("double", m)
   newx@entries[1:m] <- as.double(x) 
   slot(newx,"colindices",check=FALSE) <- 1:m
   slot(newx,"rowpointers",check=FALSE) <- as.integer(c(1:m,rep(m+1,n+1-m)))
@@ -449,7 +451,7 @@ function(x,...){
                         entries=dcheck(x@entries),
                         colindices=x@colindices,
                         rowpointers=x@rowpointers,
-                        res=numeric(prod(dimx)),  # numeric is double! 
+                        res=vector("double",prod(dimx)),  # numeric is double! 
                         NAOK=!.Spam$safemode,
                         DUP=FALSE,
                         PACKAGE = "spam"
@@ -468,7 +470,7 @@ function(x){
                         entries=dcheck(x@entries),
                         colindices=x@colindices,
                         rowpointers=x@rowpointers,
-                        res=numeric(prod(dimx)),  # numeric is double! 
+                        res=vector("double",prod(dimx)),  # numeric is double! 
                         NAOK=!.Spam$safemode,
                         DUP=FALSE,
                         PACKAGE = "spam"

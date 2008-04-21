@@ -5,6 +5,14 @@
 	*						 *
 	**************************************************
 
+                CHANGES IN R VERSION 0.13-3
+		
+    o   Minor changes in R and Fortran code to eliminate warnings.
+        
+    o	In diag()'s argument list, drop the explicit default (' = n').
+	As is now in R-2.7.
+
+
                 CHANGES IN R VERSION 0.13-2
 
     o   New spam.options and getOption functions. .Spam

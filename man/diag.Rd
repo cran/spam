@@ -15,10 +15,10 @@
 }
 \usage{
 # diag(x)
-diag(x=1, nrow, ncol=n)
+diag(x=1, nrow, ncol)
 diag(x) <- value
 
-diag.spam(x=1, nrow, ncol=n)
+diag.spam(x=1, nrow, ncol)
 diag.spam(x) <- value
 }
 \arguments{
