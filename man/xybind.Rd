@@ -1,0 +1,50 @@
+\name{cbind}
+\alias{rbind}
+\alias{cbind}
+\alias{cbind.spam}
+\alias{rbind.spam}
+\title{Combine spam Matrices by Rows or Columns}
+\description{Take a sequence of vector, matrix or \code{spam} object arguments and
+     combine by \emph{c}olumns or \emph{r}ows, respectively.}
+\usage{
+cbind.spam(\dots, deparse.level = 0)
+rbind.spam(\dots, deparse.level = 0)
+}
+\arguments{
+  \item{...}{vectors, matrices or \code{spam} objects. See Details and Value}
+  \item{deparse.level}{for compatibility reason here. Only \code{0} is implemented.}
+}
+\value{a \code{spam} object combining the \code{\dots} arguments
+  column-wise or row-wise.  (Exception: if there are no inputs or all
+  the inputs are \code{NULL}, the value is \code{NULL}.)}
+\details{\code{rbind} and \code{cbind} are not exactly symmetric in how
+  the objects are processed. The former is essentially an concatenation
+  of the slots due to the sparse storage format. Different types of
+  inputs are handled differently. The former calls a
+  Fortran routine after the input has been coerced to \code{spam}
+  objects. \cr
+
+  Only two objects at a time are processed. If more than two are
+  present, a loop concatenates them successively. \cr
+
+  A method is defined for a  \code{spam} object as first argument. 
+    }
+%\references{}
+\seealso{\code{\link{cbind,spam-method}}.}
+\examples{
+x <- cbind.spam(1:5,6)
+
+y <- cbind(x, 7)
+
+# for some large matrices the following might be slightly faster:
+
+t( cbind( t(x), t(x)))
+
+
+\dontrun{# Method is only defined for the first argument:
+cbind(diag(2),diag.spam(2))}
+
+}
+\author{Reinhard Furrer}
+\keyword{array}
+\keyword{manip}

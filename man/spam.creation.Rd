@@ -2,8 +2,10 @@
 \alias{spam.creation}
 \alias{initialize,spam-method}
 \alias{spam}
+\alias{spam.list}
 \alias{spam.numeric}
 \alias{spam.spam}
+\alias{spam,list-method}
 \alias{spam,spam-method}
 \alias{spam,numeric-method}
 \alias{as.spam,matrix-method}
@@ -29,23 +31,39 @@ as.spam(x, eps = .Spam$eps)
 
 is.spam(x)
 }
+\value{
+  A valid \code{spam} object.\cr
+  \code{is.spam} returns \code{TRUE} if \code{x} is a \code{spam} object.}
 \arguments{
-\item{x}{is a matrix, or vector object,  of either dense or sparse form}
+\item{x}{is a matrix (of either dense or sparse form), a list or vector object}
 \item{nrow}{number of rows of matrix }
 \item{ncol}{number of columns of matrix }
-\item{eps}{A tolerance parameter:  elements of \code{x} such that \code{abs(x) < eps} set to zero.
-This argument is only relevant when coercing matrices from dense to sparse form. Defaults to
-\code{eps = .Spam$eps} }
-
+\item{eps}{A tolerance parameter:  elements of \code{x} such that
+  \code{abs(x) < eps} set to zero. Defaults to \code{eps = .Spam$eps} }
 }
 \details{
-The function \code{as.spam} acts like \code{matrix} to coerce a vector object to
-a sparse matrix object of class \code{spam}.  
+  The functions \code{spam} and \code{as.spam} act like \code{matrix}
+  and \code{as.matrix} 
+  to coerce an object to a sparse matrix object of class \code{spam}.  
+
+  \code{eps} should be at least as large as \code{.Machine$double.eps}.
 }
-%\note{}
-%\references{}
+\note{The zero matrix has the element zero stored in (1,1).\cr
+
+  The functions do not test the presence of \code{NA/NaN/Inf}. Virtually
+  all call a Fortran routine with the \code{NAOK=!.Spam$safemode[3]}
+  argument, which defaults to \code{FALSE} resulting in an error.
+  Hence, the \code{NaN} do not always properly propagate through (i.e.
+  \code{spam} is not IEEE-754 compliant).
+  
+}
+\references{\url{http://en.wikipedia.org/wiki/Sparse_matrix} as a start.}
 \seealso{
-\code{\link{SPAM}} general overview of the package.
+  \code{\link{SPAM}} general overview of the package.
+  \code{\link{spam.options}} for details about the \code{safemode} flag.
+    \code{\link{read.MM}} and \code{\link{foreign}} to create \code{spam}
+	matrices from MatrixMarket
+    files and from certaib \code{Matrix/SparseM} formats.
 }
 \examples{
 # old message, do not loop, when you create a large sparse matrix
@@ -53,12 +71,17 @@ set.seed(13)
 nz <- 128
 ln <- nz^2
 smat <- spam(0,ln,ln)
-is <- sample(ln,nz) 
-js <- sample(ln,nz) 
+is <- sample(ln,nz)
+js <- sample(ln,nz)
 system.time(for (i in 1:nz) smat[is[i], js[i]] <- i)
 system.time(smat[cbind(is,js)] <- 1:nz)
 
 getClass("spam")
 
+
+
+try(as.spam.numeric(NA))
+
 }
+\author{Reinhard Furrer}
 \keyword{algebra}

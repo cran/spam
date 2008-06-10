@@ -22,36 +22,35 @@
   \item{...}{any other arguments passed
     to \code{print.default}.}
 }
-\value{\code{NULL}, because the information is printed with \code{cat} there
-  is no real need to pass any object back. We also do not see the need
-  of defining a \code{summary.spam} class with a proper \code{print}
-  method.}
-\details{\code{spam.getOption('printsize')%.Spam$printsize
- } determines  if the sparse matrix is
+\value{\code{NULL} for \code{print}, because the information is printed with \code{cat} there
+  is no real need to pass any object back. \cr
+  %
+  A list containing the non-zero elements and the density for
+  \code{summary}
+  for class \code{spam}.\cr
+  %
+  A list containing the non-zero elements of the factor, the density and
+  the fill-in for  \code{summary} for class \code{spam.chol.NgPeyton}.}
+\details{\code{spam.getOption('printsize')} determines  if the sparse matrix is
   coerced into a matrix and the printed as an array or if
   only the non-zero elements of the matrix are given.
 }
 %\references{}
 \seealso{\code{\link{spam.options}}}
 \examples{
-set.seed(14)
+set.seed(13)
 nz <- 8
 ln <- nz
 smat <- spam(0,ln,ln)
-
-tt <- cbind(sample(ln,nz),sample(ln,nz))
-print(tt)
-smat[tt] <- 1:nz
+smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
 
 par(mfcol=c(1,2),pty='s')
-%.Spam$printsize <- 1000
-spam.options(printsize=1000)
+spam.options( printsize=1000)
 print(smat)
-%.Spam$printsize <- 10
-spam.options(printsize=10)
+spam.options( printsize=10)
 print(smat)
 summary(smat)
-
+(summary(smat))
 }
 \author{Reinhard Furrer}
 \keyword{hplot}

@@ -13,13 +13,11 @@
     to \code{image.default} and \code{plot}.}
 }
 %\value{}
-\details{\code{spam.getOption('imagesize')%.Spam$imagesize
-  } determines  if the sparse matrix is
+\details{\code{getOption('imagesize')} determines  if the sparse matrix is
   coerced into a matrix and the plotted similarly to \code{image.default} or if
   the matrix is simply represented as a scatterplot with
   \code{pch="."}. The points are scaled according to
   \code{cex*spam.getOption('cex')/(nrow+ncol)}.
-  %\code{cex*.Spam$cex/(nrow+ncol)}.
   For some devices or for non-square matrices,
   \code{cex} needs probably some adjustment.\cr
   The a zero matrix in \code{spam} format has as (1,1) entry the value
@@ -27,7 +25,8 @@
   scatter plot.
 }
 %\references{}
-\seealso{\code{\link{display}} and  \code{\link{spam.options}}.\cr The code is based on  \code{\link[graphics]{image}} of \code{graphics}.
+\seealso{\code{\link{display}} and  \code{\link{spam.options}}.\cr
+  The code is based on  \code{\link[graphics]{image}} of \code{graphics}.
 }
 \examples{
 set.seed(13)
@@ -37,11 +36,9 @@ smat <- spam(0,ln,ln)
 smat[ cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
 
 par(mfcol=c(1,2),pty='s')
-%.Spam$imagesize <- 1000
-spam.options(imagesize=1000)
+spam.options( imagesize=1000)
 image(smat)#better: col=tim.colors(nz))
-%.Spam$imagesize <- 10
-spam.options(imagesize=10)
+spam.options( imagesize=10)
 image(smat)#better: col=tim.colors(nz))
 
 

@@ -7,6 +7,7 @@
 \alias{diag<-} 
 \alias{diag<-,ANY-method} 
 \alias{diag<-,spam-method}
+\alias{diag<-.spam}
 \alias{diag.spam<-}
 \alias{diag.assign,spam-method} 
 \title{Sparse Matrix diagonals}
@@ -56,7 +57,7 @@ diag.spam(x) <- value
 \seealso{\code{\link{upper.tri}}, \code{\link{lower.tri}}.
 }
 \examples{
-diag.spam(1, 4)           # I4
+diag.spam(2, 4)           # 2*I4
 smat <- diag.spam(1:5)
 diag( smat)
 diag( smat) <- 5:1

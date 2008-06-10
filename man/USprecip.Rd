@@ -1,5 +1,6 @@
 \name{USprecip}
 \alias{USprecip}
+\docType{data}
 \title{
 Monthly total precipitation (mm) for April 1948 in the contiguous United States 
 }
@@ -30,10 +31,10 @@ compared to which were estimated.
 \source{\url{www.image.ucar.edu/GSP/Data/US.monthly.met/}}
 \seealso{\code{\link[fields]{RMprecip}}}
 \references{
-Johns, C., Nychka, D., Kittel, T., and Daly, C. (2003).
+Johns, C., Nychka, D., Kittel, T., and Daly, C. (2003)
 Infilling sparse records of spatial fields.
-Journal of the American Statistical Association, 98,
-  796-806.
+\emph{Journal of the American Statistical Association},
+98, 796--806.
 }
 \examples{
 # plot

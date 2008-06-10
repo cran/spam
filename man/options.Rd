@@ -40,7 +40,7 @@ spam.getOption(x)
   a list with the previous values of the options changed (returned
   invisibly).
 }
-\section{Options used in \code{spam}}{
+\section{Options used}{
   A short description with the default values follows.
   \describe{
 \item{\code{eps=.Machine$double.eps}:}{values smaller than this are
@@ -61,54 +61,42 @@ spam.getOption(x)
 
 \item{\code{cex=1200}:}{default dot size for  \code{image} or \code{display}.}
 
-%\item{\code{dopivoting=TRUE}:}{default parameter for "solve" routines. \code{FALSE}
-%  would solve the system without using the permutation.}
-
-\item{\code{version}}{Version information from DESCRIPTION file}
-
-\item{\code{safemode=TRUE}:}{verify double and integer formats}
+\item{\code{dopivoting=TRUE}:}{default parameter for "solve" routines. \code{FALSE}
+  would solve the system without using the permutation.}
   
-\item{\code{bcksl=TRUE}:}{what type of back/forwardsolve?}
+\item{\code{safemode=c(TRUE,TRUE,TRUE)}:}{The logicals are determine (1) 
+  verify double and integer formats when constructing
+  \code{spam} objects (2) quick sanity check when constructing sparse
+  matrices (3) testing for NAs in Fortan calls.
+  \code{TRUE}s are safer but slightly slower. The most relevant speedup
+  is the second flag.}
 
-%\item{\code{safemode=c(TRUE,TRUE,TRUE)}:}{The logicals are determine (1) 
-%  verify double and integer formats when constructing
-%  \code{spam} objects (2) quick sanity check when constructing sparse
-%  matrices (3) testing for NAs in Fortan calls.
-%  \code{TRUE}s are safer but slightly slower. The most relevant speedup
-%  is the second flag.}
-
-%\item{\code{cholsymmetrycheck=TRUE}:}{for the Cholesky factorization,
-%  verify if the matrix is symmetric.}
-%\item{\code{cholpivotcheck=TRUE}:}{for the Cholesky factorization,
-%  when passing a permutation, should a minimum set of checks be performed?}
-%\item{\code{cholupdatesingular="warning"}:}{for a Cholesky update, what
-%  happens if the matrix is singular: \code{"warning"} only and
-%  returning the not updated factor, \code{"error"}  or  return simply \code{"NULL"}.}
-%\item{\code{cholincreasefactor=c(1.25,1.25)}:}{If not enought memory
-%  could be allocated, these are the steps to increase it.}
-%\item{\code{nnznearestdistnnz=c(400^2,400)}:}{Memory allocation
-%  parameters for \code{nearest.dist}.}
-%\item{\code{nearestdistincreasefactor=1.25}:}{If not enought memory
-%  could be allocated, this is the step to increase it. }
-
-	      }
-
-%  The \sQuote{factory-fresh} default settings of the options are
-%  \tabular{ll}{
-%    \code{add.smooth} \tab \code{TRUE}\cr
-%    \code{check.bounds} \tab \code{FALSE}\cr
-%    \code{continue} \tab \code{"+ "}\cr
-%  }
+\item{\code{cholsymmetrycheck=TRUE}:}{for the Cholesky factorization,
+  verify if the matrix is symmetric.}
+\item{\code{cholpivotcheck=TRUE}:}{for the Cholesky factorization,
+  when passing a permutation, should a minimum set of checks be performed?}
+\item{\code{cholupdatesingular="warning"}:}{for a Cholesky update, what
+  happens if the matrix is singular: \code{"warning"} only and
+  returning the not updated factor, \code{"error"}  or  return simply \code{"NULL"}.}
+\item{\code{cholincreasefactor=c(1.25,1.25)}:}{If not enought memory
+  could be allocated, these are the steps to increase it.}
+\item{\code{nnznearestdistnnz=c(400^2,400)}:}{Memory allocation
+  parameters for \code{nearest.dist}.}
+\item{\code{nearestdistincreasefactor=1.25}:}{If not enought memory
+  could be allocated, this is the step to increase it. }
 }
-%\references{}
+}
 \seealso{\code{\link{print}},
   \code{\link{display}},  \code{\link{image}}, \code{\link{upper.tri}},
-%  \code{\link{chol}}, \code{\link{nearest.dist}},
-  etc.
+  \code{\link{chol}}, \code{\link{nearest.dist}}, etc.
 }
 \author{\code{spam.options} is essentially identical to \code{sm.options}.}
 \examples{
-op <- spam.options(); utils::str(op)
+op <- spam.options()
+
+# two ways of representing the options nicely.
+utils::str(op)
+noquote(unlist(format(op)) )
 
 
 smat <- diag.spam( 1:8)
@@ -117,7 +105,15 @@ spam.options( printsize=49)
 smat
 
 
-
+# Reset to default values:
+spam.options( eps=.Machine$double.eps, drop=FALSE,             
+   printsize=100,  imagesize=10000,   cex=1200, 
+   trivalues=FALSE,   safemode=c(TRUE,TRUE,TRUE), 
+   dopivoting=TRUE,       cholsymmetrycheck=TRUE,  
+   cholpivotcheck=TRUE, cholupdatesingular="warning",
+   cholincreasefactor=c(1.25,1.25),
+   nearestdistincreasefactor=1.25,
+   nearestdistnnz=c(400^2,400)     )
 
 }
 \keyword{IO}

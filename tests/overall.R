@@ -1,10 +1,6 @@
 options( echo=FALSE)
 library( spam)
 
-# This script is used to test and illustrate the functionality of 'spam'.
-# We structure the script into two sections, one with a simple toy
-#  example, a second with large matrices.
-
 
 test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE,
 tag=NULL){
@@ -13,6 +9,7 @@ tag=NULL){
      cat( "testing: ", tag, fill=TRUE)}
 
   denom<-   ifelse( relative, mean( abs(c(xtrue))),1.0)
+
   test.value <- sum( abs(c(xtest) - c( xtrue) ) ) /denom
   if(   test.value < tol ){
           cat("** PASSED test at tolerance ", tol, fill=TRUE)}
@@ -61,7 +58,6 @@ test.for.zero(range(ks),range(kf))
 test.for.zero(log(ks-2*min(ks)),log(kf-2*min(kf)))
 test.for.zero(cos(ks),cos(kf))
 test.for.zero(round(ks,2),round(kf,2))
-
 
 ########################################################################
 cat("Testing transpose\n")
@@ -202,7 +198,12 @@ rw <- c(3,1);cl <- 1:3;
 ss[rw,cl] <- 1:3;tt[rw,cl] <- 1:3
 test.for.zero(ss,tt)
 
-
+nn <- length(tt[-rw,-cl])
+test.for.zero(ss[-rw,-cl] <- 1:nn,tt[-rw,-cl] <- 1:nn)
+nn <- length(tt[-rw,cl])
+test.for.zero(ss[-rw,cl] <- 1:nn,tt[-rw,cl] <- 1:nn)
+nn <- length(tt[rw,-cl])
+test.for.zero(ss[rw,-cl] <- 1:nn,tt[rw,-cl] <- 1:nn)
 
 
 # subsetting:
@@ -215,13 +216,18 @@ test.for.zero(ss[1,3],tt[1,3])# ok
 test.for.zero(ss[3:1,],tt[3:1,])# ok
 
 
-rw <- c(1,3);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
+rw <- c(1,3);cl <- 1:3;
+test.for.zero(ss[rw,cl],tt[rw,cl])
+test.for.zero(ss[-rw,cl],tt[-rw,cl])
+test.for.zero(ss[-rw,-cl],tt[-rw,-cl])
 rw <- c(3,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
 rw <- c(3,1,2,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
 
 tmp <- cbind(sample(1:3,24,rep=T),sample(1:5,24,rep=T))
 test.for.zero(ss[tmp],tt[tmp])
 
+
+test.for.zero(diag(10)[1:2,9:10],diag.spam(10)[1:2,9:10],rel=F)
 
 # Matrix multiplication operations:
 test.for.zero(ss%*%ss2,tt%*%tt2)
@@ -241,16 +247,16 @@ test.for.zero(upper.tri(ss,F),upper.tri(tt,F)&tt!=0)
 
 
 if (F) {# only works for full matrices
-  test.for.zero(ss/tt,tt/tt)
-  test.for.zero(ss/ss,tt/tt)
+test.for.zero(ss/tt,tt/tt)
+test.for.zero(ss/ss,tt/tt)
 
-  kk <- tt/tt
-  kk[is.na(kk)] <- 0
-  test.for.zero(ss/tt,kk)
-  test.for.zero(ss/ss,kk)
+kk <- tt/tt
+kk[is.na(kk)] <- 0
+test.for.zero(ss/tt,kk)
+test.for.zero(ss/ss,kk)
 
-  test.for.zero(ss^tt,tt^tt)
-  test.for.zero(ss^ss,tt^tt)
+test.for.zero(ss^tt,tt^tt)
+test.for.zero(ss^ss,tt^tt)
 }
 
 # maybe not all of them make sense
@@ -337,59 +343,6 @@ test.for.zero(as.spam(tt), tt)
 test.for.zero(spam(0,1000,1000), matrix(0,1000,1000),rel=FALSE)
 test.for.zero(spam(1,12,12),matrix(1,12,12))
 
-
-# solving system
-cat("Testing 'solve' and derivatives:\n")
-b <- rnorm(n)
-
-test.for.zero(solve(ss4),solve(tt4))
-test.for.zero(solve(ss4,b),solve(tt4,b))
-
-
-
-css <- chol(ss4)
-ctt <- chol(tt4[ordering(css),ordering(css)])
-test.for.zero(as.spam(css), ctt)
-
-test.for.zero(t(as.spam(css))%*%as.spam(css), t(ctt)%*%ctt)
-test.for.zero(t(as.spam(css))%*%as.spam(css), tt4[ordering(css),ordering(css)])
-test.for.zero((t(as.spam(css))%*%as.spam(css))[ordering(css,inv=T),ordering(css,inv=T)], tt4)
-
-test.for.zero(backsolve(css,forwardsolve(css,b[ordering(css,inv=T)]))[ordering(css)],
-              backsolve(ctt,forwardsolve(t(ctt),b)))
-
-test.for.zero(backsolve(css,b[ordering(css,inv=T)])[ordering(css)],
-              backsolve(ctt,b))
-
-test.for.zero(forwardsolve(css,b[ordering(css,inv=T)])[ordering(css)],
-              forwardsolve(t(ctt),b))
-test.for.zero(forwardsolve(css,b)[ordering(css)],
-              forwardsolve(t(ctt),b[ordering(css)]))
-
-test.for.zero(forwardsolve(css,tt4[ordering(css,inv=T),])[ordering(css),],
-              forwardsolve(t(ctt),tt4))
-
-
-# determinants
-cat("Testing 'det' and derivatives:\n")
-test.for.zero(det(ss4),det(tt4))
-test.for.zero(det(ss4,log=T),det(tt4,log=T))
-test.for.zero(determinant(ss4)$mod,determinant(tt4)$mod)
-test.for.zero(determinant(ss4,log=F)$mod,determinant(tt4,log=F)$mod)
-
-test.for.zero(det(chol(ss4)),det(chol(tt4)))
-
-
-# determinants
-cat("Testing 'ordering' and derivatives:\n")
-tt5 <- matrix(c( 2,0,2,0,4,0,2,0,3),3)
-ss5 <- spam(  c( 2,0,2,0,4,0,2,0,3),3)
-test.for.zero(ordering(tt5),1:3)
-test.for.zero(ordering(ss5),1:3)
-test.for.zero(ordering(tt5,inv=T),3:1)
-test.for.zero(ordering(ss5,inv=T),3:1)
-test.for.zero(ordering(chol(ss5)),c(2,3,1))
-test.for.zero(ordering(chol(ss5),inv=T),c(3,1,2))
 
 
 # no NA, NaN, Inf handling

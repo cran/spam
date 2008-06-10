@@ -2,12 +2,14 @@
 \alias{solve.spam}
 \alias{backsolve-methods}
 \alias{backsolve,ANY-method}
+\alias{backsolve,spam-method}
 \alias{backsolve,matrix-method}
 \alias{backsolve}
 \alias{backsolve.spam}
 \alias{backsolve.default}
 \alias{forwardsolve-methods}
 \alias{forwardsolve,ANY-method}
+\alias{forwardsolve,spam-method}
 \alias{forwardsolve,matrix-method}
 \alias{forwardsolve}
 \alias{forwardsolve.spam}
@@ -27,12 +29,12 @@ of a matrix if the right-hand-side is missing.
 \usage{
 solve(a, b, ...)
 
-backsolve(r, x, ...)%, k, upper.tri, transpose)
-forwardsolve(l, x, ...)%, k = NULL, upper.tri = NULL, transpose = NULL)
+backsolve(r, x, ...)%, k, upper.tri, transpose
+forwardsolve(l, x, ...)%, k = NULL, upper.tri = NULL, transpose = NULL
 }
 \arguments{
 \item{a}{symmetric positive definite matrix of class \code{spam}.}
-\item{l,r}{object of class \code{spam.chol.}\emph{method} returned by the function
+\item{l,r}{object of class \code{spam} or \code{spam.chol.}\emph{method} returned by the function
 \code{chol}.}
 \item{x,b}{vector or regular matrix of right-hand-side(s) of a system of linear equations.}
 \item{\dots}{further arguments passed to or from other methods, see Details below.}
@@ -61,12 +63,9 @@ decomposition, see \code{\link{chol}}.
 Recall that the Cholesky factors are from ordered matrices. 
 
 }
-\references{See also references in \code{\link{chol}}. 
- 
-Ng, E. G. and B. W. Peyton (1993), "Block sparse Cholesky algorithms
-on advanced uniprocessor computers", \emph{SIAM J. Sci. Comput.}, \bold{14},
-pp. 1034-1056.
-
+\note{There is intentionally no \S3 distinction between the classes
+  \code{spam} and \code{spam.chol.}\emph{method}.}
+\references{See references in \code{\link{chol}}. 
 }
 \seealso{\code{\link{det}}, \code{\link{chol}} and \code{\link{ordering}}.
 }

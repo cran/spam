@@ -13,8 +13,8 @@ c WORK ARRAY:
 c     colmn -- logical vector of length ncol
 
       implicit none
-      integer nrow,ncol,nnz,nz,inz,
-     & ja(nnz),ia(nrow+1),jao(nz),iao(nrow+1)
+      integer  nrow,ncol,nnz,nz,inz,
+     &       ja(nnz),ia(nrow+1),jao(nz),iao(nrow+1)
       logical colmn(ncol)
       integer i,j,k
       inz = 0
@@ -729,13 +729,22 @@ c     local variables
       kc = 1
       ic(1) = kc 
 c
+c     looping over the rows:
       do 6 i=1, nrow
          ka = ia(i)
          kb = ib(i)
          kamax = ia(i+1)-1
          kbmax = ib(i+1)-1 
  5       continue 
+
+c     If we have one or more entries then ka <= kamax
+c     If we do not have any entries in both A and B
+c     we will not enter the if clause. In which case 
+c     we repeatedly copy ic(i+1) <- ic(i).
          if (ka .le. kamax .or. kb .le. kbmax) then 
+
+c     j1 and j2 are left hand pointers of the first entry
+c     of A and B. If no entry, they are set to ncol+1
             if (ka .le. kamax) then
                j1 = ja(ka)
             else
@@ -747,8 +756,10 @@ c
                j2 = ncol+1
             endif
 c     
-c     three cases 
-c            write(*,*) 'i:',i,j1,j2
+c     Three cases:
+c       j1=j2: copy element of b in c, incr. all three pointers
+c       j1<j2: copy element of a in c, incr. a and c pointers
+c       j1>j2: copy element of b in c, incr. b and c pointers
             if (j1 .eq. j2) then 
                c(kc) = b(kb)
                jc(kc) = j1
@@ -769,7 +780,8 @@ c            write(*,*) 'i:',i,j1,j2
 
 C     the next four lines should not be required...
             if (kc .gt. nzmax+1) then
-               write (*,*) "exceeding array capacities...",i,nzmax
+               write (*,*) "exceeding array capacities...",i,nzmax,
+     & ka,kb,kc,j1,j2,kamax,kbmax
                return
             endif
             goto 5
@@ -834,14 +846,7 @@ c-----------------------------------------------------------------------
       integer nrow,ncol,ndns,ia(*),ja(*)
       double precision dns(ndns,*),a(*),eps
 c-----------------------------------------------------------------------
-c Dense         to    Compressed Row Sparse
-c-----------------------------------------------------------------------
-c
-c converts a densely stored matrix into a row orientied
-c compactly sparse matrix. ( reverse of csrdns )
-c Note: this routine does not check whether an element
-c is small. It considers that a(i,j) is zero if it is exactly
-c equal to zero: see test below.
+c Converts a densely stored matrix into a CSR  sparse matrix.
 c-----------------------------------------------------------------------
 c on entry:
 c---------
@@ -1108,6 +1113,7 @@ c-----------------------------------------------------------------------
       end
 
 
+c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
 c-
 c- Modified by P. T. Ng from sparsekit
@@ -1612,3 +1618,265 @@ c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
  
+c-----------------------------------------------------------------------
+      subroutine triplet2csr(nrow,ncol,nnz,a,ir,jc,ao,jao,iao)
+
+      implicit none
+      double precision a(*),ao(*)
+      integer nrow,ncol,nnz,ir(*),jc(*),jao(*),iao(*)
+
+      integer           k, k0, i, j, tmp 
+
+c-----------------------------------------------------------------------
+c  Triplet representation     to   Compressed Sparse Row
+c  Similar to coocsr from sparsekit
+c-----------------------------------------------------------------------
+c converts a matrix that is stored in coordinate format
+c  a, ir, jc into a row general sparse ao, jao, iao format.
+c
+c on entry:
+c---------
+c nrow  = zero
+c nnz   = number of nonzero elements in matrix
+c a,
+c ir,
+c jc    = matrix in coordinate format. a(k), ir(k), jc(k) store the nnz
+c         nonzero elements of the matrix with a(k) = actual real value of
+c         the elements, ir(k) = its row number and jc(k) = its column
+c         number. The order of the elements is arbitrary.
+c
+c on return:
+c-----------
+c nrow  = dimension of the matrix
+c ao, jao, iao = matrix in general sparse matrix format with ao
+c       continung the real values, jao containing the column indices,
+c       and iao being the pointer to the beginning of the row,
+c       in arrays ao, jao.
+c
+c------------------------------------------------------------------------
+
+c     cycle over all entries and count the number of elements in each row
+c     Memorize the largest row entry
+      do  k=1, nnz
+         tmp=ir(k)
+         iao(tmp) = iao(tmp)+1
+         if (tmp .gt. nrow)        nrow = tmp
+         tmp=jc(k)
+         if (tmp .gt. ncol)         ncol = tmp
+      enddo
+c starting position of each row..
+      k = 1
+      do j=1,nrow+1
+         k0 = iao(j)
+         iao(j) = k
+         k = k+k0
+      enddo
+c go through the structure  once more. Fill in output matrix.
+      do  k=1, nnz
+         i = ir(k)
+         tmp = iao(i)
+         ao(tmp) = a(k)  
+         jao(tmp) = jc(k)
+         iao(i) = tmp+1
+      enddo
+c shift back iao
+      do j=nrow,1,-1
+         iao(j+1) = iao(j)
+      enddo 
+      iao(1) = 1
+      return
+c-----------------------------------------------------------------------
+      end
+c-----------------------------------------------------------------------
+
+
+      subroutine reducedim(a,ja,ia,eps,bnrow,bncol,k,b,jb,ib)
+
+      implicit none
+      double precision a(*),b(*),eps
+      integer bnrow, bncol,k
+      integer ia(*),ja(*),ib(*),jb(*)
+
+      integer   i, j, jj
+
+c-----------------------------------------------------------------------
+c  Reduces the dimension of A to (,bnrow,bncol) by copying it to B.
+c  (Hence not in place - for R purposes).
+c  Only elements smaller than eps are copied.
+c-----------------------------------------------------------------------
+c on entry:
+c---------
+c
+c------------------------------------------------------------------------
+
+      k=1
+      do i=1,bnrow
+         ib(i)=k
+         do j=ia(i), ia(i+1)-1
+            jj=ja(j)
+            if (jj .le.bncol) then
+               if (abs( a(jj)) .gt. eps) then
+                  b(k)=a(jj)
+                  jb(k)=jj
+                  k=k+1
+               endif
+            endif
+         enddo
+      enddo
+      ib(bnrow+1)=k
+      return
+c-----------------------------------------------------------------------
+      end
+
+c-----------------------------------------------------------------------
+      subroutine reducediminplace(eps,nrow,ncol,k,a,ja,ia)
+
+      implicit none
+      double precision a(*),eps
+      integer nrow, ncol,k
+      integer ia(*),ja(*)
+
+      integer   i, j, jj
+
+c-----------------------------------------------------------------------
+c  Reduces the dimension of A to (nrow,ncol) _in place_
+c  Only elements smaller than eps are copied.
+c-----------------------------------------------------------------------
+c  Reinhard Furrer, June 2008
+c------------------------------------------------------------------------
+
+      k=1
+      do i=1,nrow
+         ia(i)=k
+         do j=ia(i), ia(i+1)-1
+            jj=ja(j)
+            if (jj .le. ncol) then
+               if (abs( a(jj)) .gt. eps) then
+                  a(k)=a(jj)
+                  ja(k)=jj
+                  k=k+1
+               endif
+            endif
+         enddo
+      enddo
+      ia(nrow+1)=k
+      return
+c-----------------------------------------------------------------------
+      end
+c-----------------------------------------------------------------------
+
+
+
+c----------------------------------------------------------------------c
+c      T R I A N G U L A R    S Y S T E M    S O L U T I O N S         c
+c                                                                      c
+c      spamforward and spamback                                        c
+c----------------------------------------------------------------------c
+
+      subroutine spamforward (n,p,x,b,l,jl,il)
+      implicit none
+
+      integer n, p, jl(*),il(n+1)
+      double precision  x(n,p), b(n,p), l(*)
+
+      integer i, k, j
+      double precision  t
+
+c-----------------------------------------------------------------------
+c   solves    L x = y ; L = lower triang. /  CSR format
+c                        sequential forward elimination 
+c-----------------------------------------------------------------------
+c
+c On entry:
+c----------
+c n,p      = integer. dimensions of problem.
+c b      = real array containg the right side.
+c
+c l, jl, il,    = Lower triangular matrix stored in CSR format.
+c
+c On return:
+c-----------
+c       x  = The solution of  L x  = b.
+c--------------------------------------------------------------------
+c     Reinhard Furrer June 2008
+      
+      k = 1
+c     if first diagonal element is zero, break
+      if (l(1) .eq. 0.0 ) goto 5
+
+c     cycle over all columns of b
+      do i=1,p 
+         
+c     first row has one element then cycle over all rows
+         x(1,i) = b(1,i) / l(1)
+         do 3 k = 2, n
+            t = b(k,i)
+            do 1 j = il(k), il(k+1)-1
+               if (jl(j) .lt. k) then
+                  t = t-l(j)*x(jl(j),i)
+               else
+                  if (jl(j) .eq. k) then
+                     if (l(j) .eq. 0.0) goto 5 
+c     diagonal element is not zero, hence we divide and leave the loop
+                     x(k,i) = t / l(j)
+                     goto 3
+                  endif 
+               endif
+ 1          continue
+ 3       continue      
+      enddo
+
+      return
+ 5    n = -k
+      return
+      end
+c-----------------------------------------------------------------------
+      subroutine spamback (n,p,x,b,r,jr,ir)
+      implicit none
+
+      integer n, p, jr(*),ir(n+1)
+      double precision  x(n,p), b(n,p), r(*)
+
+      integer l, k, j
+      double precision  t
+c-----------------------------------------------------------------------
+c             Solves   R x = b    R = upper triangular.
+c-----------------------------------------------------------------------
+c
+c On entry:
+c----------
+c n,p      = integers. dimension of problem.
+c y      = real array containg the right side.
+c
+c r, jr, ir,    = Upper triangular matrix stored in CSR format.
+c
+c On return:
+c-----------
+c       x = The solution of  R x = b .
+c--------------------------------------------------------------------
+c     Reinhard Furrer June 2008
+      k = n
+      if (r(ir(k+1)-1) .eq. 0.0 ) goto 5
+      do l=1,p
+         x(n,l) = b(n,l) / r(ir(k+1)-1)
+         do 3 k = n-1,1,-1
+            t = b(k,l)
+            do 1  j = ir(k+1)-1,ir(k),-1
+               if (jr(j) .gt. k) then
+                  t = t - r(j)*x(jr(j),l)
+               else
+                  if (jr(j) .eq. k) then
+                     if (r(j) .eq. 0.0) goto 5 
+c     diagonal element is not zero, hence we divide and leave the loop
+                     x(k,l) = t / r(j)
+                     goto 3
+                  endif 
+               endif
+ 1          continue
+ 3       continue      
+      enddo
+      return
+ 5    n = -k
+      return
+      end
+c-----------------------------------------------------------------------

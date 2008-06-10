@@ -28,6 +28,13 @@ compare(ffmat <- fmat1 %*% fmat2,
 compare( solve(ffmat),  solve(ssmat), "solving")
 
 
+compare(rbind(fmat1,fmat1),rbind(smat1,smat1))
+compare(cbind(fmat1,fmat1),cbind(smat1,smat1))
+
+
+
+
+
 # now create a sparse matrix.
 fmat1[fmat1<3] <- 0
 smat1 <- as.spam(fmat1)
@@ -48,3 +55,11 @@ compare(ffmat <- 1:xn %d+% ffmat,
 compare( solve(ffmat),  solve(ssmat), "solving")
 
 summary(ssmat)
+
+
+# compare a few cbind/rbinds
+
+compare(rbind(fmat1,fmat1),rbind(smat1,smat1))
+compare(cbind(fmat1,fmat1),cbind(smat1,smat1))
+
+

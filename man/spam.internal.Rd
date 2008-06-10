@@ -5,14 +5,10 @@
   Spam internal and auxiliary functions
 }
 \description{
-  The functions listed below are auxiliary functions and are not
+  The functions listed below are auxiliary functions but are 
   exported by the NAMESPACE. The user should not
   require to call these directly. 
 }
-%\usage{
-%auxiliarycholNgPeyton(x, nrow, memory)
-%setdiagspam(x, value)
-%}
 \details{The functions are listed here for a better understanding of the
   code (to fulfill the tutorial style paradigm).\cr
 
@@ -20,7 +16,10 @@
   is a proper \code{spam} object.
 
   \code{dcheck(x)}, \code{icheck(x)} testing and forcing of \code{x}
-  to doubles and
-  integers. These functions are used when calling Fortran routines.
-  }
+  to doubles and integers. These functions are used when calling Fortran
+  routines.
+}
+\note{The integers \code{int0}, \code{int1} and \code{int2} (0-2) are not
+  exported. 
+}
 \keyword{internal}

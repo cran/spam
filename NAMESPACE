@@ -41,22 +41,29 @@ export("dcheck",
 
        "todo",
        "spam.history",
-#       ".Spam",
-       "is.spam",
        "spam.options",
        "spam.getOption",
+       "is.spam",
+
+       "spam.version",
+       "spam.Version",
 	
-	"validspamobject",
+       "validspamobject",
+
+       "nearest.dist",
 
        "as.spam.matrix",
        "as.spam.numeric",
        "as.spam.spam",
        "as.spam.chol.NgPeyton",
        "as.matrix.spam",
+       "spam.spam",
+       "spam.list",
        "spam.numeric",
        
        "diag.of.spam",
        "diag.spam",
+       "diag<-.spam",
        "diag.spam<-",
        "rbind.spam",
        "cbind.spam",
@@ -64,13 +71,21 @@ export("dcheck",
        "lower.tri.spam",
        "t.spam",
 
+       "dim<-.spam",
+
+       "kronecker.default",
+       "kronecker.spam",
+       
        "determinant.spam",
        "determinant.spam.chol.NgPeyton",
        "chol.spam",
        "solve.spam",
        "forwardsolve.spam",
        "backsolve.spam",
+       "update.spam.chol.NgPeyton",
        
+       "norm.spam",
+
        "plot.spam",
        "display.spam",
        "image.spam",
@@ -78,7 +93,18 @@ export("dcheck",
        "print.spam",
        "summary.spam",
        "print.spam.chol.NgPeyton",
-       "summary.spam.chol.NgPeyton"
+       "summary.spam.chol.NgPeyton",
+
+       "triplet",
+       "as.spam.matrix.csr",
+       "as.matrix.csr.spam",
+       "as.dgRMatrix.spam",
+       "as.dgCMatrix.spam",
+       "as.spam.dgRMatrix",
+       "as.spam.dgCMatrix",
+
+       "read.MM",
+       "read.HB"
        )
 
 
@@ -117,6 +143,7 @@ exportMethods(
               "diag<-",
               "upper.tri",
               "lower.tri",
+              
               "norm",
 
               "chol",
@@ -124,7 +151,8 @@ exportMethods(
               "forwardsolve",
               "backsolve",
               "solve",
-              
+
+              "kronecker",
               
               "[",
               "[<-",

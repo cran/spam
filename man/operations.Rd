@@ -54,19 +54,17 @@
 \alias{==,spam-method}
 \alias{!=,spam-method}
 \alias{norm} 
+\alias{norm.spam} 
 \alias{norm,ANY-method} 
-\alias{norm,spam-method} 
-\alias{norm,numeric-method} 
+\alias{norm,spam,character-method} 
+\alias{norm,spam,missing-method} 
+%\alias{norm,numeric-method} 
 \alias{t,ANY-method} 
 \alias{t,spam-method} 
-\alias{t,matrix.csc-method} 
-\alias{t,matrix.coo-method} 
 \alias{ncol,spam-method} 
 \alias{nrow,spam-method} 
 \alias{dim,ANY-method} 
 \alias{dim,spam-method} 
-\alias{rbind.spam} 
-\alias{cbind.spam} 
 \alias{[.spam}
 \alias{[<-.spam}
 \alias{[<-,spam,missing,missing-method}
@@ -112,11 +110,11 @@ Further functions with identical behavior are \code{dim} and thus \code{nrow}, \
 
 The function \code{norm} calculates the (matrix-)norm of the argument.
 The argument \code{type} specifies the \code{l1} norm, \code{sup} or max
-norm, or by default or in case of no match, the Frobenius or
-Hilbert-Schmidt norm. For example, \code{norm} is used to check for
-symmetry in the function \code{chol} by 
-computing the norm of the difference between
-the matrix and its transpose
+norm (default), or the Frobenius or Hilbert-Schmidt
+(\code{frobenius/hs}) norm. Partial matching can be used. For example,
+\code{norm} is used to check for symmetry in the function \code{chol} by
+computing the norm of the difference between the matrix and its
+transpose
 
 The operator \code{\%d*\%} efficiently multiplies a diagonal matrix (in
 vector form) and a sparse matrix and is used for compatibility with the
@@ -138,5 +136,22 @@ form) and a sparse matrix, similarly to the operator \code{\%d+\%}.
 \code{\link{spam}} for coercion and other class relations involving the
 sparse matrix classes.
 }
-%\examples{}
+\examples{
+# create a weight matrix and scale it:
+\dontrun{
+wij <- distmat
+# with distmat from a nearest.dist(..., diag=FALSE, upper=TRUE) call
+
+n <- dim(wij)[1]
+
+wij@entries <- kernel( wij@entries, h) # for some function kernel
+wij <- wij + t(wij) + diag.spam(n)     # adjust from diag=FALSE, upper=TRUE
+
+sumwij <- wij \%*\% rep(1,n)
+    # row scaling:
+    #   wij@entries <- wij@entries/sumwij[ wij@colindices]
+    # col scaling:
+wij@entries <- wij@entries/sumwij[ rep(1:n, diff(wij@rowpointers))]
+}
+}
 \keyword{algebra}

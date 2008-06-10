@@ -1,5 +1,7 @@
 \name{ordering}
+\docType{methods}
 \alias{ordering}
+\alias{ordering-methods}
 \alias{ordering,spam.chol.NgPeyton-method}
 \alias{ordering,spam-method}
 \alias{ordering,matrix-method}
@@ -28,12 +30,6 @@ ordering( x, inv=FALSE)
   \cr
   
   See the examples, they speak more than 10 lines.
-}
-\references{ 
-Ng, E. G. and B. W. Peyton (1993), "Block sparse Cholesky algorithms
-on advanced uniprocessor computers", \emph{SIAM J. Sci. Comput.}, \bold{14},
-pp. 1034-1056.
-
 }
 \seealso{\code{\link{chol}}, \code{\link{solve}}.
 }

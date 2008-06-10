@@ -17,7 +17,7 @@
 }
 \usage{
 #     det(x, ...)
-     determinant(x, logarithm = TRUE, ...)
+determinant(x, logarithm = TRUE, ...)
 }
 \arguments{
   \item{x}{sparse matrix of class \code{spam} or a Cholesky factor  of
@@ -50,9 +50,9 @@
   The determinant of a Cholesky factor is also defined.
 }
 \references{
-Ng, E. G. and B. W. Peyton (1993), "Block sparse Cholesky algorithms
-on advanced uniprocessor computers", \emph{SIAM J. Sci. Comput.}, \bold{14},
-pp. 1034-1056.
+Ng, E. G. and B. W. Peyton (1993) Block sparse Cholesky algorithms
+on advanced uniprocessor computers, \emph{SIAM J. Sci. Comput.}, \bold{14},
+1034--1056.
 }
 \seealso{\code{\link{chol}}
 }

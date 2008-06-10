@@ -1,16 +1,14 @@
-
-
 todo <- function() help( "spam.todo")
 spam.history <- function() help("spam.history")
 
 
-dcheck <- function(x) if (.Spam$safemode) as.double(x) else x
-icheck <- function(x) if (.Spam$safemode) as.integer(x) else x
+dcheck <- function(x) if (.Spam$safemode[1]) as.double(x) else x
+icheck <- function(x) if (.Spam$safemode[1]) as.integer(x) else x
 
 validspamobject <- function(object) {
 
-  if (.Spam$safemode){ 
-    if(!(length(object@dimension) == 2) ){
+  if (.Spam$safemode[2]){ 
+    if(!identical(length(object@dimension), int2) ){
       print(object@dimension)
       return("invalid dimension attribute")
     }
@@ -22,7 +20,7 @@ validspamobject <- function(object) {
       return("matrix entries need to be of double mode")
     if (any(!is.finite(object@entries)))
       return("'NA/NaN/Inf' not allowed")
-    if(!(length(object@entries) ==length(object@colindices)))
+    if(!identical(length(object@entries),length(object@colindices)))
       return("entries and column indices don't have equal lengths")
     if(any(object@colindices < 1) || any(object@colindices > ncol)) 
       return("column indices exceeds dimension bounds")
@@ -32,7 +30,7 @@ validspamobject <- function(object) {
       return("row pointers are not monotone increasing")
     diffcolindices <- diff(object@colindices)     # positive values within each row
     if (all(diff(object@rowpointers)>1) && length(diffcolindices)>0)   # only if we have multiple values
-      if (nrow==1) {
+      if (identical( nrow, int1)) {
         if   ( any(diffcolindices<1))
           return("column indices are not ordered")
       } else {
@@ -64,14 +62,20 @@ setMethod("initialize", "spam",
                    entries    = 0,         # by default a 1x1 zero matrix.
                    colindices = as.integer( rep(1, length( entries ))),  # or a nx1 matrix
                    rowpointers= as.integer( 1:(length( entries )+1)),   # with n=length(ra)
-                   dimension  = as.integer( c(length( rowpointers )-1,max( colindices ))))
+                   dimension  = as.integer( c(length( rowpointers )-1,max( 1,colindices ))))
           {
-            # a few specific "degenerate" cases: 
-            if (length(entries)==0) entries <- 0         # e.g., induced by rep(1,0)
-            if (rowpointers[ length(rowpointers)] ==1) {  # e.g., zero matrix
-              rowpointers[-1] <- as.integer(2)
-              colindices <- as.integer(1)
+            # a specific "degenerate" case:
+            if (identical(length(entries),int0)) {  # e.g., induced by rep(1,0)
+              warning("While initializing, empty 'spam' object coerced to zero 'spam' matrix",call.=FALSE)
+              entries <- 0
+              colindices <- int1
+              rowpointers <- c(int1,int2)
+              dimension <- c(int1,int1)
             }
+#            if (rowpointers[ length(rowpointers)] ==1) {  # e.g., zero matrix
+#              rowpointers[-1] <- as.integer(2)
+#              colindices <- as.integer(1)
+#            }
             .Object@entries     <- entries
             .Object@colindices  <- colindices
             .Object@rowpointers <- rowpointers
@@ -83,14 +87,14 @@ setMethod("initialize", "spam",
 
 print.spam <- function(x,...) {
   if (prod(x@dimension) < .Spam$printsize) {
-    print(as.matrix(x),...)
+    print(as.matrix.spam(x),...)
   } else {
     if ( (length(x@entries)==1)  & (x@entries[1]==0)) {
-      cat(paste('Zero matrix of dimension ',x@dimension[1],'x',
-                x@dimension[2],'.\n',sep=''))
+      cat('Zero matrix of dimension ',x@dimension[1],'x',
+                x@dimension[2],'.\n',sep='', fill=TRUE)
     }else {
-      cat(paste('Matrix of dimension ',x@dimension[1],'x',
-                x@dimension[2],' with nonzero elements:\n',sep=''))
+      cat('Matrix of dimension ',x@dimension[1],'x',
+                x@dimension[2],' with (row-wise) nonzero elements:\n',sep='', fill=TRUE)
       print(x@entries,...)
     }
   }
@@ -101,24 +105,75 @@ print.spam <- function(x,...) {
 summary.spam <- function(object,...) {
             nz <- length(object@entries)
             dens <- nz/prod(object@dimension)*100
-            cat("Matrix object of class 'spam' of ")
-            cat(paste('dimension ',object@dimension[1],'x',object@dimension[2],'.\n',sep=''))
-            cat(paste('  Density of the matrix is ',signif(dens,3),'% (nz=',nz,').\n',sep=''))
+            cat("Matrix object of class 'spam' of dimension ",object@dimension[1],'x',
+                object@dimension[2],',\n',sep='')
+            cat('    with ',nz,' (row-wise) nonzero elements.\n',sep='')
+            cat('    Density of the matrix is ',signif(dens,3),'%.\n',sep='')
             cat("Class 'spam'\n")
-            invisible(NULL)
+            invisible(list(nnz=nz, density=dens))
           }
 
+"dim<-.spam" <- function(x,value) {
+  if ( (min(value)<1 ) | any(!is.finite(value)))
+    stop("dims should be postive integers.")
+  if (!identical( length(value), int2)) stop("dims should be of length 2.")
+  dimx <- x@dimension
+  last <- value[1]+1
+
+  # In three steps:
+  #  1) Address col truncation
+            # to safe time, we also take into account if we have fewer or equal rows
+  #  2) Augment rows
+  #  3) if fewer rows and more columns, truncate
+  # In any case, dimensions are fixed at the end.
+  
+  # If fewer cols required, we run reducediminplace
+  if (dimx[2]>value[2]){
+#     subroutine reducediminplace(eps,nrow,ncol,k,a,ja,ia)     
+    z <- .Fortran("reducediminplace",
+                  eps=.Spam$eps,
+                  as.integer(min(value[1],dimx[1])),as.integer(value[2]),
+                  nz=as.integer(1),
+                  entries=dcheck(x@entries),
+                  colindices=x@colindices,
+                  rowpointers=x@rowpointers,
+                  NAOK = !.Spam$safemode[3], DUP=!FALSE, PACKAGE = "spam")
+    if (identical(z$nz,int1) )
+      return(new("spam",rowpointers=c(int1,rep.int(int2,as.integer(value[1]))), dimension=as.integer(value)))
+
+    nz <- z$nz-1
+    slot(x,"entries",check=FALSE) <- z$entries[1:nz]
+    slot(x,"colindices",check=FALSE) <- z$colindices[1:nz]
+    slot(x,"rowpointers",check=FALSE) <- z$rowpointers[1:min(last,dimx[1]+1)]
+  }
+  if  (dimx[1]<value[1]){
+    # augment rows
+    slot(x,"rowpointers",check=FALSE) <- c(x@rowpointers,rep.int(
+                           x@rowpointers[length(x@rowpointers)],value[1]-dimx[1]))
+  }
+  # special case: fewer rows and more columns, truncate
+  if ((dimx[1]>value[1])&(dimx[2]<value[2])) {
+    lastelement <- (x@rowpointers[last]-1)
+    slot(x,"entries",check=FALSE) <- x@entries[1:lastelement]
+    slot(x,"colindices",check=FALSE) <- x@colindices[1:lastelement]
+    slot(x,"rowpointers",check=FALSE) <- x@rowpointers[1:last]
+  }
+        
+  slot(x,"dimension",check=FALSE) <- as.integer(value)                  
+  return(x)
+
+}
 
 setMethod("show","spam",  function(object) {
   if (prod(object@dimension) < .Spam$printsize) {
-    print(as.matrix(object))
+    print(as.matrix.spam(object))
   } else {
-    if ( (length(object@entries)==1)  & (object@entries[1]==0)) {
-      cat(paste('Zero matrix of dimension ',object@dimension[1],'x',
-                object@dimension[2],'.\n',sep=''))
+    if ( identical(length(object@entries),int1)  & identical(object@entries[1],int0)) {
+      cat('Zero matrix of dimension ',object@dimension[1],'x',
+                object@dimension[2],'.\n',sep='')
     }else {
-      cat(paste('Matrix of dimension ',object@dimension[1],'x',
-                object@dimension[2],' with nonzero elements:\n',sep=''))
+      cat('Matrix of dimension ',object@dimension[1],'x',
+                object@dimension[2],' with (row-wise) nonzero elements:\n',sep='')
       print(object@entries)
     }
   }
@@ -130,27 +185,29 @@ setMethod("print","spam", print.spam)
 setMethod("summary","spam",summary.spam)
 setMethod("length","spam",function(x) x@rowpointers[x@dimension[1]+1]-1 ) # equivalent to length(x@entries) 
 setMethod("dim",   "spam",function(x) x@dimension )
-#setMethod("dim",   "spam.chol.NgPeyton",function(x) rep.int(x@nrow,2) )
-#setMethod("length",   "spam.chol.NgPeyton",function(x) x@nnzl)
-#setMethod("length<-","spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam' object") )
-#setMethod("dim<-",   "spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam' object") )
 
 setMethod("length<-","spam",function(x,value) stop("operation not allowed on 'spam' object") )
-setMethod("dim<-",   "spam",function(x,value) stop("operation not allowed on 'spam' object") )
+setMethod("dim<-",   "spam", get("dim<-.spam"))
 
 
 setMethod("c","spam", function(x,...,recursive=TRUE){
+  dimx <- x@dimension
+  cx <- .Fortran("spamcsrdns",
+                 nrow=dimx[1],
+                 entries=dcheck(x@entries),
+                 colindices=x@colindices,
+                 rowpointers=x@rowpointers,
+                 res=vector("double",prod(dimx)),  
+                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res
   if (length( list(...)) < 1)
-    c(as.matrix(x))
+    return( cx)
   else
-    c(as.matrix(x),c(...,recursive),recursive)
+    c( cx,c(...,recursive),recursive)
 })
 
 ########################################################################
 # diag and derivatives
-"diag.spam" <-
-function(x=1, nrow, ncol)
-{
+"diag.spam" <- function(x=1, nrow, ncol)  {
   if (is.spam(x)) return( diag.of.spam( x, nrow, ncol))
 
   if (is.array(x) && length(dim(x)) != 1)
@@ -182,9 +239,7 @@ function(x=1, nrow, ncol)
 
 
 
-"diag.spam<-" <-
-function(x,value)
-{
+"diag<-.spam" <-  function(x,value) {
   nrow <- x@dimension[1]
   minrc <- min( x@dimension)
   if (length(value)==1)
@@ -200,7 +255,7 @@ function(x,value)
                 diag = as.double(value),
                 iw = vector("integer",nrow),    # just to be sure
                 info = vector("integer",nrow+1),
-                NAOK = !.Spam$safemode,
+                NAOK = !.Spam$safemode[3],
                 PACKAGE = "spam")
   nz <- z$ia[nrow+1]-1
   newx <- new("spam")
@@ -211,9 +266,9 @@ function(x,value)
   return(newx)
 }
 
-"diag.of.spam" <-
-function(x, nrow, ncol)
-{
+"diag.spam<-" <- get("diag<-.spam")
+
+"diag.of.spam" <- function(x, nrow, ncol)   {
   len <- min(x@dimension)
   return(.Fortran("getdiag",
                 a = dcheck(x@entries),
@@ -221,14 +276,14 @@ function(x, nrow, ncol)
                 rowpointers = x@rowpointers,
                 len = len,
                 diag = vector("double",len),
-                NAOK=!.Spam$safemode,
+                NAOK=!.Spam$safemode[3],
                 DUP=FALSE,
                 PACKAGE = "spam"
                 )$diag)
 }
 
 setMethod("diag","spam",diag.of.spam)
-setMethod("diag<-","spam",get("diag.spam<-"))
+setMethod("diag<-","spam",get("diag<-.spam"))
 
 ########################################################################
 
@@ -240,7 +295,7 @@ setMethod("diag<-","spam",get("diag.spam<-"))
                 a=dcheck(x@entries),ja=x@colindices,ia=x@rowpointers,
                 entries=vector("double",nz),colindices=vector("integer",nz),
                 rowpointers=vector("integer",dimx[2]+1),
-                NAOK=!.Spam$safemode,
+                NAOK=!.Spam$safemode[3],
                 DUP=FALSE,
                 PACKAGE = "spam")
   t.x <- new("spam")
@@ -260,10 +315,9 @@ setMethod("t","spam",t.spam)
 
 "spam" <- function(x, nrow = 1, ncol = 1, eps = .Spam$eps) stop("argument 'x' should be of mode 'numeric' (or 'spam')")
 
-"as.spam.spam" <-
-function(x, eps = .Spam$eps)
-{
-  if (eps<0) stop("'eps' cannot be negative",call.=FALSE)
+"as.spam.spam" <- function(x, eps = .Spam$eps)  {
+  if (eps<.Machine$double.eps)
+    stop("'eps' should not be smaller than machine precision",call.=FALSE)
   dimx <- x@dimension
   z <- .Fortran("cleanspam",
                 nrow=dimx[1],
@@ -271,15 +325,12 @@ function(x, eps = .Spam$eps)
                 colindices=x@colindices,
                 rowpointers=x@rowpointers,
                 eps=as.double(eps),
-                NAOK=!.Spam$safemode,
+                NAOK=!.Spam$safemode[3],
                 PACKAGE = "spam"
                 )
   nz <- z$rowpointers[dimx[1]+1]-1
-  if(nz==0){#trap zero matrix
-    z$entries <- 0
-    z$colindices <- as.integer(1)
-    z$rowpointers <- as.integer(c(1,rep(2,dimx[1])))
-  }  
+  if(nz==0) return(new("spam",rowpointers=c(int1,rep(int2,dimx[1])), dimension=dimx))
+
   newx <- new("spam")
   slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
   slot(newx,"colindices",check=FALSE) <- z$colindices[1:nz]
@@ -288,19 +339,11 @@ function(x, eps = .Spam$eps)
   return(newx)
 }
 
-
-"as.spam.matrix" <-
-function(x, eps = .Spam$eps)
-{  
+"as.spam.matrix" <- function(x, eps = .Spam$eps) {  
+  if (eps<.Machine$double.eps)
+    stop("'eps' should not be smaller than machine precision",call.=FALSE)
   dimx <- dim(x)
-  if (any(!is.finite(x))) {
-    warning("'NA/NaN/Inf' coerced to zero")
-    x[!is.finite(x)] <- 0
-  }
-  nz <- sum(abs(x)>eps)
-  if(nz==0) return(new("spam",entries=0,colindices=as.integer(1),
-       rowpointers=as.integer(c(1,rep(2,dimx[1]))), dimension=dimx))
-                                        # no nonzero values. We preserve the dimension of x
+  nz <- length(x)
   z <- .Fortran("spamdnscsr",
                 nrow=dimx[1],
                 ncol=dimx[2],
@@ -310,20 +353,26 @@ function(x, eps = .Spam$eps)
                 colindices=vector("integer",nz),
                 rowpointers=vector("integer",dimx[1]+1),
                 eps=as.double(eps),
+                NAOK=!.Spam$safemode[3],
                 DUP = FALSE,
                 PACKAGE = "spam"
                 )
+  nz <- z$rowpointers[dimx[1]+1]-1
+
+  if(nz==0) return(new("spam",rowpointers=c(int1,rep(int2,dimx[1])), dimension=dimx))
+                        # no nonzero values. We preserve the dimension of x
+    
   newx <- new("spam")
-  slot(newx,"entries",check=FALSE) <- z$entries
-  slot(newx,"colindices",check=FALSE) <- z$colindices
+  slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
+  slot(newx,"colindices",check=FALSE) <- z$colindices[1:nz]
   slot(newx,"rowpointers",check=FALSE) <- z$rowpointers
   slot(newx,"dimension",check=FALSE) <- dimx
   return(newx)
 }
 
-"as.spam.numeric" <-
-function(x, eps = .Spam$eps)
-{
+
+"as.spam.numeric" <- function(x, eps = .Spam$eps) {
+  if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
   if (any(!is.finite(x))) {
     warning("'NA/NaN/Inf' coerced to zero")
     x[!is.finite(x)] <- 0
@@ -331,25 +380,68 @@ function(x, eps = .Spam$eps)
   poselements <- abs(x)>eps
   nz <- sum(poselements)
   lx <- length(x)
-  if(nz==0) # empty matrix
-    return(new("spam",entries=0.0,colindices=as.integer(1),
-               rowpointers=as.integer(c(1,rep(2,lx))), dimension=as.integer(c(lx,1))))
-  
-  # standard vector.
-  #   "initialize" handles only zero entries
+  if (identical(nz,0)) # empty matrix
+    return(new("spam",rowpointers=c(int1,rep.int(int2,lx)), dimension=c(lx,int1)))
+    
   newx <- new("spam")
   slot(newx,"entries",check=FALSE) <- as.double(x[poselements])
-  slot(newx,"colindices",check=FALSE) <- rep(as.integer(1), nz)
+  slot(newx,"colindices",check=FALSE) <- rep.int(int1, nz)
   slot(newx,"rowpointers",check=FALSE) <- as.integer(cumsum(c(1, poselements)))
-  slot(newx,"dimension",check=FALSE) <- as.integer(c(lx,1)) 
+  slot(newx,"dimension",check=FALSE) <- c(lx,int1) 
+  return(newx)
+}
+
+"spam.list" <-  function(x, nrow = 1, ncol = 1, eps = .Spam$eps) {
+  if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
+  if (!is.list(x)) stop("Argument 'x' needs to be a list with two elements")
+  indnr <- pmatch("ind",names(x)) 
+  if (is.na(indnr)) stop("Argument 'x' needs an element called 'indices'")
+  elenr <- ifelse( identical( indnr,int1), int2, int1)
+  
+  nz <- length( x[[elenr]])
+  if (dim(x[[indnr]])[1] != nz) stop("Number of indices does not match with number of elements")
+  if (dim(x[[indnr]])[2] != 2)  stop("Indices should have two columns")
+
+  if (identical(nz, int0))
+    return(new("spam",rowpointers=c(int1,rep.int(int2,as.integer(nrow))), dimension=as.integer(c(nrow,ncol))))
+  
+  if (any(!is.finite(x[[elenr]]))) {
+    warning("'NA/NaN/Inf' coerced to zero")
+    x[[elenr]][!is.finite(x[[elenr]])] <- 0
+  }
+  
+  
+  z <- .Fortran("triplet2csr",
+                nrow=as.integer(ifelse(missing(nrow),0,nrow)),
+                ncol=vector("integer",1),
+                nz,
+                as.double(x[[elenr]]),
+                as.integer(x[[indnr]][,1]),
+                as.integer(x[[indnr]][,2]),
+                entries=vector("double",nz),
+                colindices=vector("integer",nz),
+                rowpointers=vector("integer",nz),
+                NAOK=TRUE, DUP = FALSE, PACKAGE = "spam"
+                )
+  newx <- new("spam")
+  slot(newx,"entries",check=FALSE) <- z$entries
+  slot(newx,"colindices",check=FALSE) <- z$colindices
+  slot(newx,"rowpointers",check=FALSE) <- z$rowpointers[1:(z$nrow+1)]
+  slot(newx,"dimension",check=FALSE) <- c(z$nrow,z$ncol)
+  
+  # If not missing nrow and ncol, we change the dimension, based
+  # on reducediminplace
+  if ( !missing(nrow)|!missing(ncol)) {
+    if (missing(nrow)) nrow <- z$nrow
+    if (missing(ncol)) ncol <- z$ncol
+    "dim<-.spam"(newx,c(nrow,ncol))
+  }
   return(newx)
 }
 
 
-
-"spam.numeric" <-
-function(x, nrow = 1, ncol = 1, eps = .Spam$eps)
-{
+"spam.numeric" <- function(x, nrow = 1, ncol = 1, eps = .Spam$eps)  {
+  if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
   if (any(!is.finite(x))) {
     warning("'NA/NaN/Inf' coerced to zero")
     x[!is.finite(x)] <- 0
@@ -359,68 +451,67 @@ function(x, nrow = 1, ncol = 1, eps = .Spam$eps)
     nrow <- ceiling( lenx/ncol)
   else if (missing(ncol))
     ncol <- ceiling( lenx/nrow)
-  if (lenx == prod(nrow,  ncol))
-    dimx <- as.integer( c(nrow, ncol))
-  else{
+  dimx <- as.integer( c(nrow, ncol))
+  if (lenx != prod(nrow,  ncol)) {
     if(lenx==1 && abs(x)<eps) {
-      dimx <- c(nrow,ncol)
-      return(new("spam",entries=0,colindices=as.integer(1),
-                 rowpointers=as.integer(c(1,rep(2,nrow))), 
-                 dimension=as.integer( c(nrow,ncol))))
+      return(new("spam",rowpointers=c(int1,rep.int(int2,as.integer(nrow))), 
+                 dimension=dimx))
     }
     else if(prod(nrow,ncol)%%lenx!=0)
       warning("ncol*nrow indivisable by length(x)")
       
     x <- rep(x, ceiling(prod(nrow,ncol)/lenx))
-    dimx <- as.integer( c(nrow, ncol))
+    lenx <- length( x)
   }
-  nz <- sum(abs(x)>eps)
-  if(nz==0)
-    return(new("spam",entries=0,colindices=as.integer(1),rowpointers=as.integer(c(1,rep(2,dimx[1]))), dimension=dimx))
-                                        # no nonzero values. We preserve the dimension of x
   z <- .Fortran("spamdnscsr",
                 nrow=dimx[1],
                 ncol=dimx[2],
                 x=as.double(x),
                 dimx[1],
-                entries=vector("double",nz),
-                colindices=vector("integer",nz),
+                entries=vector("double",lenx),
+                colindices=vector("integer",lenx),
                 rowpointers=vector("integer",dimx[1]+1),
                 eps=as.double(eps),
                 NAOK=TRUE,
                 DUP = FALSE,
                 PACKAGE = "spam"
                 )
+  nz <- z$rowpointers[dimx[1]+1]-1
+
+  if(nz==0) return(new("spam",rowpointers=c(int1,rep(int2,dimx[1])), dimension=dimx))
+                        # no nonzero values. We preserve the dimension of x
+    
   newx <- new("spam")
-  slot(newx,"entries",check=FALSE) <- z$entries
-  slot(newx,"colindices",check=FALSE) <- z$colindices
+  slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
+  slot(newx,"colindices",check=FALSE) <- z$colindices[1:nz]
   slot(newx,"rowpointers",check=FALSE) <- z$rowpointers
   slot(newx,"dimension",check=FALSE) <- dimx
   return(newx)
-
 }
 
 "spam.spam" <-
 function(x, nrow = 1, ncol = 1, eps = .Spam$eps)
 {
-  x <- as.matrix(x)
+  if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
+  x <- as.matrix.spam(x)
+  xlen <- length(x)
   if (missing(nrow))
-    nrow <- ceiling(length(x)/ncol)
+    nrow <- ceiling(xlen/ncol)
   else if (missing(ncol))
-    ncol <- ceiling(length(x)/nrow)
-  if (length(x) == prod(nrow, ncol))
+    ncol <- ceiling(xlen/nrow)
+  if (xlen == prod(nrow, ncol))
     dim(x) <- c(nrow, ncol)
   else{
-    if(length(x)==1 && abs(x)<eps) {
+    if(xlen==1 && abs(x)<eps) {
       dimx <- c(nrow,ncol)
       return(new("spam",entries=0,colindices=as.integer(1),
                  rowpointers=as.integer(c(1,rep(2,dimx[1]))), 
                  dimension=as.integer(dimx)))
     }
-    else if(prod(nrow,ncol)%%length(x)!=0)
-      warning("ncol*nrow indivisable by length(x)")
+    else if(prod(nrow,ncol)%%xlen!=0)
+      warning("ncol*nrow indivisable by xlen")
       
-    x <- rep(x, ceiling(prod(nrow,ncol)/length(x)))
+    x <- rep(x, ceiling(prod(nrow,ncol)/xlen))
     dim(x) <- c(nrow, ncol)
   }
   return( as.spam(x, eps=eps))
@@ -435,8 +526,22 @@ setMethod("as.spam","numeric",as.spam.numeric)
 
 setGeneric("spam")
 setMethod("spam","numeric",spam.numeric)
+setMethod("spam","list",spam.list)
 setMethod("spam","spam",spam.spam)
 
+
+triplet <- function(x){
+# inverse of spam.list
+  dimx <- dim(x)
+  if (length(dimx)!=2) stop("'x' should be a matrix like object of dim 2")
+  if (is.spam(x)) {
+    return(list(indices=cbind(rep(1:dimx[1],diff(x@rowpointers)),
+                  x@colindices),values=x@entries))
+  } else {
+    return(list(indices=cbind(rep.int(1:dimx[1],dimx[2]),
+                  rep.int(1:dimx[2],rep.int(dimx[1],dimx[2]))),values=c(x)))
+  }
+}
 
 ########################################################################
 
@@ -452,7 +557,7 @@ function(x,...){
                         colindices=x@colindices,
                         rowpointers=x@rowpointers,
                         res=vector("double",prod(dimx)),  # numeric is double! 
-                        NAOK=!.Spam$safemode,
+                        NAOK=!.Spam$safemode[3],
                         DUP=FALSE,
                         PACKAGE = "spam"
                         )$res,
@@ -471,7 +576,7 @@ function(x){
                         colindices=x@colindices,
                         rowpointers=x@rowpointers,
                         res=vector("double",prod(dimx)),  # numeric is double! 
-                        NAOK=!.Spam$safemode,
+                        NAOK=!.Spam$safemode[3],
                         DUP=FALSE,
                         PACKAGE = "spam"
                         )$res,
@@ -482,108 +587,6 @@ function(x){
 
 
 setMethod("as.matrix","spam",as.matrix.spam)
-
-########################################################################
-
-"rbind.spam" <-
-function(...,deparse.level=0)
-{
-  if (deparse.level!=0) warning("Only 'deparse.level=0' implemented, coerced to zero,")
-  addnargs <- ifelse(missing(deparse.level),0,1)
-
-  nargs <- nargs()-addnargs
-  if (nargs == 0)     return( NULL)
-  args <- list(...)
-  if (!is.null( names( args)))  {
-    warning("Names of arguments are ignored")
-    names( args) <- NULL
-  }
-
-  if (nargs == 1)     return( args[[1]])
-  if (nargs == 2) {
-    # this is the quick way
-    if(!(is.spam(args[[1]])&is.spam(args[[2]])))
-         stop("Not all argument are of class 'spam', in rbind.spam()",call.=FALSE)
-    if(ncol(args[[1]])!=ncol(args[[2]]))
-         stop("Arguments have differing numbers of columns, in rbind.spam()",call.=FALSE)
-    
-    nrow1 <- args[[1]]@dimension[1]
-
-    newx <- new("spam")
-    newx@entries <- c(args[[1]]@entries, args[[2]]@entries)
-    newx@colindices <- c(args[[1]]@colindices,  args[[2]]@colindices)
-    newx@rowpointers <- c(args[[1]]@rowpointers,
-                 args[[2]]@rowpointers[-1]+args[[1]]@rowpointers[nrow1+1]-as.integer(1))
-    newx@dimension <- c(nrow1+args[[2]]@dimension[1],args[[1]]@dimension[2])
-  return(newx)
-  } else {
-    # "recursive" approach only, e.g. no checking
-    tmp <- rbind.spam( args[[1]],args[[2]])
-    for ( i in 3:nargs)
-      tmp <- rbind.spam( tmp,args[[i]])
-    return( tmp)
-  }
-}
-  
-  
-"cbind.spam" <-
-function(...,deparse.level=0)
-{
-  if (deparse.level!=0) warning("Only 'deparse.level=0' implemented, coerced to zero,")
-  addnargs <- ifelse(missing(deparse.level),0,1)
-
-  nargs <- nargs()-addnargs
-  if (nargs == 0)     return( NULL)
-  args <- list(...)
-  if (!is.null( names( args)))  {
-    warning("Names of arguments are ignored")
-    names( args) <- NULL
-  }
-
-  if (nargs == 1)     return( args[[1]])
-  if (nargs == 2) {
-    # this is the quick way
-    if(!(is.spam(args[[1]])&is.spam(args[[2]])))
-         stop("Not all argument are of class 'spam', in cbind.spam()",call.=FALSE)
-    if(nrow(args[[1]])!=nrow(args[[2]]))
-         stop("Arguments have differing numbers of rows, in cbind.spam()",call.=FALSE)
-    
-    ncol1 <- args[[1]]@dimension[2] 
-    nrow <-  args[[1]]@dimension[1] 
-
-    rowpointers <- args[[1]]@rowpointers + (args[[2]]@rowpointers-as.integer(1))
-    entries <- colindices <- NULL
-
-    ###IMPROVEME
-    for (i in 1:nrow) {
-      if (args[[1]]@rowpointers[i]<args[[1]]@rowpointers[i+1])
-        stend1 <- args[[1]]@rowpointers[i]:(args[[1]]@rowpointers[i+1]-1)
-      else stend1 <- NULL
-      if (args[[2]]@rowpointers[i]<args[[2]]@rowpointers[i+1])
-        stend2 <- args[[2]]@rowpointers[i]:(args[[2]]@rowpointers[i+1]-1)
-      else stend2 <- NULL
-      entries <- c( entries, args[[1]]@entries[stend1], args[[2]]@entries[stend2])
-      colindices <-  c(  colindices, args[[1]]@colindices[stend1], args[[2]]@colindices[stend2]+ncol1)
-    }
-    return(new("spam", entries = entries,
-               colindices =  colindices,
-               rowpointers = rowpointers,
-               dimension =   c(nrow, ncol1+args[[2]]@dimension[2])))
-  } else {
-    # "recursive" approach only, e.g. no checking
-    tmp <- cbind.spam( args[[1]],args[[2]])
-    for ( i in 3:nargs)
-      tmp <- cbind.spam( tmp,args[[i]])
-    return( tmp)
-  }
-}
-  
-  
-
-
-setMethod("rbind","spam",rbind.spam)
-setMethod("cbind","spam",cbind.spam)
-
 
 ########################################################################
 
@@ -608,7 +611,7 @@ setMethod("cbind","spam",cbind.spam)
                 as.integer(nz),
                 colindices = vector("integer",nz),
                 rowpointers = vector("integer",nrow+1),
-                NAOK=!.Spam$safemode,
+                NAOK=!.Spam$safemode[3],
                 DUP=FALSE,
                 PACKAGE="spam"
                 )
@@ -716,9 +719,7 @@ function(A,B,s)
                 rowpointers = vector("integer",nrow+1),
                 as.integer(nzmax),
                 ierr = vector("integer",1),
-                NAOK=!.Spam$safemode,
-                DUP = FALSE,
-                PACKAGE = "spam"
+                NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam"
                 )
   if(z$ierr != 0) stop("insufficient space for sparse matrix addition")
   nz <- z$rowpointers[nrow+1]-1
@@ -980,7 +981,7 @@ function (x,rw,cl,drop=.Spam$drop,...)
   
   if (is.matrix(rw)) {
     if (is.logical(rw)) {
-      return( x[as.spam(rw)] )
+      return( x[as.spam.matrix(rw)] )
     }
     if (dim(rw)[2]==2) {
       ir <- rw[,1]
@@ -1003,6 +1004,15 @@ function (x,rw,cl,drop=.Spam$drop,...)
                       PACKAGE="spam")$allelem)
 
   }
+  if ( max(rw)<0 ) {
+    rw <- seq_len( nrow)[rw] 
+    if (length(rw)==0) stop("You should subset at least one element for the rows",call.=FALSE)
+  }
+  if ( max(cl)<0 ) {
+    cl <- seq_len( ncol)[cl] 
+    if (length(cl)==0) stop("You should subset at least one element for the columns",call.=FALSE)
+  }
+    
   if ( (min(rw)<1)|(max(rw)>x@dimension[1])|(min(cl)<1)|(max(cl)>x@dimension[2]))
     stop("subscript out of bounds",call.=FALSE)
   
@@ -1016,39 +1026,60 @@ function (x,rw,cl,drop=.Spam$drop,...)
                     elem=as.double(0),
                     PACKAGE="spam")$elem)
   }
-  if (all(diff(rw)==1) & all(diff(cl)==1)) {
-    z <- .Fortran("submat",
-                  nrow,
-                  job=as.integer(1), # need values as well
-                  i1=as.integer(rw[1]),
-                  i2=as.integer(rw[length(rw)]),
-                  j1=as.integer(cl[1]),
-                  j2=as.integer(cl[length(cl)]),
-                  dcheck(x@entries),x@colindices,x@rowpointers,
-                  nr=as.integer(0),
-                  nc=as.integer(0),
-                  ao=dcheck(x@entries),jao=icheck(x@colindices),iao=icheck(x@rowpointers),
-                  PACKAGE="spam")
-    nz <- z$iao[z$nr+1]-1
-    if (drop==TRUE && (z$nr==1 || z$nc==1))
-      return(c(new("spam",entries=z$ao[1:nz],colindices=z$jao[1:nz],
-                 rowpointers=z$iao[1:(z$nr+1)],dimension=c(z$nr,z$nc))))
-    else
-      return(new("spam",entries=z$ao[1:nz],colindices=z$jao[1:nz],
-                 rowpointers=z$iao[1:(z$nr+1)],dimension=c(z$nr,z$nc)))
-  }
   if (is.vector(rw) && is.vector(cl)) {
     nrw <- length(rw)   # length returns an integer, so is a product therof
     ncl <- length(cl)
-    bnz <- as.integer( min( length(x@entries), prod(nrw,ncl), 2^31-2))  # very pessimistic
-    z <- .Fortran("getblock",
-                  dcheck(x@entries),x@colindices,x@rowpointers,
-                  nrw,as.integer(rw),
-                  ncl,as.integer(cl),
-                  bnz=bnz, b=vector("double",bnz),jb=vector("integer",bnz),ib=vector("integer",nrw+1),
-                  PACKAGE="spam")
-    return(new("spam",entries=z$b[1:z$bnz],colindices=z$jb[1:z$bnz],
-               rowpointers=z$ib[1:(nrw+1)],dimension=c(nrw,ncl)))
+    nz <- as.integer( min( length(x@entries), prod(nrw,ncl)))  # very pessimistic
+    if (all(diff(rw)==1) & all(diff(cl)==1)) {
+      z <- .Fortran("submat",
+                    nrow,
+                    job=as.integer(1), # need values as well
+                    i1=as.integer(rw[1]),
+                    i2=as.integer(rw[nrw]),
+                    j1=as.integer(cl[1]),
+                    j2=as.integer(cl[ncl]),
+                    dcheck(x@entries),x@colindices,x@rowpointers,
+                    nr=as.integer(0),
+                    nc=as.integer(0),
+                    entries=vector("double",nz),
+                    colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
+                    NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam")
+      nz <- z$rowpointers[z$nr+1]-1
+    } else {
+      z <- .Fortran("getblock",
+                    dcheck(x@entries),x@colindices,x@rowpointers,
+                    nr=nrw,as.integer(rw),
+                    nc=ncl,as.integer(cl),
+                    nz=nz, entries=vector("double",nz),
+                    colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
+                    NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam")
+      nz <- z$nz
+    }
+    if (nz==0) {#trap zero matrix
+      if (drop==TRUE && (z$nr==1 || z$nc==1)) return( vector("double",max(z$nr,z$nc)))
+      else
+        return(new("spam",rowpointers=c(int1,rep.int(int2,z$nr )),
+                   dimension = c(z$nr,z$nc)))
+    }  
+    
+    if (drop==TRUE && (z$nr==1 || z$nc==1))
+      # this is essentially a c() call
+      return(.Fortran("spamcsrdns",
+                 nrow=z$nr,
+                 entries=z$entries[1:nz],
+                 colindices=z$colindices[1:nz],
+                 rowpointers=z$rowpointers[1:(z$nr+1)],
+                 res=vector("double",prod(z$nr,z$nc)),  
+                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res)
+    else {
+      newx <- new("spam")
+      slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
+      slot(newx,"colindices",check=FALSE) <- z$colindices[1:nz]
+      slot(newx,"rowpointers",check=FALSE) <- z$rowpointers[1:(z$nr+1)]
+      slot(newx,"dimension",check=FALSE) <- c(z$nr,z$nc)
+      return(newx)
+    }
+  
   }
   stop("invalid or not-yet-implemented 'spam' subsetting")
 }
@@ -1167,18 +1198,23 @@ function (x, rw, cl,value)
                     rowpointers=vector("integer",nrow+1),
                     ir=as.integer(rw[,1]),
                     PACKAGE="spam")$rowpointers
-    nzmax <- as.integer(min(prod(nrow,ncol), nir+x@rowpointers[nrow+1]+1)+1)
+    nzmax <- as.integer(min(prod(nrow,ncol), nir+x@rowpointers[nrow+1])+2)
     z <- .Fortran("subass",
                   nrow,ncol,
                   dcheck(x@entries), x@colindices, x@rowpointers,
                   b=as.vector(value[ord],"double"),
                   bj=as.vector(rw[,2],"integer"),  bi=bia,
                   entries=vector("double",nzmax),
-                  colindices=vector("integer",nzmax),rowpointers=vector("integer",nrow+1),
+                  colindices=vector("integer",nzmax),
+                  rowpointers=vector("integer",nrow+1),
                   nzmax=nzmax,
                   DUP=FALSE,
                   PACKAGE="spam")
     cnz <- z$rowpointers[nrow+1]-1
+    if (cnz<0) {
+      cat('Negative cnz in subassigning, forced to zero. Please report.')
+      cnz <- 0
+    }
     newx <- new("spam")
     slot(newx,"entries",check=FALSE) <- z$entries[1:cnz]
     slot(newx,"colindices",check=FALSE) <- z$colindices[1:cnz]
@@ -1186,6 +1222,14 @@ function (x, rw, cl,value)
     slot(newx,"dimension",check=FALSE) <- c(nrow,ncol)
     return(newx)
     
+  }
+  if ( max(rw)<0 ) {
+    rw <- seq_len( nrow)[rw] 
+    if (length(rw)==0) stop("You should assign at least one element for the rows",call.=FALSE)
+  }
+  if ( max(cl)<0 ) {
+    cl <- seq_len( ncol)[cl] 
+    if (length(cl)==0) stop("You should assign at least one element for the columns",call.=FALSE)
   }
   if ( (min(rw)<1)|(max(rw)>x@dimension[1])|(min(cl)<1)|(max(cl)>x@dimension[2]))
     stop("subscript out of bounds",call.=FALSE)
@@ -1204,13 +1248,13 @@ function (x, rw, cl,value)
     # we pack the value into a vector _row by row_
     value <- c(t(array(as.double(value),c(nrw,ncl))[order(rw),order(cl)]))
     
-    bia <- numeric(nrow)  # bia has size of nrow + 1
+    bia <- vector("integer",nrow)  # bia has size of nrow + 1
     bia[rw] <- ncl        # in each row we have ncl new objects
     bia <- as.integer(c(1,cumsum(bia)+1))
                 
     # we construct now a sparse matrix containing the "value" at positions rw and cl.
     # then we use the subassign function.
-    nzmax <- as.integer(min(prod(nrow,ncol), bnz+x@rowpointers[nrow+1]-1)+2)
+    nzmax <- as.integer(min(prod(nrow,ncol), bnz+x@rowpointers[nrow+1])+2)
     # new("spam",entries=value,colindices=rep(sort(as.integer(cl)),nrw),rowpointers=bia,c(nrow,ncol))
     z <- .Fortran("subass",
                   nrow,ncol,
@@ -1218,7 +1262,8 @@ function (x, rw, cl,value)
                   b=value,
                   bj=rep(sort(as.integer(cl)),nrw),
                   bi=bia,
-                  entries=vector("double",nzmax),colindices=vector("integer",nzmax),rowpointers=vector("integer",nrow+1),
+                  entries=vector("double",nzmax),colindices=vector("integer",nzmax),
+                  rowpointers=vector("integer",nrow+1),
                   nzmax=nzmax,
                   PACKAGE="spam")
     cnz <- z$rowpointers[nrow+1]-1
@@ -1285,7 +1330,7 @@ function(x,y)
                 integer(xn),
                 nz = vector("integer",1),
                 integer(yl),
-                NAOK=!.Spam$safemode,
+                NAOK=!.Spam$safemode[3],
                 DUP=FALSE,
                 PACKAGE = "spam")
   nzmax <- z$nz
@@ -1298,7 +1343,7 @@ function(x,y)
                 as.integer(nzmax),
                 integer(yl),
                 ierr = vector("integer",1),
-                NAOK=!.Spam$safemode,
+                NAOK=!.Spam$safemode[3],
                 DUP=FALSE,
                 PACKAGE = "spam")
   nz <- z$rowpointers[xn+1]-1
@@ -1311,7 +1356,7 @@ function(x,y)
     z$rowpointers <- as.integer(c(1,rep(2,xn)))
   }  else  z <- .Fortran("sortrows",
                          xn,entries=z$entries[1:nz],colindices=z$colindices[1:nz],rowpointers=z$rowpointers,
-                         NAOK=!.Spam$safemode,
+                         NAOK=!.Spam$safemode[3],
                          PACKAGE = "spam")
   newz <- new("spam")
   slot(newz,"entries",check=FALSE) <- z$entries
@@ -1520,214 +1565,31 @@ setMethod("lower.tri","spam",lower.tri.spam)
 ########################################################################
 
 norm <- function(x, type = "sup", ...){
-  switch(type,
-         sup = max(abs(x)),
-         l1 = sum(abs(x)),
-         sqrt(sum(x^2))
+  typ <- charmatch(tolower(type), c("sup",'l1',"frobenius","hs"))
+  if (is.na(typ))          stop("undefined norm '",type,"'.",call.=FALSE)
+
+  switch(typ,
+         max(abs(x)),
+         sum(abs(x)),
+         sqrt(sum(x^2)),sqrt(sum(x^2))
+         )
+}
+norm.spam <- function(x, type = "sup", ...){
+  typ <- charmatch(tolower(type), c("sup",'l1',"frobenius","hs"))
+  if (is.na(typ))          stop("undefined norm '",type,"'.",call.=FALSE)
+
+  switch(typ,
+         max(abs(x@entries)),
+         sum(abs(x@entries)),
+         sqrt(sum(x@entries^2)),
+         sqrt(sum(x@entries^2))
          )
 }
 
 setGeneric("norm",function(x, type,...)standardGeneric("norm"))
-setMethod("norm","spam", function(x, type = "sup", ...){
-  switch(type,
-         sup = max(abs(x@entries)),
-         l1 = sum(abs(x@entries)),
-         sqrt(sum(x@entries^2))
-         )
-}
-          )
-
-#setMethod("norm","numeric", function(x, type = "sup", ...){
-#  switch(type,
-#         sup = max(abs(x)),
-#         HS = sqrt(sum(x^2)),
-#         l1 = sum(abs(x))
-#         )
-#}
-#          )
-
-image.spam <- 
-function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
-    z, zlim = range(z), xlim = range(x), ylim = range(y),
-    col = heat.colors(12), add = FALSE, xaxs = "i", yaxs = "i",
-    xlab, ylab, breaks, oldstyle = FALSE,cex=NULL, ...)
-{
-    if (missing(z)) {
-        if (!missing(x)) {
-            if (is.list(x)) {
-                z <- x$z
-                y <- x$y
-                x <- x$x
-            }
-            else {
-                if (is.null(dim(x)))
-                  stop("argument must be matrix-like")
-                z <- x
-                x <- seq(0, 1, len = nrow(z))
-            }
-            if (missing(xlab))
-                xlab <- ""
-            if (missing(ylab))
-                ylab <- ""
-        }
-        else stop("no 'z' matrix specified")
-    }
-    else if (is.list(x)) {
-        xn <- deparse(substitute(x))
-        if (missing(xlab))
-            xlab <- paste(xn, "x", sep = "$")
-        if (missing(ylab))
-            ylab <- paste(xn, "y", sep = "$")
-        y <- x$y
-        x <- x$x
-    }
-    else {
-        if (missing(xlab))
-            xlab <- if (missing(x))
-                ""
-            else deparse(substitute(x))
-        if (missing(ylab))
-            ylab <- if (missing(y))
-                ""
-            else deparse(substitute(y))
-    }
-    spamversion <- (prod(z@dimension) > .Spam$imagesize)
-
-    if (any(!is.finite(x)) || any(!is.finite(y)))
-      stop("'x' and 'y' values must be finite and non-missing")
-    if (any(diff(x) <= 0) || any(diff(y) <= 0))
-      stop("increasing 'x' and 'y' values expected")
-    if (!is.spam(z))    stop("'z' must be a matrix")
-    if (spamversion) {
-      xx <- x
-      yy <- y
-    }
-      if (length(x) > 1 && length(x) == nrow(z)) {
-        dx <- 0.5 * diff(x)
-        x <- c(x[1] - dx[1], x[-length(x)] + dx, x[length(x)] +
-               dx[length(x) - 1])
-      }
-      if (length(y) > 1 && length(y) == ncol(z)) {
-        dy <- 0.5 * diff(y)
-        y <- c(y[1] - dy[1], y[-length(y)] + dy, y[length(y)] +
-               dy[length(y) - 1])
-      }
-    
-    if (!spamversion) {
-      zvals <- as.matrix(z)
-      zvals[zvals==0] <- NA
-     } else zvals <- z@entries
-    if (missing(breaks)) {
-        nc <- length(col)
-        if (!missing(zlim) && (any(!is.finite(zlim)) || diff(zlim) < 0))
-            stop("invalid z limits")
-        if (diff(zlim) == 0)
-            zlim <- if (zlim[1] == 0) {
-                c(-1, 1)
-            } else zlim[1] + c(-0.4, 0.4) * abs(zlim[1])
-        zvals <- (zvals - zlim[1])/diff(zlim)
-        zi <- if (oldstyle) {
-            floor((nc - 1) * zvals + 0.5)
-        } else floor((nc - 1e-05) * zvals + 1e-07)
-        zi[zi < 0 | zi >= nc] <- NA
-    }
-    else {
-        if (length(breaks) != length(col) + 1)
-            stop("must have one more break than colour")
-        if (any(!is.finite(breaks)))
-            stop("breaks must all be finite")
-        zi <- .C("bincode", as.double(zvals), length(zvals), as.double(breaks),
-            length(breaks), code = vector("integer",length(zvals)), (TRUE),
-            (TRUE), nok = TRUE, NAOK = TRUE, DUP = FALSE, PACKAGE = "base")$code -
-            1
-    }
-    if (!add)
-        plot(NA, NA, xlim = xlim, ylim = ylim, type = "n", xaxs = xaxs,
-            yaxs = yaxs, xlab = xlab, ylab = ylab, ...)
-    if (spamversion) {
-      if (length(xx) != nrow(z) || length(yy) != ncol(z))
-        stop("dimensions of z are not length(x) times length(y)")
-    }else{
-      if (length(x) <= 1)
-        x <- par("usr")[1:2]
-      if (length(y) <= 1)
-        y <- par("usr")[3:4]
-      if (length(x) != nrow(z) + 1 || length(y) != ncol(z) + 1)
-        stop("dimensions of z are not length(x)(+1) times length(y)(+1)")
-    }
-# for small matrices, we transform them into regular ones.
-    if (!spamversion) {
-      .Internal(image(as.double(x), as.double(y), as.integer(as.matrix(zi)),col))
-    } else {
-      if (missing(cex)) {
-        warning("default value for 'cex' in 'image' might be a bad choice", call.=FALSE)
-        cex <- 1
-      }
-      points( xx[rep((1:nrow(z)),diff(z@rowpointers))], yy[z@colindices], pch='.', cex=cex*.Spam$cex/(ncol(z)+nrow(z)),
-             col=col[zi+1])
-    }
-    box()
-  }
-
-display.spam <- function(x,col=c("gray","white"),xlab="column",ylab="row", cex=NULL,
-                       main="",...)
-{
-  nrow <- x@dimension[1]
-  ncol <- x@dimension[2]
-  
-# For small matrices, we transform them into regular ones and use the image.default
-# routine.  
-  if (prod(nrow,ncol) < .Spam$imagesize) {
-    z <- numeric(prod(nrow,ncol))
-    dim(z) <- c(nrow,ncol)
-    z[cbind(rep(nrow:1,diff(x@rowpointers)),x@colindices)] <- -1
-    image.default(x=1:ncol,y=-(nrow:1),t(z),
-                  axes=FALSE, col=col, xlab=xlab, ylab=ylab, ...) 
-  } else {
-    if (missing(cex)) {
-      warning("default value for 'cex' in 'display' might not be the optimal choice", call.=FALSE)
-      cex <- 1
-    }
-    plot( x@colindices, rep(-(1:nrow),diff(x@rowpointers)), pch='.', cex=cex*.Spam$cex/(ncol+nrow),
-         col=col[1],xlab=xlab,ylab=ylab,axes=FALSE,
-         ylim=c(-nrow,-0)-.5,xlim=c(0,ncol)+.5,xaxs = "i", yaxs = "i",...)
-  }
-  # Adjust axes labels.
-  axis(1,pretty(1:ncol), ...)
-  axis(2,pretty(-(nrow:1)),labels=rev(pretty(1:nrow)), ...)
-  box()
-}
-
-
-
-plot.spam <- function(x,y,xlab=NULL,ylab=NULL,...)
-{
-  lab <- deparse(substitute(x))
-  #only a few cases are considered
-  # 1st case, a colum vector only
-  if (ncol(x)==1) {
-    x <- c(x)
-    return( plot(x,...))
-  }
-  # 2nd case a matrix
-  tmp <- x[,1:2,drop=FALSE] # extract the first two columns
-  plot(c( tmp[,1]), c(tmp[,2]),
-       xlab=ifelse(missing(xlab),paste(lab,'[,1]',sep=''),xlab),
-       ylab=ifelse(missing(ylab),paste(lab,'[,2]',sep=''),ylab),...)
-}
-
-setGeneric("image", function(x, ...) standardGeneric("image")) 
-setMethod("image","spam",function(x,cex=NULL,...){image.spam(x,cex=cex,...)})
-
-setGeneric("display",function(x,...)standardGeneric("display"))
-setMethod("display","spam",display.spam)
-
-setMethod("plot", signature(x="spam",y="missing"), plot.spam)
-setMethod("plot", signature(x="spam",y="spam"),
-          function(x,y,...) {
-            warning("'plot' with two 'spam' objects is not implemented",call.=FALSE)
-            })
-
+setMethod("norm",signature(x="spam",type="character"), norm.spam)
+setMethod("norm",signature(x="spam",type="missing"),
+          function(x,type) norm.spam(x,"sup"))
 
 
 
