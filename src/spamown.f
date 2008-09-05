@@ -614,6 +614,59 @@ c---- end of cleanspam -------------------------------------------------
 c-----------------------------------------------------------------------
       end
 
+
+
+      subroutine disttospam(nrow,x,a,ja,ia,eps)
+      
+      implicit none
+      integer nrow, ia(nrow+1), ja(*)
+      double precision x(*), a(*), eps
+c
+c     Convertion of an R dist object (removes zero entries as well). 
+c
+c On entry:
+c----------
+c     nrow    -- row dimension of the matrix
+c     x       -- elements of the dist object (is lower diagonal) 
+c                        n*(i-1) - i*(i-1)/2 + j-i  for i < j
+c
+c     a,ja,ia -- input matrix in CSR format
+c
+c On return:
+c-----------
+c     a,ja,ia -- cleaned matrix
+c
+c Notes: 
+c-------
+c     Reinhard Furrer 2008-08-13
+c-----------------------------------------------------------------------
+c
+c     Local
+      integer i,j,k, tmp
+
+      
+      ia(1) = 1 
+      k = 1
+      do i = 2, nrow
+         ia(i) = k
+         do j=1 , i-1 
+            tmp = nrow*(j-1)-j*(j-1)/2+i-j
+            if (dabs(x(tmp)) .gt. eps) then
+               ja(k) = j
+               a(k) = x(tmp)
+               k = k + 1
+            endif
+            
+         enddo
+      enddo
+
+      ia(nrow+1) = k
+      return
+
+c---- end of disttospam -------------------------------------------------
+c-----------------------------------------------------------------------
+      end
+
       subroutine setdiaold (nrow,ncol,a,ja,ia,c,jc,ic,cmax,diag,eps)
 
       implicit none
@@ -1619,13 +1672,13 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
  
 c-----------------------------------------------------------------------
-      subroutine triplet2csr(nrow,ncol,nnz,a,ir,jc,ao,jao,iao)
+      subroutine triplet2csr(nrow,ncol,nnz,a,ir,jc,ao,jao,iao,eps)
 
       implicit none
-      double precision a(*),ao(*)
+      double precision a(*),ao(*),eps
       integer nrow,ncol,nnz,ir(*),jc(*),jao(*),iao(*)
 
-      integer           k, k0, i, j, tmp 
+      integer     newnnz,      k,  i, j, tmp1,tmp2 
 
 c-----------------------------------------------------------------------
 c  Triplet representation     to   Compressed Sparse Row
@@ -1636,7 +1689,8 @@ c  a, ir, jc into a row general sparse ao, jao, iao format.
 c
 c on entry:
 c---------
-c nrow  = zero
+c nrow  = row dimension of matrix
+c nrow  = col dimension of matrix
 c nnz   = number of nonzero elements in matrix
 c a,
 c ir,
@@ -1647,7 +1701,7 @@ c         number. The order of the elements is arbitrary.
 c
 c on return:
 c-----------
-c nrow  = dimension of the matrix
+c nnz   = number of nonzero elements in matrix
 c ao, jao, iao = matrix in general sparse matrix format with ao
 c       continung the real values, jao containing the column indices,
 c       and iao being the pointer to the beginning of the row,
@@ -1656,38 +1710,56 @@ c
 c------------------------------------------------------------------------
 
 c     cycle over all entries and count the number of elements in each row
-c     Memorize the largest row entry
+c     skip if larger than nrow and ncol. newnnz is actual number within
+c     matrix(nrow,ncol).
+      newnnz = 0
       do  k=1, nnz
-         tmp=ir(k)
-         iao(tmp) = iao(tmp)+1
-         if (tmp .gt. nrow)        nrow = tmp
-         tmp=jc(k)
-         if (tmp .gt. ncol)         ncol = tmp
+         tmp1 = ir(k)
+         if (tmp1 .le. nrow) then
+            tmp2 = jc(k)
+            if (tmp2 .le. ncol) then
+               if (a(k) .gt. eps) then
+                  iao(tmp1) = iao(tmp1)+1
+                  newnnz = newnnz + 1
+                  if (newnnz.lt.k) then
+                    jc(newnnz) = tmp2 
+                    ir(newnnz) = tmp1 
+                    a(newnnz) = a(k) 
+                  endif
+               endif
+            endif
+         endif
       enddo
-c starting position of each row..
+c Starting position of each row, essentially a cumsum of iao
       k = 1
       do j=1,nrow+1
-         k0 = iao(j)
+         tmp1 = iao(j)
          iao(j) = k
-         k = k+k0
+         k = k + tmp1
       enddo
-c go through the structure  once more. Fill in output matrix.
-      do  k=1, nnz
+c Go through the structure  once more. Fill in output matrix.
+c iao is miss used. 
+      do  k=1, newnnz
          i = ir(k)
-         tmp = iao(i)
-         ao(tmp) = a(k)  
-         jao(tmp) = jc(k)
-         iao(i) = tmp+1
+         tmp1 = iao(i)
+         ao(tmp1) = a(k)  
+         jao(tmp1) = jc(k)
+         iao(i) = tmp1+1
       enddo
-c shift back iao
+c Shift back iao
       do j=nrow,1,-1
          iao(j+1) = iao(j)
       enddo 
       iao(1) = 1
+
+c Sort the individual rows
+      call sortrows(nrow,ao,jao,iao)
+      nnz = newnnz
       return
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
+
 
 
       subroutine reducedim(a,ja,ia,eps,bnrow,bncol,k,b,jb,ib)
@@ -1697,7 +1769,7 @@ c-----------------------------------------------------------------------
       integer bnrow, bncol,k
       integer ia(*),ja(*),ib(*),jb(*)
 
-      integer   i, j, jj
+      integer   i, j, jaj
 
 c-----------------------------------------------------------------------
 c  Reduces the dimension of A to (,bnrow,bncol) by copying it to B.
@@ -1713,11 +1785,11 @@ c------------------------------------------------------------------------
       do i=1,bnrow
          ib(i)=k
          do j=ia(i), ia(i+1)-1
-            jj=ja(j)
-            if (jj .le.bncol) then
-               if (abs( a(jj)) .gt. eps) then
-                  b(k)=a(jj)
-                  jb(k)=jj
+            jaj=ja(j)
+            if (jaj .le.bncol) then
+               if (abs( a(j)) .gt. eps) then
+                  b(k)=a(j)
+                  jb(k)=jaj
                   k=k+1
                endif
             endif
@@ -1729,6 +1801,7 @@ c-----------------------------------------------------------------------
       end
 
 c-----------------------------------------------------------------------
+c Currently not used...
       subroutine reducediminplace(eps,nrow,ncol,k,a,ja,ia)
 
       implicit none
@@ -1736,7 +1809,7 @@ c-----------------------------------------------------------------------
       integer nrow, ncol,k
       integer ia(*),ja(*)
 
-      integer   i, j, jj
+      integer   i, j, jj, itmp
 
 c-----------------------------------------------------------------------
 c  Reduces the dimension of A to (nrow,ncol) _in place_
@@ -1747,8 +1820,9 @@ c------------------------------------------------------------------------
 
       k=1
       do i=1,nrow
+         itmp = ia(i)
          ia(i)=k
-         do j=ia(i), ia(i+1)-1
+         do j=itmp, ia(i+1)-1
             jj=ja(j)
             if (jj .le. ncol) then
                if (abs( a(jj)) .gt. eps) then

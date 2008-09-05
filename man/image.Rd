@@ -1,13 +1,15 @@
 \name{image}
 \alias{image}
 \alias{image.spam}
+\alias{image,spam-method}
+\alias{image,spam.chol.NgPeyton-method}
 \title{Display a spam Object as Color Image}
 \description{The function creates a grid of colored rectangles with
   colors corresponding to the values in \code{z}. }
 \usage{
   image(x, ...)
 }
-\arguments{\item{x}{matrix of class \code{spam}.}
+\arguments{\item{x}{matrix of class \code{spam} or \code{spam.chol.NgPeyton}.}
 %  \item{cex}{for very large matrices, the dot size may need to be scaled.}
   \item{...}{any other arguments passed
     to \code{image.default} and \code{plot}.}

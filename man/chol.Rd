@@ -41,7 +41,7 @@ positive definite sparse matrix \code{x} of class
 algorithm of Ng and Peyton (1993) implemented (\code{method=NgPeyton}).
 
 To pivot/permute the matrix, you can choose between the multiple minimum
-degree (\code{pivot=MMD}) or reverse Cuthill-Mckee (\code{pivot=MMD})
+degree (\code{pivot=MMD}) or reverse Cuthill-Mckee (\code{pivot=RCM})
 from George and Lui (1981). It is also possible to furnish a specific
 permutation in which case \code{pivot} is a vector. For compatibility
 reasons, \code{pivot} can also take a logical in which for \code{FALSE}

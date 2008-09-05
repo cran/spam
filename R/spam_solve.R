@@ -244,24 +244,16 @@ chol.spam <- function(x, pivot = "MMD",
   if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
 
   if(.Spam$cholsymmetrycheck) {
-    if(norm.spam(t.spam(x)-x,type='sup') > (2+eps)*eps)
-      stop("Input matrix to 'chol' not symmetric (up to (2+eps)*eps in 'sup'-norm",call.=FALSE)
+    test <-  all.equal.spam(x, t.spam(x), tolerance = eps*100)
+    if (!identical(TRUE,test))
+      stop("Input matrix to 'chol' not symmetric (up to 100*eps)",call.=FALSE)
   }
   
   if (method != "NgPeyton")
     warning(gettextf("method = '%s' is not supported. Using 'NgPeyton'",
                      method), domain = NA)
 
-  if (length(pivot)==nrow) {
-    doperm <- as.integer(0)
-    if (!is.integer(pivot[1]))
-      pivot <- as.vector(pivot,"integer")
-    if (.Spam$cholpivotcheck) {
-      tmp <- sort.int(pivot)
-      if(tmp[1]!=1 ||  any(tmp-seq_len(nrow)!=0))
-        stop("'pivot' should be a valid permutation")
-    }
-  } else if (length(pivot)==1) {
+  if (length(pivot)==1) {
     if (pivot==FALSE) {
       doperm <- as.integer(0)
       pivot <- seq_len(nrow)
@@ -272,7 +264,16 @@ chol.spam <- function(x, pivot = "MMD",
       doperm <- as.integer( switch(match.arg(pivot,c("MMD","RCM")),MMD=1,RCM=2))
       pivot <- vector("integer",nrow)
     }
-  } else stop("'pivot' should be 'MMD', 'RCM' or a valid permutation")
+  } else  if (length(pivot)==nrow) {
+    doperm <- as.integer(0)
+    if (!is.integer(pivot[1]))
+      pivot <- as.vector(pivot,"integer")
+    if (.Spam$cholpivotcheck) {
+      tmp <- sort.int(pivot)
+      if(tmp[1]!=1 ||  any(tmp-seq_len(nrow)!=0))
+        stop("'pivot' should be a valid permutation")
+    }
+ } else stop("'pivot' should be 'MMD', 'RCM' or a valid permutation")
 
 
 
@@ -533,8 +534,9 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
 
   if(.Spam$cholsymmetrycheck) {
-    if(norm.spam(t.spam(x)-x,type='sup') > (2+eps)*eps)
-      stop("Input matrix to 'chol' not symmetric (up to (2+eps)*eps in 'sup'-norm",call.=FALSE)
+    test <-  all.equal.spam(x, t.spam(x), tolerance = eps*100)
+    if (!identical(TRUE,test))
+      stop("Input matrix to 'chol' not symmetric (up to 100*eps)",call.=FALSE)
   }
   
   if (method != "NgPeyton")
@@ -731,4 +733,17 @@ if(paste(R.version$major, R.version$minor, sep=".") >= "2.5")
 
 setMethod("as.matrix","spam.chol.NgPeyton",as.matrix.spam.chol.NgPeyton)
 
+########################################################################
+#  force to spam matrices. Would not be required with inheritance
+
+setMethod("image","spam.chol.NgPeyton",
+          function(x,cex=NULL,...){
+            image.spam(as.spam.chol.NgPeyton(x),cex=cex,...)
+          })
+
+
+setMethod("display","spam.chol.NgPeyton",
+          function(x,...){
+            display.spam(as.spam.chol.NgPeyton(x),...)
+          })
 ########################################################################

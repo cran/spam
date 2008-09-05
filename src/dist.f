@@ -13,30 +13,6 @@ c     only values between eps and eta are considered.
 c     p power for minkowski
 
 
-      subroutine stest(x,y,nx,n)
-      implicit none
-      integer i,j, nx,n
-      double precision x(nx), y(nx)
-      do j =1,n
-         do i =1,nx
-            y(i)=sin(x(i))
-         enddo
-      enddo
-      return
-      end
-
-      subroutine dtest(x,y,nx,n)
-      implicit none
-      integer i,j, nx,n
-      double precision x(nx), y(nx)
-      do j =1,n
-         do i =1,nx
-            y(i)=dsin(x(i))
-         enddo
-         enddo
-      return
-      end
-
 
       double precision function euclid(x,y,p)
       implicit none
@@ -45,17 +21,8 @@ c     p power for minkowski
       return
       end
 
-      double precision function maximum(nd,nx,ny,x,y,i,j)
-      implicit none
-      integer nd,nx,ny,i,j, k
-      double precision x(nx,nd),y(ny,nd), tmp
-      tmp=0.0
-      do k=1,nd
-         tmp=max(tmp,abs(x(i,k)-y(j,k)))
-      enddo
-      maximum=tmp
-      return
-      end
+
+
       double precision function minkowski(x,y,p)
       implicit none
       double precision x,y,p
@@ -72,8 +39,8 @@ c     p power for minkowski
       implicit none
       
       
-      double precision euclid, maximum, minkowski
-      external euclid, maximum, minkowski
+      double precision euclid, minkowski
+      external euclid, minkowski
 
       integer ncol,nrowx, nrowy, nnz, method,  diag, part,  iflag
       integer colindices(nnz), rowpointers(nrowx+1)
@@ -91,8 +58,8 @@ c     p power for minkowski
       endif
       if (method.eq.2) then
          p=1.0
-         call closestOdistXY( ncol, x,nrowx, y, nrowy,
-     &        diag, part, maximum,
+         call closestMAXdistXY( ncol, x,nrowx, y, nrowy,
+     &        diag, part, 
      &        eps, eta, colindices, rowpointers, entries, nnz, iflag)
       endif
       if (method.eq.3) then
@@ -139,49 +106,40 @@ c     local variables
       jfrom = 1
       jto = ynrow
       
-      if (part.lt.0 .and. diag.gt.0) then
-         ifrom = 2
-         rowpointers(2)=1
-      else
-         ifrom = 1
-      endif
-      if (part.gt.0 .and. diag.gt.0) then
-         ito = xnrow-1
-      else
-         ito = xnrow
-      endif
       
-       
+c cycle over all rows of x (independent of part and diag!)       
       
-      do i= ifrom,ito
+      do i= 1,xnrow
          
          if (part .lt. 0) then
-            if (diag.gt.0) then
-               jto = i - diag
-            else
-               jto = i
-            endif
+            jto = i
          endif
          if (part .gt. 0) then
-            if (diag.gt.0) then
-               jfrom = i + diag
-            else
-               jfrom = i
-            endif
+            jfrom = i
          endif
          
          do 10 j = jfrom,jto
             
-            if ((i.eq.j).and.(diag.gt.0)) goto 10
+c Start calculating the distance (until delta is exceeded)            
             tmp = 0.0
-            if (.not.((i.eq.j).and.(diag.lt.0))) then
-               do  k = 1, ncol
-                  tmp = tmp + distfcn(x(i,k),y(j,k),p)
-                  if( tmp.gt.etap) goto 10
-               enddo
+            do  k = 1, ncol
+               tmp = tmp + distfcn(x(i,k),y(j,k),p)
+               if( tmp.gt.etap) goto 10
+            enddo
+c Delta is not exceeded. 
+c If we need to do not include the diagonal (diag==0)
+c    eps < tmp < delta
+c If we do include the diagonal,  
+c    eps < tmp < delta for i=/=j only
+ 
+            if (diag.eq.-1) then
                if (tmp.lt.epsp) goto 10
-               
+            else
+               if (i.ne.j) then
+                  if (tmp.lt.epsp) goto 10
+               endif
             endif
+
 c     (i,j) has a distance between eps and eta.
             
 c     in case nnz was too small, recall line to get a better estimate
@@ -208,7 +166,7 @@ c     in case nnz was too small, recall line to get a better estimate
       enddo
       
       
-      if (part.gt.0 .and. diag.gt.0) then
+      if (part.gt.0) then
          rowpointers(xnrow+1)=jja
       endif
       nnz=jja-1
@@ -217,15 +175,12 @@ c     in case nnz was too small, recall line to get a better estimate
       return
       end
       
-      subroutine closestOdistXY( ncol, x,xnrow, y, ynrow,
-     &    diag, part, distfcn,
+      subroutine closestMAXdistXY( ncol, x,xnrow, y, ynrow,
+     &    diag, part, 
      &    eps, eta, colindices, rowpointers, entries, nnz, iflag)
 
       implicit none
       
-      double precision distfcn
-      external distfcn
-
       integer ncol,xnrow, ynrow, nnz,  diag, part,iflag
       integer colindices(nnz),rowpointers(xnrow+1)
       double precision x(xnrow,ncol), y(ynrow,ncol)
@@ -243,47 +198,42 @@ c     local variables
       jfrom = 1
       jto = ynrow
       
-      if (part.lt.0 .and. diag.gt.0) then
-         ifrom = 2
-         rowpointers(2)=1
-      else
-         ifrom = 1
-      endif
-      if (part.gt.0 .and. diag.gt.0) then
-         ito = xnrow-1
-      else
-         ito = xnrow
-      endif
       
-       
-      
-      do i= ifrom,ito
+      do i= 1,xnrow
          
          if (part .lt. 0) then
-            if (diag.gt.0) then
-               jto = i - diag
-            else
-               jto = i
-            endif
+            jto = i
          endif
          if (part .gt. 0) then
-            if (diag.gt.0) then
-               jfrom = i + diag
-            else
-               jfrom = i
-            endif
+            jfrom = i
          endif
-         
+       
          do 10 j = jfrom,jto
-            if ((i.eq.j).and.(diag.gt.0)) goto 10
-            if ((i.eq.j).and.(diag.lt.0)) then
-               tmp = 0.0
-            else
-               tmp = distfcn(ncol,xnrow,ynrow, x,y, i,j)
-               if(( tmp.gt.eta).or.(tmp.lt.eps)) goto 10
-c     (i,j) has a distance between eps and eta.
-            endif
             
+c Start calculating the distance 
+            tmp = 0.0
+            do  k = 1, ncol
+               tmp = max(tmp, abs(x(i,k)-y(j,k))) 
+               if( tmp.gt.eta) goto 10
+            enddo
+
+c Delta is not exceeded. 
+c If we need to do not include the diagonal (diag==0)
+c    eps < tmp < delta
+c If we do include the diagonal,  
+c    eps < tmp < delta for i=/=j only
+ 
+            if (diag.eq.-1) then
+               if (tmp.lt.eps) goto 10
+            else
+               if (i.ne.j) then
+                  if (tmp.lt.eps) goto 10
+               endif
+            endif
+
+c     (i,j) has a distance between eps and eta.
+      
+                    
             
 c     in case nnz was too small, recall line to get a better estimate
             if( jja .gt. nnz) then
@@ -301,7 +251,7 @@ c     in case nnz was too small, recall line to get a better estimate
       enddo
       
       
-      if (part.gt.0 .and. diag.gt.0) then
+      if (part.gt.0) then
          rowpointers(xnrow+1)=jja
       endif
       nnz=jja-1
@@ -331,8 +281,12 @@ c     local variables
       
       parameter (rad = 0.01745329251994329)
 
-      if (diag.ne.0) then
+
+c     Great savings if we know that x=y. This can be done by
+c     multiplying diag by two.
+      if (abs(diag).gt.1) then
          equi=.TRUE.
+         diag=diag/2
       else 
          equi= .FALSE. 
       endif
@@ -354,21 +308,9 @@ c     local variables
          sy2(j)=dsin(tmp2)
       ENDDO
 
-      if (part.lt.0 .and. diag.gt.0) then
-         ifrom = 2
-         rowpointers(2)=1
-      else
-         ifrom = 1
-      endif
-      if (part.gt.0 .and. diag.gt.0) then
-         ito = nx-1
-      else
-         ito = nx
-      endif
-      
        
       
-      do i= ifrom,ito
+      do i= 1,nx
          
 c     x2 is missing if equi=.TRUE. and we reuse the y stuff 
          if (equi .eqv. .TRUE.) then 
@@ -384,38 +326,40 @@ c     x2 is missing if equi=.TRUE. and we reuse the y stuff
          endif 
 
          if (part .lt. 0) then
-            if (diag.gt.0) then
-               jto = i - diag
-            else
-               jto = i
-            endif
+            jto = i
          endif
          if (part .gt. 0) then
-            if (diag.gt.0) then
-               jfrom = i + diag
-            else
-               jfrom = i
-            endif
+            jfrom = i
          endif
-         
+       
          do 10 j = jfrom,jto
 
-            if ((i.eq.j).and.(diag.gt.0)) goto 10
-            if ((i.eq.j).and.(diag.lt.0)) then
-               tmp = 0.0
-            else
-               tmp = ccx12 * ccy12(j)
-     %             + scx12 * scy12(j)  + sx2*sy2(j)
 
-c     if tmp >= 1, implies numerically acos(1)=0
-               if (tmp .ge. epsp) goto 10
-               if (tmp .lt. etap) goto 10
-               tmp = dacos( tmp)
-            endif
+c Start calculating the distance 
+            tmp = ccx12 * ccy12(j) + scx12 * scy12(j)  + sx2*sy2(j)
+            if (tmp .lt. etap) goto 10
             
+            
+c Delta is not exceeded. 
+c If we need to do not include the diagonal (diag==0)
+c    eps < tmp < delta
+c If we do include the diagonal,  
+c    eps < tmp < delta for i=/=j only
+ 
+            if (diag.eq.-1) then
+               if (tmp.ge.epsp) goto 10
+            else
+               if (i.ne.j) then
+                  if (tmp.ge.epsp) goto 10
+               endif
+            endif
+
+            tmp = dacos( tmp)
+
+
 c     (i,j) has a distance between eps and eta.
             
-c     in case nnz was too small, recall line to get a better estimate
+c     In case nnz was too small, recall line to get a better estimate
             if( jja .gt. nnz) then
                iflag = i 
                goto 20
@@ -431,7 +375,7 @@ c     in case nnz was too small, recall line to get a better estimate
       enddo
       
       
-      if (part.gt.0 .and. diag.gt.0) then
+      if (part.gt.0) then
          rowpointers(nx+1)=jja
       endif
       nnz=jja-1

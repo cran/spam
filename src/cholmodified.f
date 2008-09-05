@@ -129,38 +129,54 @@ c temp and working stuff, loops, etc
       integer i,j,k,  nnzadj, jtmp
       double precision iwork(7*m+3)
 
-      iwsiz=7*m+3
-c
-c Extract the non-diagonal structure  of d,jd,id
-c   The diagonal entries are stored in dsub(1:m), the off-diagonal entries
-c   are stored rowwise in dsub(m+2:nnzd+1), their column indices are stored 
-c   in jsub(m+2:nnzd+1), the pointers to the nondiagonal entries in 
-c   dsub(m+2:nnzd+1) and jsub(m+2:nnzd+1) are stored in jsub(1:m+1) 
-c
+c iwsiz is used temporalily
+      iwsiz=0
+
+c Create the adjacency matrix: eliminate the diagonal elements from
+c    (d,id,jd) and make two copies: (*,xlindx,lindx),(*,adj,adjncy)
+c    Also to lindx and xlindx, because the matrix structure is destroyed 
+c    by the minimum degree ordering routine.
+
       nsub = 0
+
+c the adj matrix has m elements less than d
       nnzadj = nnzd - m
 
       k=1
       do i=1,m
+c copy id, but ajust for the missing diagonal.
          xlindx(i) = id(i)-i+1
          adj(i) = xlindx(i)
+
+c now cycle over all rows
          do j=id(i),id(i+1)-1
             jtmp=jd(j)
             if (jtmp.ne.i) then
                lindx(k) = jtmp               
                adjncy(k) = jtmp               
                k=k+1
+            else
+               if ( d(j) .le. 0) then
+                  ierr = 1
+                  return
+               endif
+               iwsiz = iwsiz + 1
             endif
          enddo
       enddo
       jtmp=m+1
       xlindx(jtmp) = id(jtmp)-m
       adj(jtmp) = xlindx(jtmp)
-        
 
-c Save the  matrix structure from jdsub(m+2:nnzd+1),jdsub(1:m+1)
-c   to lindx and xlindx because the matrix structure is destroyed by the 
-c   minimum degree ordering routine
+c check if we actually had m elements on the diagonal...
+      if ( iwsiz .lt. m) then
+         ierr = 1
+         return
+      endif
+
+c initialize iwsiz to the later used value...        
+      iwsiz=7*m+3
+
 c
 c
 c reorder the matrix using minimum degree ordering routine.

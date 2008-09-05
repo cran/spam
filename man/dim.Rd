@@ -1,6 +1,7 @@
 \name{dim}
 \alias{dim}
 \alias{dim<-.spam} 
+\alias{dim<-,spam-method}
 \title{Dimensions of an Object}
 \description{
   Retrieve or set the dimension of an \code{spam} object.
@@ -46,9 +47,7 @@ s <- diag.spam(4)
 dim(s) <- c(7,3)  # any positive value can be used
 
 s <- diag.spam(4)
-dim(s) <- c(2,8)
-
-spam( diag.spam(4), 2, 8)  # equivalent to dim(x)<-c(2,8)
+dim(s) <- c(2,8)  # result is different than x
 
 }
 \author{Reinhard Furrer}

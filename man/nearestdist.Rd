@@ -9,7 +9,7 @@
 \usage{
 nearest.dist( x, y=NULL, method = "euclidean",
              eps = .Spam$eps, delta = 1,
-             diag = FALSE, upper = NULL,
+             diag = FALSE, upper = FALSE,
              p=2, miles=TRUE, R=NULL)
 }
 \arguments{
@@ -24,27 +24,36 @@ nearest.dist( x, y=NULL, method = "euclidean",
           given.}
   \item{eps}{distances smaller than this number are considered zero.} 
   \item{delta}{only distances smaller than \code{delta} are recorded.} 
-  \item{diag}{Should the diagonal be included? Only of importance if \code{y} is missing.} 
+  \item{diag}{Should the diagonal be included? See details.} 
   \item{upper}{Should the entire matrix (\code{NULL}) or only the upper-triagonal (\code{TRUE})
                or lower-triagonal (\code{FALSE}) values be calculated.} 
   \item{p}{The power of the Minkowski distance.} 
-  \item{miles}{If true distances are in statute miles if false distances in
+  \item{miles}{For great circle distance: If true distances are in statute miles if false distances in
           kilometers.} 
-  \item{R}{Radius to use for sphere to find spherical distances. If \code{NULL}
+  \item{R}{For great circle distance: Radius to use for sphere to find spherical distances. If \code{NULL}
           the radius is either in miles or kilometers depending on the
           values of the miles argument. If \code{R=1} then distances are of
           course in radians.}
 }
 \value{A \code{spam} object containing the distances spanned by \code{eps} and \code{delta}.}
 
-\details{For the great circle distance, \code{x} and \code{y} contain
+\details{For great circle distance, \code{x} and \code{y} contain
   the longitudes in the first and the latitudes in the second column.
+  \code{eps} and \code{delta} are in degrees. The distance is
+  in single precision and if calculating the entire matrix it does not
+  pass the symmetry check of \code{chol}, for example.\cr 
+
+  The argument \code{dist=TRUE} determines if diagonal elements will also be
+  included if smaller than \code{eps}.\cr
+%  \code{dist(x)} and \code{dist(x,x)} should return the same result.
+  
   \code{x} and \code{y} can be any object with an existing
   \code{as.matrix} method.\cr
 
   A quick scan revieled distance functions in at least 7 packages. The
   argument names should be as general as possible and be coherend with
   many (but not all) available distance functions.\cr
+  
   The Fortran code is based on a idea of Doug Nychka.
     }
 %\references{}

@@ -26,9 +26,6 @@
 \alias{Compare,numeric,spam-method}
 \alias{Compare,spam,numeric-method}
 \alias{c,spam-method}
-\alias{cbind,spam-method}
-\alias{dim<-,spam-method}
-\alias{image,spam-method}
 \alias{length<-,spam-method}
 \alias{length,spam-method}
 \alias{lower.tri,spam-method}
@@ -38,7 +35,6 @@
 \alias{plot,spam,missing-method}
 \alias{plot,spam,spam-method}
 \alias{Summary,spam-method}
-\alias{rbind,spam-method}
 \alias{show,spam-method}
 \alias{upper.tri,spam-method}
 
@@ -95,6 +91,8 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
       sparse matrix.}
     \item{image}{\code{signature(x = "spam")}:
       see \code{\link{image}} for details.}
+    \item{display}{\code{signature(x = "spam")}:
+      see \code{\link{display}} for details.}
 %    \item{initialize}{\code{signature(.Object = "spam")}: ... }
     \item{length<-}{\code{signature(x = "spam")}: Is not implemented and
       causes an error.}

@@ -5,6 +5,42 @@
 	*						 *
 	**************************************************
 
+                CHANGES IN R VERSION 0.15-1
+
+    o   Improvements in the nearest.dist function. The diagonals
+	are now handled consistenly.
+
+    o	Symmetry check criterion for Cholesky decomposition has been
+	relaxed from (2+eps)*eps to 100*eps for an easier handling when
+	working with great circle distance induced covariance matrices.
+	Same cutoff is used with eigen. Instead of using norm, 
+	we use essentially an isSymmetric.spam test.
+
+    o	Methods isSymmetric and all.equal for spam. 
+	
+    o	Methods image and display for spam.chol.NgPeyton.
+
+    o	Method as.spam for distance class implemented.
+
+    o	Complete rewrite of spam.list. Method as.spam for lists
+	are implemented as well. 
+
+    o   Method spam for spam objects (possibility to rearrange the 
+	dimension) has been eliminated. The approach was based on
+	creating the full matrix and assigning it back to a spam 
+	object. 
+	
+    o   Binary subsetting and subassigning is implemented.
+
+    o	Bug fix: the Cholesky Fortran routine checks if diagonal 
+	elements are available (and positive).
+
+    o   Bug fix: in dim<-.spam
+
+    o	Minor improvements in the help files as well as the following
+	R functions: norm, .spam.matmul.
+
+
                 CHANGES IN R VERSION 0.15-0
 
     o   The devel versions of 14-x have been sitting around for 

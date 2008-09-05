@@ -55,9 +55,10 @@ export("dcheck",
        "as.spam.matrix",
        "as.spam.numeric",
        "as.spam.spam",
+       "as.spam.dist",
        "as.spam.chol.NgPeyton",
+       "as.spam.list",
        "as.matrix.spam",
-       "spam.spam",
        "spam.list",
        "spam.numeric",
        
@@ -72,6 +73,9 @@ export("dcheck",
        "t.spam",
 
        "dim<-.spam",
+
+       "isSymmetric.spam",
+       "all.equal.spam",
 
        "kronecker.default",
        "kronecker.spam",
@@ -124,6 +128,9 @@ exportMethods(
 
               "spam",
               "as.spam",
+
+              "isSymmetric",
+              "all.equal",
               
               "summary",
               "length",

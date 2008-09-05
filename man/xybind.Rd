@@ -3,6 +3,8 @@
 \alias{cbind}
 \alias{cbind.spam}
 \alias{rbind.spam}
+\alias{cbind,spam-method}
+\alias{rbind,spam-method}
 \title{Combine spam Matrices by Rows or Columns}
 \description{Take a sequence of vector, matrix or \code{spam} object arguments and
      combine by \emph{c}olumns or \emph{r}ows, respectively.}

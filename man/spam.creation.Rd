@@ -4,20 +4,23 @@
 \alias{spam}
 \alias{spam.list}
 \alias{spam.numeric}
-\alias{spam.spam}
 \alias{spam,list-method}
-\alias{spam,spam-method}
 \alias{spam,numeric-method}
+%\alias{spam.spam}
+%\alias{spam,spam-method}
 \alias{as.spam,matrix-method}
 \alias{as.spam,numeric-method}
 \alias{as.spam,spam-method}
 \alias{as.spam,spam.chol.NgPeyton-method}
+\alias{as.spam,dist-method}
+\alias{as.spam,list-method}
 \alias{as.spam}
 \alias{as.spam.spam}
 \alias{as.spam.numeric}
 \alias{as.spam.matrix}
 \alias{as.spam.chol.NgPeyton}
-\alias{as.spam.}
+\alias{as.spam.dist}
+\alias{as.spam.list}
 \alias{is.spam}
 \alias{validspamobject}
 \title{Sparse Matrix Class}
@@ -35,7 +38,8 @@ is.spam(x)
   A valid \code{spam} object.\cr
   \code{is.spam} returns \code{TRUE} if \code{x} is a \code{spam} object.}
 \arguments{
-\item{x}{is a matrix (of either dense or sparse form), a list or vector object}
+  \item{x}{is a matrix (of either dense or sparse form), a list, vector
+    object or a distance object}
 \item{nrow}{number of rows of matrix }
 \item{ncol}{number of columns of matrix }
 \item{eps}{A tolerance parameter:  elements of \code{x} such that
@@ -46,6 +50,15 @@ is.spam(x)
   and \code{as.matrix} 
   to coerce an object to a sparse matrix object of class \code{spam}.  
 
+
+  If \code{x} is a list, it should contain either two or three elements.
+  In case of the former, the list should contain a \code{n} by two
+  matrix of indicies (called \code{ind}) and the values.
+  In case of the latter, the list should contain three vectors
+  containing the row, column indices (called \code{i} and
+  \code{j}) and the values. In both cases partial matching is done.
+
+  
   \code{eps} should be at least as large as \code{.Machine$double.eps}.
 }
 \note{The zero matrix has the element zero stored in (1,1).\cr
@@ -63,7 +76,7 @@ is.spam(x)
   \code{\link{spam.options}} for details about the \code{safemode} flag.
     \code{\link{read.MM}} and \code{\link{foreign}} to create \code{spam}
 	matrices from MatrixMarket
-    files and from certaib \code{Matrix/SparseM} formats.
+    files and from certain \code{Matrix/SparseM} formats.
 }
 \examples{
 # old message, do not loop, when you create a large sparse matrix

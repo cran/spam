@@ -158,6 +158,13 @@ test.for.zero(ss,tt)
 ss[3:1,] <- 1:m;tt[3:1,] <- 1:m
 test.for.zero(ss,tt)
 
+rw <- sample(c(T,F),nrow(tt),rep=T)
+cl <- sample(c(T,F),ncol(tt),rep=T)
+ass <- rnorm(sum(rw)*sum(cl))
+ss[rw,cl] <- ass
+tt[rw,cl] <- ass
+
+test.for.zero(ss[rw,cl],tt[rw,cl])
 
 if (F) { # do not run
   # the following quantities will be different because of different reasons.
@@ -181,6 +188,8 @@ if (F) { # do not run
   ss[as.spam(tmp <- array(1:15,c(5,3)))]  #  error, wrong format
 
   ss[ array(sample(1:15,24,rep=T),c(12,2))]  # works not because out of bounds
+
+  ss[numeric(0),]  # error, at least one element is needed...
 }
 ss[cbind(1,1)] <- 4;tt[cbind(1,1)] <- 4
 test.for.zero(ss,tt)
@@ -215,6 +224,10 @@ test.for.zero(ss[,2],tt[,2])  # ok
 test.for.zero(ss[1,3],tt[1,3])# ok
 test.for.zero(ss[3:1,],tt[3:1,])# ok
 
+
+rw <- sample(c(T,F),nrow(tt),rep=T)
+cl <- sample(c(T,F),ncol(tt),rep=T)
+test.for.zero(ss[rw,cl],tt[rw,cl])
 
 rw <- c(1,3);cl <- 1:3;
 test.for.zero(ss[rw,cl],tt[rw,cl])
@@ -354,6 +367,42 @@ if (F) { #not implemented
   tt[5,] <- Inf
   as.spam(tt)
 }
+
+
+
+# transformation from list and else
+cat("Testing 'as.spam.list' and 'triplet':\n")
+test.for.zero( spam(triplet(ss)), ss)
+test.for.zero( spam(triplet(ss, tri=TRUE)), ss)
+
+test.for.zero( spam(triplet(tt)), ss)
+test.for.zero( spam(triplet(tt, tri=TRUE)), ss)
+
+
+if (F) { # the following should cause errors:
+  spam.list( list(i=1, 2))
+  spam.list( list(ind=1, 2))
+  spam.list( list(ind=1, 1, 2))
+  spam.list( list(ind=1, j=0, 2))
+  spam.list( list(ind=numeric(0), j=numeric(0), numeric(0)))
+}
+
+test.for.zero(spam( list(ind=numeric(0), j=numeric(0), numeric(0)),nrow=4,ncol=3),
+              spam(0,4,3),rel=FALSE)
+
+i <- c(1,2,3,4,5)
+j <- c(5,4,3,2,1)
+ss3 <- spam(0,5,5)
+ss3[cbind(i,j)] <- i/j
+test.for.zero(spam(list(i=i,j=j,i/j)), ss3)
+dim(ss3) <- c(13,13)
+test.for.zero(spam(list(i=i,j=j,i/j),13,13), ss3)
+dim(ss3) <- c(3,3)
+test.for.zero(spam(list(i=i,j=j,i/j),3,3), ss3)
+dim(ss3) <- c(2,2)
+test.for.zero(spam(list(i=i,j=j,i/j),2,2), ss3,rel=F)
+
+
 
 
 options( echo=TRUE)

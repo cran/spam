@@ -29,7 +29,7 @@
   
   - implement other Cholesky routines (one eye glances to the LDL library). \cr
 
-  - what about an LU decomposition?\cr
+  - what about an LU/SVD decomposition?\cr
   
 %   - implement \code{backsolve} and \code{forwardsolve} for \code{spam} class.\cr  => done
 

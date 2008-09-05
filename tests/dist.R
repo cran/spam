@@ -1,5 +1,6 @@
 options( echo=FALSE)
-library( spam)
+library( spam)  #   library("spam",lib="~/todelete/0.15-1R7/")
+
 fieldshere <- require(fields)
 
 if (!fieldshere)
@@ -85,10 +86,17 @@ o1 <- nearest.dist( x1, diag=FALSE, upper=!FALSE)
 test.for.zero(o2[o2>eps & o2< eta & lower.tri(o2)]- o1@entries)
 
 
+
 # Should cause error:
 #    nearest.dist(cbind(1,1))
+# this is ok:
 test.for.zero( nearest.dist(rbind(1,0)) - c(0,1,1,0))
 test.for.zero( nearest.dist(cbind(1,1),cbind(1,0)) -1)
+
+
+
+# testing with dist only
+test.for.zero( c(as.spam( dist(x1)) - nearest.dist(x1,upper=FALSE,diag=FALSE,delta=2)))
 
 
 # testing some other norms
@@ -141,22 +149,22 @@ display( nearest.dist( x1,x1,  delta=180,method="gr",diag=TRUE,  upper=TRUE))
 
 if (fieldshere){
 o2 <- rdist.earth(x1)
-o1 <- nearest.dist( x1, method="gr",diag=TRUE,delta=delta)
+o1 <- nearest.dist( x1, method="gr",diag=TRUE,upper=NULL,delta=delta)
 test.for.zero(o2- o1@entries)
 
-eps <- spam.getOption('eps')^.5
+eps <- (spam.getOption('eps')^.5)*2
 o2 <- rdist.earth(x1, R=1)
-o1 <- nearest.dist( x1,  method="gr",diag=FALSE,delta=180,R=1) 
-test.for.zero(o2[o2>eps]- o1@entries)
+o1 <- nearest.dist( x1,  method="gr",diag=FALSE,upper=NULL,delta=180,R=1) 
+test.for.zero(o2[o2>eps]- o1@entries[o1@entries>eps])
 
 eps <- 30
 o2 <- rdist.earth(x1, R=1)
-o1 <- nearest.dist( x1,  method="gr",diag=FALSE,eps=eps,delta=180,R=1)
+o1 <- nearest.dist( x1,  method="gr",diag=FALSE,upper=NULL,eps=eps,delta=180,R=1)
 test.for.zero(o2[o2>eps*pi/180]- o1@entries)
 
 delta <- 90
 o2 <- rdist.earth(x2,x1,R=1)
-o1 <- nearest.dist( x1,x2, method="gr",diag=TRUE,delta=delta,R=1)
+o1 <- nearest.dist( x1,x2, method="gr",diag=TRUE,upper=NULL,delta=delta,R=1)
 test.for.zero(o2[o2<delta*pi/180]- o1@entries)
 
 
@@ -193,4 +201,22 @@ cat("Expect warning:\n")
 spam.options(nearestdistnnz=c(3,3))
 o1 <- nearest.dist( x,method="max",p=p)
 spam.options(nearestdistnnz=c(400^2,400))
+
+
+
+
+
+
+
+
+#################################################################
+# addendum:
+# test a few as.spam.dist:
+
+test.for.zero( as.spam(dist(0))@entries -0)
+
+# 'NA/NaN/Inf's are coerced to zero:
+cat("Expect warning:\n")
+test.for.zero( as.spam(dist(c(0, NA, 1)))@entries -1)
+
 

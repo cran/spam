@@ -114,7 +114,7 @@ summary.spam <- function(object,...) {
           }
 
 "dim<-.spam" <- function(x,value) {
-  if ( (min(value)<1 ) | any(!is.finite(value)))
+  if ( (min(value)<1 ) || any(!is.finite(value)))
     stop("dims should be postive integers.")
   if (!identical( length(value), int2)) stop("dims should be of length 2.")
   dimx <- x@dimension
@@ -127,27 +127,31 @@ summary.spam <- function(object,...) {
   #  3) if fewer rows and more columns, truncate
   # In any case, dimensions are fixed at the end.
   
-  # If fewer cols required, we run reducediminplace
+  # If fewer cols required, we run reducedim
   if (dimx[2]>value[2]){
-#     subroutine reducediminplace(eps,nrow,ncol,k,a,ja,ia)     
-    z <- .Fortran("reducediminplace",
+#     subroutine reducedim(a,ja,ia,eps,bnrow,bncol,k,b,jb,ib)
+    z <- .Fortran("reducedim",
+                  oldra=dcheck(x@entries),
+                  oldja=x@colindices,
+                  oldia=x@rowpointers,
                   eps=.Spam$eps,
                   as.integer(min(value[1],dimx[1])),as.integer(value[2]),
                   nz=as.integer(1),
-                  entries=dcheck(x@entries),
-                  colindices=x@colindices,
-                  rowpointers=x@rowpointers,
-                  NAOK = !.Spam$safemode[3], DUP=!FALSE, PACKAGE = "spam")
+                  entries=vector("double",length(x@entries)),
+                  colindices=vector("integer",length(x@entries)),
+                  rowpointers=vector("integer",last),
+                  NAOK = !.Spam$safemode[3], DUP=FALSE, PACKAGE = "spam")
     if (identical(z$nz,int1) )
-      return(new("spam",rowpointers=c(int1,rep.int(int2,as.integer(value[1]))), dimension=as.integer(value)))
+      return(new("spam",rowpointers=c(int1,rep.int(int2,as.integer(value[1]))),
+                 dimension=as.integer(value)))
 
     nz <- z$nz-1
     slot(x,"entries",check=FALSE) <- z$entries[1:nz]
     slot(x,"colindices",check=FALSE) <- z$colindices[1:nz]
     slot(x,"rowpointers",check=FALSE) <- z$rowpointers[1:min(last,dimx[1]+1)]
   }
+  # augment rows
   if  (dimx[1]<value[1]){
-    # augment rows
     slot(x,"rowpointers",check=FALSE) <- c(x@rowpointers,rep.int(
                            x@rowpointers[length(x@rowpointers)],value[1]-dimx[1]))
   }
@@ -391,51 +395,100 @@ setMethod("t","spam",t.spam)
   return(newx)
 }
 
+
+"as.spam.dist" <- function(x, eps = .Spam$eps) {
+  if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
+  if (any(!is.finite(x))) {
+    warning("'NA/NaN/Inf' coerced to zero")
+    x[!is.finite(x)] <- 0
+  }
+  dimx <- attr(x,"Size")
+  size <- dimx*(dimx-1)/2
+  z <- .Fortran("disttospam",
+                nrow=dimx,
+                x=as.vector(x,'double'),
+                entries=vector('double',size),
+                colindices=vector('integer',size),
+                rowpointers=vector('integer',dimx+1),
+                eps=as.double(eps),
+                NAOK=!.Spam$safemode[3],
+                PACKAGE = "spam"
+                )
+  nz <- z$rowpointers[dimx+1]-1
+  if(nz==0) return(new("spam",rowpointers=c(int1,rep(int2,dimx)), dimension=c(dimx,dimx)))
+
+  newx <- new("spam")
+  slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
+  slot(newx,"colindices",check=FALSE) <- z$colindices[1:nz]
+  slot(newx,"rowpointers",check=FALSE) <- z$rowpointers[1:(dimx+1)]
+  slot(newx,"dimension",check=FALSE) <- c(dimx,dimx)
+ 
+  return(newx)
+}
+
+"as.spam.list" <-  function(x, eps = .Spam$eps)
+  spam.list(x,eps)
+
 "spam.list" <-  function(x, nrow = 1, ncol = 1, eps = .Spam$eps) {
   if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
-  if (!is.list(x)) stop("Argument 'x' needs to be a list with two elements")
-  indnr <- pmatch("ind",names(x)) 
-  if (is.na(indnr)) stop("Argument 'x' needs an element called 'indices'")
-  elenr <- ifelse( identical( indnr,int1), int2, int1)
-  
-  nz <- length( x[[elenr]])
-  if (dim(x[[indnr]])[1] != nz) stop("Number of indices does not match with number of elements")
-  if (dim(x[[indnr]])[2] != 2)  stop("Indices should have two columns")
+  if (!is.list(x)|(length(x)<2)|(length(x)>3))
+    stop("Argument 'x' needs to be a list with two or three elements")
+  # two cases: list of length
+  # -  two (matrix with two columns called ind* and the elements)
+  # -  three (each one column called i*, j*.   
 
+  if (identical(length(x),int2)) {
+    indnr <- pmatch("ind",names(x)) 
+    if (is.na(indnr)) stop("Argument 'x' needs an element called 'indices'")
+    elenr <- ifelse( identical( indnr,int1), int2, int1)
+    
+    nz <- length( x[[elenr]])
+
+    dimx <- dim(x[[indnr]])
+    if (is.null(dimx)||(dimx[2] != 2))  stop("Indices should have two columns")
+    if (dimx[1] != nz) stop("Number of indices does not match with number of elements")
+    
+    ir <- as.integer(x[[indnr]][,1])
+    jc <- as.integer(x[[indnr]][,2])
+  } else {
+    inr <- pmatch("i",names(x)) 
+    jnr <- pmatch("j",names(x))
+    if (is.na(inr)||is.na(jnr)) stop("Argument 'x' needs elements called 'i' and 'j'")
+    elenr <- c(1:3)[-c(inr,jnr)]
+    nz <- length( x[[elenr]])
+    
+    ir <- as.integer(x[[inr]])
+    jc <- as.integer(x[[jnr]])
+
+    if ((length(ir) != nz)||(length(jc) != nz))
+        stop("Number of indices does not match with number of elements")
+  }
   if (identical(nz, int0))
     return(new("spam",rowpointers=c(int1,rep.int(int2,as.integer(nrow))), dimension=as.integer(c(nrow,ncol))))
-  
+  if (any( ir <= 0) || any( jc <= 0))
+      stop("Indices need to be positive")
   if (any(!is.finite(x[[elenr]]))) {
     warning("'NA/NaN/Inf' coerced to zero")
     x[[elenr]][!is.finite(x[[elenr]])] <- 0
   }
-  
-  
+  nrow <- as.integer(ifelse(missing(nrow),max(ir),nrow))
   z <- .Fortran("triplet2csr",
-                nrow=as.integer(ifelse(missing(nrow),0,nrow)),
-                ncol=vector("integer",1),
+                nrow=nrow, ncol=as.integer(ifelse(missing(ncol),max(jc),ncol)),
                 nz,
-                as.double(x[[elenr]]),
-                as.integer(x[[indnr]][,1]),
-                as.integer(x[[indnr]][,2]),
+                as.double(x[[elenr]]),ir,jc,
                 entries=vector("double",nz),
                 colindices=vector("integer",nz),
-                rowpointers=vector("integer",nz),
+                rowpointers=vector("integer",nrow+1),eps,
                 NAOK=TRUE, DUP = FALSE, PACKAGE = "spam"
                 )
+  if (identical(z$nz, int0))
+    return(new("spam",rowpointers=c(int1,rep.int(int2,as.integer(nrow))), dimension=as.integer(c(nrow,ncol))))
   newx <- new("spam")
   slot(newx,"entries",check=FALSE) <- z$entries
   slot(newx,"colindices",check=FALSE) <- z$colindices
-  slot(newx,"rowpointers",check=FALSE) <- z$rowpointers[1:(z$nrow+1)]
-  slot(newx,"dimension",check=FALSE) <- c(z$nrow,z$ncol)
+  slot(newx,"rowpointers",check=FALSE) <- z$rowpointers
+  slot(newx,"dimension",check=FALSE) <- c(nrow,z$ncol)
   
-  # If not missing nrow and ncol, we change the dimension, based
-  # on reducediminplace
-  if ( !missing(nrow)|!missing(ncol)) {
-    if (missing(nrow)) nrow <- z$nrow
-    if (missing(ncol)) ncol <- z$ncol
-    "dim<-.spam"(newx,c(nrow,ncol))
-  }
   return(newx)
 }
 
@@ -489,33 +542,35 @@ setMethod("t","spam",t.spam)
   return(newx)
 }
 
-"spam.spam" <-
-function(x, nrow = 1, ncol = 1, eps = .Spam$eps)
-{
-  if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
-  x <- as.matrix.spam(x)
-  xlen <- length(x)
-  if (missing(nrow))
-    nrow <- ceiling(xlen/ncol)
-  else if (missing(ncol))
-    ncol <- ceiling(xlen/nrow)
-  if (xlen == prod(nrow, ncol))
-    dim(x) <- c(nrow, ncol)
-  else{
-    if(xlen==1 && abs(x)<eps) {
-      dimx <- c(nrow,ncol)
-      return(new("spam",entries=0,colindices=as.integer(1),
-                 rowpointers=as.integer(c(1,rep(2,dimx[1]))), 
-                 dimension=as.integer(dimx)))
-    }
-    else if(prod(nrow,ncol)%%xlen!=0)
-      warning("ncol*nrow indivisable by xlen")
-      
-    x <- rep(x, ceiling(prod(nrow,ncol)/xlen))
-    dim(x) <- c(nrow, ncol)
-  }
-  return( as.spam(x, eps=eps))
-}
+# "spam.spam" <-
+# function(x, nrow = 1, ncol = 1, eps = .Spam$eps)
+# {
+#   if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
+#   x <- as.matrix.spam(x)
+#   xlen <- length(x)
+#   if (missing(nrow))
+#     nrow <- ceiling(xlen/ncol)
+#   else if (missing(ncol))
+#     ncol <- ceiling(xlen/nrow)
+#   if (xlen == prod(nrow, ncol))
+#     dim(x) <- c(nrow, ncol)
+#   else{
+#     if(xlen==1 && abs(x)<eps) {
+#       dimx <- c(nrow,ncol)
+#       return(new("spam",entries=0,colindices=as.integer(1),
+#                  rowpointers=as.integer(c(1,rep(2,dimx[1]))), 
+#                  dimension=as.integer(dimx)))
+#     }
+#     else if(prod(nrow,ncol)%%xlen!=0)
+#       warning("ncol*nrow indivisable by xlen")
+#       
+#     x <- rep(x, ceiling(prod(nrow,ncol)/xlen))
+#     dim(x) <- c(nrow, ncol)
+#   }
+#   return( as.spam(x, eps=eps))
+# }
+
+
 
 
 
@@ -523,23 +578,34 @@ setGeneric("as.spam")
 setMethod("as.spam","spam",   as.spam.spam)
 setMethod("as.spam","matrix", as.spam.matrix)
 setMethod("as.spam","numeric",as.spam.numeric)
+setMethod("as.spam","dist",   as.spam.dist)
+setMethod("as.spam","list",   { function(x,eps) spam.list(x,eps=eps)})
 
 setGeneric("spam")
 setMethod("spam","numeric",spam.numeric)
 setMethod("spam","list",spam.list)
-setMethod("spam","spam",spam.spam)
+# setMethod("spam","spam",spam.spam)
 
 
-triplet <- function(x){
+
+triplet <- function(x, tri=FALSE){
 # inverse of spam.list
   dimx <- dim(x)
   if (length(dimx)!=2) stop("'x' should be a matrix like object of dim 2")
   if (is.spam(x)) {
-    return(list(indices=cbind(rep(1:dimx[1],diff(x@rowpointers)),
-                  x@colindices),values=x@entries))
+    return(c({ if (tri) list(i=rep(1:dimx[1],diff(x@rowpointers)),
+                  j= x@colindices) else list(indices=cbind(rep(1:dimx[1],diff(x@rowpointers)),
+                  x@colindices) ) }, list(values=x@entries)
+             )
+           )
   } else {
-    return(list(indices=cbind(rep.int(1:dimx[1],dimx[2]),
-                  rep.int(1:dimx[2],rep.int(dimx[1],dimx[2]))),values=c(x)))
+    return(c({ if (tri) list(i=rep.int(1:dimx[1],dimx[2]),
+                             j=rep.int(1:dimx[2],rep.int(dimx[1],dimx[2]))) else
+              list(indices=cbind(rep.int(1:dimx[1],dimx[2]),
+                  rep.int(1:dimx[2],rep.int(dimx[1],dimx[2]))))
+             } , list(values=c(x))
+             )
+           )
   }
 }
 
@@ -1004,15 +1070,17 @@ function (x,rw,cl,drop=.Spam$drop,...)
                       PACKAGE="spam")$allelem)
 
   }
-  if ( max(rw)<0 ) {
-    rw <- seq_len( nrow)[rw] 
-    if (length(rw)==0) stop("You should subset at least one element for the rows",call.=FALSE)
-  }
-  if ( max(cl)<0 ) {
-    cl <- seq_len( ncol)[cl] 
-    if (length(cl)==0) stop("You should subset at least one element for the columns",call.=FALSE)
-  }
-    
+  # negative values:
+  if ( max(rw)<0 )       rw <- seq_len( nrow)[rw] 
+  if ( max(cl)<0 )       cl <- seq_len( ncol)[cl] 
+  
+  # logical
+  if (is.logical(rw))    rw <- seq_len( nrow)[rw] 
+  if (is.logical(cl))    cl <- seq_len( ncol)[cl] 
+  
+  if (length(cl)==0) stop("You should subset at least one element for the columns",call.=FALSE)
+  if (length(rw)==0) stop("You should subset at least one element for the rows",call.=FALSE)
+
   if ( (min(rw)<1)|(max(rw)>x@dimension[1])|(min(cl)<1)|(max(cl)>x@dimension[2]))
     stop("subscript out of bounds",call.=FALSE)
   
@@ -1223,14 +1291,19 @@ function (x, rw, cl,value)
     return(newx)
     
   }
-  if ( max(rw)<0 ) {
-    rw <- seq_len( nrow)[rw] 
-    if (length(rw)==0) stop("You should assign at least one element for the rows",call.=FALSE)
-  }
-  if ( max(cl)<0 ) {
-    cl <- seq_len( ncol)[cl] 
-    if (length(cl)==0) stop("You should assign at least one element for the columns",call.=FALSE)
-  }
+  # negative subsetting:
+  if ( max(rw)<0 )    rw <- seq_len( nrow)[rw] 
+  if ( max(cl)<0 )    cl <- seq_len( ncol)[cl] 
+  
+  # logical
+  if (is.logical(rw))    rw <- seq_len( nrow)[rw] 
+  if (is.logical(cl))    cl <- seq_len( ncol)[cl] 
+
+  # sanity check
+  if (length(rw)==0) stop("You should assign at least one element for the rows",call.=FALSE)
+  if (length(cl)==0) stop("You should assign at least one element for the columns",call.=FALSE)
+
+
   if ( (min(rw)<1)|(max(rw)>x@dimension[1])|(min(cl)<1)|(max(cl)>x@dimension[2]))
     stop("subscript out of bounds",call.=FALSE)
   
@@ -1312,7 +1385,7 @@ function(x,y)
     return(z)
   }
   if (is.matrix(y)) y <- as.spam(y)
-  else  if(is.matrix(x)) x <- as.spam(x)
+  if (is.matrix(x)) x <- as.spam(x)
 
 
   #matrix multiply two sparse spam matrices
@@ -1339,7 +1412,8 @@ function(x,y)
                 as.integer(1),
                 dcheck(x@entries), x@colindices, x@rowpointers,
                 dcheck(y@entries), y@colindices, y@rowpointers,
-                entries = vector("double",nzmax), colindices = vector("integer",nzmax), rowpointers = vector("integer",xn+1),
+                entries = vector("double",nzmax), colindices = vector("integer",nzmax),
+                rowpointers = vector("integer",xn+1),
                 as.integer(nzmax),
                 integer(yl),
                 ierr = vector("integer",1),
@@ -1586,7 +1660,7 @@ norm.spam <- function(x, type = "sup", ...){
          )
 }
 
-setGeneric("norm",function(x, type,...)standardGeneric("norm"))
+setGeneric("norm",function(x, type = "sup",...)standardGeneric("norm"))
 setMethod("norm",signature(x="spam",type="character"), norm.spam)
 setMethod("norm",signature(x="spam",type="missing"),
           function(x,type) norm.spam(x,"sup"))
@@ -1656,3 +1730,73 @@ setMethod("%d+%",signature(x="spam",y="ANY"),      function(x,y){ .spam.addspars
 setMethod("%d+%",signature(x="numeric",y="spam"),  .spam.diagaddmat )
 
 
+#####################################################################
+#
+# a bit of matrix handling
+
+all.equal.spam <- function (target, current, tolerance = .Machine$double.eps^0.5,
+    scale = NULL, check.attributes = FALSE,...)
+{
+    if (check.attributes)
+        warning("attributes are not supported for 'spam' objects. Ignoring 'check.attributes' argument")
+    if (!is.spam(target)) stop("'target' should be of class 'spam'")    
+    if (!is.spam(current)) {
+        return(paste("target is spam, current is ", data.class(current), sep = ""))
+    }
+    msg <- NULL
+    lt <- length(target)
+    lc <- length(current)
+    if (lt != lc) {
+      return(paste("Lengths (", lt, ", ", lc, ") differ", sep = ""))
+    }
+    dt <- target@dimension
+    dc <- current@dimension
+    if ( !all( dt == dc ))
+      return(paste("Dimensions ([",dt[1],",",dt[2],"], [",
+                    dc[1],",",dc[2], "]) differ", sep = ""))
+    tmp <- sum(target@colindices != current@colindices) 
+    if ( tmp>0)
+      msg <- c(msg,paste("Column-sparsity structure differ (at least",
+                    tmp,"instance(s))"))
+    
+    tmp <- sum(target@rowpointers != current@rowpointers) 
+    if ( tmp>0)
+      msg <- c(msg,paste("Row-sparsity structure differ (at least",
+                    tmp,"instance(s))"))
+
+    xy <- mean(abs(target@entries - current@entries))
+    what <- if (is.null(scale)) {
+        xn <- mean(abs(target@entries))
+        if (is.finite(xn) && xn > tolerance) {
+            xy <- xy/xn
+            "relative"
+        }
+        else "absolute"
+    }
+    else {
+        xy <- xy/scale
+        "scaled"
+    }
+    if (is.na(xy) || xy > tolerance)
+        msg <- c(msg,paste("Mean", what, "difference:",
+            format(xy)))
+    if (is.null(msg))
+        TRUE
+    else msg
+
+}
+
+isSymmetric.spam <- function(object, tol = 100 * .Machine$double.eps, ...)
+{
+  # very similar to is.Symmetric.matrix
+  if (!is.spam(object)) return(FALSE)
+  
+  d <- object@dimension
+  if (d[1] != d[2])     return(FALSE)
+  test <-  all.equal.spam(object, t.spam(object), tolerance = tol, ...)
+  isTRUE(test)
+
+}
+
+setMethod("all.equal",signature(target="spam",current="spam"), all.equal.spam )
+setMethod("isSymmetric","spam", isSymmetric.spam)

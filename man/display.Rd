@@ -2,6 +2,7 @@
 \alias{display}
 \alias{display.spam}
 \alias{display,spam-method}
+\alias{display,spam.chol.NgPeyton-method}
 \title{Graphially represent the nonzero entries}
 \description{The function represents the nonzero entries in a simple
   bicolor plot. 
@@ -9,7 +10,7 @@
 \usage{
   display(x, ...)
 }
-\arguments{\item{x}{matrix of class \code{spam}.}
+\arguments{\item{x}{matrix of class \code{spam} or \code{spam.chol.NgPeyton}.}
 %  \item{cex}{for very large matrices, the dot size may need to be scaled.}
   \item{...}{any other arguments passed
     to \code{image.default}/\code{plot}.}
