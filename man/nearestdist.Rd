@@ -37,14 +37,18 @@ nearest.dist( x, y=NULL, method = "euclidean",
 }
 \value{A \code{spam} object containing the distances spanned by \code{eps} and \code{delta}.}
 
-\details{For great circle distance, \code{x} and \code{y} contain
-  the longitudes in the first and the latitudes in the second column.
+\details{For great circle distance, the by 2 matrices \code{x} and \code{y} contain
+  the degrees longitudes in the first and the degrees latitudes in the second column.
   \code{eps} and \code{delta} are in degrees. The distance is
-  in single precision and if calculating the entire matrix it does not
-  pass the symmetry check of \code{chol}, for example.\cr 
+  in single precision (I am still not sure where I loose the double in
+  the Fortran code) and if calculating the entire matrix
+  \code{upper=NULL} (instead of adding its transpose) it may not
+  pass the symmetry checks, for example.\cr 
 
   The argument \code{dist=TRUE} determines if diagonal elements will also be
-  included if smaller than \code{eps}.\cr
+  included if smaller than \code{eps}. This is useful when calculating
+  covariance matrices based on a distance matrix. The default values of
+  \code{dist=FALSE} and \code{upper=FALSE} are borrowed from \code{dist}.\cr
 %  \code{dist(x)} and \code{dist(x,x)} should return the same result.
   
   \code{x} and \code{y} can be any object with an existing

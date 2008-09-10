@@ -22,7 +22,7 @@
   - extend basic matrix operatation, comparisons, etc: \cr
     \code{unique}, \code{duplicated}, ... 
   
-  - improve subsetting via row extraction\cr % xtrows
+  - improve subsetting via row extraction, incorporate matrix permutation\cr % xtrows
   
 %  - extend methods for \code{spam.chol.NgPeyton}: \cr
 %  e.g., \code{diag}  => done

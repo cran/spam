@@ -115,8 +115,10 @@ cholS <- chol( Sigma)
 # cholS is the upper triangular part of the permutated matrix Sigma
 iord <- ordering(cholS, inv=TRUE)
 
-R <- as.spam(cholS)[,iord]
-mvsample <- array(rnorm(N*n),c(N,n)) \%*\% R
+R <- as.spam(cholS)
+mvsample <- ( array(rnorm(N*n),c(N,n)) \%*\% R)[,iord]
+# It is often better to order the sample than the matrix
+# R itself. 
 
 # 'mvsample' is of class 'spam'. We need to transform it to a
 # regular matrix, as there is no method 'var' for 'spam' (should there?).

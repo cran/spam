@@ -5,6 +5,18 @@
 	*						 *
 	**************************************************
 
+                CHANGES IN R VERSION 0.15-2
+
+    o	Method all.equal for matrix-spam signature. 
+
+    o   Bug fix in Fortran function of nearest.dist. Numerical
+	instabilities could return NaN on diagonal. Additionally,
+	overhaul of tests/dist.R.
+
+    o	Several minor improvements in the help files as well
+	as in function nearest.dist and tests/*.R.
+
+
                 CHANGES IN R VERSION 0.15-1
 
     o   Improvements in the nearest.dist function. The diagonals

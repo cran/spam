@@ -32,34 +32,34 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
 {
   # see help for exact parameter meaning
 
-  # diag=TRUE  include if diag < delta (always the case if y=NULL)
+  # diag=TRUE  include if diag < delta 
   # diag=FALSE (not include diagonal)  (equivalent to > eps condition)
   # For the Fortran routine we have the following coding:
-  # diag=0 include diagonal and y=NULL
-  # diag=1 include diagonal and y is given (then the entries are also subject to eps/delta
+  # diag=1 include diagonal 
   # diag=-1 do not include diagonal
   if (!is.na(pmatch(method, "euclidian")))     method <- "euclidean"
   METHODS <- c("euclidean", "maximum", "minkowski", "greatcircle")
   method <- pmatch(method, METHODS)  # result is integer
 
   if (is.na(method))     stop("invalid distance method")
-  if (method == -1)      stop("ambiguous distance method")
+# The following is from dist. But I believe it unnecessary...
+#  if (method == -1)      stop("ambiguous distance method")
   if (delta <= eps)      stop("'delta' should be larger than 'eps'.")
   if (method == 4) {
     if (is.null(R))
       p <- ifelse( miles,3963.34,6378.388)
     else
       p <- R
-    if (abs(delta)>180)  stop("'delta' should be smaller than 180 degrees.")
+    if (abs(delta)>180.5)  stop("'delta' should be smaller than 180 degrees.")
   }
   
 
-  diag <- as.integer( ifelse(diag,1,-1))
+  diag <-  ifelse(diag, int1 ,-int1)
 
   if (is.null(upper)) 
-    part <- as.integer(0)
+    part <- int0
   else
-    part <- as.integer( ifelse(upper, 1 ,-1))
+    part <- ifelse(upper, int1 ,-int1)
   if (is.data.frame(x))  x <- as.matrix(x)
   if (is.list(x)) stop("'x' should be an array or matrix")
            # as.matrix( list() ) does not work
@@ -84,7 +84,7 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   } else {
     # x = y, i.e. proper distance matrix
     if (n1==1)         stop("More than a single point in 'x' is required.")
-    if (method == 4) diag <- diag*2
+    if (method == 4) diag <- diag*int2
     y <- x
     n2 <- n1
     nnz  <- min(max(.Spam$nearestdistnnz[1],
@@ -104,15 +104,17 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
                   iflag=as.integer(0),DUP=FALSE,NAOK=!TRUE,
                   PACKAGE="spam")
     
-    if (d$iflag==0)
-      break
-    else {
-      if (nnz==2^31-2) stop("distance matrix is too dense (more than 2^31 entries).")
-      nnz <- min(2^31-2,nnz*.Spam$nearestdistincreasefactor*n1/(d$iflag-1))
-      warning(paste("You ask for a 'dense' spase distance matrix, I require one more iteration.",
-                    "\nTo avoid the iteration, increase the 'nnznearestdist' option\n(constructed ",d$iflag,
-                    " lines out of ",n1,").\n",sep=""),
-              call. = TRUE)
+    if (d$iflag==0) break else {
+      if (nnz==2^31-2)
+        stop("distance matrix is too dense (more than 2^31 entries).")
+      nnz <-  min(2^31-2,nnz*.Spam$nearestdistincreasefactor*n1/(d$iflag-1))
+      madens <- d$iflag
+      on.exit(
+              warning(paste("You ask for a 'dense' spase distance matrix, I require one more iteration.",
+                            "\nTo avoid the iteration, increase 'nearestdistnnz' option to something like\n",
+                            "'spam.options(nearestdistnnz=c(",d$nnz,",400))'\n(constructed ",madens,
+                            " lines out of ",n1,").\n",sep=""), call. = TRUE)
+              )
     }
   }
 

@@ -1,5 +1,6 @@
 \name{allequal}
 \alias{all.equal.spam}
+\alias{all.equal,matrix,spam-method}
 \alias{all.equal,spam,spam-method}
 \title{Test if Two 'spam' Objects are (Nearly) Equal}
 \description{Utility to compare two \code{spam} objects
@@ -39,7 +40,11 @@ all.equal.spam(target, current, tolerance = .Machine$double.eps^0.5,
   \code{identical} if appropriate.
 
   
-  Cholesky decomposition routines use this function to test for symmetry.}
+  Cholesky decomposition routines use this function to test for
+  symmetry.
+
+  A method for \code{matrix-spam} objects is defined as well.
+}
 %\seealso{}
 \examples{
 obj <- diag.spam(2)
@@ -51,6 +56,12 @@ all.equal( t(obj), obj)
 
 all.equal( t(obj), obj*1.1)
 
+# We can compare a spam to a matrix
+all.equal(diag(2),diag.spam(2))
+
+# the opposite does often not make sense,
+# hence, it is not implemented.
+all.equal(diag.spam(2),diag(2))
 }
 \author{Reinhard Furrer}
 \keyword{array}

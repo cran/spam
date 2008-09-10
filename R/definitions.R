@@ -1799,4 +1799,63 @@ isSymmetric.spam <- function(object, tol = 100 * .Machine$double.eps, ...)
 }
 
 setMethod("all.equal",signature(target="spam",current="spam"), all.equal.spam )
+setMethod("all.equal",signature(target="matrix",current="spam"),
+          function (target, current, tolerance = .Machine$double.eps^0.5,
+                    scale = NULL, check.attributes = FALSE,eps = .Spam$eps,...)
+{
+    if (check.attributes)
+      warning("attributes are not supported for 'spam' objects. Ignoring 'check.attributes' argument")
+    msg <- NULL
+    
+    dimx <- dim(target)
+    nz <- length(target)
+    z <- .Fortran("spamdnscsr", nrow = dimx[1], ncol = dimx[2],
+        x = as.double(target), dimx[1], entries = vector("double",
+            nz), colindices = vector("integer", nz), rowpointers = vector("integer",
+            dimx[1] + 1), eps = as.double(eps), NAOK = !.Spam$safemode[3],
+        DUP = FALSE, PACKAGE = "spam")
+
+    lt <- z$rowpointers[dimx[1] + 1] - 1
+    lc <- length(current)
+        
+    if (lt != lc) {
+      return(paste("Lengths (", lt, ", ", lc, ") differ", sep = ""))
+    }
+    dt <- dim(target)
+    dc <- current@dimension
+    if ( !all( dt == dc ))
+      return(paste("Dimensions ([",dt[1],",",dt[2],"], [",
+                    dc[1],",",dc[2], "]) differ", sep = ""))
+    tmp <- sum(z$colindices[1:lt] != current@colindices) 
+    if ( tmp>0)
+      msg <- c(msg,paste("Column-sparsity structure differ (at least",
+                    tmp,"instance(s))"))
+    
+    tmp <- sum(z$rowpointers != current@rowpointers) 
+    if ( tmp>0)
+      msg <- c(msg,paste("Row-sparsity structure differ (at least",
+                    tmp,"instance(s))"))
+
+    xy <- mean(abs(z$entries[1:lt] - current@entries))
+    what <- if (is.null(scale)) {
+        xn <- mean(abs(z$entries))
+        if (is.finite(xn) && xn > tolerance) {
+            xy <- xy/xn
+            "relative"
+        }
+        else "absolute"
+    }
+    else {
+        xy <- xy/scale
+        "scaled"
+    }
+    if (is.na(xy) || xy > tolerance)
+        msg <- c(msg,paste("Mean", what, "difference:",
+            format(xy)))
+    if (is.null(msg))
+        TRUE
+    else msg
+
+}
+ )
 setMethod("isSymmetric","spam", isSymmetric.spam)

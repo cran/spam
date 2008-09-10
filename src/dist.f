@@ -6,7 +6,8 @@ C       c("euclidean", "maximum", "minkowski", "greatcircle")
 C     
 c     In case we need the distance matrix between x and x, then the
 c     following parameters are used as well:
-c     diag=0 include diagonal zero value, diag=1 no diagonal 
+c     if diag = 1 include a potentional diagonal zero value
+c        diag =-1 always subject to > eps
 c     if part=-1, lower tri, part=0 the entire matrix
 c        part= 1, upper tri only.
 c     only values between eps and eta are considered.
@@ -127,9 +128,9 @@ c Start calculating the distance (until delta is exceeded)
                if( tmp.gt.etap) goto 10
             enddo
 c Delta is not exceeded. 
-c If we need to do not include the diagonal (diag==0)
+c If we need to do not include the diagonal (diag==-1)
 c    eps < tmp < delta
-c If we do include the diagonal,  
+c If we do include the diagonal  (diag==1),  
 c    eps < tmp < delta for i=/=j only
  
             if (diag.eq.-1) then
@@ -218,9 +219,9 @@ c Start calculating the distance
             enddo
 
 c Delta is not exceeded. 
-c If we need to do not include the diagonal (diag==0)
+c If we need to do not include the diagonal (diag==-1)
 c    eps < tmp < delta
-c If we do include the diagonal,  
+c If we do include the diagonal (diag==1),  
 c    eps < tmp < delta for i=/=j only
  
             if (diag.eq.-1) then
@@ -341,9 +342,9 @@ c Start calculating the distance
             
             
 c Delta is not exceeded. 
-c If we need to do not include the diagonal (diag==0)
+c If we do not need to include the diagonal (diag==-1)
 c    eps < tmp < delta
-c If we do include the diagonal,  
+c If we do include the diagonal (diag==1),  
 c    eps < tmp < delta for i=/=j only
  
             if (diag.eq.-1) then
@@ -351,6 +352,9 @@ c    eps < tmp < delta for i=/=j only
             else
                if (i.ne.j) then
                   if (tmp.ge.epsp) goto 10
+               else
+c Due to numerical instabilities, we need the following... 0.15-2:
+                  if  (tmp .ge. 1) tmp = 1.0
                endif
             endif
 
