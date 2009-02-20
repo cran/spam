@@ -5,6 +5,31 @@
 	*						 *
 	**************************************************
 
+                CHANGES IN R VERSION 0.15-3
+
+    o	Several bug fixes in the demos due to the changes in 
+	the previous versions.	
+
+    o	Several minior changes in the help files to compile with
+	the new help parser and to correct for typos.
+
+    o	Added the demos into the tests directory. Additionally,
+	tests contains now the proper Rout.saves files.
+	
+    o	In test files, library( spam, warn.conflict=FALSE)
+	is used to avoid masking messages in R-2.8.0.
+	Timing output in test files is suppressed.
+	
+    o	Added trivial headers to most files. 
+
+
+    o	Bug fix in spam.list(), negative values were not correctly
+	handled.
+
+    o	Bug fix in subsetting (occured when subsetting very 
+	sparse matrices, memory allocation problem).	
+
+
                 CHANGES IN R VERSION 0.15-2
 
     o	Method all.equal for matrix-spam signature. 

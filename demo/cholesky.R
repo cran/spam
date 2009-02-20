@@ -1,3 +1,10 @@
+# This is file spam0.15-3/demo/cholesky.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
 # We illustrate the Cholesky decompostion approaches
 
 set.seed(14)

@@ -1,0 +1,105 @@
+
+R version 2.8.0 (2008-10-20)
+Copyright (C) 2008 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # This is file spam0.15-3/tests/article-jss.R
+> # This file is part of the spam package, 
+> #      http://www.mines.edu/~rfurrer/software/spam/
+> # written and maintained by Reinhard Furrer.
+> 
+> 
+> 
+> # This demo contains the R code to construct the figures and the table of the
+> # article:
+> #     "spam: A Sparse Matrix R Package with Emphasis on
+> #            MCMC Methods for Gaussian Markov Random Fields"
+> # submitted to JSS.
+> 
+> 
+> # The code presented here differs in the following points form the actually used
+> # one:
+> # - Very large grid sizes or very high order neighbor structures are not included
+> #   here;
+> # - Instead of (100+1) factorizations only (10+1) are performed here;
+> # - No figure fine-tuning is done here.
+> # - We had a few additional gc(), just to be sure.  
+> 
+> 
+> 
+> # The following are tests specific. Not all computers run with profiling. Instead
+> # of commenting, we define dummies.
+> options( echo=FALSE)
+Package 'spam' is loaded. Spam version 0.15-3 (2009-02-20).
+
+Type demo( spam) for some demos, help( Spam) for an overview of this package.
+
+[1] 3 5 1 2 4
+[1] 1 2 3 3 3
+[1] 1 2 3 6
+ [1] 1.0000000 0.5000000 0.8660254 0.5773503 0.8164966 0.6123724 0.6123724
+ [8] 0.7905694 0.1581139 0.7745967
+[1] 1 2 2 3 3 4 5
+[1] 1 3 5 8
+[1]  1  3  5  8 10 11
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+(Upper) Cholesky factor of class 'spam.chol.NgPeyton' of dimension 100x100 with 
+917 (row-wise) nonzero elements.
+    Density of the factor is 9.17%.
+    Fill-in ratio is 2.07
+    (Optimal argument for 'chol' is 'memory=list(nnzR=917)'.)
+Class 'spam.chol.NgPeyton'
+(Upper) Cholesky factor of class 'spam.chol.NgPeyton' of dimension 3082x3082
+ with 146735 (row-wise) nonzero elements.
+    Density of the factor is 1.54%.
+    Fill-in ratio is 4.65
+    (Optimal argument for 'chol' is 'memory=list(nnzR=146735)'.)
+Class 'spam.chol.NgPeyton'
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+NULL
+> 

@@ -1718,7 +1718,7 @@ c     matrix(nrow,ncol).
          if (tmp1 .le. nrow) then
             tmp2 = jc(k)
             if (tmp2 .le. ncol) then
-               if (a(k) .gt. eps) then
+               if (abs(a(k)) .gt. eps) then
                   iao(tmp1) = iao(tmp1)+1
                   newnnz = newnnz + 1
                   if (newnnz.lt.k) then

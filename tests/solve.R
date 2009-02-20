@@ -1,5 +1,12 @@
+# This is file spam0.15-3/tests/solve.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
 options( echo=FALSE)
-library( spam)
+library( spam, warn.conflict=FALSE)
 
 
 test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE,
@@ -98,8 +105,8 @@ test.for.zero(c(css), c(ctt))
 
 
 # update singular matrices
-cat("Testing option 'cholupdatesingular' (expect 2 passes, a warning then 2 errors):\n") 
-ss3 <- spam(rep(2,4),2)
+cat("Testing option 'cholupdatesingular' (expect a pass, a warning then 2 errors):\n") 
+ss3 <- spam(rep(1,4),2)
 ch3 <- chol( ss3+diag.spam(2))
 spam.options(cholupdatesingular="null")
 test.for.zero(is.null(update(ch3, ss3)),TRUE)

@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/definitions.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 todo <- function() help( "spam.todo")
 spam.history <- function() help("spam.history")
 
@@ -1097,8 +1105,11 @@ function (x,rw,cl,drop=.Spam$drop,...)
   if (is.vector(rw) && is.vector(cl)) {
     nrw <- length(rw)   # length returns an integer, so is a product therof
     ncl <- length(cl)
-    nz <- as.integer( min( length(x@entries), prod(nrw,ncl)))  # very pessimistic
-    if (all(diff(rw)==1) & all(diff(cl)==1)) {
+    diffrw <- diff(rw)
+    diffcl <- diff(cl)
+    nz <- as.integer( min( (1+sum(diff(sort(rw))==0))*(1+sum(diff(sort(cl))==0))*
+                          length(x@entries), prod(nrw,ncl)))  # very pessimistic
+    if (all(diffrw==1) & all(diffcl==1)) {
       z <- .Fortran("submat",
                     nrow,
                     job=as.integer(1), # need values as well

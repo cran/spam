@@ -1,5 +1,12 @@
+# This is file spam0.15-3/tests/overall.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
 options( echo=FALSE)
-library( spam)
+library( spam, warn.conflict=FALSE)
 
 
 test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE,

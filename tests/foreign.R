@@ -1,10 +1,17 @@
+# This is file spam0.15-3/tests/foreign.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
 # A few rudimentary tests to check transformations.
 # This is for illustration and will not be run.
 
 if (FALSE) {
 
   options( echo=FALSE)
-  library( spam)
+  library( spam, warn.conflict=FALSE)
 
   test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, tag=NULL){
 

@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/dist.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 ### in base:
 # dist(x, method = "euclidean", diag = FALSE, upper = FALSE, p=2)
 #

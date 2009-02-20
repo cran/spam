@@ -1,3 +1,12 @@
+% This is file spam0.15-3/man/import.Rd
+% This file is part of the spam package, 
+%      http://www.mines.edu/~rfurrer/software/spam/
+% written and maintained by Reinhard Furrer.
+
+
+
+
+
 \name{import}
 \docType{genericFunction}
 \alias{import}
@@ -21,7 +30,7 @@ read.MM(file)
 \details{The names of files storing matrices in the
   Harwell-Boeing format usually end in \code{".rua"} or \code{".rsa"}.
   Those storing matrices in the MatrixMarket format usually end in
-  {".mtx"}.
+  \code{".mtx"}.
 
   Currently, only  real assembled Harwell-Boeing can be read with
   \code{read.HB}. Reading MatrixMarket formats is more flexible.

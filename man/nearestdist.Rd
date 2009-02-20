@@ -1,3 +1,12 @@
+% This is file spam0.15-3/man/nearestdist.Rd
+% This file is part of the spam package, 
+%      http://www.mines.edu/~rfurrer/software/spam/
+% written and maintained by Reinhard Furrer.
+
+
+
+
+
 \name{nearestdist}
 \alias{dist.spam}
 \alias{nearest.dist}

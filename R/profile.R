@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/profile.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 # Framework introduce with much input from Roger Bivand for 0.13-2 and higher.
 
 ".onLoad" <- function (lib, pkg) {

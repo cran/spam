@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/spam_solve.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 ########################################################################
 ########################################################################
 #
@@ -145,16 +153,22 @@ setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
 setMethod("as.spam","spam.chol.NgPeyton", as.spam.chol.NgPeyton)
 
 
+
+
+#if(paste(R.version$major, R.version$minor, sep=".") < "2.8") 
 "backsolve" <- function(r,x, ...) UseMethod("backsolve")
 #"backsolve.default" <- base::backsolve
 setGeneric("backsolve")
 setMethod("backsolve","matrix",base::backsolve)
-
+  
+#if(paste(R.version$major, R.version$minor, sep=".") < "2.8") 
 "forwardsolve" <- function(l,x, ...) UseMethod("forwardsolve")
 #"forwardsolve.default" <- base::forwardsolve
 setGeneric("forwardsolve")
 setMethod("forwardsolve","matrix",base::forwardsolve)
 
+
+  
 "ordering.default" <- function(x,inv=FALSE) stop('Operation not defined form this class')
 
 #ordering <- function(x,...) stop('Operation not defined form this class')
@@ -181,10 +195,10 @@ setMethod("ordering","spam",function(x,inv=FALSE)
 
 
 if(paste(R.version$major, R.version$minor, sep=".") < "2.6") { 
-"chol" <- function(x, ...) UseMethod("chol")
-"chol.default" <- base::chol
-setGeneric("chol")
-setMethod("chol","matrix",base::chol)
+  "chol" <- function(x, ...) UseMethod("chol")
+  "chol.default" <- base::chol
+  setGeneric("chol")
+  setMethod("chol","matrix",base::chol)
 }
 
 update.spam.chol.NgPeyton <- function(object,x,...){

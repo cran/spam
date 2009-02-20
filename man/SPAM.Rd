@@ -1,3 +1,12 @@
+% This is file spam0.15-3/man/SPAM.Rd
+% This file is part of the spam package, 
+%      http://www.mines.edu/~rfurrer/software/spam/
+% written and maintained by Reinhard Furrer.
+
+
+
+
+
 \name{SPAM}
 \alias{overview}
 \alias{SPAM}
@@ -16,7 +25,7 @@ life. There is however some emphasize on Markov chain Monte Carlo type
 calculations within the framework of (Gaussian) Markov random fields.
 \cr
 
-Emphasis is given on a comprehensiv, simple, tutorial structure of the
+Emphasis is given on a comprehensive, simple, tutorial structure of the
 code. The code is S4 based but (in a tutorial spirit) the functions are
 in a S3 structure visible to the user (exported via \code{NAMESPACE}).\cr
 

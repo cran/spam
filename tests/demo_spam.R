@@ -1,4 +1,4 @@
-# This is file spam0.15-3/demo/spam.R
+# This is file spam0.15-3/tests/spam.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -6,6 +6,8 @@
 
 
 # This is a simple demo, wrapping up the functionality of spam.
+options( echo=FALSE)
+library( spam, warn.conflict=FALSE)
 
 
 set.seed(14)
@@ -34,9 +36,9 @@ cholssmat <- chol(ssmat)
 
 set.seed(14)
 
-nz <- 1000
-nrow <- 1000
-ncol <- 1000
+nz <- 100
+nrow <- 100
+ncol <- 100
 smat <- diag.spam(1,nrow,ncol)
 
 smat[cbind(sample(1:(nrow*ncol),size=nz))] <- runif(nz)
@@ -54,6 +56,7 @@ cholssmat <- chol(smat)
 
 
 # displaying matrices
+if (F) {
 opar <- par(no.readonly = TRUE)
 par(ask=interactive() &&
             (.Device %in% c("X11","GTK","gnome","windows","quartz")))
@@ -66,3 +69,7 @@ display(smat, main="'scatterplot'-type display, very efficient")
 display(smat, main="'image'-type display, may be slow and heavy")
 
 par(opar)
+
+
+}
+options( echo=TRUE)

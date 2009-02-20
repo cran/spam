@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/foreign.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 # Contains two sections:
 # 1) Routines to transform spam objects to SparseM and Matrix
 # 2) Functions to read (and write) MM and HB formats.

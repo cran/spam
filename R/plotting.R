@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/plotting.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 
 image.spam <- 
 function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),

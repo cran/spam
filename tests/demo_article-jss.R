@@ -1,4 +1,4 @@
-# This is file spam0.15-3/demo/article-jss.R
+# This is file spam0.15-3/tests/article-jss.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -19,6 +19,34 @@
 # - Instead of (100+1) factorizations only (10+1) are performed here;
 # - No figure fine-tuning is done here.
 # - We had a few additional gc(), just to be sure.  
+
+
+
+# The following are tests specific. Not all computers run with profiling. Instead
+# of commenting, we define dummies.
+options( echo=FALSE)
+library( spam, warn.conflict=FALSE)
+
+
+Rprof <- function(memory.profiling=TRUE, interval=0.1)
+  return()
+summaryRprof <- function(memory="both")
+  return(list(by.total=rbind(1:4)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Figure 1:
@@ -43,13 +71,13 @@ U@colindices
 U@colpointers
 U@rowpointers
 
-
-display( A)
-display( as.spam( chol(as.matrix( A))))
-display( B)
-display( as.spam(R))
-abline( h=-U@supernodes+.5,col=3,lty=2)
-
+if (F){ 
+  display( A)
+  display( as.spam( chol(as.matrix( A))))
+  display( B)
+  display( as.spam(R))
+  abline( h=-U@supernodes+.5,col=3,lty=2)
+}
 
 # Figure 2:
 theta1 <- .1
@@ -60,22 +88,25 @@ USmat <- diag.spam(n) + theta1 *  UScounties.storder + theta2 *  UScounties.ndor
 
 
 U <- chol( USmat,memory=list(nnzR=146735))
-display( as.spam(U))
-text(400,-2200,"MMD\nz=146735\nw=30182\ns=1262",adj=0)
-
+if (F) {
+  display( as.spam(U))
+  text(400,-2200,"MMD\nz=146735\nw=30182\ns=1262",adj=0)
+}
 
 U <- chol( USmat, pivot="RCM",memory=list(nnzR=256198,nnzcolindices=140960))
-display( as.spam(U))
-text(400,-2200,"RCM\nz=256198\nw=140960\ns=1706",adj=0)
-
+if (F) {
+  display( as.spam(U))
+  text(400,-2200,"RCM\nz=256198\nw=140960\ns=1706",adj=0)
+}
 
 U <- chol( USmat, pivot=FALSE,memory=list(nnzR=689615,nnzcolindices=96463))
-display( as.spam(U))
-text(400,-2200,"no permutation\nz=689615\nw=96463\ns=711",adj=0)
-
+if (F) {
+  display( as.spam(U))
+  text(400,-2200,"no permutation\nz=689615\nw=96463\ns=711",adj=0)
+}
 
 # general parameters for the following
-N <- 25         # would be 100 in the article 
+N <- 10         # would be 100 in the article 
 stsel <- 1      # user.self
 rPsx <- 1       # for function "system.time"
 rPsy <- 3       # memory usage 
@@ -86,7 +117,7 @@ rPint <- .0001  # small interval
 theta1 <- .1
 theta2 <- .05
 
-xseq <- ceiling(4 + exp(seq(0,to=5,by=1))/2)  # would be seq(0.5,to=6,by=.5) in the article
+xseq <- ceiling(4 + exp(seq(0,to=4,by=1))/2)  # would be seq(0.5,to=6,by=.5) in the article
 xseql <- length(xseq)
 
 table <- array(NA,c(xseql,4))
@@ -115,21 +146,23 @@ for (ix in 1:xseql) {
 
 }
 
-par(mfcol=c(1,2))
-plot(xseq, table[,1], type='l', log='xy', ylim=range(table[,c(1,3)]),
-     xlab="L (log scale)", ylab="seconds (log scale)")
-lines(xseq, table[,3], lty=2)
+if (F) {
 
-plot(xseq, table[,2], type='l', log='xy', ylim=range(table[,c(2,4)]+0.01),
-     xlab="L (log scale)", ylab="Mbytes (log scale)")
-lines(xseq, table[,4], lty=2)
-
+  par(mfcol=c(1,2))
+  plot(xseq, table[,1], type='l', log='xy', ylim=range(table[,c(1,3)]),
+       xlab="L (log scale)", ylab="seconds (log scale)")
+  lines(xseq, table[,3], lty=2)
+  
+  plot(xseq, table[,2], type='l', log='xy', ylim=range(table[,c(2,4)]+0.01),
+       xlab="L (log scale)", ylab="Mbytes (log scale)")
+  lines(xseq, table[,4], lty=2)
+}
 
 
 # Figure 4:
 
-x <- 30     # was 50 in article
-maxnn <- 6  # was 6 in article
+x <- 20     # was 50 in article
+maxnn <- 3  # was 6 in article
 
 egdx <- expand.grid( 1:(maxnn+1), 1:(maxnn+1))
 dval <- sort(unique(nearest.dist( egdx, delta=maxnn,diag=FALSE)@entries))
@@ -166,22 +199,25 @@ for (id in 1:dvall) {
 
 }
 
-par(mfcol=c(1,2))
-plot( dval, table[,1], type='l', log='xy',ylim=range(table[,c(1,3)]),
-     xlab="distance (log scale)", ylab="seconds (log scale)")
-lines( dval, table[,3],lty=2)
 
-plot( dval, table[,2], type='l', log='xy',ylim=range(table[,c(2,4)]),
-     xlab="distance (log scale)", ylab="Mbytes (log scale)")
-lines( dval, table[,4],lty=2)
+if (F) {
 
+  par(mfcol=c(1,2))
+  plot( dval, table[,1], type='l', log='xy',ylim=range(table[,c(1,3)]),
+       xlab="distance (log scale)", ylab="seconds (log scale)")
+  lines( dval, table[,3],lty=2)
+  
+  plot( dval, table[,2], type='l', log='xy',ylim=range(table[,c(2,4)]),
+       xlab="distance (log scale)", ylab="Mbytes (log scale)")
+  lines( dval, table[,4],lty=2)
+}
 
 
 
 # Table 1:
 table <- array(NA,c(9,4))
 
-x <- 30    #  was 50 in article
+x <- 10    #  was 50 in article
 egdx <- expand.grid(1:x,1:x)
 
 # As above hence shortend
@@ -306,4 +342,9 @@ rownames(table) <- c("Generic chol","chol.spam","safemode",
 
 
 normed.table <- t( round( t(table[-1,])/table[1,],3))
-print( t( round( t(table[-1,])/table[1,],3)))
+
+if (F) {
+ print( t( round( t(table[-1,])/table[1,],3)))
+}
+
+options( echo=TRUE)

@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/xybind.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 ########################################################################
 "rbind.spam" <-
 function(...,deparse.level=0)

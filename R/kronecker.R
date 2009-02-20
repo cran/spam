@@ -1,3 +1,11 @@
+# This is file spam0.15-3/R/kronecker.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
+
 kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
 {
   if (make.dimnames) 
@@ -59,7 +67,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
     FUN <- match.fun(FUN)
     slot(kronxy, "entries", check=FALSE) <-  FUN(z$ent1,z$ent2,...)
     if (z$rowpointers[Xdim[1]*Ydim[1]+1]-1 < prod(Xdim,Ydim))
-      warning("Sparseness structure of 'kronecker(X,Y)' preseved when applying 'FUN'.")
+      warning("Sparseness structure of 'kronecker(X,Y)' preseved when applying 'FUN'.", call. = FALSE)
   }
   slot(kronxy, "colindices", check=FALSE) <- z$colindices
   slot(kronxy, "rowpointers", check=FALSE) <- z$rowpointers
@@ -69,10 +77,12 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
 }
 
 
-"kronecker" <- function(X,Y, ...) UseMethod("kronecker")
-"kronecker.default" <- base::kronecker
+if(paste(R.version$major, R.version$minor, sep=".") < "2.8") 
+  "kronecker" <- function(X,Y, ...) UseMethod("kronecker")
 
+"kronecker.default" <- base::kronecker
 setGeneric("kronecker")
+
 setMethod("kronecker","spam", kronecker.spam)
 setMethod("kronecker",signature(X="spam",Y="spam"), kronecker.spam)
 setMethod("kronecker",signature(X="spam",Y="ANY"), kronecker.spam)

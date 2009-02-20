@@ -1,5 +1,12 @@
+# This is file spam0.15-3/tests/dist.R
+# This file is part of the spam package, 
+#      http://www.mines.edu/~rfurrer/software/spam/
+# written and maintained by Reinhard Furrer.
+
+
+
 options( echo=FALSE)
-library( spam)  #   library("spam",lib="~/todelete/0.15-1R7/")
+library( spam, warn.conflict=FALSE)  
 
 
 distmatrix <- function(x1,x2=NULL)

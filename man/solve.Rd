@@ -1,3 +1,12 @@
+% This is file spam0.15-3/man/solve.Rd
+% This file is part of the spam package, 
+%      http://www.mines.edu/~rfurrer/software/spam/
+% written and maintained by Reinhard Furrer.
+
+
+
+
+
 \name{spam solve}
 \alias{solve.spam}
 \alias{backsolve-methods}
@@ -63,7 +72,7 @@ decomposition, see \code{\link{chol}}.
 Recall that the Cholesky factors are from ordered matrices. 
 
 }
-\note{There is intentionally no \S3 distinction between the classes
+\note{There is intentionally no \acronym{S3} distinction between the classes
   \code{spam} and \code{spam.chol.}\emph{method}.}
 \references{See references in \code{\link{chol}}. 
 }

@@ -1,3 +1,12 @@
+% This is file spam0.15-3/man/math2.Rd
+% This file is part of the spam package, 
+%      http://www.mines.edu/~rfurrer/software/spam/
+% written and maintained by Reinhard Furrer.
+
+
+
+
+
 \name{Math2}
 \alias{Math2}
 \alias{Math2,spam-method}

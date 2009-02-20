@@ -1,0 +1,31 @@
+
+R version 2.8.0 (2008-10-20)
+Copyright (C) 2008 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # This is file spam0.15-3/tests/cholesky.R
+> # This file is part of the spam package, 
+> #      http://www.mines.edu/~rfurrer/software/spam/
+> # written and maintained by Reinhard Furrer.
+> 
+> 
+> 
+> # We illustrate the Cholesky decompostion approaches
+> options( echo=FALSE)
+Package 'spam' is loaded. Spam version 0.15-3 (2009-02-20).
+
+Type demo( spam) for some demos, help( Spam) for an overview of this package.
+
+> 

@@ -1,3 +1,12 @@
+% This is file spam0.15-3/man/spam.chol.NgPeyton-class.Rd
+% This file is part of the spam package, 
+%      http://www.mines.edu/~rfurrer/software/spam/
+% written and maintained by Reinhard Furrer.
+
+
+
+
+
 \name{spam.chol.NgPeyton-class}
 \docType{class}
 \alias{spam.chol.NgPeyton-class}
