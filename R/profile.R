@@ -1,7 +1,8 @@
-# This is file spam0.15-3/R/profile.R
+# This is file ../spam0.15-4/R/profile.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
 
 
 
@@ -83,6 +84,23 @@ class(spam.version) <- "simple.list"
     assign(".Spam", current, envir = env)
     invisible(current)
 }
+
+powerboost <- function(flag="on") {
+    if (sys.parent() == 0)
+            env <- asNamespace("spam")
+    else env <- parent.frame()
+
+    current <- spam.options()
+    current[c("safemode","cholsymmetrycheck","cholpivotcheck","eps")] <-
+    if (tolower(flag) %in% c("true","on","an","ein")) {
+            list(c(FALSE,FALSE,FALSE),FALSE,FALSE,1e-8)
+    } else { list(c(TRUE,TRUE,TRUE),TRUE,TRUE,.Machine$double.eps)
+    }
+    assign(".Spam", current, envir = env)
+    invisible( current)
+}
+
+
 
 #      library(spam,lib='~/todelete/0.15R7')
 #      .Spam=spam.options()

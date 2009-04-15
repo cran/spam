@@ -1,7 +1,8 @@
-% This is file spam0.15-3/man/lu.tri.Rd
+% This is file ../spam0.15-4/man/lu.tri.Rd
 % This file is part of the spam package, 
 %      http://www.mines.edu/~rfurrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
 
 
 

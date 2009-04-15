@@ -1,7 +1,8 @@
-# This is file spam0.15-3/R/definitions.R
+# This is file ../spam0.15-4/R/definitions.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
 
 
 
@@ -619,8 +620,8 @@ triplet <- function(x, tri=FALSE){
 
 ########################################################################
 
-if(paste(R.version$major, R.version$minor, sep=".") >= "2.5")
-  {
+if(getRversion() >= "2.5") {
+
     
 "as.matrix.spam" <-
 function(x,...){
@@ -1452,9 +1453,8 @@ function(x,y)
 }
 
 
+if(getRversion() < "2.6") {
 
-if(paste(R.version$major, R.version$minor, sep=".") < "2.6") 
-{
 
   
 # The following is taken form https://svn.r-project.org/R-packages/trunk/Matrix/R/AllGeneric.R

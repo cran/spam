@@ -1,7 +1,8 @@
-# This is file spam0.15-3/R/spam_solve.R
+# This is file ../spam0.15-4/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
 
 
 
@@ -155,13 +156,13 @@ setMethod("as.spam","spam.chol.NgPeyton", as.spam.chol.NgPeyton)
 
 
 
-#if(paste(R.version$major, R.version$minor, sep=".") < "2.8") 
+#if(getRversion() < "2.8") {
 "backsolve" <- function(r,x, ...) UseMethod("backsolve")
 #"backsolve.default" <- base::backsolve
 setGeneric("backsolve")
 setMethod("backsolve","matrix",base::backsolve)
   
-#if(paste(R.version$major, R.version$minor, sep=".") < "2.8") 
+#if(getRversion() < "2.8") {
 "forwardsolve" <- function(l,x, ...) UseMethod("forwardsolve")
 #"forwardsolve.default" <- base::forwardsolve
 setGeneric("forwardsolve")
@@ -194,7 +195,7 @@ setMethod("ordering","spam",function(x,inv=FALSE)
             if(inv)return(dim(x)[1]:1) else return(1:dim(x)[1]) })
 
 
-if(paste(R.version$major, R.version$minor, sep=".") < "2.6") { 
+if(getRversion() < "2.6") {
   "chol" <- function(x, ...) UseMethod("chol")
   "chol.default" <- base::chol
   setGeneric("chol")
@@ -694,8 +695,7 @@ setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
 ######################################################################
 ########################################################################
 
-if(paste(R.version$major, R.version$minor, sep=".") >= "2.5")
-  {
+if(getRversion() >= "2.5") {
     
 "as.matrix.spam.chol.NgPeyton" <- function(x,...){
   nrow <- x@dimension[1]

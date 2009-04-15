@@ -5,6 +5,16 @@
 	*						 *
 	**************************************************
 
+                CHANGES IN R VERSION 0.15-4
+
+    o	Changes in help files. Minor code improvements.
+   
+    o   New function powerboost.
+	 
+    o	Changes to if(getRversion() >= "x.y"), required for R 2.10.
+
+   
+
                 CHANGES IN R VERSION 0.15-3
 
     o	Several bug fixes in the demos due to the changes in 

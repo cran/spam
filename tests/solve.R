@@ -1,7 +1,8 @@
-# This is file spam0.15-3/tests/solve.R
+# This is file ../spam0.15-4/tests/solve.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
 
 
 

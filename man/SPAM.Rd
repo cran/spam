@@ -1,4 +1,4 @@
-% This is file spam0.15-3/man/SPAM.Rd
+% This is file ../spam0.15-4/man/SPAM.Rd
 % This file is part of the spam package, 
 %      http://www.mines.edu/~rfurrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -7,7 +7,8 @@
 
 
 
-\name{SPAM}
+
+\name{. SPAM .}
 \alias{overview}
 \alias{SPAM}
 \alias{Spam}
@@ -28,6 +29,13 @@ calculations within the framework of (Gaussian) Markov random fields.
 Emphasis is given on a comprehensive, simple, tutorial structure of the
 code. The code is S4 based but (in a tutorial spirit) the functions are
 in a S3 structure visible to the user (exported via \code{NAMESPACE}).\cr
+
+There exist many methods for sparse matrices that work identically as in
+the case of ordinary matrices. All the methods are discussed in the help
+and can be accessed directly via a \code{*.spam} concatenation to the
+function. For example, \code{help{chol.spam}} calls the help directly,
+whereas with  \code{help{chol}} the user has to choose first between the
+basis help and the help provided by \code{spam}.\cr
 
 Sparseness is used when handling large matrices. Hence, care has been
 used to provide efficient and fast routines. Essentially, the functions

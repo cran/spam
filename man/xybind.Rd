@@ -1,7 +1,8 @@
-% This is file spam0.15-3/man/xybind.Rd
+% This is file ../spam0.15-4/man/xybind.Rd
 % This file is part of the spam package, 
 %      http://www.mines.edu/~rfurrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
 
 
 
@@ -47,13 +48,10 @@ x <- cbind.spam(1:5,6)
 
 y <- cbind(x, 7)
 
-# for some large matrices the following might be slightly faster:
+rbind( x, x)
+# for some large matrices   t( cbind( t(x), t(x)))
+# might be slightly faster:
 
-t( cbind( t(x), t(x)))
-
-
-\dontrun{# Method is only defined for the first argument:
-cbind(diag(2),diag.spam(2))}
 
 }
 \author{Reinhard Furrer}

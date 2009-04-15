@@ -1,4 +1,4 @@
-% This is file ../spam0.15-4/man/math2.Rd
+% This is file ../spam0.15-4/man/summary.Rd
 % This file is part of the spam package, 
 %      http://www.mines.edu/~rfurrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -8,20 +8,23 @@
 
 
 
-\name{Math2}
-\alias{Math2}
-\alias{Math2,spam-method}
-\alias{Math2,spam,numeric-method}
-\alias{round}
-\alias{signif}
+\name{Summary}
+\alias{Summary}
+\alias{Summary.spam}
+\alias{Summary,spam-method}
+\alias{all}
+\alias{any}
+\alias{max}
+\alias{min}
+\alias{prod}
+\alias{range}
+\alias{sum}
 \title{Rounding of Numbers}
 \description{Applies the \code{Math2} group functions to '\code{spam}' objects
 }
-\usage{# round(x, digits = 0)
-# signif(x, digits = 6)
+\usage{# max(x,..., na.rm = FALSE)
 }
 \arguments{\item{x}{spam object.}
-\item{digits}{integer indicating the precision to be used.}
 }
 \value{All functions operate on the vector \code{x@entries} and return the
   result thereof.
@@ -36,12 +39,13 @@
 }
 %\references{
 %}
-\seealso{\code{Math}}
+\seealso{\code{\link{Math}} and \code{\link{Math2}}.}
 \examples{
-getGroupMembers("Math2")
+getGroupMembers("Summary")
 
-smat <- diag.spam( rnorm(15))
-round(smat, 3)
+smat <- diag.spam( runif(15))
+range(smat)
 }
 \author{Reinhard Furrer}
 \keyword{manip}
+% all any max min prod range sum

@@ -1,7 +1,8 @@
-% This is file spam0.15-3/man/history.spam.Rd
+% This is file ../spam0.15-4/man/history.spam.Rd
 % This file is part of the spam package, 
 %      http://www.mines.edu/~rfurrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
 
 
 

@@ -1,7 +1,8 @@
-% This is file spam0.15-3/man/spam-class.Rd
+% This is file ../spam0.15-4/man/spam-class.Rd
 % This file is part of the spam package, 
 %      http://www.mines.edu/~rfurrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
 
 
 
@@ -43,7 +44,6 @@
 \alias{kronecker,spam,spam-method}
 \alias{plot,spam,missing-method}
 \alias{plot,spam,spam-method}
-\alias{Summary,spam-method}
 \alias{show,spam-method}
 \alias{upper.tri,spam-method}
 
@@ -123,7 +123,7 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
     \item{Summary}{\code{signature(x = "spam")}:
       All functions of the \code{Summary} class (like \code{min}, \code{max},
       \code{range}...) operate on the vector \code{x@entries} and return the
-      result thereof. See Examples.
+      result thereof. See Examples or \code{\link{Summary}} for details.
     }
     \item{t}{\code{signature(x = "spam")}: transpose of a sparse matrix.}
     \item{upper.tri}{\code{signature(x = "spam")}: see \code{\link{lower.tri}} for details.}

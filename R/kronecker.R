@@ -1,7 +1,8 @@
-# This is file spam0.15-3/R/kronecker.R
+# This is file ../spam0.15-4/R/kronecker.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
 
 
 
@@ -76,8 +77,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
   return(kronxy)
 }
 
-
-if(paste(R.version$major, R.version$minor, sep=".") < "2.8") 
+if(getRversion() < "2.8")
   "kronecker" <- function(X,Y, ...) UseMethod("kronecker")
 
 "kronecker.default" <- base::kronecker

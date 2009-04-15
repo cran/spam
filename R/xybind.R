@@ -1,7 +1,8 @@
-# This is file spam0.15-3/R/xybind.R
+# This is file ../spam0.15-4/R/xybind.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
 
 
 
@@ -152,7 +153,7 @@ function(...,deparse.level=0)
                                     
         } else {
           # "standard" case, a vector (scalar) with a matrix
-          args[[1]] <- spam.numeric( args[[1]], Ydim[1])                           # skalar
+          args[[1]] <- spam.numeric( args[[1]], Ydim[1])                  # scalar
         }
       } else {
         # we have a regular matrix
@@ -181,7 +182,7 @@ function(...,deparse.level=0)
     if(Xdim[1]!=Ydim[1])
          stop("Arguments have differing numbers of rows, in cbind.spam()",call.=FALSE)
 
-    XYlen <- args[[1]]@rowpointers[Xdim[1]+1]+args[[2]]@rowpointers[Xdim[1]+1]-as.integer(2)
+    XYlen <- args[[1]]@rowpointers[Xdim[1]+1]+args[[2]]@rowpointers[Xdim[1]+1]-int2
     z <- .Fortran("cbind", Xdim[2], Xdim[1], Ydim[2], XYlen,
                   args[[1]]@entries, args[[1]]@colindices, args[[1]]@rowpointers,
                   args[[2]]@entries, args[[2]]@colindices, args[[2]]@rowpointers,
@@ -202,14 +203,14 @@ function(...,deparse.level=0)
         entries <- c( entries, args[[1]]@entries[stend1], args[[2]]@entries[stend2])
         colindices <-  c(  colindices, args[[1]]@colindices[stend1], args[[2]]@colindices[stend2]+Xdim[2])
       }
-  }
+    }
     newx <- new("spam")
     slot(newx,"entries", check=FALSE)     <- z$entries
     slot(newx,"colindices", check=FALSE)  <- z$colindices
     slot(newx,"rowpointers", check=FALSE) <- z$rowpointers
     slot(newx,"dimension", check=FALSE)   <- c(Ydim[1],Xdim[2]+Ydim[2])
     return(newx)
-  
+    
   } else {
     # "recursive" approach only, e.g. no checking
     tmp <- cbind.spam( args[[1]],args[[2]])

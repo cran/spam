@@ -1,7 +1,8 @@
-# This is file spam0.15-3/R/foreign.R
+# This is file ../spam0.15-4/R/foreign.R
 # This file is part of the spam package, 
 #      http://www.mines.edu/~rfurrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
 
 
 
@@ -29,7 +30,7 @@ as.spam.matrix.csr <- function(x)
 # The following should not be necessary because it is
 # as."matrix.csr".spam and not "as.matrix".csr.spam.
 # Is there anyway around this?
-if(paste(R.version$major, R.version$minor, sep=".") >= "2.5") {
+if(getRversion() >= "2.5") {
     
     as.matrix.csr.spam <- function(x,...) {
       if (require('SparseM')){

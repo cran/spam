@@ -1,7 +1,8 @@
-% This is file spam0.15-3/man/options.Rd
+% This is file ../spam0.15-4/man/options.Rd
 % This file is part of the spam package, 
 %      http://www.mines.edu/~rfurrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
 
 
 
@@ -37,7 +38,10 @@ spam.getOption(x)
   use \code{spam.getOption("eps")}, e.g., rather than
   \code{spam.options("eps")} which is a \emph{list} of length one.\cr
 
-  Internally, the options are kept in the list \code{.Spam}.
+  Internally, the options are kept in the list \code{.Spam}.\cr
+
+  Of course, printing is still subordinate to
+  \code{getOption("max.print")} or similar options.
 }
 \value{
   For \code{spam.getOption}, the current value set for option \code{x}, or
@@ -97,7 +101,8 @@ spam.getOption(x)
 }
 \seealso{\code{\link{print}},
   \code{\link{display}},  \code{\link{image}}, \code{\link{upper.tri}},
-  \code{\link{chol}}, \code{\link{nearest.dist}}, etc.
+  \code{\link{chol}}, \code{\link{nearest.dist}}, etc.\cr
+  \code{\link{powerboost}}\cr
 }
 \author{\code{spam.options} is essentially identical to \code{sm.options}.}
 \examples{
@@ -105,7 +110,7 @@ op <- spam.options()
 
 # two ways of representing the options nicely.
 utils::str(op)
-noquote(unlist(format(op)) )
+noquote(format(op) )
 
 
 smat <- diag.spam( 1:8)
