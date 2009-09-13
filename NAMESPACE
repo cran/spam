@@ -99,6 +99,16 @@ export("dcheck",
        "print.spam.chol.NgPeyton",
        "summary.spam.chol.NgPeyton",
 
+       "apply.spam",
+       
+       "rmvnorm.spam",
+       "rmvnorm.canonical",
+       "rmvnorm.prec",
+
+       "adiag.spam",
+       
+       ".spam.matmul.mat",
+
        "triplet",
        "as.spam.matrix.csr",
        "as.matrix.csr.spam",

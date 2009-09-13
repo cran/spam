@@ -1,3 +1,52 @@
+      subroutine amuxmat (n,m,p, x, y, a,ja,ia)
+      implicit none
+      double precision  x(m,p), y(n,p), a(*)
+      integer n, m, p, ja(*), ia(*)
+c-----------------------------------------------------------------------
+c Multiplies a sparse matrix by a full matrix using consecutive dot 
+c products, cf. subroutine amux. 
+c Matrix A is stored in compressed sparse row storage.
+c
+c on entry:
+c----------
+c n     = row dimension of A
+c p     = column dimension of x
+c x     = array of dimension mxp, m column dimension of A.
+c a, ja,
+c    ia = input matrix in compressed sparse row format.
+c
+c on return:
+c-----------
+c y     = array of dimension nxp, containing the product y=Ax
+c
+c-----------------------------------------------------------------------
+c local variables
+c
+      double precision t
+      integer j, i, k
+c-----------------------------------------------------------------------
+      do j = 1,p
+         do i = 1,n
+c
+c     compute the inner product of row i with vector x
+c
+            t = 0.0d0
+            do  k=ia(i), ia(i+1)-1
+               t = t + a(k)*x(ja(k),j)
+            enddo
+c
+c     store result in y(i)
+c
+            y(i,j) = t
+         enddo
+      enddo
+c
+      return
+c---------end-of-amux---------------------------------------------------
+c-----------------------------------------------------------------------
+      end
+c
+ 
       subroutine notzero (ja,ia,nrow,ncol,nnz,nz,jao,iao)
 c Return the structure of the zero entries in ra,ja,ia, in 
 c  compressed sparse row format via rao, jao, iao.
@@ -482,10 +531,16 @@ c
 c     constructs from a regular row index vector a sparse ia vector.
 c     note that a regular column index vector corresponds to the 
 c     sparse ja vector. for example:
-c         A[ir,jc] =>  A@ja = jc, A@ia = constructia(nrow,ir,ia)$ia
+c         A[ir,jc] =>  A@ja = jc, A@ia = constructia(nrow,nir,ia,ir)$ia
+c
+c     nrow: row dimension of A
+c     nir:  length of ir
+c     ir:   array of length nir+1!!!
 c
 c Notes: 
 c-------
+c     _*Row indices have to be ordered!*_
+c
 c     Reinhard Furrer 2006-09-13
 c-----------------------------------------------------------------------
 
@@ -834,7 +889,7 @@ c       j1>j2: copy element of b in c, incr. b and c pointers
 C     the next four lines should not be required...
             if (kc .gt. nzmax+1) then
                write (*,*) "exceeding array capacities...",i,nzmax,
-     & ka,kb,kc,j1,j2,kamax,kbmax
+     & ka,kb,kc,j1,j2,kamax,kbmax,ncol,jb(kb)
                return
             endif
             goto 5

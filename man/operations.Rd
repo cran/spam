@@ -1,7 +1,9 @@
-% This is file ../spam0.15-4/man/operations.Rd
+% This is file ../spam0.15-5/man/operations.Rd
 % This file is part of the spam package, 
-%      http://www.mines.edu/~rfurrer/software/spam/
+%      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -150,7 +152,7 @@ sparse matrix classes.
 # create a weight matrix and scale it:
 \dontrun{
 wij <- distmat
-# with distmat from a nearest.dist(..., diag=FALSE, upper=TRUE) call
+# with distmat from a nearest.dist(..., upper=TRUE) call
 
 n <- dim(wij)[1]
 

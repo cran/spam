@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/R/profile.R
+# This is file ../spam0.15-5/R/profile.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -53,10 +55,11 @@ class(spam.version) <- "simple.list"
 
 
 ".onAttach" <- function (lib, pkg) {
-   cat("Package 'spam' is loaded. ", spam.version$version.string,".",
+   packageStartupMessage("Package 'spam' is loaded. ", spam.version$version.string,".",
        "\nType demo( spam) for some demos,",
-       " help( Spam) for an overview of this package.\n",
-       sep='',fill=TRUE)
+       " help( Spam) for an overview\nof this package.",
+       "\nHelp for individual functions is optained by",
+       "adding the\nsuffix '.spam' to the function name, e.g. 'help(chol.spam)'.")
    unlockBinding(".Spam", asNamespace("spam"))
  }
 

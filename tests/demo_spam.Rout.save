@@ -1,5 +1,5 @@
 
-R version 2.9.0 Under development (unstable) (2009-02-19 r47958)
+R version 2.9.2 (2009-08-24)
 Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -15,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.15-4/tests/demo_spam.R
+> # This is file /home/rfurrer/spamwork/spam0.15-5/tests/demo_spam.R
 > # This file is part of the spam package, 
 > #      http://www.mines.edu/~rfurrer/software/spam/
 > # written and maintained by Reinhard Furrer.
@@ -23,12 +23,14 @@ Type 'q()' to quit R.
 > 
 > 
 > 
+> 
 > # This is a simple demo, wrapping up the functionality of spam.
 > options( echo=FALSE)
-Package 'spam' is loaded. Spam version 0.15-4 (2009-04-15).
-
-Type demo( spam) for some demos, help( Spam) for an overview of this package.
-
+Package 'spam' is loaded. Spam version 0.15-5 (2009-09-13).
+Type demo( spam) for some demos, help( Spam) for an overview
+of this package.
+Help for individual functions is optained byadding the
+suffix '.spam' to the function name, e.g. 'help(chol.spam)'.
 [1] -0.6618498  1.2319452 -0.3828219  0.8828018 -1.2668148 -0.7666105 -1.4219925
      [,1]        [,2]       [,3]      [,4]       [,5]       [,6]       [,7]
 [1,]    0  1.23194518 -0.3828219 0.8828018 -1.2668148 -0.7666105 -1.4219925

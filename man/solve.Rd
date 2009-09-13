@@ -1,7 +1,9 @@
-% This is file ../spam0.15-4/man/solve.Rd
+% This is file ../spam0.15-5/man/solve.Rd
 % This file is part of the spam package, 
-%      http://www.mines.edu/~rfurrer/software/spam/
+%      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -43,7 +45,8 @@ backsolve(r, x, ...)%, k, upper.tri, transpose
 forwardsolve(l, x, ...)%, k = NULL, upper.tri = NULL, transpose = NULL
 }
 \arguments{
-\item{a}{symmetric positive definite matrix of class \code{spam}.}
+\item{a}{symmetric positive definite matrix of class \code{spam} or a Cholesky factor 
+		  as the result of a \code{chol} call.}
 \item{l,r}{object of class \code{spam} or \code{spam.chol.}\emph{method} returned by the function
 \code{chol}.}
 \item{x,b}{vector or regular matrix of right-hand-side(s) of a system of linear equations.}
@@ -55,7 +58,10 @@ forwardsolve(l, x, ...)%, k = NULL, upper.tri = NULL, transpose = NULL
 finally solving \code{R\%*\%x = y} for \code{x}.
    \code{solve} combines \code{chol}, a Cholesky decomposition of a
 symmetric positive definite sparse matrix, with \code{forwardsolve} and
-then \code{backsolve}.
+then \code{backsolve}.\cr
+
+In case \code{a} is from a \code{chol}, then \code{solve} is an efficient way to calculate
+   \code{backsolve(a,forwardsolve( t(a),b))}.
 
 \code{forwardsolve} and \code{backsolve} solve a system of linear
 equations where the coefficient matrix is lower (\code{forwardsolve}) or

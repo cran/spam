@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/R/definitions.R
+# This is file ../spam0.15-5/R/definitions.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -1000,7 +1002,7 @@ setMethod("[",signature(x="spam",i="matrix",j="matrix", drop = "ANY"),
 	  function (x, i, j, drop) {subset.spam(x,rw=cbind(c(i),c(j)),drop) })
 
 setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
-	  function (x, i, j, drop=FALSE) 
+	  function (x, i, j, drop=.Spam$drop) 
 {
   # drop is not implemented yet
   dimx <- x@dimension
@@ -1025,9 +1027,14 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
                 PACKAGE="spam")
   nz <- z$ic[nrow+1]-1
   if (nz==0) return( numeric(0))
-  ic <- unique( z$ic[1:(z$nr+1)])
+  if (drop) {
+    ic <- unique( z$ic[1:(z$nrow+1)])
+    dimx <- as.integer(c(length(ic)-1,max(z$jc[1:nz])))    
+  } else {
+    ic <-z$ic[1:(z$nrow+1)]
+  }
   return(new("spam",entries=z$c[1:nz],colindices=z$jc[1:nz],rowpointers=ic,
-               dimension=as.integer(c(length(ic)-1,max(z$jc[1:nz])))))
+               dimension=dimx))
 }      )
 
 setMethod("[", signature(x = "spam", i = "ANY", j = "ANY", drop = "ANY"),
@@ -1276,7 +1283,7 @@ function (x, rw, cl,value)
     bia <- .Fortran("constructia",
                     nrow,as.integer(nir),
                     rowpointers=vector("integer",nrow+1),
-                    ir=as.integer(rw[,1]),
+                    ir=as.integer(c(rw[,1],0)),
                     PACKAGE="spam")$rowpointers
     nzmax <- as.integer(min(prod(nrow,ncol), nir+x@rowpointers[nrow+1])+2)
     z <- .Fortran("subass",
@@ -1292,8 +1299,8 @@ function (x, rw, cl,value)
                   PACKAGE="spam")
     cnz <- z$rowpointers[nrow+1]-1
     if (cnz<0) {
-      cat('Negative cnz in subassigning, forced to zero. Please report.')
-      cnz <- 0
+      cat('Negative cnz in subassigning, forced to one. Please report.')
+      return( spam(0))
     }
     newx <- new("spam")
     slot(newx,"entries",check=FALSE) <- z$entries[1:cnz]
@@ -1362,6 +1369,32 @@ function (x, rw, cl,value)
   stop("invalid or not-yet-implemented 'spam' subsetting")
 }
 
+".spam.matmul.mat" <-
+function(x,y)
+{
+    nrow <- x@dimension[1]
+    ncol <- x@dimension[2]
+    yrow <- dim(y)[1]
+    ycol <- dim(y)[2]
+    if(yrow != ncol)stop("not conformable for multiplication")
+    z <- .Fortran("amuxmat",
+                  nrow,
+		  yrow,
+		  ycol,
+                  as.double(y),
+                  y=vector("double",nrow*ycol),
+                  dcheck(x@entries),
+                  x@colindices,
+                  x@rowpointers,
+#                NAOK=!.Spam$safemode[3],
+                DUP=FALSE,
+                  PACKAGE = "spam")$y
+    dim(z) <- c(nrow,ycol)
+    return(z)
+  }
+
+
+
 ".spam.matmul" <-
 function(x,y)
 {
@@ -1377,6 +1410,8 @@ function(x,y)
                   dcheck(y@entries),
                   y@colindices,
                   y@rowpointers,
+                NAOK=!.Spam$safemode[3],
+                DUP=FALSE,
                   PACKAGE = "spam")$y
     dim(z) <- c(1,nrow)
     return(z)
@@ -1392,6 +1427,8 @@ function(x,y)
                   dcheck(x@entries),
                   x@colindices,
                   x@rowpointers,
+                NAOK=!.Spam$safemode[3],
+                DUP=FALSE,
                   PACKAGE = "spam")$y
     dim(z) <- c(nrow,1)
     return(z)

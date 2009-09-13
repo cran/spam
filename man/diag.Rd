@@ -1,7 +1,9 @@
-% This is file ../spam0.15-4/man/diag.Rd
+% This is file ../spam0.15-5/man/diag.Rd
 % This file is part of the spam package, 
-%      http://www.mines.edu/~rfurrer/software/spam/
+%      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
+
 
 
 

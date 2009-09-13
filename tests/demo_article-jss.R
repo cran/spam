@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/tests/demo_article-jss.R
+# This is file ../spam0.15-5/tests/demo_article-jss.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -125,8 +127,8 @@ table <- array(NA,c(xseql,4))
 for (ix in 1:xseql) {
 
   egdx <- expand.grid(1:xseq[ix],1:xseq[ix])
-  Cspam <- nearest.dist( egdx, delta=1., upper=NULL, diag=FALSE)
-  Dspam <- nearest.dist( egdx, delta=1.5,upper=NULL, diag=FALSE)
+  Cspam <- nearest.dist( egdx, delta=1., upper=NULL)
+  Dspam <- nearest.dist( egdx, delta=1.5,upper=NULL)
 
   mat <- diag.spam(xseq[ix]^2) + theta1 * Cspam + theta2 * Dspam
 
@@ -166,7 +168,7 @@ x <- 20     # was 50 in article
 maxnn <- 3  # was 6 in article
 
 egdx <- expand.grid( 1:(maxnn+1), 1:(maxnn+1))
-dval <- sort(unique(nearest.dist( egdx, delta=maxnn,diag=FALSE)@entries))
+dval <- sort(unique(nearest.dist( egdx, delta=maxnn)@entries))
 dvall <- length( dval)
 
 
@@ -177,8 +179,8 @@ table <- array(NA, c(dvall,5))
 
 for (id in 1:dvall) {
 
-  Cspam <- nearest.dist( egdx, delta=dval[id],upper=NULL, diag=FALSE)
-  Cspam@entries <- 0.05/Cspam@entries         # arbitrary values to get a spd precision matrix
+  Cspam <- nearest.dist( egdx, delta=dval[id],upper=NULL)
+  Cspam@entries <- exp(-Cspam@entries)         # arbitrary values to get a spd precision matrix
 
   mat <- diag.spam(x^2) + Cspam
 
@@ -222,8 +224,8 @@ x <- 10    #  was 50 in article
 egdx <- expand.grid(1:x,1:x)
 
 # As above hence shortend
-gridmat <- diag.spam(x^2) + .2 * nearest.dist( egdx, delta=1.,upper=NULL, diag=FALSE) +
-  .1 * nearest.dist( egdx, delta=1.5,upper=NULL, diag=FALSE)
+gridmat <- diag.spam(x^2) + .2 * nearest.dist( egdx, delta=1.,upper=NULL) +
+  .1 * nearest.dist( egdx, delta=1.5,upper=NULL)
 # USmat was constructed above.
 
 

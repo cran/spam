@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/tests/dist.R
+# This is file ../spam0.15-5/tests/dist.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -10,12 +12,16 @@ options( echo=FALSE)
 library( spam, warn.conflict=FALSE)  
 
 
-distmatrix <- function(x1,x2=NULL)
+distmatrix <- function(x1,x2=NULL,upper=NULL,...)
   {
-    if (is.null(x2)) 
-      return( as.matrix( dist(x1)))
-    else
-      return( as.matrix( dist(rbind(x1,x2)))[1:dim(x1)[1],1:dim(x2)[1]+dim(x1)[1]])
+    if (is.null(x2)) {
+      tmp <- as.matrix(dist(x1,...))
+      if (is.null(upper)) return(tmp)
+      if (upper) tmp[row(tmp)<col(tmp)] <- -1
+      if (!upper) tmp[row(tmp)>col(tmp)] <- -1
+      return( tmp[tmp>-0.5])
+    } else
+      return( as.matrix( dist(rbind(x1,x2),...))[1:dim(x1)[1],1:dim(x2)[1]+dim(x1)[1]])
   }
 
 
@@ -30,7 +36,7 @@ test.for.zero <- function( vec, tol = 1.0e-6)
 }
 
 ########
-## as an aside, comparing nearest.dist with dist, use diag=FALSE, upper=TRUE
+## as an aside, comparing nearest.dist with dist, use diag=true, upper=TRUE
 
 cat("Results of the form '[1] TRUE' are from 'all.equal'\n\n")
 
@@ -46,64 +52,50 @@ x2 <- x1 <- array(runif(n1*nd), c( n1,nd))
 if (F){
 # testing the structure
   distmatrix(x1)
-  nearest.dist( x1, x1, diag=TRUE,upper=NULL)
+  nearest.dist( x1, x1, upper=NULL)
 
-# and all other possibilities (2[diag]*3[upper])
+# and all other possibilities (3[upper])
 # with x1,x1 and x1, NULL:
-par(mfcol=c(3,4),mai=c(.15,.15,.05,.05))
-display(   nearest.dist( x1, x1,  diag=FALSE, upper=NULL))  # default
-display(   nearest.dist( x1, x1,  diag=FALSE, upper=FALSE))
-display(   nearest.dist( x1, x1,  diag=FALSE, upper=TRUE))
-display(   nearest.dist( x1, x1,  diag=TRUE,  upper=NULL) ) # upper 
-display(   nearest.dist( x1, x1,  diag=TRUE,  upper=FALSE))
-display(   nearest.dist( x1, x1,  diag=TRUE,  upper=TRUE))
-display(   nearest.dist( x1,  diag=FALSE, upper=NULL))
-display(   nearest.dist( x1,  diag=FALSE, upper=FALSE))
-display(   nearest.dist( x1,  diag=FALSE, upper=TRUE))
-display(   nearest.dist( x1,  diag=TRUE,  upper=NULL))
-display(   nearest.dist( x1,  diag=TRUE,  upper=FALSE))
-display(   nearest.dist( x1,  diag=TRUE,  upper=TRUE))
+par(mfcol=c(3,2))
+display(   nearest.dist( x1, x1,  upper=NULL))  # default
+display(   nearest.dist( x1, x1,  upper=FALSE))
+display(   nearest.dist( x1, x1,  upper=TRUE))
+display(   nearest.dist( x1,  upper=NULL))
+display(   nearest.dist( x1,  upper=FALSE))
+display(   nearest.dist( x1,  upper=TRUE))
 }
 
 
 #  nearest.dist( x1) and  nearest.dist( x1,x1) should be identical...
-all.equal(  nearest.dist( x1, x1,  diag=FALSE, upper=NULL) ,nearest.dist( x1,  diag=FALSE, upper=NULL) )
-all.equal(  nearest.dist( x1, x1,  diag=FALSE, upper=FALSE),nearest.dist( x1,  diag=FALSE, upper=FALSE))
-all.equal(  nearest.dist( x1, x1,  diag=FALSE, upper=TRUE) ,nearest.dist( x1,  diag=FALSE, upper=TRUE) )
-all.equal(  nearest.dist( x1, x1,  diag=TRUE,  upper=NULL) ,nearest.dist( x1,  diag=TRUE,  upper=NULL) )
-all.equal(  nearest.dist( x1, x1,  diag=TRUE,  upper=FALSE),nearest.dist( x1,  diag=TRUE,  upper=FALSE))
-all.equal(  nearest.dist( x1, x1,  diag=TRUE,  upper=TRUE) ,nearest.dist( x1,  diag=TRUE,  upper=TRUE) )
+all.equal(  nearest.dist( x1, x1,  upper=NULL) ,nearest.dist( x1,  upper=NULL) )
+all.equal(  nearest.dist( x1, x1,  upper=FALSE),nearest.dist( x1,  upper=FALSE))
+all.equal(  nearest.dist( x1, x1,  upper=TRUE) ,nearest.dist( x1,  upper=TRUE) )
 
 
 # testing  Euclidian
 eta <- 1
-eps <- 1e-8
 
-o1 <- nearest.dist( x1, diag=TRUE, upper=NULL)
+o1 <- nearest.dist( x1, upper=NULL)
 o2 <- distmatrix(x1)
 
 test.for.zero(o2[o2< eta]- o1@entries)
 
-o1 <- nearest.dist( x1, diag=FALSE, upper=NULL)  # is default...
-test.for.zero(o2[o2>eps & o2< eta]- o1@entries)
 
-o1 <- nearest.dist( x1, diag=FALSE, upper=!FALSE)  # is default...
-o3 <- c(dist(x1))
+o1 <- nearest.dist( x1, upper=!FALSE)  # is default...
+o3 <- distmatrix(x1, upper=!FALSE)
 test.for.zero(o1@entries-o3)
 
 
 
 x2 <- x1 <- array(runif(n1*nd), c( n1,nd))
-o1 <- nearest.dist( x1,x2, diag=TRUE, upper=NULL)
+o1 <- nearest.dist( x1,x2,upper=NULL)
 o2 <- distmatrix(x1,x2)
 
 test.for.zero(o2[o2< eta]- o1@entries)
 
-o1 <- nearest.dist( x1, diag=FALSE, upper=NULL) 
-test.for.zero(o2[o2>eps & o2< eta]- o1@entries)
 
-o1 <- nearest.dist( x1, diag=FALSE, upper=!FALSE)  
-test.for.zero(o2[o2>eps & o2< eta & lower.tri(o2)]- o1@entries)
+o1 <- nearest.dist( x1, upper=!FALSE)  
+test.for.zero(o2[2< eta & lower.tri(o2)]- o1@entries)
 
 
 
@@ -116,14 +108,14 @@ test.for.zero( nearest.dist(cbind(1,1),cbind(1,0)) -1)
 
 
 # testing with dist only
-test.for.zero( c(as.spam( dist(x1)) - nearest.dist(x1,upper=FALSE,diag=FALSE,delta=2)))
+test.for.zero( c(as.spam( dist(x1)) - nearest.dist(x1,delta=2)))
 
 
 # testing some other norms
 method <- "max"
 p <- 1.0001
-o1 <- nearest.dist( x1,method=method,p=p, diag=FALSE, upper=TRUE )
-o3 <- c(dist(x1,method=method,p=p))
+o1 <- nearest.dist( x1,method=method,p=p, upper=TRUE )
+o3 <- distmatrix(x1,method=method,p=p, upper=TRUE)
 test.for.zero(o1@entries-o3)
 
 
@@ -155,20 +147,13 @@ if (F){
 # structure
 delta <-  180
 
-par(mfcol=c(3,4),mai=c(.15,.15,.05,.05))
-eps=0.0001
-display( nearest.dist( x1,    eps=eps, delta=delta,method="gr",diag=FALSE,  upper=FALSE))
-display( nearest.dist( x1,    eps=eps, delta=delta,method="gr",diag=FALSE,  upper=TRUE))
-display( nearest.dist( x1,    eps=eps, delta=delta,method="gr",diag=FALSE,  upper=NULL))
-display( nearest.dist( x1,    eps=eps, delta=delta,method="gr",diag=TRUE,   upper=FALSE))
-display( nearest.dist( x1,    eps=eps, delta=delta,method="gr",diag=TRUE,   upper=TRUE))
-display( nearest.dist( x1,    eps=eps, delta=delta,method="gr",diag=TRUE,   upper=NULL))
-display( nearest.dist( x1,x1, eps=eps, delta=delta,method="gr",diag=FALSE,  upper=FALSE))
-display( nearest.dist( x1,x1, eps=eps, delta=delta,method="gr",diag=FALSE,  upper=TRUE))
-display( nearest.dist( x1,x1, eps=eps, delta=delta,method="gr",diag=FALSE,  upper=NULL))
-display( nearest.dist( x1,x1, eps=eps, delta=delta,method="gr",diag=TRUE,   upper=FALSE))
-display( nearest.dist( x1,x1, eps=eps, delta=delta,method="gr",diag=TRUE,   upper=TRUE))
-display( nearest.dist( x1,x1, eps=eps, delta=delta,method="gr",diag=TRUE,   upper=NULL))
+par(mfcol=c(3,2))
+display( nearest.dist( x1,    delta=delta,method="gr",  upper=FALSE))
+display( nearest.dist( x1,    delta=delta,method="gr",  upper=TRUE))
+display( nearest.dist( x1,    delta=delta,method="gr",  upper=NULL))
+display( nearest.dist( x1,x1, delta=delta,method="gr",  upper=FALSE))
+display( nearest.dist( x1,x1, delta=delta,method="gr",  upper=TRUE))
+display( nearest.dist( x1,x1, delta=delta,method="gr",  upper=NULL))
 }
 
 # 
@@ -177,22 +162,17 @@ if (F){
 # if fields would be available, the following can be used as well.
 delta <-  180
 o2 <- rdist.earth(x1)
-o1 <- nearest.dist( x1, method="gr",diag=TRUE,upper=NULL,delta=delta)
+o1 <- nearest.dist( x1, method="gr",upper=NULL,delta=delta)
 test.for.zero(o2- o1@entries)
 
-eps <- (spam.getOption('eps')^.5)*2
 o2 <- rdist.earth(x1, R=1)
-o1 <- nearest.dist( x1,  method="gr",diag=FALSE,upper=NULL,delta=delta,R=1) 
-test.for.zero(o2[o2>eps]- o1@entries[o1@entries>eps])
+o1 <- nearest.dist( x1,  method="gr",upper=NULL,delta=delta,R=1) 
+test.for.zero(o2- o1@entries)
 
-eps <- 30
-o2 <- rdist.earth(x1, R=1)
-o1 <- nearest.dist( x1,  method="gr",diag=FALSE,upper=NULL,eps=eps,delta=delta,R=1)
-test.for.zero(o2[o2>eps*pi/180]- o1@entries)
 
 delta <- 90
 o2 <- rdist.earth(x2,x1,R=1)
-o1 <- nearest.dist( x1,x2, method="gr",diag=TRUE,upper=NULL,delta=delta,R=1)
+o1 <- nearest.dist( x1,x2, method="gr",upper=NULL,delta=delta,R=1)
 test.for.zero(o2[o2<delta*pi/180]- o1@entries)
 
 
@@ -203,26 +183,21 @@ test.for.zero(o2[o2<delta*pi/180]- o1@entries)
 cat("storage conversion:\n")
 nx <- 4
 x <- expand.grid(as.double(1:nx),as.double(1:nx))
-test.for.zero(nearest.dist( x,delta=nx*2,diag=FALSE, upper=TRUE)@entries-
-              c(dist(x)))
+test.for.zero(nearest.dist( x,delta=nx*2, upper=TRUE)@entries-
+              distmatrix(x, upper=TRUE))
 x <- expand.grid(as.integer(1:nx),as.integer(1:nx))
-test.for.zero(nearest.dist( x,delta=nx*2,diag=FALSE, upper=TRUE)@entries-
-              c(dist(x)))
+test.for.zero(nearest.dist( x,delta=nx*2, upper=TRUE)@entries-
+              distmatrix(x, upper=TRUE))
 
 
 # again a bit playing with the parameters:
 if (F){
 rdist.earth(x1, R=1)
-nearest.dist( x1, x1,  method="gr",delta=360,R=1, diag=TRUE)
-nearest.dist( x1, x1,  method="gr",delta=360,R=1, diag=FALSE)
-nearest.dist( x1,      method="gr",delta=360,R=1, diag=FALSE, upper=FALSE)
-nearest.dist( x1,      method="gr",delta=360,R=1, diag=FALSE, upper=TRUE)
-nearest.dist( x1,      method="gr",delta=360,R=1, diag=TRUE,  upper=FALSE)
-nearest.dist( x1,      method="gr",delta=360,R=1, diag=TRUE,  upper=TRUE)
-nearest.dist( x1,x1,   method="gr",delta=360,R=1, diag=FALSE, upper=FALSE)
-nearest.dist( x1,x1,   method="gr",delta=360,R=1, diag=FALSE, upper=TRUE)
-nearest.dist( x1,x1,   method="gr",delta=360,R=1, diag=TRUE,  upper=FALSE)
-nearest.dist( x1,x1,   method="gr",delta=360,R=1, diag=TRUE,  upper=TRUE)
+nearest.dist( x1, x1,  method="gr",delta=180,R=1 )
+nearest.dist( x1,      method="gr",delta=180,R=1, upper=FALSE)
+nearest.dist( x1,      method="gr",delta=180,R=1, upper=TRUE)
+nearest.dist( x1,x1,   method="gr",delta=180,R=1, upper=FALSE)
+nearest.dist( x1,x1,   method="gr",delta=180,R=1, upper=TRUE)
 }
 
 
@@ -246,10 +221,10 @@ nearest.dist( x1,x1,   method="gr",delta=360,R=1, diag=TRUE,  upper=TRUE)
 # test a few as.spam.dist:
 
 test.for.zero( as.spam(dist(0))@entries -0)
-all.equal( as.spam(dist(x1)), nearest.dist(x1,delta=1000))
+all.equal( as.spam(dist(x1)), as.spam(nearest.dist(x1,delta=1000)))
 
 # diag and upper are only processed when displaying
-all.equal( as.spam(dist(x1)), as.spam(dist(x1,diag=TRUE,  upper=TRUE)) )
+all.equal( as.spam(dist(x1)), as.spam(dist(x1,  upper=TRUE)) )
 
 # 'NA/NaN/Inf's are coerced to zero:
 cat("Expect warning:\n")

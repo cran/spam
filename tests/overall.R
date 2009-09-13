@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/tests/overall.R
+# This is file ../spam0.15-5/tests/overall.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -166,6 +168,7 @@ test.for.zero(ss,tt)
 ss[3:1,] <- 1:m;tt[3:1,] <- 1:m
 test.for.zero(ss,tt)
 
+set.seed(14)
 rw <- sample(c(T,F),nrow(tt),rep=T)
 cl <- sample(c(T,F),ncol(tt),rep=T)
 ass <- rnorm(sum(rw)*sum(cl))

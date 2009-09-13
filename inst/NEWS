@@ -1,10 +1,39 @@
 			Dear Emacs, please make this -*-Text-*- mode!
+
 	**************************************************
 	*						 *
 	*	    SPAM VERSION 0.15  			 *
 	*						 *
 	**************************************************
 
+                CHANGES IN R VERSION 0.15-5
+
+    o   New function adiag.spam, creation of block diagonal sparse
+    	matrices. No method though.
+
+    o   New functions adiag.spam, rmvnorm.spam, rmvnorm.canonical 
+    	and rmvnorm.prec to draw multivariate normals.
+
+    o	New function apply.spam, similar functionality as apply.		
+
+    o   drop is implemented now when subsetting a sparse matrix 
+    	with a binary matrix.
+
+    o   Major overhaul to nearest.dist: zeros are not included.
+	Old parameters are kept for backwards compatibility.
+
+    o	Orders/complexities of major algorithms are now described 
+	in the help 'complexity'. 
+
+    o   Using packageStartupMessage in .onAttach.
+
+    o   Code clean up and help improvements. Changes reflecting the
+    	change to UZH.
+
+    o	Bugfix in assinging via a nx2 matrix.
+ 
+
+		
                 CHANGES IN R VERSION 0.15-4
 
     o	Changes in help files. Minor code improvements.

@@ -1,7 +1,9 @@
-% This is file ../spam0.15-4/man/nearestdist.Rd
+% This is file ../spam0.15-5/man/nearestdist.Rd
 % This file is part of the spam package, 
-%      http://www.mines.edu/~rfurrer/software/spam/
+%      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -18,9 +20,9 @@
      using the specified distance measure.}
 \usage{
 nearest.dist( x, y=NULL, method = "euclidean",
-             eps = .Spam$eps, delta = 1,
-             diag = FALSE, upper = FALSE,
-             p=2, miles=TRUE, R=NULL)
+             delta = 1, upper = FALSE,
+             p=2, miles=TRUE, R=NULL,
+             eps = NULL, diag = NULL)
 }
 \arguments{
   \item{x}{Matrix of first set of locations where each row gives the
@@ -32,9 +34,7 @@ nearest.dist( x, y=NULL, method = "euclidean",
           \code{"euclidean"}, \code{"maximum"}, \code{"minkowski"} or
                 \code{"greatcircle"}. Any unambiguous substring can be
           given.}
-  \item{eps}{distances smaller than this number are considered zero.} 
   \item{delta}{only distances smaller than \code{delta} are recorded.} 
-  \item{diag}{Should the diagonal be included? See details.} 
   \item{upper}{Should the entire matrix (\code{NULL}) or only the upper-triagonal (\code{TRUE})
                or lower-triagonal (\code{FALSE}) values be calculated.} 
   \item{p}{The power of the Minkowski distance.} 
@@ -44,8 +44,13 @@ nearest.dist( x, y=NULL, method = "euclidean",
           the radius is either in miles or kilometers depending on the
           values of the miles argument. If \code{R=1} then distances are of
           course in radians.}
+  \item{eps}{depreciated. Left for backwards consistency.} 
+  \item{diag}{depreciated. Left for backwards consistency. See details.} 
 }
-\value{A \code{spam} object containing the distances spanned by \code{eps} and \code{delta}.}
+\value{A \code{spam} object containing the distances spanned between
+  zero and \code{delta}. The sparse matrix may contain many zeros
+  (e.g., collocated data). However, to calculate covariances, these zeros
+  are essential.}
 
 \details{For great circle distance, the by 2 matrices \code{x} and \code{y} contain
   the degrees longitudes in the first and the degrees latitudes in the second column.
@@ -55,11 +60,10 @@ nearest.dist( x, y=NULL, method = "euclidean",
   \code{upper=NULL} (instead of adding its transpose) it may not
   pass the symmetry checks, for example.\cr 
 
-  The argument \code{dist=TRUE} determines if diagonal elements will also be
-  included if smaller than \code{eps}. This is useful when calculating
-  covariance matrices based on a distance matrix. The default values of
-  \code{dist=FALSE} and \code{upper=FALSE} are borrowed from \code{dist}.\cr
-%  \code{dist(x)} and \code{dist(x,x)} should return the same result.
+  Default value of Earth's radius is 3963.34miles (6378.388km).\cr
+
+  The arguments \code{eps} and \code{diag} do not have any effect and
+  are left for compatibility reasons. 
   
   \code{x} and \code{y} can be any object with an existing
   \code{as.matrix} method.\cr

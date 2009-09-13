@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/R/dist.R
+# This is file ../spam0.15-5/R/dist.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -35,35 +37,36 @@
 #
 
 nearest.dist <- function( x, y=NULL, method = "euclidean",
-             eps = .Spam$eps, delta = 1,
-             diag = FALSE, upper = FALSE,
-             p = 2, miles=TRUE, R=NULL)
+                         delta = 1,
+                         upper = FALSE,
+                         p = 2, miles=TRUE, R=NULL,
+                         eps =  NULL, diag = NULL
+                         )
 {
   # see help for exact parameter meaning
 
-  # diag=TRUE  include if diag < delta 
-  # diag=FALSE (not include diagonal)  (equivalent to > eps condition)
-  # For the Fortran routine we have the following coding:
-  # diag=1 include diagonal 
-  # diag=-1 do not include diagonal
+  # We always include all small distances. Hence, this function 
+  #   works different than any other spam functions. An addititonal
+  #   call to an as.spam would eliminate the small values. 
+  if (!is.null(diag)) warning("Argument 'diag' is depreciated")
+  if (!is.null(eps))  warning("Argument 'eps' is depreciated")
+  
   if (!is.na(pmatch(method, "euclidian")))     method <- "euclidean"
   METHODS <- c("euclidean", "maximum", "minkowski", "greatcircle")
   method <- pmatch(method, METHODS)  # result is integer
 
   if (is.na(method))     stop("invalid distance method")
-# The following is from dist. But I believe it unnecessary...
-#  if (method == -1)      stop("ambiguous distance method")
-  if (delta <= eps)      stop("'delta' should be larger than 'eps'.")
+
   if (method == 4) {
     if (is.null(R))
       p <- ifelse( miles,3963.34,6378.388)
-    else
+    else {
+      if (R <= 0)           stop("'R' should be postiive")
       p <- R
-    if (abs(delta)>180.5)  stop("'delta' should be smaller than 180 degrees.")
+    }
+    if (abs(delta)>180.1)  stop("'delta' should be smaller than 180 degrees.")
   }
   
-
-  diag <-  ifelse(diag, int1 ,-int1)
 
   if (is.null(upper)) 
     part <- int0
@@ -93,7 +96,9 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   } else {
     # x = y, i.e. proper distance matrix
     if (n1==1)         stop("More than a single point in 'x' is required.")
-    if (method == 4) diag <- diag*int2
+    if (method == 4) {
+      p <- -p  # we save one variable...
+    }
     y <- x
     n2 <- n1
     nnz  <- min(max(.Spam$nearestdistnnz[1],
@@ -103,9 +108,9 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   }
   repeat {
     d <- .Fortran("closestdist", nd, as.double(x), n1,  as.double(y), n2, 
-                  diag, part,
+                  part,
                   as.double(p[1]), method, 
-                  as.double( abs( eps[1])), as.double(abs( delta[1])),
+                  as.double(abs( delta[1])),
                   colindices=vector("integer",nnz),
                   rowpointers=vector("integer",n1+1),
                   entries=vector("double",nnz),

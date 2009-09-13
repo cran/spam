@@ -1,7 +1,9 @@
-% This is file ../spam0.15-4/man/powerboost.Rd
+% This is file ../spam0.15-5/man/powerboost.Rd
 % This file is part of the spam package, 
-%      http://www.mines.edu/~rfurrer/software/spam/
+%      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -20,8 +22,9 @@ powerboost(flag)
 \arguments{
   \item{flag}{on or off}
 }
-\details{
-}
+\details{The options turn checking off (\code{"safemode"},
+  \code{"cholsymmetrycheck"}  and \code{"cholpivotcheck"}) and switch to
+  single precision for \code{"eps"}.}
 \value{
   \code{NULL} in any case.
 

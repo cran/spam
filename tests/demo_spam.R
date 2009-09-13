@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/tests/demo_spam.R
+# This is file ../spam0.15-5/tests/demo_spam.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 

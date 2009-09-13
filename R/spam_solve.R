@@ -1,7 +1,9 @@
-# This is file ../spam0.15-4/R/spam_solve.R
+# This is file ../spam0.15-5/R/spam_solve.R
 # This file is part of the spam package, 
-#      http://www.mines.edu/~rfurrer/software/spam/
+#      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+
+
 
 
 
@@ -397,7 +399,10 @@ solve.spam <- function (a, b, ...) {
   nrow <- a@dimension[1]
   ncol <- a@dimension[2]
   if (ncol != nrow)      stop("only square matrices can be inverted")
-  a <- chol.spam(a,...)
+
+  # if we have a spam matrix, we calculate the Cholesky factor
+  if (is(a,"spam"))
+    a <- chol.spam(a,...)
 
   if (missing(b)) {
     b <- diag(1, ncol)
@@ -761,3 +766,4 @@ setMethod("display","spam.chol.NgPeyton",
             display.spam(as.spam.chol.NgPeyton(x),...)
           })
 ########################################################################
+

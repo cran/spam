@@ -1,5 +1,5 @@
 
-R version 2.9.0 Under development (unstable) (2009-02-19 r47958)
+R version 2.9.2 (2009-08-24)
 Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -15,10 +15,11 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.15-4/tests/foreign.R
+> # This is file /home/rfurrer/spamwork/spam0.15-5/tests/foreign.R
 > # This file is part of the spam package, 
 > #      http://www.mines.edu/~rfurrer/software/spam/
 > # written and maintained by Reinhard Furrer.
+> 
 > 
 > 
 > 
