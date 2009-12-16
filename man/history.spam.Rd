@@ -1,13 +1,8 @@
-% This is file ../spam0.15-5/man/history.spam.Rd
+% This is file ../spam0.20-2/man/history.spam.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
-
-
-
-
-
-
+   
 
 
 \name{history}
@@ -21,6 +16,8 @@
 }
 \details{This list is maintained for releases 0.05 and higher.
   \describe{
+  \item{0.20}{Major new release, more functions, methods, ...}
+  \item{0.16}{Mostly bugfixes and minor enhancements.}
   \item{0.15}{Induced by need to catch up the devel versions of 0.14.}
   \item{0.14}{Complete rewrite of \code{chol}, implementation of
     \code{update.spam.chol.NgPeyton} and related routines.
@@ -52,7 +49,7 @@
 	    }
 }
 \references{See also a more detailed description at
-  \url{http://www.mines.edu/~rfurrer/software/spam/history.shtml}.}
+  \url{http://www.math.uzh.ch/furrer/software/spam/history.shtml}.}
 \seealso{\code{\link{todo}}.}
 \examples{
 \dontrun{

@@ -1,12 +1,8 @@
-% This is file ../spam0.15-5/man/print.Rd
+% This is file ../spam0.20-2/man/print.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
-
-
-
-
-
+   
 
 
 
@@ -23,7 +19,7 @@
 \alias{summary.spam.chol.NgPeyton}
 \title{Printing and summarizing sparse matrices}
 \description{Printing (non-zero elements) of sparse matrices
-  and summarizing the sparseness structure thereof. 
+  and summarizing the sparsity structure thereof. 
 }
 \usage{
   print(x, ...)

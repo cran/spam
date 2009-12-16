@@ -1,7 +1,10 @@
-% This is file ../spam0.15-5/man/spam.chol.NgPeyton-class.Rd
+% This is file ../spam0.20-2/man/spam.chol.NgPeyton-class.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+   
+
+
 
 
 
@@ -23,6 +26,7 @@
 \alias{length<-,spam.chol.NgPeyton-method}
 \alias{length,spam.chol.NgPeyton-method}
 \alias{c,spam.chol.NgPeyton-method}
+\alias{t,spam.chol.NgPeyton-method}
 \title{Class "spam.chol.NgPeyton"}
 \description{Result of a Cholesky decomposition with the \code{NgPeyton}
 method}

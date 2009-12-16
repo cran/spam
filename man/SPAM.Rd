@@ -1,7 +1,10 @@
-% This is file ../spam0.15-5/man/SPAM.Rd
+% This is file ../spam0.20-2/man/SPAM.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+   
+
+
 
 
 
@@ -50,7 +53,7 @@ The packages \code{fields} and \code{spdep} use \code{spam} as a
 required package.  \cr
   
 }
-\references{\url{www.mines.edu/~rfurrer/software/spam/}
+\references{\url{www.math.uzh.ch/furrer/software/spam/}
 }
 \seealso{See \code{\link{spam.class}} for a detailed class description,
   \code{\link{spam}} and \code{\link{spam.ops}} for creation,

@@ -107,7 +107,8 @@ export("dcheck",
 
        "adiag.spam",
        
-       ".spam.matmul.mat",
+#       ".spam.matmul.mat",
+#       ".spam.matmul",
 
        "triplet",
        "as.spam.matrix.csr",
@@ -118,7 +119,10 @@ export("dcheck",
        "as.spam.dgCMatrix",
 
        "read.MM",
-       "read.HB"
+       "read.HB",
+
+       "map.landkreis",
+       "adjacency.landkreis"
        )
 
 

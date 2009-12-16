@@ -1,5 +1,5 @@
 
-R version 2.9.2 (2009-08-24)
+R version 2.10.0 (2009-10-26)
 Copyright (C) 2009 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 
@@ -15,20 +15,24 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file /home/rfurrer/spamwork/spam0.15-5/tests/solve.R
+> # This is file ../spam0.20-2/tests/solve.R
 > # This file is part of the spam package, 
-> #      http://www.mines.edu/~rfurrer/software/spam/
+> #      http://www.math.uzh.ch/furrer/software/spam/
 > # written and maintained by Reinhard Furrer.
+>      
+> 
+> 
+> 
 > 
 > 
 > 
 > 
 > 
 > options( echo=FALSE)
-Package 'spam' is loaded. Spam version 0.15-5 (2009-09-13).
+Package 'spam' is loaded. Spam version 0.20-2 (2009-12-16).
 Type demo( spam) for some demos, help( Spam) for an overview
 of this package.
-Help for individual functions is optained byadding the
+Help for individual functions is optained by adding the
 suffix '.spam' to the function name, e.g. 'help(chol.spam)'.
 Testing 'solve' and derivatives:
 ** PASSED test at tolerance  1e-06

@@ -2,17 +2,51 @@
 
 	**************************************************
 	*						 *
+	*	    SPAM VERSION 0.20  			 *
+	*						 *
+	**************************************************
+
+                CHANGES IN R VERSION 0.20-1
+    
+    o	Minor changes to pass the CRAN test.
+
+
+                CHANGES IN R VERSION 0.20-0
+    
+    o	New demos, test functions, datasets.
+
+    o	Method t for spam.chol.NgPeyton.
+
+    o	Method Math2 now with signature digits="ANY". 	
+
+    o	Update in rmvnorm.canonical, can take a Cholesky structure
+    	as argument. 
+
+    o   New functionality for a sparse times a full matrix 
+    	multiplication.
+
+    o	Minor ajustment in memory allocation of chol.	
+
+
+	**************************************************
+	*						 *
 	*	    SPAM VERSION 0.15  			 *
 	*						 *
 	**************************************************
+
+                CHANGES IN R VERSION 0.15-6
+    
+    o   Minor change in Fortran routines to accomodate some Intel 
+    	compilers (pointed out by Tim Hoar).
+
 
                 CHANGES IN R VERSION 0.15-5
 
     o   New function adiag.spam, creation of block diagonal sparse
     	matrices. No method though.
 
-    o   New functions adiag.spam, rmvnorm.spam, rmvnorm.canonical 
-    	and rmvnorm.prec to draw multivariate normals.
+    o	New functions rmvnorm.spam, rmvnorm.canonical and
+    	rmvnorm.prec to draw multivariate normals.
 
     o	New function apply.spam, similar functionality as apply.		
 

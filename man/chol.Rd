@@ -1,14 +1,8 @@
-% This is file ../spam0.15-5/man/chol.Rd
+% This is file ../spam0.20-2/man/chol.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
-
-
-
-
-
-
-
+   
 
 \name{chol}
 \alias{chol.spam}
@@ -60,7 +54,7 @@ reasons, \code{pivot} can also take a logical in which for \code{FALSE}
 no permutation is done and for \code{TRUE} is equivalent to
 \code{MMD}.\cr
 
-Often the sparseness structure is fixed and does not change, but the
+Often the sparsity structure is fixed and does not change, but the
 entries do. In those cases, we can update the Cholesky factor with
 \code{update.spam.chol.NgPeyton} by suppling a Cholesky factor and the
 updated matrix.
@@ -77,7 +71,7 @@ allocation.  If the default values are too small the Fortran routine
 returns an error to \R, which allocates more space and calls the Fortran
 routine again. The user can also pass better estimates of the allocation
 sizes to \code{chol} with the argument \code{memory=list(nnzR=...,
-  nnzcolindices=...)}. The minimal sizes for a fixed sparseness
+  nnzcolindices=...)}. The minimal sizes for a fixed sparsity
 structure can be obtained from a \code{summary} call.\cr
 
 

@@ -1,7 +1,10 @@
-# This is file ../spam0.15-5/demo/article-jss.R
+# This is file ../spam0.20-2/demo/article-jss.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+     
+
+
 
 
 
@@ -20,6 +23,7 @@
 # - Very large grid sizes or very high order neighbor structures are not included
 #   here;
 # - Instead of (100+1) factorizations only (10+1) are performed here;
+# - The ratios in Fig 3 and 4 are not included here.
 # - No figure fine-tuning is done here.
 # - We had a few additional gc(), just to be sure.  
 
@@ -118,6 +122,9 @@ for (ix in 1:xseql) {
 
 }
 
+# Since we have a small N, elements in table might be zero.
+table <- pmax(table, 0.0001)
+
 par(mfcol=c(1,2))
 plot(xseq, table[,1], type='l', log='xy', ylim=range(table[,c(1,3)]),
      xlab="L (log scale)", ylab="seconds (log scale)")
@@ -128,14 +135,13 @@ plot(xseq, table[,2], type='l', log='xy', ylim=range(table[,c(2,4)]+0.01),
 lines(xseq, table[,4], lty=2)
 
 
-
 # Figure 4:
 
 x <- 30     # was 50 in article
 maxnn <- 6  # was 6 in article
 
 egdx <- expand.grid( 1:(maxnn+1), 1:(maxnn+1))
-dval <- sort(unique(nearest.dist( egdx, delta=maxnn)@entries))
+dval <- sort(unique(nearest.dist( egdx, delta=maxnn)@entries))[-1]
 dvall <- length( dval)
 
 
@@ -146,10 +152,8 @@ table <- array(NA, c(dvall,5))
 
 for (id in 1:dvall) {
 
-  Cspam <- nearest.dist( egdx, delta=dval[id],upper=NULL)
-  Cspam@entries <- 0.05/Cspam@entries         # arbitrary values to get a spd precision matrix
-
-  mat <- diag.spam(x^2) + Cspam
+  mat <- nearest.dist( egdx, delta=dval[id],upper=NULL)
+  mat@entries <- exp(-2*mat@entries)         # arbitrary values to get a spd precision matrix
 
   table[id,5] <- length(Cspam)
 
@@ -169,6 +173,9 @@ for (id in 1:dvall) {
 
 }
 
+# Since we have a small N, elements in table might be zero.
+table <- pmax(table, 0.0001)
+
 par(mfcol=c(1,2))
 plot( dval, table[,1], type='l', log='xy',ylim=range(table[,c(1,3)]),
      xlab="distance (log scale)", ylab="seconds (log scale)")
@@ -180,11 +187,10 @@ lines( dval, table[,4],lty=2)
 
 
 
-
 # Table 1:
 table <- array(NA,c(9,4))
 
-x <- 30    #  was 50 in article
+x <- 50    #  was 50 in article
 egdx <- expand.grid(1:x,1:x)
 
 # As above hence shortend
@@ -225,7 +231,6 @@ Rprof( NULL)
 table[3,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
 spam.options( safemode=c(TRUE, TRUE, TRUE))
 
-
 # lesser checking
 spam.options( cholsymmetrycheck=FALSE)
 Rprof( memory.profiling=TRUE, interval = rPint)
@@ -239,7 +244,7 @@ Rprof( NULL)
 table[4,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
 spam.options( cholsymmetrycheck=TRUE)
 
-# Pass optimal memory parameters (from above
+# Pass optimal memory parameters (from above)
 memory1 = summary(ch1)[1:2]
 memory2 = summary(ch2)[1:2]
 Rprof( memory.profiling=TRUE, interval = rPint)
@@ -250,6 +255,7 @@ Rprof( memory.profiling=TRUE, interval = rPint)
 table[5,3] <- system.time(   for (i in 1:N) ch2 <- chol( USmat,memory=memory2)    )[stsel]
 Rprof( NULL)
 table[5,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
+
 
 # All of the above
 spam.options( cholsymmetrycheck=FALSE, safemode=c(FALSE,FALSE,FALSE))

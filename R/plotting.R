@@ -1,7 +1,10 @@
-# This is file ../spam0.15-5/R/plotting.R
+# This is file ../spam0.20-2/R/plotting.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+     
+
+
 
 
 

@@ -1,11 +1,8 @@
-# This is file ../spam0.15-5/R/definitions.R
+# This is file ../spam0.20-2/R/definitions.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
-
-
-
-
+     
 
 
 
@@ -583,6 +580,7 @@ setMethod("t","spam",t.spam)
 
 
 
+setOldClass(c("dist", "numeric"))
 
 
 setGeneric("as.spam")
@@ -1386,8 +1384,8 @@ function(x,y)
                   dcheck(x@entries),
                   x@colindices,
                   x@rowpointers,
-#                NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                  NAOK=!.Spam$safemode[3],
+                  DUP=FALSE,
                   PACKAGE = "spam")$y
     dim(z) <- c(nrow,ycol)
     return(z)
@@ -1439,10 +1437,10 @@ function(x,y)
 
   #matrix multiply two sparse spam matrices
 
-  xn <- icheck(x@dimension[1])
-  xm <- icheck(x@dimension[2])
-  yl <- icheck(y@dimension[2])
-  if(xm != icheck(y@dimension[1]))
+  xn <- x@dimension[1]
+  xm <- x@dimension[2]
+  yl <- y@dimension[2]
+  if(xm != y@dimension[1])
     stop("matrices not conformable for multiplication")
 
   z <- .Fortran("amubdg",
@@ -1547,14 +1545,14 @@ rm(fname)
 
 
 setMethod("Math","spam", function(x){ x@entries <- callGeneric(x@entries);x })
-setMethod("Math2",signature(x = "spam", digits = "numeric"),
+setMethod("Math2",signature(x = "spam", digits = "ANY"),
           function(x, digits){ x@entries <- callGeneric(x@entries, digits = digits);x })
 
 setMethod("Summary","spam", function(x,...,na.rm=FALSE){ callGeneric(x@entries,...,na.rm=FALSE) })
 
 
 setMethod("%*%",signature(x="spam",y="spam"),    .spam.matmul)
-setMethod("%*%",signature(x="spam",y="matrix"),  .spam.matmul)
+setMethod("%*%",signature(x="spam",y="matrix"),  .spam.matmul.mat)
 setMethod("%*%",signature(x="spam",y="numeric"), .spam.matmul)
 setMethod("%*%",signature(x="matrix",y="spam"),  .spam.matmul)
 setMethod("%*%",signature(x="numeric",y="spam"), .spam.matmul)

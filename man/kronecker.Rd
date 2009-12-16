@@ -1,12 +1,8 @@
-% This is file ../spam0.15-5/man/kronecker.Rd
+% This is file ../spam0.20-2/man/kronecker.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
-
-
-
-
-
+   
 
 
 
@@ -30,7 +26,7 @@ kronecker.spam(X, Y, FUN = "*", make.dimnames = FALSE, ...)
 }
 \value{An array \code{A} with dimensions
      \code{dim(X) * dim(Y)}.}
-\details{The sparseness structure is determined by the ordinary
+\details{The sparsity structure is determined by the ordinary
   \code{\%x\%}. Hence, the result of \code{kronecker(X, Y, FUN = "+")} is
     different depending on the input.
     }
@@ -42,7 +38,7 @@ kronecker.spam( diag(2), array(1:4,c(2,2)))
 
 kronecker( diag.spam(2), array(1:4,c(2,2)))
 
-# Notice the preservation of sparseness structure: 
+# Notice the preservation of sparsity structure: 
 kronecker( diag.spam(2), array(1:4,c(2,2)),FUN="+")
 
 

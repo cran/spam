@@ -1,7 +1,10 @@
-% This is file ../spam0.15-5/man/todo.Rd
+% This is file ../spam0.20-2/man/todo.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+   
+
+
 
 
 
@@ -49,6 +52,6 @@
 %  say \code{rbind}, \code{cbind}, ...\cr  => done
 
   
-  Any other items are welcome (\email{rfurrer@mines.edu}).\cr
+  Any other items are welcome (\email{reinhard.furrer@math.uzh.ch}).\cr
 }
 \keyword{internal}

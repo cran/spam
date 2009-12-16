@@ -1,7 +1,10 @@
-% This is file ../spam0.15-5/man/apply.Rd
+% This is file ../spam0.20-2/man/apply.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
+   
+
+
 
 
 
@@ -62,7 +65,7 @@ apply.spam(S,1,range)
 
 
 # A similar example as for the base apply.
-# However, no dimnames else we would warnings. 
+# However, no dimnames else we would get warnings. 
 x <- as.spam(cbind(x1 = 3, x2 = c(0,0,0, 5:2)))
 apply.spam(x, 2, mean, trim = .2)
 col.sums <- apply.spam(x, 2, sum)

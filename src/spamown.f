@@ -1,10 +1,10 @@
       subroutine amuxmat (n,m,p, x, y, a,ja,ia)
       implicit none
-      double precision  x(m,p), y(n,p), a(*)
       integer n, m, p, ja(*), ia(*)
+      double precision  x(m,p), y(n,p), a(*)
 c-----------------------------------------------------------------------
 c Multiplies a sparse matrix by a full matrix using consecutive dot 
-c products, cf. subroutine amux. 
+c products, cf. subroutine amux from sparse kit. 
 c Matrix A is stored in compressed sparse row storage.
 c
 c on entry:
@@ -19,6 +19,7 @@ c on return:
 c-----------
 c y     = array of dimension nxp, containing the product y=Ax
 c
+c Reinhard Furrer
 c-----------------------------------------------------------------------
 c local variables
 c
@@ -35,14 +36,12 @@ c
                t = t + a(k)*x(ja(k),j)
             enddo
 c
-c     store result in y(i)
-c
             y(i,j) = t
          enddo
       enddo
 c
       return
-c---------end-of-amux---------------------------------------------------
+c---------end-of-amuxmat------------------------------------------------
 c-----------------------------------------------------------------------
       end
 c

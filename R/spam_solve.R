@@ -1,13 +1,8 @@
-# This is file ../spam0.15-5/R/spam_solve.R
+# This is file ../spam0.20-2/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
-
-
-
-
-
-
+     
 
 ########################################################################
 ########################################################################
@@ -308,11 +303,11 @@ chol.spam <- function(x, pivot = "MMD",
     memory$nnzcolindices <- NULL
   }
   # nnzR = length of array holding the nonzero values of the factor 
-  if(is.null(memory$nnzR))    nnzR <- max(4*nnzA,floor(.2*nnzA^1.3))*nnzRfact[doperm+1]  else {
+  if(is.null(memory$nnzR))    nnzR <- min(max(4*nnzA,floor(.2*nnzA^1.3))*nnzRfact[doperm+1],nrow*(nrow+1)/2)  else {
     nnzR <- memory$nnzR
     memory$nnzR <- NULL
   }
-  if(is.null(memory$cache))    cache <- 64  else {
+  if(is.null(memory$cache))    cache <- 512  else {
     cache <- memory$cache 
     memory$cache <- NULL
   }
@@ -585,15 +580,21 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   } else stop("'pivot' should be 'MMD', 'RCM' or a permutation")
 
 
-
   ### IMPROVEME get better parameter values
+  nnzcfact <- c(5,1,5)
+  nnzRfact <- c(5,1,2)
   # nnzcolindices = length of array holding the colindices 
-  if(is.null(memory$nnzcolindices))    nnzcolindices <- nnzA  else {
+  if(is.null(memory$nnzcolindices))  {
+    nnzcolindices <- ifelse((nnzA/nrow < 5), # very sparse matrix
+                            max(1000,nnzA*(1.05*nnzA/nrow-3.8)),
+                            nnzA)*nnzcfact[doperm+1]
+    nnzcolindices <- max(nnzcolindices,nnzA)
+ }else {
     nnzcolindices <- max(memory$nnzcolindices,nnzA)
     memory$nnzcolindices <- NULL
   }
   # nnzR = length of array holding the nonzero values of the factor 
-  if(is.null(memory$nnzR))    nnzR <- max(4*nnzA,floor(.2*nnzA^1.3))  else {
+  if(is.null(memory$nnzR))    nnzR <- min(max(4*nnzA,floor(.2*nnzA^1.3))*nnzRfact[doperm+1],nrow*(nrow+1)/2)  else {
     nnzR <- memory$nnzR
     memory$nnzR <- NULL
   }
@@ -764,6 +765,11 @@ setMethod("image","spam.chol.NgPeyton",
 setMethod("display","spam.chol.NgPeyton",
           function(x,...){
             display.spam(as.spam.chol.NgPeyton(x),...)
+          })
+
+setMethod("t","spam.chol.NgPeyton",
+          function(x){
+            t.spam(as.spam.chol.NgPeyton(x))
           })
 ########################################################################
 

@@ -1,14 +1,8 @@
-% This is file ../spam0.15-5/man/rmvnorm.Rd
+% This is file ../spam0.20-2/man/rmvnorm.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
-
-
-
-
-
-
-
+   
 
 \name{rmvnorm}
 \alias{rmvnorm.spam}
@@ -19,9 +13,9 @@
   Fast ways to draw multivariate normals when the variance or precision matrix
   is sparse.}
 \usage{
-rmvnorm.spam(n,mu=rep(0, nrow(Sigma)), Sigma,...) 
-rmvnorm.prec(n,mu=rep(0, nrow(Q)), Q, ...) 
-rmvnorm.canonical(n, b, Q, ...) 
+rmvnorm.spam(n,mu=rep(0, nrow(Sigma)), Sigma, Rstruct=NULL, ...) 
+rmvnorm.prec(n,mu=rep(0, nrow(Q)), Q, Rstruct=NULL, ...) 
+rmvnorm.canonical(n, b, Q, Rstruct=NULL, ...) 
 }
 \arguments{
 \item{n}{number of observations.}
@@ -29,13 +23,21 @@ rmvnorm.canonical(n, b, Q, ...)
 \item{Sigma}{covariance matrix of class \code{spam}.}
 \item{Q}{precision matrix.}
 \item{b}{vector determining the mean.}
+\item{Rstruct}{the Cholesky structure of \code{Sigma} or \code{Q}.}
 \item{\dots}{arguments passed to \code{chol}.}
 }
-\details{
-
+\details{The functions \code{rmvnorm.prec} and \code{rmvnorm.canonical}
+  do not requrie sparse precision matrices. 
+  For \code{rmvnorm.spam}, the differences between regular and sparse
+  covariance matrices are too significant to be implemented here.  \cr
+  Often (e.g., in a Gibbs sampler setting), the sparsity structure of
+  the covariance/precision does not change. In such setting, the
+  Cholesky factor can be passed via \code{Rstruct} in which only updates
+  are performed (i.e., \code{update.spam.chol.NgPeyton} instead of a
+  full \code{chol}).
 }
-\note{There is intentionally no \acronym{S3} distinction between the classes
-  \code{spam} and \code{spam.chol.}\emph{method}.}
+%\note{There is intentionally no \acronym{S3} distinction between the classes
+%  \code{spam} and \code{spam.chol.}\emph{method}.}
 \references{See references in \code{\link{chol}}. 
 }
 \seealso{\code{\link{chol}} and \code{\link{ordering}}.
@@ -73,5 +75,5 @@ norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma,type="HS")
 }
 % backsolve( chol(as.matrix(V)[ord,ord]),iidsample)[iord,]
 %
-\author{Reinhard Furrer, based on Ng and Peyton (1993) Fortran routines}
+\author{Reinhard Furrer}
 \keyword{algebra}

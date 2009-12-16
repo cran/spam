@@ -1,7 +1,10 @@
-# This is file ../spam0.15-5/tests/demo_article-jss.R
+# This is file ../spam0.20-2/tests/demo_article-jss.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+     
+
+
 
 
 
@@ -35,14 +38,6 @@ Rprof <- function(memory.profiling=TRUE, interval=0.1)
   return()
 summaryRprof <- function(memory="both")
   return(list(by.total=rbind(1:4)))
-
-
-
-
-
-
-
-
 
 
 
@@ -150,6 +145,8 @@ for (ix in 1:xseql) {
 }
 
 if (F) {
+  # Since we have a small N, elements in table might be zero.
+  table <- pmax(table, 0.0001)
 
   par(mfcol=c(1,2))
   plot(xseq, table[,1], type='l', log='xy', ylim=range(table[,c(1,3)]),
@@ -179,10 +176,8 @@ table <- array(NA, c(dvall,5))
 
 for (id in 1:dvall) {
 
-  Cspam <- nearest.dist( egdx, delta=dval[id],upper=NULL)
-  Cspam@entries <- exp(-Cspam@entries)         # arbitrary values to get a spd precision matrix
-
-  mat <- diag.spam(x^2) + Cspam
+  mat <- nearest.dist( egdx, delta=dval[id],upper=NULL)
+  mat@entries <- exp(-2*mat@entries)         # arbitrary values to get a spd precision matrix
 
   table[id,5] <- length(Cspam)
 
@@ -204,6 +199,8 @@ for (id in 1:dvall) {
 
 
 if (F) {
+  # Since we have a small N, elements in table might be zero.
+  table <- pmax(table, 0.0001)
 
   par(mfcol=c(1,2))
   plot( dval, table[,1], type='l', log='xy',ylim=range(table[,c(1,3)]),

@@ -1,7 +1,10 @@
-# This is file ../spam0.15-5/tests/demo_timing.R
+# This is file ../spam0.20-2/tests/demo_timing.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
+     
+
+
 
 
 
@@ -80,3 +83,27 @@ compare(cbind(fmat1,fmat1),cbind(smat1,smat1))
 
 
 options( echo=TRUE)
+
+
+
+
+
+# illustrate the new spam x matrix multiply:
+if (F){
+  n <- 1000
+  
+  A <- spam(0,n,n)
+  A[cbind(1:(n-1),2:n)] <- -c(2,rep(4,n-3),2)
+  A[cbind(1:(n-2),3:n)] <- rep(1,n-2)
+  A <- A + t( A)
+  diag(A) <- c(1,5,rep(6,n-4),5,1)
+
+
+  B <- array(rnorm(n*n),c(n,n))
+
+  system.time(C1 <- .spam.matmul.mat(A,B))
+  system.time(C2 <- .spam.matmul(A,B))
+  norm(C1-C2)
+
+
+}
