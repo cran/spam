@@ -1,4 +1,4 @@
-# This is file ../spam0.20-2/R/definitions.R
+# This is file ../spam0.20-3/R/definitions.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -579,8 +579,7 @@ setMethod("t","spam",t.spam)
 # }
 
 
-
-setOldClass(c("dist", "numeric"))
+if(getRversion() >= "2.10")  setOldClass(c("dist", "numeric"))
 
 
 setGeneric("as.spam")

@@ -6,7 +6,11 @@
 	*						 *
 	**************************************************
 
-                CHANGES IN R VERSION 0.20-1
+                CHANGES IN R VERSION 0.20-3
+    
+    o	Resolved dependency issues.
+
+                CHANGES IN R VERSION 0.20-1,2
     
     o	Minor changes to pass the CRAN test.
 

@@ -30,7 +30,7 @@ Type 'q()' to quit R.
 > 
 > # This is a simple demo, wrapping up the functionality of spam.
 > options( echo=FALSE)
-Package 'spam' is loaded. Spam version 0.20-2 (2009-12-16).
+Package 'spam' is loaded. Spam version 0.20-3 (2010-01-13).
 Type demo( spam) for some demos, help( Spam) for an overview
 of this package.
 Help for individual functions is optained by adding the

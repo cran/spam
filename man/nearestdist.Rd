@@ -1,4 +1,4 @@
-% This is file ../spam0.20-2/man/nearestdist.Rd
+% This is file ../spam0.20-3/man/nearestdist.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.

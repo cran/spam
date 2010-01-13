@@ -26,7 +26,7 @@ Type 'q()' to quit R.
 > require( fields, warn.conflict=FALSE)
 Loading required package: fields
 Loading required package: spam
-Package 'spam' is loaded. Spam version 0.20-2 (2009-12-16).
+Package 'spam' is loaded. Spam version 0.20-3 (2010-01-13).
 Type demo( spam) for some demos, help( Spam) for an overview
 of this package.
 Help for individual functions is optained by adding the

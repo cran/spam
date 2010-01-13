@@ -1,4 +1,4 @@
-# This is file ../spam0.20-2/R/profile.R
+# This is file ../spam0.20-3/R/profile.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
