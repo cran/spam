@@ -1,4 +1,4 @@
-# This is file ../spam0.20-3/R/definitions.R
+# This is file ../spam0.21-0/R/definitions.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -776,8 +776,18 @@ function(A,B,s)
   if(ncol != B@dimension[2] || nrow != B@dimension[1])
     stop("non-conformable matrices")
   ###IMPROVEME : there is a fortran routine getting the correct nr!
-  nzmax <- length(unique(c(A@colindices+ncol*(rep(1:nrow,diff(A@rowpointers))-1),
-                           B@colindices+ncol*(rep(1:nrow,diff(B@rowpointers))-1))))+1
+
+#      subroutine aplbdg (nrow,ncol,ja,ia,jb,ib,ndegr,nnz,iw) 
+#      integer ja(*),jb(*),ia(nrow+1),ib(nrow+1),iw(ncol),ndegr(nrow) 
+  
+  nzmax <- .Fortran("aplbdg",
+                nrow,                ncol,
+                A@colindices,               A@rowpointers,
+                B@colindices,               B@rowpointers,
+                vector("integer",nrow),nnz=vector("integer",1),vector("integer",ncol),
+                NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam"
+                )$nnz
+
   z <- .Fortran("aplsb1",
                 nrow,
                 ncol,
@@ -791,7 +801,7 @@ function(A,B,s)
                 entries     = vector("double",nzmax),
                 colindices  = vector("integer",nzmax),
                 rowpointers = vector("integer",nrow+1),
-                as.integer(nzmax),
+                as.integer(nzmax+1),
                 ierr = vector("integer",1),
                 NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam"
                 )

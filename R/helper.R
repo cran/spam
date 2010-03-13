@@ -1,4 +1,4 @@
-# This is file ../spam0.20-3/R/helper.R
+# This is file ../spam0.21-0/R/helper.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -11,8 +11,20 @@
 # a few nice helper functions:
 
 
+bandwidth <- function(A) {
+  if (!is.spam(A)) {
+    warning("Matrix not 'spam' object. Coerced to one")
+    A <- as.spam(A)
+  }
+  ret <- .Fortran("getbwd",A@dimension[1],A@entries,A@colindices,
+                  A@rowpointers,low=integer(1),upp=integer(1),
+                 NAOK = !.Spam$safemode[3], DUP=FALSE, PACKAGE = "spam")
+  return(c(ret$low,ret$upp))
+}
+                  
+  
 
-adiag.spam <- function(...){
+bdiag.spam <- function(...){
   nargs <- nargs()
   if (nargs == 0)     return( NULL)
   args <- list(...)
@@ -37,9 +49,9 @@ adiag.spam <- function(...){
     return(A)
   } else {
     # "recursive" approach only, e.g. no checking
-    tmp <- adiag.spam( args[[1]], args[[2]])
+    tmp <- bdiag.spam( args[[1]], args[[2]])
     for ( i in 3:nargs)
-      tmp <- adiag.spam( tmp, args[[i]])
+      tmp <- bdiag.spam( tmp, args[[i]])
     return( tmp)
   }
 }

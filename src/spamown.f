@@ -605,9 +605,9 @@ c
                   ko = ja(k)
                   ja(k) = ja(j)
                   ja(j) = ko
-                     tmp = a(k)
-                     a(k) = a(j)
-                     a(j) = tmp
+                  tmp = a(k)
+                  a(k) = a(j)
+                  a(j) = tmp
                endif
  150        continue
  160     continue

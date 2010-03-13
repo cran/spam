@@ -1,4 +1,4 @@
-% This is file ../spam0.20-3/man/solve.Rd
+% This is file ../spam0.21-0/man/solve.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -63,9 +63,22 @@ finally solving \code{R\%*\%x = y} for \code{x}.
 symmetric positive definite sparse matrix, with \code{forwardsolve} and
 then \code{backsolve}.\cr
 
-In case \code{a} is from a \code{chol}, then \code{solve} is an efficient way to calculate
-   \code{backsolve(a,forwardsolve( t(a),b))}.
+In case \code{a} is from a \code{chol}, then \code{solve} is an
+   efficient way to calculate \code{backsolve(a,forwardsolve( t(a),b))}.
 
+
+   However, for \code{a.spam} and \code{a.mat} from a \code{chol} call
+   wit a sparse and ordinary matrix,  note that
+   \code{forwardsolve(a.mat, b, transpose=T, upper.tri=T)}
+   is equivalent to
+   \code{forwardsolve(t(a.mat), b)}
+   and \code{backsolve(a.spam,forwardsolve(a.spam, b,transpose=T,upper.tri=T))}
+   yields the desired result. But
+          \code{backsolve(a.spam,forwardsolve(t(a.spam), resid))} is
+   wrong because  \code{t(a.spam)} is a \code{spam} and not a
+   \code{spam.chol.NgPeyton} object.
+
+   
 \code{forwardsolve} and \code{backsolve} solve a system of linear
 equations where the coefficient matrix is lower (\code{forwardsolve}) or
 upper (\code{backsolve}) triangular.  Usually, the triangular matrix is
@@ -74,6 +87,9 @@ for \code{forwardsolve}.  Note that arguments of the default
 methods \code{k}, \code{upper.tri} and \code{transpose} do not have any
 effects here.
 
+Notice that it is more efficient to solve successively the linear
+equations (both triangular solves) than to implement these in the
+Fortran code. 
 
 If the right-hand-side in \code{solve} is missing it will compute
 the inverse of a matrix. For details about the specific Cholsesky

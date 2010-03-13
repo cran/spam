@@ -1,4 +1,4 @@
-# This is file ../spam0.20-3/tests/helper.R
+# This is file ../spam0.21-0/tests/helper.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -36,15 +36,15 @@ tag=NULL){
 
 set.seed(14)
 
-# adiag.spam:
+# bdiag.spam:
 
 A <- spam(rnorm(10),2)
 B <- spam(rnorm(16),4)
 
-cat("Testing adiag.spam:\n")
-test.for.zero( adiag.spam(A),A)
+cat("Testing bdiag.spam:\n")
+test.for.zero( bdiag.spam(A),A)
 
-test.for.zero( adiag.spam(A,B),rbind(cbind(A,rep(0,8)),
+test.for.zero( bdiag.spam(A,B),rbind(cbind(A,rep(0,8)),
                                      cbind(spam(rep(0,20),4),B)))
 
 

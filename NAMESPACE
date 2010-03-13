@@ -105,10 +105,22 @@ export("dcheck",
        "rmvnorm.canonical",
        "rmvnorm.prec",
 
-       "adiag.spam",
+
+       "mle.spam",
+       "mle.nomean.spam",
+       "neg2loglikelihood.spam",
+       "mle",
+       "mle.nomean",
+       "neg2loglikelihood",
+       
+       "bdiag.spam",
+
+       "bandwidth",
        
 #       ".spam.matmul.mat",
 #       ".spam.matmul",
+#       "solve.spam.mat",
+#       "solve.spam.dummy",
 
        "triplet",
        "as.spam.matrix.csr",
@@ -121,6 +133,10 @@ export("dcheck",
        "read.MM",
        "read.HB",
 
+       "powerboost",
+
+       "permutation.spam",
+       
        "map.landkreis",
        "adjacency.landkreis"
        )
@@ -174,6 +190,8 @@ exportMethods(
               "solve",
 
               "kronecker",
+
+              "permutation",
               
               "[",
               "[<-",

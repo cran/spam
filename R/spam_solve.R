@@ -1,4 +1,4 @@
-# This is file ../spam0.20-3/R/spam_solve.R
+# This is file ../spam0.21-0/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -281,9 +281,7 @@ chol.spam <- function(x, pivot = "MMD",
     if (!is.integer(pivot[1]))
       pivot <- as.vector(pivot,"integer")
     if (.Spam$cholpivotcheck) {
-      tmp <- sort.int(pivot)
-      if(tmp[1]!=1 ||  any(tmp-seq_len(nrow)!=0))
-        stop("'pivot' should be a valid permutation")
+      checkpivot(pivot,nrow)
     }
  } else stop("'pivot' should be 'MMD', 'RCM' or a valid permutation")
 
@@ -414,9 +412,10 @@ solve.spam <- function (a, b, ...) {
                   nsuper, p, a@colindices,
                   a@colpointers, dcheck(a@entries),
                   a@rowpointers, a@invpivot, a@pivot,
-                  a@supernodes, double(nrow), sol = vector("double",nrow*p), as.vector(b,"double"),
+                  a@supernodes, vector("double",nrow), sol = vector("double",nrow*p), as.vector(b,"double"),
                   DUP=FALSE,NAOK = !.Spam$safemode[3],PACKAGE = "spam")$sol
   } else z <- backsolve(a,forwardsolve( t(a),b))
+    # see the helpfile for a comment about the 't(a)' construct.
   
   if ( p!=1)    dim(z) <- c(nrow,p)
   return( z)
@@ -562,9 +561,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
     doperm <- as.integer(0)
     pivot <- as.vector(pivot,"integer")
     if (.Spam$cholpivotcheck) {
-      tmp <- sort.int(pivot)
-      if(tmp[1]!=1 ||  (tmp-seq_len(nrow))!=0)
-        stop("'pivot' should be a valid permutation")
+      checkpivot(pivot,nrow)
     }
   } else if (length(pivot)==1) {
     if (pivot==FALSE) {
