@@ -1,4 +1,4 @@
-# This is file ../spam0.21-0/tests/overall.R
+# This is file ../spam0.22-0/tests/overall.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.

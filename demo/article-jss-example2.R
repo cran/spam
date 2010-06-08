@@ -1,8 +1,22 @@
-# This is file ../spam0.21-0/demo/article-jss-example2.R
+# This is file ../spam0.22-0/demo/article-jss-example2.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
      
+
+
+# This demo contains the R code of the example in Section 5.2 of the
+# JSS article:
+#     "spam: A Sparse Matrix R Package with Emphasis on
+#            MCMC Methods for Gaussian Markov Random Fields"
+
+
+# Compared to the R code in the article, here we give:
+# - improved formatting
+# - more comments, e.g. how to run the code using regular matrices 
+# - the code to construct the figures
+
+
 
 
 # INITALIZE AND FUNCTIONS:
@@ -71,8 +85,8 @@ postshape <- ahyper + c(n-1,n)/2
 
 accept <- numeric(totalg)
 
-struct <- chol(Q1 + Q2,
-               memory=list(nnzcolindices=6467))
+struct <- chol(Q1 + Q2 + diag.spam(2*n),
+               memory=list(nnzcolindices=5500))
 
 # struct <- NULL        # If no update steps are wanted
 
@@ -99,8 +113,7 @@ for (ig in 2:totalg) {
                              b,
                              # Precision matrix
                              Q,
-                             Rstruct=struct,
-                             memory=list(nnzcolindices=6467))
+                             Rstruct=struct)
   
 
   ustar <- xstar[1:n]
@@ -171,13 +184,15 @@ vpostmedian <- apply(vpost,2,median)
 
 
 ######################################################################
-# Figures 
+# Figure 8:
+
 par(mfcol=c(1,3),mai=rep(0,4))
 map.landkreis(log(Y))
 map.landkreis(Y/E,zlim=c(.1,2.4))
 map.landkreis(exp(upostmedian),zlim=c(.1,2.4))
 
 
+# Figure 9:
 par(mfcol=c(2,4),mai=c(.5,.5,.05,.1),mgp=c(2.3,.8,0))
 hist(kpost[,1],main='',xlab=expression(kappa[u]),prob=T)
 lines(density(kpost[,1]),col=2)

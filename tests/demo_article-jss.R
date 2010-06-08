@@ -1,4 +1,4 @@
-# This is file ../spam0.21-0/tests/demo_article-jss.R
+# This is file ../spam0.22-0/tests/demo_article-jss.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -346,5 +346,26 @@ normed.table <- t( round( t(table[-1,])/table[1,],3))
 if (F) {
  print( t( round( t(table[-1,])/table[1,],3)))
 }
+
+
+
+
+# Figure 5
+In <- diag.spam(nrow(UScounties.storder))
+struct <- chol(In + .2 * UScounties.storder + .1 * UScounties.ndorder)
+
+len.1 <- 10 # in the article, is set to 180
+len.2 <- 5 # in the article, is set to 100
+theta.1 <- seq(-.225, to=.515, len=len.1)
+theta.2 <- seq(-.09, to=.235, len=len.2)
+
+grid <- array(NA, c(len.1, len.2))
+spam.options('cholupdatesingular'='null')
+
+for (i in 1:len.1)
+  for(j in 1:len.2) 
+    grid[i,j] <- !is.null(update(struct, In + theta.1[i]*UScounties.storder
+                       + theta.2[j]* UScounties.ndorder))
+
 
 options( echo=TRUE)

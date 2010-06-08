@@ -1,4 +1,4 @@
-% This is file ../spam0.21-0/man/mle.Rd
+% This is file ../spam0.22-0/man/mle.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -89,11 +89,12 @@ the parameters \code{X} or \code{beta} to zero.
 }
 \examples{
 # True parameter values:
-truebeta <- c(1,2,.2)
-truetheta <- c(.5,2,.02)
+truebeta <- c(1,2,.2)    # beta = (intercept, linear in x, linear in y)
+truetheta <- c(.5,2,.02) # theta = (range, sill, nugget)
 
 
-# Auxiliary covariance function:
+# Auxiliary covariance function, parameterized by
+#    theta = (range, sill, nugget)
 spherical <- function(distmat, theta, eps = 1e-06) {
   Sigma <- distmat
   d <- Sigma@entries/theta[1]

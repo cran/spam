@@ -1,4 +1,4 @@
-# This is file ../spam0.21-0/R/dist.R
+# This is file ../spam0.22-0/R/dist.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -45,8 +45,8 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   # We always include all small distances. Hence, this function 
   #   works different than any other spam functions. An addititonal
   #   call to an as.spam would eliminate the small values. 
-  if (!is.null(diag)) warning("Argument 'diag' is depreciated")
-  if (!is.null(eps))  warning("Argument 'eps' is depreciated")
+  if (!is.null(diag)) warning("Argument 'diag' is deprecated")
+  if (!is.null(eps))  warning("Argument 'eps' is deprecated")
   
   if (!is.na(pmatch(method, "euclidian")))     method <- "euclidean"
   METHODS <- c("euclidean", "maximum", "minkowski", "greatcircle")

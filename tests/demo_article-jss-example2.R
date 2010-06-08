@@ -1,4 +1,4 @@
-# This is file ../spam0.21-0/tests/demo_article-jss-example2.R
+# This is file ../spam0.22-0/tests/demo_article-jss-example2.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -72,7 +72,7 @@ postshape <- ahyper + c(n-1,n)/2
 accept <- numeric(totalg)
 
 struct <- chol(Q1 + Q2 + diagC,
-               memory=list(nnzcolindices=6467))
+               memory=list(nnzcolindices=5500))
 
 # struct <- NULL        # If no update steps are wanted
 
@@ -98,8 +98,7 @@ for (ig in 2:totalg) {
                              b,
                              # Precision matrix
                              Q,
-                             Rstruct=struct,
-                             memory=list(nnzcolindices=6467))
+                             Rstruct=struct)
   
 
   ustar <- xstar[1:n]

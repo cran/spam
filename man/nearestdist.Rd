@@ -1,4 +1,4 @@
-% This is file ../spam0.21-0/man/nearestdist.Rd
+% This is file ../spam0.22-0/man/nearestdist.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -47,8 +47,8 @@ nearest.dist( x, y=NULL, method = "euclidean",
           the radius is either in miles or kilometers depending on the
           values of the miles argument. If \code{R=1} then distances are of
           course in radians.}
-  \item{eps}{depreciated. Left for backwards consistency.} 
-  \item{diag}{depreciated. Left for backwards consistency. See details.} 
+  \item{eps}{deprecated. Left for backwards consistency.} 
+  \item{diag}{deprecated. Left for backwards consistency. See details.} 
 }
 \value{A \code{spam} object containing the distances spanned between
   zero and \code{delta}. The sparse matrix may contain many zeros
@@ -58,7 +58,7 @@ nearest.dist( x, y=NULL, method = "euclidean",
 \details{For great circle distance, the by 2 matrices \code{x} and \code{y} contain
   the degrees longitudes in the first and the degrees latitudes in the second column.
   \code{eps} and \code{delta} are in degrees. The distance is
-  in single precision (I am still not sure where I loose the double in
+  in single precision (I am still not sure where I lose the double in
   the Fortran code) and if calculating the entire matrix
   \code{upper=NULL} (instead of adding its transpose) it may not
   pass the symmetry checks, for example.\cr 
@@ -71,8 +71,8 @@ nearest.dist( x, y=NULL, method = "euclidean",
   \code{x} and \code{y} can be any object with an existing
   \code{as.matrix} method.\cr
 
-  A quick scan revieled distance functions in at least 7 packages. The
-  argument names should be as general as possible and be coherend with
+  A quick scan revealed distance functions in at least 7 packages. The
+  argument names should be as general as possible and be coherent with
   many (but not all) available distance functions.\cr
   
   The Fortran code is based on a idea of Doug Nychka.
