@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/foreign.Rd
+% This is file ../spam0.23-0/man/foreign.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.

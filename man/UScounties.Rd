@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/UScounties.Rd
+% This is file ../spam0.23-0/man/UScounties.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -44,7 +44,7 @@ Adjacency structure of the counties in the contiguous United States
 }
 }
 %\source{\url{ www.to somethin??}}
-\seealso{\code{\link[maps]{map}}}
+\seealso{\code{map} from \pkg{maps}.}
 %\references{}
 \examples{
 # number of counties:

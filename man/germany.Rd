@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/germany.Rd
+% This is file ../spam0.23-0/man/germany.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -44,7 +44,7 @@ consecutively and that they start from zero.\cr
 The perfect position of the legend is an art per se and depends on
 various \code{par} parameters. See also the source code of the function
 \code{image.plot} of \pkg{fields}.}
-\seealso{\code{\link{Oral}}, \code{\link[fields]{image.plot}}.}
+\seealso{\code{\link{Oral}}.}
 \examples{
 loc <- system.file("demodata/germany.adjacency", package="spam")
 display( adjacency.landkreis( loc))

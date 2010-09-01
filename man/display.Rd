@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/display.Rd
+% This is file ../spam0.23-0/man/display.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -18,7 +18,7 @@
 \alias{display.spam}
 \alias{display,spam-method}
 \alias{display,spam.chol.NgPeyton-method}
-\title{Graphially represent the nonzero entries}
+\title{Graphially Represent the Nonzero Entries}
 \description{The function represents the nonzero entries in a simple
   bicolor plot. 
 }
@@ -34,8 +34,8 @@
 \details{\code{spam.getOption('imagesize')} determines  if the sparse matrix is
   coerced into a matrix and the plotted with \code{image.default} or if
   the matrix is simply represented as a scatterplot with
-  \code{pch="."}. The points are scaled according to
-  \code{cex*spam.getOption('cex')/(nrow+ncol)}.
+  \code{pch="."}.  The points are scaled according to
+  \code{cex*spam.getOption('cex')/(nrow+ncol)}. 
   For some devices or for non-square matrices,
   \code{cex} needs probably some adjustment.
 }
@@ -46,24 +46,24 @@ set.seed(13)
 
 nz <- 8
 ln <- nz
-smat <- spam(0,ln,ln)
-smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
+smat <- spam(0, ln, ln)
+smat[cbind(sample(ln, nz), sample(ln, nz))] <- 1:nz
 
-par(mfcol=c(1,2),pty='s')
-spam.options( imagesize=1000)
+par(mfcol=c(1,2), pty='s')
+spam.options(imagesize = 1000)
 display(smat)
-spam.options( imagesize=10)
+spam.options(imagesize = 10)
 display(smat)
 
 
 # very large but very sparse matrix
 nz <- 128
 ln <- nz^2
-smat <- spam(0,ln,ln)
-smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
+smat <- spam(0, ln, ln)
+smat[cbind(sample(ln, nz), sample(ln, nz))] <- 1:nz
 
-par(mfcol=c(1,1),pty='s')
-display(smat, cex=100)
+par(mfcol=c(1, 1), pty='s')
+display(smat, cex = 100)
 
 }
 \author{Reinhard Furrer}

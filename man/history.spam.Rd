@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/history.spam.Rd
+% This is file ../spam0.23-0/man/history.spam.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -9,13 +9,14 @@
 \alias{history.spam}
 \alias{spam.history}
 \alias{history}
-\title{Brief overview of the history}
+\title{Brief Overview of the History}
 \description{Brief overview of \code{spam}s  history}
 \usage{
   spam.history()
 }
 \details{This list is maintained for releases 0.05 and higher.
   \describe{
+  \item{0.21-0.23}{Changes in help files and demos. Minor internal improvements.}
   \item{0.20}{Major new release, more functions, methods, ...}
   \item{0.16}{Mostly bugfixes and minor enhancements.}
   \item{0.15}{Induced by need to catch up the devel versions of 0.14.}

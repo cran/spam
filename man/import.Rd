@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/import.Rd
+% This is file ../spam0.23-0/man/import.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -14,11 +14,10 @@
 
 
 \name{import}
-\docType{genericFunction}
 \alias{import}
 \alias{read.MM}
 \alias{read.HB}
-\title{Read external matrix formats}
+\title{Read External Matrix Formats}
 \description{
     Read matrices stored in the Harwell-Boeing or MatrixMarket formats.
 }

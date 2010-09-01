@@ -1,4 +1,4 @@
-# This is file ../spam0.22-0/demo/article-jss.R
+# This is file ../spam0.23-0/demo/article-jss.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -130,12 +130,12 @@ for (ix in 1:xseql) {
 table <- pmax(table, 0.0001)
 
 par(mfcol=c(1,2))
-plot(xseq, table[,1], type='l', log='xy', ylim=range(table[,c(1,3)]),
+plot(xseq, table[,1], type="l", log="xy", ylim=range(table[,c(1,3)]),
      xlab="L (log scale)", ylab="seconds (log scale)")
 lines(xseq, table[,3], lty=2)
 lines(xseq,table[,1]/table[,3],col=4,lty=3)
 
-plot(xseq, table[,2], type='l', log='xy', ylim=range(table[,c(2,4)]+0.01),
+plot(xseq, table[,2], type="l", log="xy", ylim=range(table[,c(2,4)]+0.01),
      xlab="L (log scale)", ylab="Mbytes (log scale)")
 lines(xseq, table[,4], lty=2)
 lines(xseq,table[,2]/table[,4],col=4,lty=3)
@@ -193,12 +193,12 @@ for (id in 1:dvall) {
 table <- pmax(table, 0.0001)
 
 par(mfcol=c(1,2))
-plot( dval, table[,1], type='l', log='xy',ylim=range(table[,c(1,3)]),
+plot( dval, table[,1], type="l", log="xy",ylim=range(table[,c(1,3)]),
      xlab="distance (log scale)", ylab="seconds (log scale)")
 lines( dval, table[,3],lty=2)
 lines( dval, table[,1]/table[,3],col=4,lty=3)
 
-plot( dval, table[,2], type='l', log='xy',ylim=range(table[,c(2,4)]),
+plot( dval, table[,2], type="l", log="xy",ylim=range(table[,c(2,4)]),
      xlab="distance (log scale)", ylab="Mbytes (log scale)")
 lines( dval, table[,4],lty=2)
 lines( dval, table[,2]/table[,4],col=4,lty=3)
@@ -215,7 +215,7 @@ theta.1 <- seq(-.225, to=.515, len=len.1)
 theta.2 <- seq(-.09, to=.235, len=len.2)
 
 grid <- array(NA, c(len.1, len.2))
-spam.options('cholupdatesingular'='null')
+spam.options("cholupdatesingular"="null")
 
 for (i in 1:len.1)
   for(j in 1:len.2) 
@@ -223,7 +223,7 @@ for (i in 1:len.1)
                        + theta.2[j]* UScounties.ndorder))
 
 image(theta.1, theta.2, grid, xlab=expression(theta[1]), ylab=expression(theta[2]),
-      xlim=c(-.3,.6),ylim=c(-.1,.25),col=c(0,'gray'))
+      xlim=c(-.3,.6),ylim=c(-.1,.25),col=c(0,"gray"))
 abline(v=0,h=0, lty=2)
 
 

@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/kronecker.Rd
+% This is file ../spam0.23-0/man/kronecker.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -10,7 +10,7 @@
 \alias{kronecker}
 \alias{kronecker.default}
 \alias{kronecker.spam}
-\title{Kronecker products on sparse matrices}
+\title{Kronecker Products on Sparse Matrices}
 \description{Computes the generalised kronecker product of two arrays, \code{X} and
      \code{Y}.}
 \usage{
@@ -34,12 +34,12 @@ kronecker.spam(X, Y, FUN = "*", make.dimnames = FALSE, ...)
 %\seealso{\code{\link{chol}}}
 \examples{
 # Starting with non-spam objects, we get a spam matrix
-kronecker.spam( diag(2), array(1:4,c(2,2)))
+kronecker.spam( diag(2), array(1:4, c(2, 2)))
 
-kronecker( diag.spam(2), array(1:4,c(2,2)))
+kronecker( diag.spam(2), array(1:4, c(2, 2)))
 
 # Notice the preservation of sparsity structure: 
-kronecker( diag.spam(2), array(1:4,c(2,2)),FUN="+")
+kronecker( diag.spam(2), array(1:4, c(2, 2)), FUN="+")
 
 
 }

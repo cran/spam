@@ -1,4 +1,4 @@
-% This is file ../spam0.22-0/man/SPAM.Rd
+% This is file ../spam0.23-0/man/SPAM.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -49,11 +49,14 @@ do not transform the sparse structure into full matrices to use standard
 operators, functions, etc. should eventually be implemented.
 
 
-The packages \code{fields} and \code{spdep} use \code{spam} as a
-required package.  \cr
+The packages \code{fields} and \code{spam} are closely linked.  \cr
   
 }
-\references{\url{www.math.uzh.ch/furrer/software/spam/}
+\references{Reinhard Furrer, Stephan R. Sain (2010). 
+  "spam: A Sparse Matrix R Package with Emphasis on MCMC
+  Methods for Gaussian Markov Random Fields.",
+        \emph{Journal of Statistical Software}, 36(10), 1-25,
+        \url{http://www.jstatsoft.org/v36/i10/.}
 }
 \seealso{See \code{\link{spam.class}} for a detailed class description,
   \code{\link{spam}} and \code{\link{spam.ops}} for creation,

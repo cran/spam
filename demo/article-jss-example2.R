@@ -1,4 +1,4 @@
-# This is file ../spam0.22-0/demo/article-jss-example2.R
+# This is file ../spam0.23-0/demo/article-jss-example2.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -20,7 +20,7 @@
 
 
 # INITALIZE AND FUNCTIONS:
-require( fields, warn.conflict=FALSE)
+require("fields", warn.conflict=FALSE)
 
 
 # READ DATA:
@@ -148,7 +148,7 @@ for (ig in 2:totalg) {
     kpost[ig,] <- kpost[ig-1,]    
   }
                    
-  if( (ig%%10)==0) cat('.')
+  if( (ig%%10)==0) cat(".")
 
 }
 
@@ -157,10 +157,10 @@ for (ig in 2:totalg) {
 
 
 # POSTPROCESSING:
-cat('\nTotal time:',timing[1],'per iteration:',timing[1]/totalg)
+cat("\nTotal time:",timing[1],"per iteration:",timing[1]/totalg)
 
 accept <- accept[-c(1:burnin)]
-cat('\nAcceptance rate:',mean(accept),'\n')
+cat("\nAcceptance rate:",mean(accept),"\n")
 
 kpost <- kpost[-c(1:burnin),]
 upost <- upost[-c(1:burnin),]
@@ -194,22 +194,22 @@ map.landkreis(exp(upostmedian),zlim=c(.1,2.4))
 
 # Figure 9:
 par(mfcol=c(2,4),mai=c(.5,.5,.05,.1),mgp=c(2.3,.8,0))
-hist(kpost[,1],main='',xlab=expression(kappa[u]),prob=T)
+hist(kpost[,1],main="",xlab=expression(kappa[u]),prob=TRUE)
 lines(density(kpost[,1]),col=2)
 tmp <- seq(0,to=max(kpost[,1]),l=500)
 lines(tmp,dgamma(tmp,ahyper[1],bhyper[1]),col=4)
 abline(v=kpostmedian[1],col=3)
 
-hist(kpost[,2],main='',xlab=expression(kappa[y]),prob=T)
+hist(kpost[,2],main="",xlab=expression(kappa[y]),prob=TRUE)
 lines(density(kpost[,2]),col=2)
 tmp <- seq(0,to=max(kpost[,2]),l=500)
 lines(tmp,dgamma(tmp,ahyper[2],bhyper[2]),col=4)
 abline(v=kpostmedian[2],col=3)
 
 # Trace plots:
-plot(kpost[,1],ylab=expression(kappa[u]),type='l')
+plot(kpost[,1],ylab=expression(kappa[u]),type="l")
 abline(h=kpostmedian[1],col=3)
-plot(kpost[,2],ylab=expression(kappa[y]),type='l')
+plot(kpost[,2],ylab=expression(kappa[y]),type="l")
 abline(h=kpostmedian[2],col=3)
 
 # ACF:
@@ -223,9 +223,9 @@ plot(kpost[,1],kpost[,2],xlab=expression(kappa[u]),ylab=expression(kappa[y]))
 abline(v=kpostmedian[1],h=kpostmedian[2],col=3)
 
 
-plot(accept+rnorm(ngibbs,sd=.05),pch='.',ylim=c(-1,2),yaxt='n',ylab='')
-text(ngibbs/2,1/2,paste('Acceptance rate:',round(mean(accept),3)))
-axis(2,at=c(0,1),label=c('Reject','Accept'))
+plot(accept+rnorm(ngibbs,sd=.05),pch=".",ylim=c(-1,2),yaxt="n",ylab="")
+text(ngibbs/2,1/2,paste("Acceptance rate:",round(mean(accept),3)))
+axis(2,at=c(0,1),label=c("Reject","Accept"))
 
 detach(Oral)
 ######################################################################

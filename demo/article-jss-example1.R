@@ -1,4 +1,4 @@
-# This is file ../spam0.22-0/demo/article-jss-example1.R
+# This is file ../spam0.23-0/demo/article-jss-example1.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -19,9 +19,9 @@
 
 
 # SETUP:
-library(spam)
+library("spam")
 
-data(UKDriverDeaths)
+data("UKDriverDeaths")
 
 y <- sqrt(c(UKDriverDeaths))       # square root counts
 
@@ -86,7 +86,7 @@ display(struct)
 # Note that we do not provide the exactly the same ordering 
 # algorithms. Hence, the following is sightly different than
 # Figure RH4.2.
-cholQst_yk <- chol(Qst_yk,pivot='RCM')
+cholQst_yk <- chol(Qst_yk,pivot="RCM")
 P <- ordering(cholQst_yk)
 display(Qst_yk[P,P])
 
@@ -142,7 +142,7 @@ for (ig in 2:totalg) {
 
   kpost[ig,] <- rgamma(3, postshape, postinvscale)	
 
-  if( (ig%%10)==0) cat('.')
+  if( (ig%%10)==0) cat(".")
 
 }
 
@@ -150,7 +150,7 @@ for (ig in 2:totalg) {
 
 
 # POSTPROCESSING:
-cat('\nTotal time:',timing[1],'per iteration:',timing[1]/totalg,'\n')
+cat("\nTotal time:",timing[1],"per iteration:",timing[1]/totalg,"\n")
 
 
 # Eliminate burn-in:
@@ -176,7 +176,7 @@ matlines( t(postquant)^2, col=4,lty=1)
 
 legend("topright",legend=c("Posterior median", "Quantiles of posterior sample",
                     "Quantiles of predictive distribution"),
-       bty='n',col=c(2,4,3),lty=1)
+       bty="n",col=c(2,4,3),lty=1)
 
 
 
@@ -193,7 +193,7 @@ kpostmedian <- apply(kpost,2,median)
 
 par(mfcol=c(1,3),mai=c(.65,.65,.01,.01),cex=.85,mgp=c(2.6,1,0))
 
-matplot( log( kpost), lty=1, type='l',xlab='Index')
+matplot( log( kpost), lty=1, type="l",xlab="Index")
 abline(h=log(kpostmedian),col=3)
 acf( kpost[,3],ylab=expression(kappa[t]))
 plot(kpost[,2:3],ylab=expression(kappa[t]),xlab=expression(kappa[s]),cex=.8)
@@ -204,9 +204,9 @@ allkappas <- rbind(apply(kpost,2,mean),
                    apply(kpost,2,median),
                    apply(1/kpost,2,mean),
                    apply(1/kpost,2,median))
-colnames(allkappas) <- c('kappa_y', 'kappa_s', 'kappa_t')
-rownames(allkappas) <- c('Prec (mean)', 'Prec (median)',
-                         'Var (mean)', 'Var (median) ')
+colnames(allkappas) <- c("kappa_y", "kappa_s", "kappa_t")
+rownames(allkappas) <- c("Prec (mean)", "Prec (median)",
+                         "Var (mean)", "Var (median) ")
 print(allkappas,4)
 
 
