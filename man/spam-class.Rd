@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/spam-class.Rd
+% This is file ../spam0.27-0/man/spam-class.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -41,6 +41,7 @@
 \alias{Compare,numeric,spam-method}
 \alias{Compare,spam,numeric-method}
 \alias{c,spam-method}
+\alias{t,spam-method}
 \alias{length<-,spam-method}
 \alias{length,spam-method}
 \alias{lower.tri,spam-method}
@@ -94,7 +95,7 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
     \item{c}{\code{signature(x = "spam")}:
       vectorizes the sparse matrix and takes account of the zeros. Hence
     the lenght of the result is \code{prod(dim(x))}.}
-    \item{cbind}{\code{signature(x = "spam")}: binds sparse matrices.}
+    \item{cbind}{\code{signature(x = "spam")}: binds sparse matrices, see \code{\link{cbind}} for details.}
     \item{chol}{\code{signature(x = "spam")}:
     see \code{\link{chol}} for details.}
     \item{diag}{\code{signature(x = "spam")}: 
@@ -120,7 +121,7 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
       the ordinary \code{plot}. }
     \item{print}{\code{signature(x = "spam")}: see \code{\link{print}} for details.}
     \item{rbind}{\code{signature(x = "spam")}: binds sparse
-      matrices.}
+      matrices, see \code{\link{cbind}} for details.}
 %    \item{show}{\code{signature(object = "spam")}: ... }
     \item{solve}{\code{signature(a = "spam")}: see \code{\link{solve}} for details.}
     \item{summary}{\code{signature(object = "spam")}: small summary

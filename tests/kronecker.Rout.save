@@ -1,7 +1,8 @@
 
-R version 2.11.0 beta (2010-04-12 r51702)
-Copyright (C) 2010 The R Foundation for Statistical Computing
+R version 2.13.1 (2011-07-08)
+Copyright (C) 2011 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
+Platform: i686-pc-linux-gnu (32-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -15,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.23-0/tests/kronecker.R
+> # This is file ../spam0.27-0/tests/kronecker.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # written and maintained by Reinhard Furrer.
@@ -29,7 +30,7 @@ Type 'q()' to quit R.
 > 
 > 
 > options( echo=FALSE)
-Package 'spam' is loaded. Spam version 0.23-0 (2010-09-01).
+Package 'spam' is loaded. Spam version 0.27-0 (2011-08-17).
 Type demo( spam) for some demos, help( Spam) for an overview
 of this package.
 Help for individual functions is optained by adding the

@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/options.Rd
+% This is file ../spam0.27-0/man/options.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -78,6 +78,10 @@ spam.getOption(x)
   upper and lower triangular part of a matrix.}
 
 \item{\code{cex=1200}:}{default dot size for  \code{image} or \code{display}.}
+
+\item{\code{listmethod="PE"}:}{algorithm for \code{spam.list}. Default
+  is suggestion by Paul Eilers (thanks). Any other specification uses a
+  bubble sort algorithm which is only slightly faster for very sparse matrices. }
 
 \item{\code{dopivoting=TRUE}:}{default parameter for "solve" routines. \code{FALSE}
   would solve the system without using the permutation.}

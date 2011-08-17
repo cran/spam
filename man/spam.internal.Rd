@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/spam.internal.Rd
+% This is file ../spam0.27-0/man/spam.internal.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -34,7 +34,7 @@
   to doubles and integers. These functions are used when calling Fortran
   routines.
 }
-\note{The integers \code{int0}, \code{int1} and \code{int2} (0-2) are not
-  exported. 
-}
+%\note{The integers \code{int0}, \code{int1} and \code{int2} (0-2) are not
+%  exported. 
+%}
 \keyword{internal}

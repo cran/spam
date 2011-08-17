@@ -1,4 +1,4 @@
-# This is file ../spam0.23-0/R/kronecker.R
+# This is file ../spam0.27-0/R/kronecker.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -82,8 +82,6 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
   return(kronxy)
 }
 
-if(getRversion() < "2.8")
-  "kronecker" <- function(X,Y, ...) UseMethod("kronecker")
 
 "kronecker.default" <- base::kronecker
 setGeneric("kronecker")

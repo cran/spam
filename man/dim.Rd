@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/dim.Rd
+% This is file ../spam0.27-0/man/dim.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -14,7 +14,7 @@
 
 
 \name{dim}
-\alias{dim}
+%\alias{dim}
 \alias{dim<-.spam} 
 \alias{dim<-,spam-method}
 \title{Dimensions of an Object}
@@ -33,7 +33,7 @@
 \value{
   \code{dim} retrieves
   the \code{dimension} slot of the object.  It is a vector
-  of mode \code{\link{integer}}.
+  of mode \code{integer}.
 
   The replacemnt method changes the dimension of the object by
   truncation or extension (with zeros).

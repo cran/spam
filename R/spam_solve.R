@@ -1,4 +1,4 @@
-# This is file ../spam0.23-0/R/spam_solve.R
+# This is file ../spam0.27-0/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -102,8 +102,8 @@ setMethod("print",   "spam.chol.NgPeyton", print.spam.chol.NgPeyton)
 setMethod("summary", "spam.chol.NgPeyton", summary.spam.chol.NgPeyton)
 setMethod("dim",     "spam.chol.NgPeyton",function(x) x@dimension)
 setMethod("length",  "spam.chol.NgPeyton",function(x) x@rowpointers[x@dimension[1]+1]-1)
-setMethod("length<-","spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam' object") )
-setMethod("dim<-",   "spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam' object") )
+setMethod("length<-","spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam.chol.NgPeyton' object") )
+setMethod("dim<-",   "spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam.chol.NgPeyton' object") )
 
 setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
   nrow <- x@dimension[1]
@@ -153,13 +153,11 @@ setMethod("as.spam","spam.chol.NgPeyton", as.spam.chol.NgPeyton)
 
 
 
-#if(getRversion() < "2.8") {
 "backsolve" <- function(r,x, ...) UseMethod("backsolve")
 #"backsolve.default" <- base::backsolve
 setGeneric("backsolve")
 setMethod("backsolve","matrix",base::backsolve)
   
-#if(getRversion() < "2.8") {
 "forwardsolve" <- function(l,x, ...) UseMethod("forwardsolve")
 #"forwardsolve.default" <- base::forwardsolve
 setGeneric("forwardsolve")
@@ -192,12 +190,6 @@ setMethod("ordering","spam",function(x,inv=FALSE)
             if(inv)return(dim(x)[1]:1) else return(1:dim(x)[1]) })
 
 
-if(getRversion() < "2.6") {
-  "chol" <- function(x, ...) UseMethod("chol")
-  "chol.default" <- base::chol
-  setGeneric("chol")
-  setMethod("chol","matrix",base::chol)
-}
 
 update.spam.chol.NgPeyton <- function(object,x,...){
   nrow <- object@dimension[1]
@@ -222,7 +214,7 @@ update.spam.chol.NgPeyton <- function(object,x,...){
                 snode=object@snmember,
                 xsuper=object@supernodes,
                 cachesize=object@memory[3],
-                ierr = as.integer(0),         
+                ierr = 0L,         
                 NAOK = !.Spam$safemode[3],
                 DUP=FALSE,
                 PACKAGE="spam")
@@ -267,17 +259,17 @@ chol.spam <- function(x, pivot = "MMD",
 
   if (length(pivot)==1) {
     if (pivot==FALSE) {
-      doperm <- as.integer(0)
+      doperm <- 0L
       pivot <- seq_len(nrow)
     } else if(pivot==TRUE) {
-      doperm <- as.integer( 1)
+      doperm <- 1L
       pivot <- vector("integer",nrow)
     } else {
       doperm <- as.integer( switch(match.arg(pivot,c("MMD","RCM")),MMD=1,RCM=2))
       pivot <- vector("integer",nrow)
     }
   } else  if (length(pivot)==nrow) {
-    doperm <- as.integer(0)
+    doperm <- 0L
     if (!is.integer(pivot[1]))
       pivot <- as.vector(pivot,"integer")
     if (.Spam$cholpivotcheck) {
@@ -330,7 +322,7 @@ chol.spam <- function(x, pivot = "MMD",
                 snode = vector("integer",nrow),
                 xsuper = vector("integer",nrow+1),   
                 cachesize = as.integer(cache),
-                ierr = as.integer(0),          
+                ierr = 0L,          
                 NAOK = !.Spam$safemode[3],
                 DUP=FALSE)
 
@@ -365,7 +357,7 @@ chol.spam <- function(x, pivot = "MMD",
                   snode = vector("integer",nrow),
                   xsuper = vector("integer",nrow+1),   
                   cachesize = as.integer(cache),
-                  ierr = as.integer(0),          
+                  ierr = 0L,          
                   NAOK = !.Spam$safemode[3],
                   DUP=FALSE)
     
@@ -428,7 +420,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
   m <- r@dimension[1]
   if(is.vector(x)) {
     n <- length(x)
-    p <- int1
+    p <- 1L
   } else {
     if(!is.matrix(x)) x <- as.matrix(x)
     n <- nrow(x)
@@ -480,7 +472,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
   m <- l@dimension[1]
   if(is.vector(x)) {
     n <- length(x)
-    p <- int1
+    p <- 1L
   } else {
     if(!is.matrix(x)) x <- as.matrix(x)
     n <- nrow(x)
@@ -558,17 +550,17 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                      method), domain = NA)
 
   if (length(pivot)==nrow) {
-    doperm <- as.integer(0)
+    doperm <- 0L
     pivot <- as.vector(pivot,"integer")
     if (.Spam$cholpivotcheck) {
       checkpivot(pivot,nrow)
     }
   } else if (length(pivot)==1) {
     if (pivot==FALSE) {
-      doperm <- as.integer(0)
+      doperm <- 0L
       pivot <- seq_len(nrow)
     } else if(pivot==TRUE) {
-      doperm <- as.integer( 1)
+      doperm <- 1L
       pivot <- vector("integer",nrow)
     } else {
       doperm <- as.integer( switch(match.arg(pivot,c("MMD","RCM")),MMD=1,RCM=2))
@@ -619,7 +611,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                 snode = vector("integer",nrow),
                 xsuper = vector("integer",nrow+1),   
                 cachesize = as.integer(cache),
-                ierr = as.integer(0),          
+                ierr = 0L,          
                 NAOK = !.Spam$safemode[3],
                 DUP=FALSE)
 
@@ -652,7 +644,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                   snode = vector("integer",nrow),
                   xsuper = vector("integer",nrow+1),   
                   cachesize = as.integer(cache),
-                  ierr = as.integer(0),          
+                  ierr = 0L,          
                   NAOK = !.Spam$safemode[3],
                   DUP=FALSE)
     
@@ -698,7 +690,6 @@ setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
 ######################################################################
 ########################################################################
 
-if(getRversion() >= "2.5") {
     
 "as.matrix.spam.chol.NgPeyton" <- function(x,...){
   nrow <- x@dimension[1]
@@ -722,30 +713,6 @@ if(getRversion() >= "2.5") {
          )
 }
 
-}else{
-  
-"as.matrix.spam.chol.NgPeyton" <- function(x){
-  nrow <- x@dimension[1]
-  nnzR <- x@rowpointers[nrow+1]-1
-  newx <- new("spam")
-  nsuper <- as.integer( length(x@supernodes)-1)
-  xcolindices <- .Fortran('calcja',
-                           nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
-                           xja=vector("integer",nnzR),
-                           NAOK = !.Spam$safemode[3],
-                           DUP=FALSE,
-                           PACKAGE = "spam")$xja
-  return(array(.Fortran("spamcsrdns",
-                 nrow=nrow,
-                 entries=dcheck(x@entries),
-                 colindices=xcolindices,
-                 rowpointers=x@rowpointers,
-                 res=vector("double",nrow*nrow),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res,
-               c(nrow,nrow))      # we preserve dimensions
-         )
-}
-}
 
 
 setMethod("as.matrix","spam.chol.NgPeyton",as.matrix.spam.chol.NgPeyton)
@@ -767,6 +734,11 @@ setMethod("display","spam.chol.NgPeyton",
 setMethod("t","spam.chol.NgPeyton",
           function(x){
             t.spam(as.spam.chol.NgPeyton(x))
+          })
+
+setMethod("chol","spam.chol.NgPeyton",
+          function(x){
+           x
           })
 ########################################################################
 

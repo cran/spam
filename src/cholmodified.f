@@ -15,7 +15,7 @@
       double precision d(nnzd),lnz(*)
 
 c temp and working stuff, loops, etc
-      double precision iwork(7*m+3)
+      integer iwork(7*m+3)
       integer split(m)
 c
 c Clean L
@@ -127,7 +127,7 @@ c
 
 c temp and working stuff, loops, etc
       integer i,j,k,  nnzadj, jtmp
-      double precision iwork(7*m+3)
+      integer iwork(7*m+3)
 
 c iwsiz is used temporalily
       iwsiz=0

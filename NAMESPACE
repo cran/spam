@@ -79,6 +79,13 @@ export("dcheck",
 
        "kronecker.default",
        "kronecker.spam",
+
+       "diff.spam",
+
+       "circulant.spam",
+       "toeplitz.spam",
+
+       "make.prec",
        
        "determinant.spam",
        "determinant.spam.chol.NgPeyton",

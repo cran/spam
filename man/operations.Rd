@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/operations.Rd
+% This is file ../spam0.27-0/man/operations.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -74,8 +74,9 @@
 \alias{norm,spam,character-method} 
 \alias{norm,spam,missing-method} 
 %\alias{norm,numeric-method} 
-\alias{t,ANY-method} 
-\alias{t,spam-method} 
+%\alias{t,ANY-method} 
+%\alias{t,spam-method} 
+\alias{t.spam}
 \alias{ncol,spam-method} 
 \alias{nrow,spam-method} 
 \alias{dim,ANY-method} 
@@ -91,7 +92,6 @@
 \alias{[<-,spam,spam,missing-method}
 \alias{[<-,spam,ANY,ANY-method}
 \alias{[,spam,ANY,ANY-method}
-\alias{t.spam}
 \alias{plot.spam}
 \alias{subset.spam}
 \alias{assign.spam}

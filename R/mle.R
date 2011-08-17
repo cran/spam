@@ -1,4 +1,4 @@
-# This is file ../spam0.23-0/R/mle.R
+# This is file ../spam0.27-0/R/mle.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -51,7 +51,7 @@ neg2loglikelihood <- function(y, X, distmat, Covariance,
 mle.spam <- function(y, X, distmat, Covariance,
                      beta0, theta0,
                      thetalower, thetaupper, optim.control=NULL,
-                     Rstruct = NULL,...) {
+                     Rstruct = NULL, hessian = FALSE,...) {
   
   
   if (!is(Rstruct, "spam.chol.NgPeyton")) {
@@ -80,13 +80,14 @@ mle.spam <- function(y, X, distmat, Covariance,
   return(optim(c(beta0,theta0),neg2loglikelihood,
                method = "L-BFGS-B",control = optim.control,
                lower=c(rep(-Inf,p),thetalower),
-               upper=c(rep(Inf,p),thetaupper)))
+               upper=c(rep(Inf,p),thetaupper), hessian = hessian))
                
 }
 
 mle <- function(y, X, distmat, Covariance,
                 beta0, theta0,
                 thetalower, thetaupper, optim.control=NULL,
+                hessian = FALSE,
                 ...) {
     
   p <- dim(X)[2]
@@ -108,15 +109,15 @@ mle <- function(y, X, distmat, Covariance,
   return(optim(c(beta0,theta0),neg2loglikelihood,
                method = "L-BFGS-B",control = optim.control,
                lower=c(rep(-Inf,p),thetalower),
-               upper=c(rep(Inf,p),thetaupper)))
+               upper=c(rep(Inf,p),thetaupper), hessian = hessian))
                
 }
 
 
 mle.nomean.spam <- function(y, distmat, Covariance,
                      theta0,
-                     thetalower, thetaupper, optim.control=NULL,
-                     Rstruct = NULL,...) {
+                     thetalower, thetaupper, optim.control = NULL,
+                     Rstruct = NULL, hessian = FALSE,...) {
   
   
   if (!is(Rstruct, "spam.chol.NgPeyton")) {
@@ -142,7 +143,7 @@ mle.nomean.spam <- function(y, distmat, Covariance,
 
   return(optim(theta0,neg2loglikelihood,
                method = "L-BFGS-B",control = optim.control,
-               lower=thetalower,    upper=thetaupper))
+               lower=thetalower,    upper=thetaupper, hessian = hessian))
                
 }
 
@@ -152,6 +153,7 @@ mle.nomean.spam <- function(y, distmat, Covariance,
 mle.nomean <- function(y, distmat, Covariance,
                        theta0,
                        thetalower, thetaupper, optim.control=NULL,
+                       hessian = FALSE,
                        ...) {
     
   n <- length(y)
@@ -170,6 +172,6 @@ mle.nomean <- function(y, distmat, Covariance,
 
   return(optim(theta0,neg2loglikelihood,
                method = "L-BFGS-B",control = optim.control,
-               lower=thetalower,    upper=thetaupper))
+               lower=thetalower,    upper=thetaupper, hessian = hessian))
                
 }

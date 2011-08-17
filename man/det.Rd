@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/det.Rd
+% This is file ../spam0.27-0/man/det.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -19,9 +19,10 @@
 \alias{det,spam.chol.NgPeyton-method}
 \alias{det.spam}
 \alias{determinant}
-\alias{determinant,spam.chol.NgPeyton-method}
+%\alias{determinant,spam.chol.NgPeyton-method}
 \alias{determinant,spam-method}
 \alias{determinant.spam}
+\alias{determinant.spam.chol}
 \alias{determinant.spam.chol.NgPeyton}
 \title{Calculate the determinant of a positive definite Sparse Matrix}
 \description{\code{det} and \code{determinant} calculate the determinant of a
@@ -31,7 +32,7 @@
 
 }
 \usage{
-#     det(x, ...)
+# det(x, ...)
 determinant(x, logarithm = TRUE, ...)
 }
 \arguments{

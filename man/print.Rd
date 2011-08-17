@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/print.Rd
+% This is file ../spam0.27-0/man/print.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -10,12 +10,14 @@
 \alias{print}
 \alias{print.spam}
 \alias{print,spam-method}
-\alias{print,spam.chol.NgPeyton-method}
+%\alias{print,spam.chol.NgPeyton-method}
+\alias{print.spam.chol}
 \alias{print.spam.chol.NgPeyton}
 \alias{summary}
 \alias{summary.spam}
 \alias{summary,spam-method}
-\alias{summary,spam.chol.NgPeyton-method}
+%\alias{summary,spam.chol.NgPeyton-method}
+\alias{summary.spam.chol}
 \alias{summary.spam.chol.NgPeyton}
 \title{Printing and summarizing sparse matrices}
 \description{Printing (non-zero elements) of sparse matrices

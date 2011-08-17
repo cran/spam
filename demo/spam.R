@@ -1,4 +1,4 @@
-# This is file ../spam0.23-0/demo/spam.R
+# This is file ../spam0.27-0/demo/spam.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -67,8 +67,7 @@ par(ask=interactive() &&
 display(smat, main="'scatterplot'-type display, very efficient")
 
 
-
-.Spam$imagesize <- prod(smat@dimension)+1
+spam.options("imagesize"=prod(smat@dimension)+1)
 display(smat, main="'image'-type display, may be slow and heavy")
 
 par(opar)

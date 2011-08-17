@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/spam.creation.Rd
+% This is file ../spam0.27-0/man/spam.creation.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -26,7 +26,6 @@
 \alias{as.spam,matrix-method}
 \alias{as.spam,numeric-method}
 \alias{as.spam,spam-method}
-\alias{as.spam,spam.chol.NgPeyton-method}
 \alias{as.spam,dist-method}
 \alias{as.spam,list-method}
 \alias{as.spam}
@@ -72,7 +71,8 @@ is.spam(x)
   In case of the latter, the list should contain three vectors
   containing the row, column indices (called \code{i} and
   \code{j}) and the values. In both cases partial matching is done.
-
+  In case there are several triplets with the same \code{i}, \code{j},
+  the values are added.
   
   \code{eps} should be at least as large as \code{.Machine$double.eps}.
 }
@@ -87,11 +87,11 @@ is.spam(x)
 }
 \references{\url{http://en.wikipedia.org/wiki/Sparse_matrix} as a start.}
 \seealso{
-  \code{\link{SPAM}} general overview of the package.
-  \code{\link{spam.options}} for details about the \code{safemode} flag.
+  \code{\link{SPAM}} for a general overview of the package;
+  \code{\link{spam.options}} for details about the \code{safemode} flag;
     \code{\link{read.MM}} and \code{\link{foreign}} to create \code{spam}
 	matrices from MatrixMarket
-    files and from certain \code{Matrix/SparseM} formats.
+    files and from certain \pkg{Matrix} or \pkg{SparseM} formats.
 }
 \examples{
 # old message, do not loop, when you create a large sparse matrix

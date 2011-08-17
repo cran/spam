@@ -1,4 +1,4 @@
-# This is file ../spam0.23-0/R/profile.R
+# This is file ../spam0.27-0/R/profile.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -37,7 +37,8 @@ class(spam.version) <- "simple.list"
                 imagesize=10000,           # the max size which we display as regular matrices
                 trivalues=FALSE,           # with upper./lower/.tri return values (TRUE) or only structure?
                 cex=1200,                  # scaling factor for scatter displays
-                
+
+                listmethod='PE',           # method to be used when using spam.list
              
                 safemode=c(TRUE,TRUE,TRUE),  # verify double and integer formats and else...
                 dopivoting=TRUE,           # what type of back/forwardsolve?
@@ -68,7 +69,7 @@ class(spam.version) <- "simple.list"
     if (nargs() == 0) return(.Spam)
     current <- .Spam
     temp <- list(...)
-    if (length(temp) == 1 && is.null(names(temp))) {
+    if (length(temp) == 1L && is.null(names(temp))) {
         arg <- temp[[1]]
         switch(mode(arg),
                list = temp <- arg,
@@ -101,8 +102,3 @@ powerboost <- function(flag="on") {
 }
 
 
-#      library(spam,lib='~/todelete/0.15R7')
-#      .Spam=spam.options()
-int0 <- as.integer(0)
-int1 <- as.integer(1)
-int2 <- as.integer(2)

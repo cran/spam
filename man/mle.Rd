@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/mle.Rd
+% This is file ../spam0.27-0/man/mle.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -23,20 +23,22 @@ neg2loglikelihood(y, X, distmat, Covariance,
 mle.spam(y, X, distmat, Covariance,
      beta0, theta0,
      thetalower, thetaupper, optim.control=NULL,
-     Rstruct = NULL,...)
+     Rstruct = NULL, hessian = FALSE,...)
 
 mle(y, X, distmat, Covariance,
      beta0, theta0,
-     thetalower, thetaupper, optim.control=NULL, ...)
+     thetalower, thetaupper, optim.control=NULL,
+     hessian = FALSE, ...)
 
 mle.nomean.spam(y, distmat, Covariance,
      theta0,
      thetalower, thetaupper, optim.control=NULL,
-     Rstruct = NULL,...) 
+     Rstruct = NULL, hessian = FALSE, ...) 
 
 mle.nomean(y, distmat, Covariance,
      theta0,
-     thetalower, thetaupper, optim.control=NULL, ...) 
+     thetalower, thetaupper, optim.control=NULL,
+     hessian = FALSE, ...) 
 }
 \arguments{
   \item{y}{data vector of length n.}
@@ -51,6 +53,8 @@ mle.nomean(y, distmat, Covariance,
   \item{thetalower,thetaupper}{lower and upper bounds of the parameter
     \code{theta}.}
   \item{optim.control}{arguments passed to \code{optim}.}
+  \item{hessian}{Logical. Should a numerically differentiated Hessian matrix
+          be returned?}
   \item{...}{additional arguments passed to \code{chol}.}
 }
 \value{The negative-2-loglikelihood or the output from the function
@@ -77,9 +81,16 @@ h ->   R / 2 sin(h/2)
 where R is the radius of the sphere.
 
 
-The covariance function requires that the first argument is the
-distance matrix and the second the parameters, out of which the
-first is the range parameter.
+The covariance function requires that the first argument is the distance
+matrix and the second the parameters. One can image cases in which the
+covariance function does not take the entire distance matrix but only
+some partial information thereof. (An example is the use of a kronecker
+type covariance structure.)  In case of a sparse covariance construction
+where the argument \code{Rstruct} is not given, the first parameter
+element needs to be the range parameter. (This results from the fact,
+that a sparse structure is constructed that is independent of the
+parameter values to exploit the fast Choleski decomposition.)
+
 
 In the zero-mean case, the \code{neg2loglikelihood} is calculated by setting
 the parameters \code{X} or \code{beta} to zero.

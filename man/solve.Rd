@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/solve.Rd
+% This is file ../spam0.27-0/man/solve.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -29,7 +29,7 @@
 \alias{forwardsolve}
 \alias{forwardsolve.spam}
 \alias{forwardsolve.default}
-\alias{solve}
+%\alias{solve}
 \alias{solve,ANY-method}
 \alias{solve,spam-method}
 \title{Linear Equation Solving for Sparse Matrices}
@@ -42,10 +42,13 @@
 of a matrix if the right-hand-side is missing.
 }
 \usage{
-solve(a, b, ...)
+# solve(a, b, ...)
+solve.spam(a, b, ...)
 
-backsolve(r, x, ...)%, k, upper.tri, transpose
-forwardsolve(l, x, ...)%, k = NULL, upper.tri = NULL, transpose = NULL
+# backsolve(r, x, ...)
+backsolve.spam(r, x, ...)
+# forwardsolve(l, x, ...)
+forwardsolve.spam(l, x, ...)
 }
 \arguments{
 \item{a}{symmetric positive definite matrix of class \code{spam} or a Cholesky factor 
@@ -53,7 +56,7 @@ forwardsolve(l, x, ...)%, k = NULL, upper.tri = NULL, transpose = NULL
 \item{l,r}{object of class \code{spam} or \code{spam.chol.}\emph{method} returned by the function
 \code{chol}.}
 \item{x,b}{vector or regular matrix of right-hand-side(s) of a system of linear equations.}
-\item{\dots}{further arguments passed to or from other methods, see Details below.}
+\item{\dots}{further arguments passed to or from other methods, see \sQuote{Details} below.}
 }
 \details{
   We can solve \code{A \%*\% x = b} by first computing the Cholesky decomposition \code{A =
@@ -64,15 +67,15 @@ symmetric positive definite sparse matrix, with \code{forwardsolve} and
 then \code{backsolve}.\cr
 
 In case \code{a} is from a \code{chol}, then \code{solve} is an
-   efficient way to calculate \code{backsolve(a,forwardsolve( t(a),b))}.
+   efficient way to calculate \code{backsolve(a, forwardsolve( t(a), b))}.
 
 
    However, for \code{a.spam} and \code{a.mat} from a \code{chol} call
    wit a sparse and ordinary matrix,  note that
-   \code{forwardsolve(a.mat, b, transpose=T, upper.tri=T)}
+   \code{forwardsolve( a.mat, b, transpose=T, upper.tri=T)}
    is equivalent to
-   \code{forwardsolve(t(a.mat), b)}
-   and \code{backsolve(a.spam,forwardsolve(a.spam, b,transpose=T,upper.tri=T))}
+   \code{forwardsolve( t(a.mat), b)}
+   and \code{backsolve(a.spam, forwardsolve(a.spam, b, transpose=T, upper.tri=T))}
    yields the desired result. But
           \code{backsolve(a.spam,forwardsolve(t(a.spam), resid))} is
    wrong because  \code{t(a.spam)} is a \code{spam} and not a

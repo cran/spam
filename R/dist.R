@@ -1,4 +1,4 @@
-# This is file ../spam0.23-0/R/dist.R
+# This is file ../spam0.27-0/R/dist.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -35,7 +35,7 @@
 
 nearest.dist <- function( x, y=NULL, method = "euclidean",
                          delta = 1,
-                         upper = FALSE,
+                         upper = if(is.null(y)) FALSE else NULL,
                          p = 2, miles=TRUE, R=NULL,
                          eps =  NULL, diag = NULL
                          )
@@ -66,9 +66,9 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   
 
   if (is.null(upper)) 
-    part <- int0
+    part <- 0L
   else
-    part <- ifelse(upper, int1 ,-int1)
+    part <- ifelse(upper, 1L ,-1L)
   if (is.data.frame(x))  x <- as.matrix(x)
   if (is.list(x)) stop("'x' should be an array or matrix")
            # as.matrix( list() ) does not work

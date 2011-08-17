@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/history.spam.Rd
+% This is file ../spam0.27-0/man/history.spam.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -14,40 +14,23 @@
 \usage{
   spam.history()
 }
-\details{This list is maintained for releases 0.05 and higher.
-  \describe{
-  \item{0.21-0.23}{Changes in help files and demos. Minor internal improvements.}
-  \item{0.20}{Major new release, more functions, methods, ...}
-  \item{0.16}{Mostly bugfixes and minor enhancements.}
-  \item{0.15}{Induced by need to catch up the devel versions of 0.14.}
-  \item{0.14}{Complete rewrite of \code{chol}, implementation of
-    \code{update.spam.chol.NgPeyton} and related routines.
-    Rewrite of \code{spam.chol.NgPeyton} class. Proper \code{spam.options}
-    handling.  Kronecker product implementation. Rewrite of
-    \code{cbind}. Importing and handling of foreign formats.
-    Many internal changes for efficieny increases. Major file renaming.
-    Some backwards compatibility loss.}
-  \item{0.13}{Minor changes to avoid some warning/errors when
-    compiling on different platforms.}
-  \item{0.12}{Many internal changes. Start maintaining a proper
-    CHANGELOG file.}
-  \item{0.11}{Considerable help file improvements. Changes in
-    \code{c/rbind}, \code{chol}, print/summary methods and other minor
-    improvements, first push to CRAN.}
-  \item{0.10}{Minor bug fixes and help file improvements.}
-  \item{0.09}{Proper NAMESPACE handling.}
-  \item{0.08}{\code{fields} uses \code{spam} now as a required
-    package.
-    The required linking functions are implemented in fields.}
-  \item{0.07}{Change of slot names.}
-  \item{0.06}{Implements \code{spam} and the function linking
-            \code{fields} version 3.6. Last stable version before the
-	    "merging" with fields. 
-              Update to R2.4 and documentation fill-in.}
-  \item{0.05}{Implements \code{spam} and the function linking
-              \code{fields} version 3.2. It should represent a fair working
-              version, with large gaps in the documentation.}
-	    }
+\details{Many years ago, I required sparse matrix algebra capacities in
+  \R for my research. The packages available at that time where not
+  necessarily satisfying for my purpose. Hence, I started writing my own
+  functions, somewhat inspired by the package \code{SparseM}.
+
+  Over the years, I decided to write an \R package, called \code{spam}.
+  In mean time, we have tree significant sparse matrix packages posted
+  on CRAN. I believe that all three have their own niche of users.
+
+  I believe that \code{spam} is stable, useful but definitely not fully
+  matured. I appreciate all comments and remarks.
+
+
+  There is no need to maintain here a complete list of changes. Older
+  versions are available on CRAN (>0.11), each coming with a proper
+  history file.
+	
 }
 \references{See also a more detailed description at
   \url{http://www.math.uzh.ch/furrer/software/spam/history.shtml}.}
@@ -56,6 +39,7 @@
 \dontrun{
 ## A complete history of changes
 file.show(system.file("NEWS", package = "spam"))
+file.show(system.file("0NEWS", package = "spam"))
 }
 }
 \keyword{internal}

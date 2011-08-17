@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/kronecker.Rd
+% This is file ../spam0.27-0/man/kronecker.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -7,7 +7,7 @@
 
 
 \name{kronecker}
-\alias{kronecker}
+%\alias{kronecker}
 \alias{kronecker.default}
 \alias{kronecker.spam}
 \title{Kronecker Products on Sparse Matrices}
@@ -21,7 +21,7 @@ kronecker.spam(X, Y, FUN = "*", make.dimnames = FALSE, ...)
   \item{Y}{sparse matrix of class \code{spam}, a vector or a matrix.}
   \item{FUN}{a function; it may be a quoted string. See details}
   \item{make.dimnames}{Provide dimnames that are the product of the dimnames of
-    'X' and 'Y'. } 
+    \code{X} and \code{Y}. } 
     \item{ ...}{optional arguments to be passed to \code{FUN}.}
 }
 \value{An array \code{A} with dimensions

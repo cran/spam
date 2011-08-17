@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/nearestdist.Rd
+% This is file ../spam0.27-0/man/nearestdist.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -23,21 +23,22 @@
      using the specified distance measure.}
 \usage{
 nearest.dist( x, y=NULL, method = "euclidean",
-             delta = 1, upper = FALSE,
+             delta = 1, upper = if (is.null(y)) FALSE else NULL,
              p=2, miles=TRUE, R=NULL,
              eps = NULL, diag = NULL)
 }
 \arguments{
   \item{x}{Matrix of first set of locations where each row gives the
-          coordinates of a particular point. See also Details.}
+          coordinates of a particular point. See also \sQuote{Details}.}
   \item{y}{Matrix of second set of locations where each row gives the
           coordinates of a particular point. If this is missing \code{x} is
-          used. See also Details.}
+          used. See also \sQuote{Details}.}
   \item{method}{the distance measure to be used. This must be one of
           \code{"euclidean"}, \code{"maximum"}, \code{"minkowski"} or
                 \code{"greatcircle"}. Any unambiguous substring can be
           given.}
-  \item{delta}{only distances smaller than \code{delta} are recorded.} 
+  \item{delta}{only distances smaller than \code{delta} are recorded,
+    see Details.} 
   \item{upper}{Should the entire matrix (\code{NULL}) or only the upper-triagonal (\code{TRUE})
                or lower-triagonal (\code{FALSE}) values be calculated.} 
   \item{p}{The power of the Minkowski distance.} 
@@ -48,7 +49,7 @@ nearest.dist( x, y=NULL, method = "euclidean",
           values of the miles argument. If \code{R=1} then distances are of
           course in radians.}
   \item{eps}{deprecated. Left for backwards consistency.} 
-  \item{diag}{deprecated. Left for backwards consistency. See details.} 
+  \item{diag}{deprecated. Left for backwards consistency. See \sQuote{Details}.} 
 }
 \value{A \code{spam} object containing the distances spanned between
   zero and \code{delta}. The sparse matrix may contain many zeros
@@ -57,8 +58,12 @@ nearest.dist( x, y=NULL, method = "euclidean",
 
 \details{For great circle distance, the by 2 matrices \code{x} and \code{y} contain
   the degrees longitudes in the first and the degrees latitudes in the second column.
-  \code{eps} and \code{delta} are in degrees. The distance is
-  in single precision (I am still not sure where I lose the double in
+  \code{eps} and \code{delta} are in degrees. Hence to restrict to
+  distances smaller than \code{delta.km}, one has to specify
+  \code{delta=delta.km*360/(6378.388*2*pi)}.
+
+  The distance is
+  in single precision (I am still not sure where I lose the double precision in
   the Fortran code) and if calculating the entire matrix
   \code{upper=NULL} (instead of adding its transpose) it may not
   pass the symmetry checks, for example.\cr 
@@ -71,9 +76,9 @@ nearest.dist( x, y=NULL, method = "euclidean",
   \code{x} and \code{y} can be any object with an existing
   \code{as.matrix} method.\cr
 
-  A quick scan revealed distance functions in at least 7 packages. The
-  argument names should be as general as possible and be coherent with
-  many (but not all) available distance functions.\cr
+  A quick scan revealed distance functions in at least 7 packages
+  (around 2008). The argument names should be as general as possible and
+  be coherent with many (but not all) available distance functions.\cr
   
   The Fortran code is based on a idea of Doug Nychka.
     }

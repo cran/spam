@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/xybind.Rd
+% This is file ../spam0.27-0/man/xybind.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -28,7 +28,7 @@ cbind.spam(\dots, deparse.level = 0)
 rbind.spam(\dots, deparse.level = 0)
 }
 \arguments{
-  \item{...}{vectors, matrices or \code{spam} objects. See Details and Value}
+  \item{...}{vectors, matrices or \code{spam} objects. See \sQuote{Details} and \sQuote{Value}}
   \item{deparse.level}{for compatibility reason here. Only \code{0} is implemented.}
 }
 \value{a \code{spam} object combining the \code{\dots} arguments
@@ -37,7 +37,7 @@ rbind.spam(\dots, deparse.level = 0)
 \details{\code{rbind} and \code{cbind} are not exactly symmetric in how
   the objects are processed. The former is essentially an concatenation
   of the slots due to the sparse storage format. Different types of
-  inputs are handled differently. The former calls a
+  inputs are handled differently. The latter calls a
   Fortran routine after the input has been coerced to \code{spam}
   objects. \cr
 
@@ -47,7 +47,7 @@ rbind.spam(\dots, deparse.level = 0)
   A method is defined for a  \code{spam} object as first argument. 
     }
 %\references{}
-\seealso{\code{\link{cbind,spam-method}}.}
+%\seealso{\code{\link{cbind,spam-method}}.}
 \examples{
 x <- cbind.spam(1:5,6)
 

@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/chol.Rd
+% This is file ../spam0.27-0/man/chol.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -12,15 +12,15 @@
 \alias{update}
 \alias{update,spam.chol.NgPeyton-method}
 \alias{update.spam.chol.NgPeyton}
-\alias{chol}              
+% \alias{chol}              
 \title{Cholesky Factorization for Sparse Matrices}
 \description{
 \code{chol} performs a Cholesky
 decomposition of a symmetric positive definite sparse matrix \code{x} 
 of class \code{spam}.}
 \usage{
-chol(x, \dots)
-chol.spam(x, pivot = "MMD", method = 'NgPeyton', memory =
+# chol(x, \dots)
+chol.spam(x, pivot = "MMD", method = "NgPeyton", memory =
                  list(), eps =  .Spam$eps, \dots)
 
 update.spam.chol.NgPeyton(object, x,...)
@@ -29,9 +29,9 @@ update.spam.chol.NgPeyton(object, x,...)
 \arguments{
 \item{x}{symmetric positive definite matrix of class \code{spam}.}
 \item{pivot}{should the matrix be permuted, and if, with what
-  algorithm, see Details below.}
+  algorithm, see \sQuote{Details} below.}
 \item{method}{Currently, only \code{NgPeyton} is implemented.}
-\item{memory}{Parameters specific to the method, see Details below.}
+\item{memory}{Parameters specific to the method, see \sQuote{Details} below.}
 \item{eps}{threshold to test symmetry. Defaults to \code{.Spam$eps}.}
 \item{\dots}{further arguments passed to or from other methods.}
 \item{object}{an object from a previous call to \code{chol}.}
@@ -44,10 +44,10 @@ update.spam.chol.NgPeyton(object, x,...)
 \details{\code{chol} performs a Cholesky decomposition of a symmetric
 positive definite sparse matrix \code{x} of class
 \code{spam}. Currently, there is only the block sparse Cholesky
-algorithm of Ng and Peyton (1993) implemented (\code{method=NgPeyton}).
+algorithm of Ng and Peyton (1993) implemented (\code{method="NgPeyton"}).
 
 To pivot/permute the matrix, you can choose between the multiple minimum
-degree (\code{pivot=MMD}) or reverse Cuthill-Mckee (\code{pivot=RCM})
+degree (\code{pivot="MMD"}) or reverse Cuthill-Mckee (\code{pivot="RCM"})
 from George and Lui (1981). It is also possible to furnish a specific
 permutation in which case \code{pivot} is a vector. For compatibility
 reasons, \code{pivot} can also take a logical in which for \code{FALSE}
@@ -72,7 +72,7 @@ returns an error to \R, which allocates more space and calls the Fortran
 routine again. The user can also pass better estimates of the allocation
 sizes to \code{chol} with the argument \code{memory=list(nnzR=...,
   nnzcolindices=...)}. The minimal sizes for a fixed sparsity
-structure can be obtained from a \code{summary} call.\cr
+structure can be obtained from a \code{summary} call, see \sQuote{Examples}.\cr
 
 
 The output of \code{chol} can be used with \code{forwardsolve} and
@@ -82,7 +82,7 @@ The output of \code{chol} can be used with \code{forwardsolve} and
 Notice that the Cholesky factorization of the package \code{SparseM} is also
 based on the algorithm of Ng and Peyton (1993).  Whereas the Cholesky
 routine of the package \code{Matrix} are based on 
-\code{CHOLMOD} by Timothy A. Davis (\code{c} code).
+\code{CHOLMOD} by Timothy A. Davis (\code{C} code).
 }
 \references{ 
 Ng, E. G. and B. W. Peyton (1993) Block sparse Cholesky algorithms
@@ -99,11 +99,11 @@ diagonal entries are used. By default, the code does check for
 symmetry (contrarily to \code{base:::chol}). However,
 depending on the matrix size, this is a time consuming test.
 A test is ignored if
-\code{.spam.options("cholsymmetrycheck")} is set to \code{FALSE}. 
+\code{spam.options( "cholsymmetrycheck")} is set to \code{FALSE}. 
 
 
 If a permutation is supplied with \code{pivot},
-\code{.spam.options("cholpivotcheck")} determines if the permutation is
+\code{spam.options( "cholpivotcheck")} determines if the permutation is
 tested for validity (defaults to \code{TRUE}). 
 }
 \seealso{\code{\link{det}}, \code{\link{solve}}, 
@@ -131,6 +131,11 @@ mvsample <- ( array(rnorm(N*n),c(N,n)) \%*\% R)[,iord]
 norm( var( as.matrix( mvsample)) - Sigma, type="HS")
 norm( t(R) \%*\% R - Sigma, type="sup")
 
+
+# To speed up factorizations, memory allocations can be optimized:
+opt <- summary(cholS)
+# here, some elements of Sigma may be changed...
+cholS <- chol( Sigma, memory=list(nnzR=opt$nnzR,nnzcolindices=opt$nnzc))
 
 }
 % backsolve( chol(as.matrix(V)[ord,ord]),iidsample)[iord,]

@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/lu.tri.Rd
+% This is file ../spam0.27-0/man/lu.tri.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -33,7 +33,7 @@ upper.tri(x, diag = FALSE)
 \details{Often not only the structure of the matrix is required but the
   entries as well. For compatibility, the default is only a structure
   consisting of ones (representing \code{TRUE}s). Setting the flag
-  \code{spam.getOption('trivalues')} to \code{TRUE},
+  \code{spam.getOption( "trivalues")} to \code{TRUE},
   the function returns the actual
   values.
   }

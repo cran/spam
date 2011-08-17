@@ -1,3 +1,50 @@
+	CHANGES IN VERSION 0.27
+
+NEW FEATURES
+
+    o	Requires now R2.10 and higher.
+
+    o	Functions to create Toeplitz and circulant matrices.
+
+    o 	Function to create precision matrices for gridded GMRF.
+
+    o	Improvements in the mle.* functions.
+
+    o	Method diff for sparse matrices (suggested by Paul Eilers).
+
+    o 	Improvement of help pages. 
+
+    o	Eliminated some help aliases to base functions 
+    	(for which no 'usage' is given). 
+
+
+INTERNAL CHANGES
+
+    o  	Change to iL coding.
+
+    o	Start to using 'identical'.
+
+    o 	Code cleaning due to requirement of R2.10 and higher.
+
+
+BUG FIXES
+
+    o   Bug fix in as.spam.list (thanks to Paul Eilers).
+
+    o 	Bug fix in demo(spam) (thanks to Thomas Gsponer).
+
+
+
+
+
+	CHANGES IN VERSION 0.24, 0.25 and 0.26
+	
+    o 	Devel versions, not released.	
+
+
+
+
+
 	CHANGES IN VERSION 0.23
 
 NEW FEATURES
@@ -6,6 +53,8 @@ NEW FEATURES
 
     o	Some improvements to meet Rd standards.
         Adjustments for future R versions. 
+
+
 
 
 
@@ -47,7 +96,7 @@ NEW FEATURES
 
 INTERNAL CHANGES
 
-    o   Varios Fortran code, R code and help file 
+    o   Various Fortran code, R code and help file 
     	improvements.
 
 

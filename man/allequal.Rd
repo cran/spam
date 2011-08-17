@@ -1,4 +1,4 @@
-% This is file ../spam0.23-0/man/allequal.Rd
+% This is file ../spam0.27-0/man/allequal.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -31,7 +31,7 @@ all.equal.spam(target, current, tolerance = .Machine$double.eps^0.5,
   \item{current}{another \code{spam} object to be compared with \code{target}.}
   \item{tolerance}{numeric >= 0.  Differences smaller than
     \code{tolerance} are not considered.}
-  \item{scale}{numeric scalar > 0 (or \code{NULL}). See 'Details'.}
+  \item{scale}{numeric scalar > 0 (or \code{NULL}). See \sQuote{Details}.}
   \item{check.attributes}{currently not yet implemented.}
   \item{...}{Further arguments for different methods.}
 }
@@ -50,8 +50,8 @@ all.equal.spam(target, current, tolerance = .Machine$double.eps^0.5,
      If \code{scale} is positive, absolute comparisons are made after
      scaling (dividing) by \code{scale}.
 
-     Don't use \code{all.equal.spam} directly in \code{if}
-  expressions-either use \code{isTRUE(all.equal.spam(....))} or
+     Do not use \code{all.equal.spam} directly in \code{if}
+  expressions: either use \code{isTRUE( all.equal.spam(...))} or
   \code{identical} if appropriate.
 
   

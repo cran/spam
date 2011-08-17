@@ -1,4 +1,4 @@
-# This is file ../spam0.23-0/R/foreign.R
+# This is file ../spam0.27-0/R/foreign.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -35,36 +35,19 @@ as.spam.matrix.csr <- function(x)
 # The following should not be necessary because it is
 # as."matrix.csr".spam and not "as.matrix".csr.spam.
 # Is there anyway around this?
-if(getRversion() >= "2.5") {
     
-    as.matrix.csr.spam <- function(x,...) {
-      if (require('SparseM')){
-        newx <- new("matrix.csr")
-        slot(newx,"ra",check=FALSE) <- x@entries
-        slot(newx,"ja",check=FALSE) <- x@colindices
-        slot(newx,"ia",check=FALSE) <- x@rowpointers
-        slot(newx,"dimension",check=FALSE) <- x@dimension
-        return(newx)
-      }       
-      
-    }
-
-  } else {
-
-    as.matrix.csr.spam <- function(x)  {
-      if (require('SparseM')){
-        newx <- new("matrix.csr")
-        slot(newx,"ra",check=FALSE) <- x@entries
-        slot(newx,"ja",check=FALSE) <- x@colindices
-        slot(newx,"ia",check=FALSE) <- x@rowpointers
-        slot(newx,"dimension",check=FALSE) <- x@dimension
-        return(newx)
-      }       
-      
-    }
-
-
+as.matrix.csr.spam <- function(x,...) {
+  if (require('SparseM')){
+    newx <- new("matrix.csr")
+    slot(newx,"ra",check=FALSE) <- x@entries
+    slot(newx,"ja",check=FALSE) <- x@colindices
+    slot(newx,"ia",check=FALSE) <- x@rowpointers
+    slot(newx,"dimension",check=FALSE) <- x@dimension
+    return(newx)
+  }       
+  
 }
+
 
 # 1b) spam <-> Matrix
 
@@ -72,8 +55,8 @@ as.dgRMatrix.spam <- function(x) {
     if (require('Matrix')) {
       newx <- new(p=0:0,'dgRMatrix')
       slot(newx,"x",check=FALSE) <- x@entries
-      slot(newx,"j",check=FALSE) <- x@colindices-int1
-      slot(newx,"p",check=FALSE) <- x@rowpointers-int1
+      slot(newx,"j",check=FALSE) <- x@colindices-1L
+      slot(newx,"p",check=FALSE) <- x@rowpointers-1L
       slot(newx,"Dim",check=FALSE) <- x@dimension
       return(newx)
     } 
@@ -91,8 +74,8 @@ as.dgCMatrix.spam <- function(x)  {
                     PACKAGE = "spam")
       newx <- new(p=0:0,'dgCMatrix')
       slot(newx,"x",check=FALSE) <- z$entries
-      slot(newx,"i",check=FALSE) <- z$colindices-int1
-      slot(newx,"p",check=FALSE) <- z$rowpointers-int1
+      slot(newx,"i",check=FALSE) <- z$colindices-1L
+      slot(newx,"p",check=FALSE) <- z$rowpointers-1L
       slot(newx,"Dim",check=FALSE) <- dimx
       return(newx)
     } 
@@ -102,13 +85,13 @@ as.dgCMatrix.spam <- function(x)  {
 as.spam.dgRMatrix <- function(x)  {
     
     if (is(x,'dgRMatrix')){
-      if (identical(length(x@x),int0))  # zero matrix
-        return(new("spam",rowpointers=c(int1,rep.int(int2,x@Dim[1])), dimension=x@Dim))
+      if (identical(length(x@x),0L))  # zero matrix
+        return(new("spam",rowpointers=c(1L,rep.int(2L,x@Dim[1])), dimension=x@Dim))
 
       newx <- new('spam')
       slot(newx,"entries",check=FALSE) <- x@x
-      slot(newx,"colindices",check=FALSE) <- x@j+int1
-      slot(newx,"rowpointers",check=FALSE) <- x@p+int1
+      slot(newx,"colindices",check=FALSE) <- x@j+1L
+      slot(newx,"rowpointers",check=FALSE) <- x@p+1L
       slot(newx,"dimension",check=FALSE) <- x@Dim
       return(newx)
     }
@@ -118,12 +101,12 @@ as.spam.dgRMatrix <- function(x)  {
 as.spam.dgCMatrix <- function(x)  {
     
     if (is(x,'dgCMatrix')){
-      if (identical(length(x@x),int0))  # zero matrix
-        return(new("spam",rowpointers=c(int1,rep.int(int2,x@Dim[1])), dimension=x@Dim))
+      if (identical(length(x@x),0L))  # zero matrix
+        return(new("spam",rowpointers=c(1L,rep.int(2L,x@Dim[1])), dimension=x@Dim))
 
       nz <- x@p[x@Dim[2] + 1]
       z <- .Fortran("transpose", n = x@Dim[2], m = x@Dim[1],
-                    a = dcheck(x@x),ja = x@i+int1, ia = x@p+int1,
+                    a = dcheck(x@x),ja = x@i+1L, ia = x@p+1L,
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", x@Dim[1] + 1),
                     NAOK = !.Spam$safemode[3], DUP = FALSE,
@@ -299,8 +282,8 @@ read.MM <- function(file)  {
     
     warning("returning a (possibly) dense 'spam' object", call. = FALSE)
     nz <- z$rowpointers[nr+1]-1
-    if (identical(nz, int0))
-      return(new("spam",rowpointers=c(int1,rep.int(int2,nr)), dimension=c(nr,nc)))
+    if (identical(nz, 0L))
+      return(new("spam",rowpointers=c(1L,rep.int(2L,nr)), dimension=c(nr,nc)))
   
     newx <- new("spam")
     slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
