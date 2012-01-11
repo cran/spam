@@ -1,4 +1,4 @@
-# This is file ../spam0.27-0/R/definitions.R
+# This is file ../spam0.28-0/R/definitions.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -349,6 +349,10 @@ setMethod("t","spam",t.spam)
   slot(newx,"rowpointers",check=FALSE) <- z$rowpointers[1:(dimx[1]+1)]
   slot(newx,"dimension",check=FALSE) <- dimx
   return(newx)
+}
+
+"cleanup" <- function(x, eps = .Spam$eps) {
+  if (is.spam(x)) as.spam.spam(x,eps) else x
 }
 
 "as.spam.matrix" <- function(x, eps = .Spam$eps) {  
@@ -1704,11 +1708,14 @@ all.equal.spam <- function (target, current, tolerance = .Machine$double.eps^0.5
 isSymmetric.spam <- function(object, tol = 100 * .Machine$double.eps, ...)
 {
   # very similar to is.Symmetric.matrix
-  if (!is.spam(object)) return(FALSE)
-  
-  d <- object@dimension
-  if (d[1] != d[2])     return(FALSE)
   test <-  all.equal.spam(object, t.spam(object), tolerance = tol, ...)
+
+  # Possibility that structure is different but not contents
+
+  if (!isTRUE(test)) {
+    object <- as.spam.spam(object)
+    test <-  all.equal.spam(object, t.spam(object), tolerance = tol, ...)
+  }
   isTRUE(test)
 
 }

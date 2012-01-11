@@ -1,4 +1,4 @@
-% This is file ../spam0.27-0/man/chol.Rd
+% This is file ../spam0.28-0/man/chol.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -20,10 +20,12 @@ decomposition of a symmetric positive definite sparse matrix \code{x}
 of class \code{spam}.}
 \usage{
 # chol(x, \dots)
-chol.spam(x, pivot = "MMD", method = "NgPeyton", memory =
+
+\S3method{chol}{spam}(x, pivot = "MMD", method = "NgPeyton", memory =
                  list(), eps =  .Spam$eps, \dots)
 
-update.spam.chol.NgPeyton(object, x,...)
+# update.spam.chol.NgPeyton(object, x,...)
+\S3method{update}{spam.chol.NgPeyton}(object, x,...)
 %chol(x, method, ordering, memory, \dots)
 }
 \arguments{

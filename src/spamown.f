@@ -836,8 +836,8 @@ c       j1>j2: copy element of b in c, incr. b and c pointers
 
 C     the next four lines should not be required...
             if (kc .gt. nzmax+1) then
-               write (*,*) "exceeding array capacities...",i,nzmax,
-     & ka,kb,kc,j1,j2,kamax,kbmax,ncol,jb(kb)
+c               write (*,*) "exceeding array capacities...",i,nzmax,
+c     & ka,kb,kc,j1,j2,kamax,kbmax,ncol,jb(kb)
                return
             endif
             goto 5
@@ -1117,6 +1117,11 @@ c
       iadd = 0 
       ibeg = ia(i)
       iend = ia(i+1)-1
+
+      if (iend .lt. ibeg) then
+c     empty line! test at beginning
+         return
+      endif
 c     
 c     begin binary search.   compute the middle index.
 c     

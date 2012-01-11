@@ -1,4 +1,4 @@
-% This is file ../spam0.27-0/man/solve.Rd
+% This is file ../spam0.28-0/man/solve.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -43,7 +43,9 @@ of a matrix if the right-hand-side is missing.
 }
 \usage{
 # solve(a, b, ...)
-solve.spam(a, b, ...)
+# solve.spam(a, b, ...)
+
+\S3method{solve}{spam}(a, b, ...)
 
 # backsolve(r, x, ...)
 backsolve.spam(r, x, ...)

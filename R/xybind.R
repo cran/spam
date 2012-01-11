@@ -1,4 +1,4 @@
-# This is file ../spam0.27-0/R/xybind.R
+# This is file ../spam0.28-0/R/xybind.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -80,7 +80,7 @@ function(...,deparse.level=0)
       newx@entries <- c(args[[1]]@entries, as.double(t(args[[2]])))
       newx@colindices <- c(args[[1]]@colindices,  rep.int(as.integer(1:Ydim[2]),Ydim[1]))
       newx@rowpointers <- c(args[[1]]@rowpointers,
-                            seq.int(args[[1]]@rowpointers[Xdim[1]+1], by=Ydim[2], len=Ydim[1]+1)[-1])
+                            seq.int(args[[1]]@rowpointers[Xdim[1]+1], by=Ydim[2], length.out=Ydim[1]+1)[-1])
       newx@dimension <- c(Xdim[1]+Ydim[1],Ydim[2])
       return(newx)
     }
@@ -103,8 +103,9 @@ function(...,deparse.level=0)
 
       newx <- new("spam")
       newx@entries <- c(as.double(t(args[[1]])), args[[2]]@entries )
-      newx@colindices <- c(rep.int(as.integer(1:Xdim[2]),Xdim[1]), args[[2]]@colindices)
-      newx@rowpointers <- c(seq.int(1, by=Xdim[2], len=Xdim[1]),
+      newx@colindices <- c(rep.int(as.integer(1:Xdim[2]),Xdim[1]),
+                           args[[2]]@colindices)
+      newx@rowpointers <- c(seq.int(1, by=Xdim[2], length.out=Xdim[1]),
                             args[[2]]@rowpointers + Xlen)
       newx@dimension <- c(Ydim[1]+Xdim[1],Ydim[2])
       return(newx)

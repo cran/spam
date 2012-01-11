@@ -1,4 +1,4 @@
-% This is file ../spam0.27-0/man/allequal.Rd
+% This is file ../spam0.28-0/man/allequal.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -23,7 +23,8 @@
      still made to some extent, and a report of the differences is
      returned.}
 \usage{
-all.equal.spam(target, current, tolerance = .Machine$double.eps^0.5,
+
+\S3method{all.equal}{spam}(target, current, tolerance = .Machine$double.eps^0.5,
     scale = NULL, check.attributes = FALSE,...)
 }
 \arguments{
@@ -59,8 +60,12 @@ all.equal.spam(target, current, tolerance = .Machine$double.eps^0.5,
   symmetry.
 
   A method for \code{matrix-spam} objects is defined as well.
-}
-%\seealso{}
+
+
+  There is the additional catch of a zero matrix being represented by
+  one zero element, see \sQuote{Examples} below.
+ }
+\seealso{\code{\link{isSymmetric.spam}} and \code{\link{cleanup}}.}
 \examples{
 obj <- diag.spam(2)
 obj[1,2] <- .Machine$double.eps
@@ -77,6 +82,13 @@ all.equal(diag(2),diag.spam(2))
 # the opposite does often not make sense,
 # hence, it is not implemented.
 all.equal(diag.spam(2),diag(2))
+
+
+# A zero matrix contains one element:
+str(spam(0))
+# hence
+all.equal.spam(spam(0,3,3), diag.spam(0,3) )
+norm(spam(0,3,3) - diag.spam(0,3) ) 
 }
 \author{Reinhard Furrer}
 \keyword{array}

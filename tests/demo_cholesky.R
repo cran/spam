@@ -1,4 +1,4 @@
-# This is file ../spam0.27-0/tests/demo_cholesky.R
+# This is file ../spam0.28-0/tests/demo_cholesky.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.

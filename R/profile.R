@@ -1,4 +1,4 @@
-# This is file ../spam0.27-0/R/profile.R
+# This is file ../spam0.28-0/R/profile.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -6,12 +6,12 @@
 
 
 
-# Framework introduce with much input from Roger Bivand for 0.13-2 and higher.
 
 ".onLoad" <- function (lib, pkg) {
-        require(methods) 
+#    if (R.version$minor<paste(14))    require(methods) 
 }
 
+# Framework introduce with much input from Roger Bivand for 0.13-2 and higher.
 
 spam.Version <- function() {
   release <- utils:::packageDescription("spam",field="Version")

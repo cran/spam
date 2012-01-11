@@ -1,4 +1,4 @@
-# This is file ../spam0.27-0/R/spam_solve.R
+# This is file ../spam0.28-0/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -248,8 +248,8 @@ chol.spam <- function(x, pivot = "MMD",
   if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
 
   if(.Spam$cholsymmetrycheck) {
-    test <-  all.equal.spam(x, t.spam(x), tolerance = eps*100)
-    if (!identical(TRUE,test))
+    test <- isSymmetric.spam(x, tol = eps*100) 
+    if (!isTRUE(test))
       stop("Input matrix to 'chol' not symmetric (up to 100*eps)",call.=FALSE)
   }
   
@@ -540,8 +540,8 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
 
   if(.Spam$cholsymmetrycheck) {
-    test <-  all.equal.spam(x, t.spam(x), tolerance = eps*100)
-    if (!identical(TRUE,test))
+    test <- isSymmetric.spam(x, tol = eps*100) 
+    if (!isTRUE(test))
       stop("Input matrix to 'chol' not symmetric (up to 100*eps)",call.=FALSE)
   }
   

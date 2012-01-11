@@ -1,4 +1,4 @@
-# This is file ../spam0.27-0/R/kronecker.R
+# This is file ../spam0.28-0/R/kronecker.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -34,7 +34,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
     Xentries <- as.double(t(X))
     Xdim <- dim(X)
     Xcol <- rep.int(as.integer(1:Xdim[2]),Xdim[1])
-    Xrow <- seq.int(1, by=Xdim[2], len=Xdim[1]+1)
+    Xrow <- seq.int(1, by=Xdim[2], length.out=Xdim[1]+1)
   }
 
   if(is.spam(Y)){
@@ -51,7 +51,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
     Yentries <- as.double(t(Y))
     Ydim <- dim(Y)
     Ycol <- rep.int(as.integer(1:Ydim[2]),Ydim[1])
-    Yrow <- seq.int(1, by=Ydim[2], len=Ydim[1]+1)
+    Yrow <- seq.int(1, by=Ydim[2], length.out=Ydim[1]+1)
   }
   kronxy <- new("spam")
 
