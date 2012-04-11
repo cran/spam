@@ -1,6 +1,6 @@
 
-R version 2.14.1 (2011-12-22)
-Copyright (C) 2011 The R Foundation for Statistical Computing
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i686-pc-linux-gnu (32-bit)
 
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.28-0/tests/foreign.R
+> # This is file ../spam0.29-0/tests/foreign.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # written and maintained by Reinhard Furrer.
@@ -120,3 +120,6 @@ Type 'q()' to quit R.
 + }
 > 
 > 
+> proc.time()
+   user  system elapsed 
+  0.180   0.020   0.195 

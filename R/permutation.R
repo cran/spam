@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/R/permutation.R
+# This is file ../spam0.29-0/R/permutation.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -24,6 +24,9 @@ checkpivot <- function(pivot, len, type="Pivot") {
 
 
 "permutation.spam" <- function(A, P=NULL, Q=NULL, ind=FALSE, check=TRUE){
+  # eliminated .Internal calls as this creates a 'Note' on CRAN checks.
+  # Only 1-2% timing loss, see end of the file.
+  
   nrow <- A@dimension[1]
   ncol <- A@dimension[2]
 
@@ -42,8 +45,8 @@ checkpivot <- function(pivot, len, type="Pivot") {
 #      subroutine rperm (nrow,a,ja,ia,ao,jao,iao,perm)
 #      B = P A
     P <- as.integer(P)
-#    if(ind) P <- order(P)
-    if(ind) P <- .Internal(order(T,F,P))
+    if(ind) P <- order(P)
+#    if(ind) P <- .Internal(order(T,F,P))
    
     z <- .Fortran("rperm",
                   nrow,
@@ -59,8 +62,8 @@ checkpivot <- function(pivot, len, type="Pivot") {
 #      double precision a(*), ao(*) 
 #      B = A Q 
       Q <- as.integer(Q)
-#      if(ind) Q <- order(Q)
-      if(ind) Q <- .Internal(order(T,F,Q))
+      if(ind) Q <- order(Q)
+#       if(ind) Q <- .Internal(order(T,F,Q))
         z <- .Fortran("cperm",
                       nrow,
                       A@entries,A@colindices,A@rowpointers,
@@ -73,11 +76,11 @@ checkpivot <- function(pivot, len, type="Pivot") {
 #      subroutine dperm (nrow,a,ja,ia,ao,jao,iao,pperm,qperm,iwork)
 #      B = P A Q 
         Q <- as.integer(Q)
-        if(ind) Q <- .Internal(order(T,F,Q))
-#        if(ind) Q <- order(Q)
+#        if(ind) Q <- .Internal(order(T,F,Q))
+        if(ind) Q <- order(Q)
         P <- as.integer(P)
-        if(ind) P <- .Internal(order(T,F,P))
-#        if(ind) P <- order(P)
+#        if(ind) P <- .Internal(order(T,F,P))
+        if(ind) P <- order(P)
         z <- .Fortran("dperm",
                       nrow,
                       A@entries,A@colindices,A@rowpointers,
@@ -122,3 +125,8 @@ permutation.matrix <- function(A, P=NULL, Q=NULL, ind=FALSE, check=TRUE){
 setGeneric("permutation",function(A, P=NULL, Q=NULL, ind=FALSE, check=TRUE)standardGeneric("permutation"))
 setMethod("permutation","matrix",permutation.matrix)
 setMethod("permutation","spam",permutation.spam)
+
+
+### ss <- sample(1:100000)
+### system.time( for( i in 1:1000) tt<-order(ss))
+### system.time( for( i in 1:1000) tt<-.Internal(order(T,F,ss)))

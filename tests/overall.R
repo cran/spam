@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/tests/overall.R
+# This is file ../spam0.29-0/tests/overall.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -229,39 +229,6 @@ nn <- length(tt[rw,-cl])
 test.for.zero(ss[rw,-cl] <- 1:nn,tt[rw,-cl] <- 1:nn)
 
 
-# subsetting:
-cat("Testing subsetting\n")
-test.for.zero(ss[],tt[])      # ok
-test.for.zero(ss[,],tt[,])    # ok
-test.for.zero(ss[1,],tt[1,])  # ok
-test.for.zero(ss[,2],tt[,2])  # ok
-test.for.zero(ss[1,3],tt[1,3])# ok
-test.for.zero(ss[3:1,],tt[3:1,])# ok
-
-
-rw <- sample(c(T,F),nrow(tt),rep=T)
-cl <- sample(c(T,F),ncol(tt),rep=T)
-test.for.zero(ss[rw,cl],tt[rw,cl])
-
-rw <- c(1,3);cl <- 1:3;
-test.for.zero(ss[rw,cl],tt[rw,cl])
-test.for.zero(ss[-rw,cl],tt[-rw,cl])
-test.for.zero(ss[-rw,-cl],tt[-rw,-cl])
-rw <- c(3,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
-rw <- c(3,1,2,1);cl <- 1:3; test.for.zero(ss[rw,cl],tt[rw,cl])
-
-tmp <- cbind(sample(1:3,24,rep=T),sample(1:5,24,rep=T))
-test.for.zero(ss[tmp],tt[tmp])
-
-
-test.for.zero(diag(10)[1:2,9:10],diag.spam(10)[1:2,9:10],rel=F)
-
-# Matrix multiplication operations:
-test.for.zero(ss%*%ss2,tt%*%tt2)
-test.for.zero(ss%*%tt2,tt%*%tt2)
-test.for.zero(tt%*%ss2,tt%*%tt2)
-test.for.zero(ss%*%1:m,tt%*%1:m)
-test.for.zero(1:n%*%ss,1:n%*%tt)
 
 # mathstuff
 test.for.zero(sqrt(ss),sqrt(tt))

@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/tests/solve.R
+# This is file ../spam0.29-0/tests/solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -66,10 +66,12 @@ test.for.zero(t(as.spam(css))%*%as.spam(css), tt[ordering(css),ordering(css)])
 test.for.zero((t(as.spam(css))%*%as.spam(css))[ordering(css,inv=T),ordering(css,inv=T)], tt)
 
 test.for.zero(backsolve(css,forwardsolve(css,b[ordering(css,inv=T)]))[ordering(css)],
-              backsolve(ctt,forwardsolve(t(ctt),b)))
+              backsolve(ctt,forwardsolve(t(ctt),b),n))
+   #### ,n as patch 
 
 test.for.zero(backsolve(css,b[ordering(css,inv=T)])[ordering(css)],
-              backsolve(ctt,b))
+              backsolve(ctt,b,n))
+   #### ,n as patch 
 
 test.for.zero(forwardsolve(css,b[ordering(css,inv=T)])[ordering(css)],
               forwardsolve(t(ctt),b))
@@ -84,7 +86,7 @@ cat("Testing option 'chol.update' (expect two passes then one fail):\n")
 ss1 <- ss+diag.spam(dim(ss)[1])
 test.for.zero( chol(ss), update.spam.chol.NgPeyton(css, ss))
 
-sel <- which(ss[1,]!=0)
+sel <- which(ss[1,,drop=TRUE]!=0)
 ss1[1,sel[-1]] <- 0
 ss2 <- ss
 ss2[n,1] <- .1
@@ -162,7 +164,7 @@ b <- rnorm(nrow(tt))
 
 
 # Recall:
-test.for.zero(backsolve(ctt,forwardsolve(t(ctt),b)),
+test.for.zero(backsolve(ctt,forwardsolve(t(ctt),b),n),
               solve(tt,b))
 
 # Now do testing:
@@ -175,13 +177,14 @@ cs[upper.tri(cs)] <- 0
 test.for.zero(forwardsolve(cs,b), forwardsolve(ss,b))
 
 
+   #### ,n as patch 
 
-test.for.zero(backsolve(css,b), backsolve(ctt,b))
-test.for.zero(backsolve(ss,b), backsolve(tt,b))
-test.for.zero(backsolve(t(cs),b), backsolve(tt,b))
+test.for.zero(backsolve(css,b), backsolve(ctt,b, n))
+test.for.zero(backsolve(ss,b), backsolve(tt,b, n))
+test.for.zero(backsolve(t(cs),b), backsolve(tt,b, n))
 
 test.for.zero(backsolve(css,forwardsolve(t(css),b)),
-              backsolve(ctt,forwardsolve(t(ctt),b)))
+              backsolve(ctt,forwardsolve(t(ctt),b), n))
 
 if (F){
 # a few specific tests leading mostly to errors/warnings...

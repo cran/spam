@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/tests/xybind.R
+# This is file ../spam0.29-0/tests/xybind.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -116,3 +116,4 @@ test.for.zero( cbind( NULL, NULL), cbind.spam( NULL,  NULL),rel=F)
 
 
 ######################################################################
+options( echo=TRUE)

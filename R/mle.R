@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/R/mle.R
+# This is file ../spam0.29-0/R/mle.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -40,7 +40,7 @@ neg2loglikelihood <- function(y, X, distmat, Covariance,
   return( n * log(2*pi) +
          2*logdet +
          sum(resid * backsolve(cholS, forwardsolve(cholS, resid,
-            transpose=TRUE, upper.tri=TRUE)))
+            transpose=TRUE, upper.tri=TRUE),n))
          )
 }
 
@@ -102,7 +102,7 @@ mle <- function(y, X, distmat, Covariance,
     return( n * log(2*pi) +
            2*logdet +
            sum(resid * backsolve(cholS, forwardsolve(cholS, resid,
-              transpose=TRUE, upper.tri=TRUE)))
+              transpose=TRUE, upper.tri=TRUE),n))
            )
   }
 
@@ -166,7 +166,7 @@ mle.nomean <- function(y, distmat, Covariance,
     return( n * log(2*pi) +
            2*logdet +
            sum(y * backsolve(cholS, forwardsolve(cholS, y,
-              transpose=TRUE, upper.tri=TRUE)))
+              transpose=TRUE, upper.tri=TRUE),n))
            )
   }
 

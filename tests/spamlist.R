@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/tests/spamlist.R
+# This is file ../spam0.29-0/tests/spamlist.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -74,3 +74,4 @@ ss2 <- spam.list(list(i=i,j=j,val))
 test.for.zero(ss1,ss2,rel=F)
 
 
+options( echo=TRUE)

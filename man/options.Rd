@@ -1,4 +1,4 @@
-% This is file ../spam0.28-0/man/options.Rd
+% This is file ../spam0.29-0/man/options.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -73,11 +73,18 @@ spam.getOption(x)
   as regular matrix with \code{image} or \code{display}. Larger matrices are represented
   as dots only.}
 
+\item{\code{cex=1200}:}{default dot size for  \code{image} or \code{display}.}
+
+\item{\code{structurebased=FALSE}:}{should operations be carried out on
+  the nonzero entries (the structure) or including the zeros.}
+
+\item{code{inefficiencywarning=1e6}:}{issue a warning when inefficient
+  operations are performed and the matrix exceeds the specified size.
+  Valid value is a postive integer or a logical. \code{TRUE} corresponds to 1, \code{FALSE} to \code{Inf}.}
+
 \item{\code{trivalues=FALSE}:}{a flag whether to return the structure 
   (\code{FALSE}) or the values themselves (\code{TRUE}) when returning the
   upper and lower triangular part of a matrix.}
-
-\item{\code{cex=1200}:}{default dot size for  \code{image} or \code{display}.}
 
 \item{\code{listmethod="PE"}:}{algorithm for \code{spam.list}. Default
   is suggestion by Paul Eilers (thanks). Any other specification uses a
@@ -102,6 +109,7 @@ spam.getOption(x)
   returning the not updated factor, \code{"error"}  or  return simply \code{"NULL"}.}
 \item{\code{cholincreasefactor=c(1.25,1.25)}:}{If not enought memory
   could be allocated, these are the steps to increase it.}
+
 \item{\code{nnznearestdistnnz=c(400^2,400)}:}{Memory allocation
   parameters for \code{nearest.dist}.}
 \item{\code{nearestdistincreasefactor=1.25}:}{If not enought memory
@@ -130,13 +138,13 @@ smat
 
 # Reset to default values:
 spam.options( eps=.Machine$double.eps, drop=FALSE,             
-   printsize=100,  imagesize=10000,   cex=1200, 
-   trivalues=FALSE,   safemode=c(TRUE,TRUE,TRUE), 
-   dopivoting=TRUE,       cholsymmetrycheck=TRUE,  
-   cholpivotcheck=TRUE, cholupdatesingular="warning",
-   cholincreasefactor=c(1.25,1.25),
-   nearestdistincreasefactor=1.25,
-   nearestdistnnz=c(400^2,400)     )
+   printsize=100, imagesize=10000, cex=1200, 
+   structurebased=FALSE, inefficiencywarning=1e6,
+   trivalues=FALSE, listmethod="PE", 
+   safemode=c(TRUE,TRUE,TRUE), dopivoting=TRUE, 
+   cholsymmetrycheck=TRUE, cholpivotcheck=TRUE,
+   cholupdatesingular="warning", cholincreasefactor=c(1.25,1.25),
+   nearestdistincreasefactor=1.25, nearestdistnnz=c(400^2,400)     )
 
 }
 \keyword{IO}

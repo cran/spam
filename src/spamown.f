@@ -1069,6 +1069,66 @@ c-----------------------------------------------------------------------
       end 
 
 
+c----------------------------------------------------------------------- 
+      subroutine getlines(a,ja,ia, nrw, rw, bnz, b,jb,ib)
+c-----------------------------------------------------------------------
+c     purpose:
+c     -------- 
+c     this function returns the lines rw of a matrix a. 
+c     the matrix is assumed to be stored 
+c     in compressed sparse row (csr) format. 
+c
+c
+c     Reinhard Furrer 2012-04-04
+c-----------------------------------------------------------------------
+c     parameters:
+c     ----------- 
+c on entry: 
+c---------- 
+c     a,ja,ia = the matrix a in compressed sparse row format (input).
+c     nrw,rw  = length of and the vector containing the rows and columns
+c               to extract
+c
+c on return:
+c----------- 
+c     bnz     = nonzero elements of b
+c     b,jb,ib = the matrix a(rw,cl) in compressed sparse row format.
+c
+c note:
+c------
+c     no error testing is done. It is assumed that b has enough space
+c     allocated.
+c-----------------------------------------------------------------------
+      implicit none
+
+      integer nrw,rw(*)
+      integer bnz, ia(*),ja(*), ib(*),jb(*)
+      double precision a(*),b(*)
+c
+c     local variables.
+c
+      integer irw, jja
+c
+      bnz = 1
+      ib(1) = 1
+      do irw = 1,nrw
+         do jja = ia(rw(irw)),ia(rw(irw)+1)-1
+
+            b(bnz)  = a(jja)
+            jb(bnz) = ja(jja)
+            bnz = bnz + 1
+         enddo
+         ib(irw+1) = bnz
+c     end irw, we've cycled over all lines 
+      enddo 
+      bnz = bnz - 1
+
+      return
+c--------end-of-getlines------------------------------------------------
+c-----------------------------------------------------------------------
+      end 
+
+
 
 c----------------------------------------------------------------------- 
       subroutine getelem(i,j,a,ja,ia,iadd,elem) 
@@ -1793,9 +1853,8 @@ c On return:
 c-----------
 c       x  = The solution of  L x  = b.
 c--------------------------------------------------------------------
-c     Reinhard Furrer June 2008
+c     Reinhard Furrer June 2008, April 2012
       
-      k = 1
 c     if first diagonal element is zero, break
       if (l(1) .eq. 0.0 ) goto 5
 
@@ -1841,7 +1900,7 @@ c
 c On entry:
 c----------
 c n,p      = integers. dimension of problem.
-c y      = real array containg the right side.
+c b        = real array containg the right side.
 c
 c r, jr, ir,    = Upper triangular matrix stored in CSR format.
 c
@@ -1849,11 +1908,11 @@ c On return:
 c-----------
 c       x = The solution of  R x = b .
 c--------------------------------------------------------------------
-c     Reinhard Furrer June 2008
-      k = n
+c     Reinhard Furrer June 2008, April 2012
+
       if (r(ir(k+1)-1) .eq. 0.0 ) goto 5
       do l=1,p
-         x(n,l) = b(n,l) / r(ir(k+1)-1)
+         x(n,l) = b(n,l) / r(ir(n+1)-1)
          do 3 k = n-1,1,-1
             t = b(k,l)
             do 1  j = ir(k+1)-1,ir(k),-1

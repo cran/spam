@@ -1,6 +1,6 @@
 
-R version 2.14.1 (2011-12-22)
-Copyright (C) 2011 The R Foundation for Statistical Computing
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
 ISBN 3-900051-07-0
 Platform: i686-pc-linux-gnu (32-bit)
 
@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.28-0/tests/demo_spam.R
+> # This is file ../spam0.29-0/tests/demo_spam.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # written and maintained by Reinhard Furrer.
@@ -31,12 +31,14 @@ Type 'q()' to quit R.
 > 
 > # This is a simple demo, wrapping up the functionality of spam.
 > options( echo=FALSE)
-Package 'spam' is loaded. Spam version 0.28-0 (2012-01-11).
-Type demo( spam) for some demos, help( Spam) for an overview
-of this package.
-Help for individual functions is optained by adding the
-suffix '.spam' to the function name, e.g. 'help(chol.spam)'.
-[1] -0.6618498  1.2319452 -0.3828219  0.8828018 -1.2668148 -0.7666105 -1.4219925
+Spam version 0.29-0 (2012-04-11) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+           [,1]     [,2]       [,3]      [,4]      [,5]       [,6]      [,7]
+[1,] -0.6618498 1.231945 -0.3828219 0.8828018 -1.266815 -0.7666105 -1.421992
+Class 'spam'
      [,1]        [,2]       [,3]      [,4]       [,5]       [,6]       [,7]
 [1,]    0  1.23194518 -0.3828219 0.8828018 -1.2668148 -0.7666105 -1.4219925
 [2,]    0 -0.06488077  0.2994216 1.8627490 -0.1985833  1.4433629 -0.3282283
@@ -46,3 +48,6 @@ suffix '.spam' to the function name, e.g. 'help(chol.spam)'.
 Class 'spam'
 [1] -0.36181804  0.07322929 -0.13634352  0.59605327  0.52252315
 > 
+> proc.time()
+   user  system elapsed 
+  0.836   0.028   0.869 

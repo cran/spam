@@ -1,4 +1,4 @@
-% This is file ../spam0.28-0/man/solve.Rd
+% This is file ../spam0.29-0/man/solve.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -21,15 +21,16 @@
 \alias{backsolve,matrix-method}
 \alias{backsolve}
 \alias{backsolve.spam}
-\alias{backsolve.default}
 \alias{forwardsolve-methods}
 \alias{forwardsolve,ANY-method}
 \alias{forwardsolve,spam-method}
 \alias{forwardsolve,matrix-method}
 \alias{forwardsolve}
 \alias{forwardsolve.spam}
-\alias{forwardsolve.default}
-%\alias{solve}
+\alias{chol2inv}
+\alias{chol2inv.spam}
+\alias{chol2inv,spam-method}
+\alias{chol2inv,spam.chol.NgPeyton-method}
 \alias{solve,ANY-method}
 \alias{solve,spam-method}
 \title{Linear Equation Solving for Sparse Matrices}
@@ -51,6 +52,8 @@ of a matrix if the right-hand-side is missing.
 backsolve.spam(r, x, ...)
 # forwardsolve(l, x, ...)
 forwardsolve.spam(l, x, ...)
+
+chol2inv(x,...)
 }
 \arguments{
 \item{a}{symmetric positive definite matrix of class \code{spam} or a Cholesky factor 
@@ -102,6 +105,8 @@ decomposition, see \code{\link{chol}}.
 
 Recall that the Cholesky factors are from ordered matrices. 
 
+
+\code{chol2inv(x)} is a faster way to \code{solve(x)}.
 }
 \note{There is intentionally no \acronym{S3} distinction between the classes
   \code{spam} and \code{spam.chol.}\emph{method}.}
@@ -123,11 +128,12 @@ Sigma <- solve( Sigmainv)  # for verification
 iidsample <- array(rnorm(N*n),c(n,N))
 
 mvsample <- backsolve( chol(Sigmainv), iidsample)
-norm( var(t(mvsample)) - Sigma, type="HS")
+norm( var(t(mvsample)) - Sigma)
 
 # compare with:
-mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample)
-norm( var(t(mvsample)) - Sigma, type="HS")
+mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample, n)
+   #### ,n as patch 
+norm( var(t(mvsample)) - Sigma)
 
 
 
@@ -135,8 +141,8 @@ norm( var(t(mvsample)) - Sigma, type="HS")
 b <- rnorm( n)
 R <- chol(Sigmainv)
 norm( backsolve( R, forwardsolve( R, b))-
-      solve( Sigmainv, b),type="HS") 
-norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma,type="HS") 
+      solve( Sigmainv, b) )
+norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma )
 
 
 }

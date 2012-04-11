@@ -1,0 +1,119 @@
+
+R version 2.15.0 (2012-03-30)
+Copyright (C) 2012 The R Foundation for Statistical Computing
+ISBN 3-900051-07-0
+Platform: i686-pc-linux-gnu (32-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # This is file ../spam0.29-0/tests/rowcolstats.R
+> # This file is part of the spam package, 
+> #      http://www.math.uzh.ch/furrer/software/spam/
+> # written and maintained by Reinhard Furrer.
+>      
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> #options( echo=FALSE)
+> library( spam, warn.conflict=FALSE)
+Spam version 0.29-0 (2012-04-11) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+> 
+> 
+> test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=FALSE,
++ tag=NULL){
++   # slightly different test function!
++   if( !is.null(tag)){
++      cat( "testing: ", tag, fill=TRUE)}
++ 
++   denom<-   ifelse( relative, mean( abs(c(xtrue))),1.0)
++ 
++   if (any(dim(xtest)!=dim(xtrue)))
++     return( cat("## FAILED dimensions  ", dim(xtest), " and ", dim(xtrue),
++               fill=TRUE))
++   test.value <- sum( abs(c(xtest) - c( xtrue) ),na.rm=T ) /denom
++   if(   test.value < tol ){
++           cat("** PASSED test at tolerance ", tol, fill=TRUE)}
++   else{ cat( "## FAILED test value = ", test.value, " at tolerance ", tol,
++               fill=TRUE)}
++ 
++ }
+> 
+> 
+> 
+> # simple tests:
+> ########################################################################
+> 
+> 
+> # construct matrices:
+> n <- 10
+> m <- 15
+> 
+> set.seed(14)
+> tt <- matrix(rnorm(m*n),n,m)
+> tt[tt<0] <- 0
+> 
+> ss <- as.spam(tt)
+> 
+> test.for.zero(rowSums(ss),rowSums(tt)) 
+** PASSED test at tolerance  1e-06
+> test.for.zero(colSums(ss),colSums(tt)) 
+** PASSED test at tolerance  1e-06
+> 
+> 
+> spam.options(structurebased=FALSE)
+> 
+> test.for.zero(rowMeans(ss),rowMeans(tt))      # ok
+** PASSED test at tolerance  1e-06
+> test.for.zero(colMeans(ss),colMeans(tt))      # ok
+** PASSED test at tolerance  1e-06
+> 
+> 
+> 
+> spam.options(structurebased=TRUE)
+> test.for.zero(rowMeans(ss),rowSums(tt)/apply(tt>0,1,sum))      # ok
+** PASSED test at tolerance  1e-06
+> test.for.zero(colMeans(ss),colSums(tt)/apply(tt>0,2,sum))      # ok
+** PASSED test at tolerance  1e-06
+> 
+> test.for.zero(rowMeans(ss),apply.spam(ss,1,mean))      # ok
+** PASSED test at tolerance  1e-06
+> test.for.zero(colMeans(ss),apply.spam(ss,2,mean))      # ok
+** PASSED test at tolerance  1e-06
+> 
+> 
+> test.for.zero(rowMeans(spam(0,n,m)),rowMeans(tt*0))      # ok
+** PASSED test at tolerance  1e-06
+> test.for.zero(colMeans(spam(0,n,m)),colMeans(tt*0))      # ok
+** PASSED test at tolerance  1e-06
+> test.for.zero(rowMeans(as.spam(diag(0,n))),rowMeans(diag(0,n)))      # ok
+** PASSED test at tolerance  1e-06
+> test.for.zero(colMeans(as.spam(diag(0,n))),colMeans(diag(0,n)))      # ok
+** PASSED test at tolerance  1e-06
+> 
+> spam.options(structurebased=TRUE)
+> 
+> 
+> options( echo=TRUE)
+> 
+> proc.time()
+   user  system elapsed 
+  0.816   0.060   0.890 

@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/R/plotting.R
+# This is file ../spam0.29-0/R/plotting.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -19,56 +19,57 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
     col = heat.colors(12), add = FALSE, xaxs = "i", yaxs = "i",
     xlab, ylab, breaks, oldstyle = FALSE,cex=NULL, ...)
 {
+  
     if (missing(z)) {
-        if (!missing(x)) {
-            if (is.list(x)) {
-                z <- x$z
-                y <- x$y
-                x <- x$x
-            }
-            else {
-                if (is.null(dim(x)))
-                  stop("argument must be matrix-like")
-                z <- x
-                x <- seq(0, 1, len = nrow(z))
-            }
-            if (missing(xlab))
-                xlab <- ""
-            if (missing(ylab))
-                ylab <- ""
+      if (!missing(x)) {
+        if (is.list(x)) {
+          z <- x$z
+          y <- x$y
+          x <- x$x
+        } else {
+          if (is.null(dim(x)))
+            stop("argument must be matrix-like")
+          z <- x
+          x <- seq(0, 1, len = nrow(z))
         }
-        else stop("no 'z' matrix specified")
-    }
-    else if (is.list(x)) {
-        xn <- deparse(substitute(x))
         if (missing(xlab))
-            xlab <- paste(xn, "x", sep = "$")
+          xlab <- ""
         if (missing(ylab))
-            ylab <- paste(xn, "y", sep = "$")
-        y <- x$y
-        x <- x$x
+          ylab <- ""
+      }
+      else stop("no 'z' matrix specified")
+    } else if (is.list(x)) {
+      xn <- deparse(substitute(x))
+      if (missing(xlab))
+        xlab <- paste(xn, "x", sep = "$")
+      if (missing(ylab))
+        ylab <- paste(xn, "y", sep = "$")
+      y <- x$y
+      x <- x$x
+    } else {
+      if (missing(xlab))
+        xlab <- if (missing(x))
+          ""
+        else deparse(substitute(x))
+      if (missing(ylab))
+        ylab <- if (missing(y))
+          ""
+        else deparse(substitute(y))
     }
-    else {
-        if (missing(xlab))
-            xlab <- if (missing(x))
-                ""
-            else deparse(substitute(x))
-        if (missing(ylab))
-            ylab <- if (missing(y))
-                ""
-            else deparse(substitute(y))
-    }
-    spamversion <- (prod(z@dimension) > .Spam$imagesize)
-
+    
     if (any(!is.finite(x)) || any(!is.finite(y)))
       stop("'x' and 'y' values must be finite and non-missing")
     if (any(diff(x) <= 0) || any(diff(y) <= 0))
       stop("increasing 'x' and 'y' values expected")
-    if (!is.spam(z))    stop("'z' must be a matrix")
-    if (spamversion) {
+    
+    spamversion <- (prod(z@dimension) > .Spam$imagesize)
+    if (!spamversion){
+      image.default(x, y, as.matrix(z),...)
+    } else {
+
+      if (!is.spam(z))    stop("'z' must be a matrix")
       xx <- x
       yy <- y
-    }
       if (length(x) > 1 && length(x) == nrow(z)) {
         dx <- 0.5 * diff(x)
         x <- c(x[1] - dx[1], x[-length(x)] + dx, x[length(x)] +
@@ -79,53 +80,36 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
         y <- c(y[1] - dy[1], y[-length(y)] + dy, y[length(y)] +
                dy[length(y) - 1])
       }
-    
-    if (!spamversion) {
-      zvals <- as.matrix(z)
-      zvals[zvals==0] <- NA
-     } else zvals <- z@entries
-    if (missing(breaks)) {
+      
+      zvals <- z@entries
+      if (missing(breaks)) {
         nc <- length(col)
         if (!missing(zlim) && (any(!is.finite(zlim)) || diff(zlim) < 0))
-            stop("invalid z limits")
+          stop("invalid z limits")
         if (diff(zlim) == 0)
-            zlim <- if (zlim[1] == 0) {
-                c(-1, 1)
-            } else zlim[1] + c(-0.4, 0.4) * abs(zlim[1])
+          zlim <- if (zlim[1] == 0) {
+            c(-1, 1)
+          } else zlim[1] + c(-0.4, 0.4) * abs(zlim[1])
         zvals <- (zvals - zlim[1])/diff(zlim)
         zi <- if (oldstyle) {
-            floor((nc - 1) * zvals + 0.5)
+          floor((nc - 1) * zvals + 0.5)
         } else floor((nc - 1e-05) * zvals + 1e-07)
         zi[zi < 0 | zi >= nc] <- NA
-    }
-    else {
+      }    else {
         if (length(breaks) != length(col) + 1)
-            stop("must have one more break than colour")
+          stop("must have one more break than colour")
         if (any(!is.finite(breaks)))
-            stop("breaks must all be finite")
+          stop("breaks must all be finite")
         zi <- .C("bincode", as.double(zvals), length(zvals), as.double(breaks),
-            length(breaks), code = vector("integer",length(zvals)), (TRUE),
-            (TRUE), nok = TRUE, NAOK = TRUE, DUP = FALSE, PACKAGE = "base")$code -
-            1
-    }
-    if (!add)
+                 length(breaks), code = vector("integer",length(zvals)), (TRUE),
+                 (TRUE), nok = TRUE, NAOK = TRUE, DUP = FALSE, PACKAGE = "base")$code -
+                   1
+      }
+      if (!add)
         plot(NA, NA, xlim = xlim, ylim = ylim, type = "n", xaxs = xaxs,
-            yaxs = yaxs, xlab = xlab, ylab = ylab, ...)
-    if (spamversion) {
+             yaxs = yaxs, xlab = xlab, ylab = ylab, ...)
       if (length(xx) != nrow(z) || length(yy) != ncol(z))
         stop("dimensions of z are not length(x) times length(y)")
-    }else{
-      if (length(x) <= 1)
-        x <- par("usr")[1:2]
-      if (length(y) <= 1)
-        y <- par("usr")[3:4]
-      if (length(x) != nrow(z) + 1 || length(y) != ncol(z) + 1)
-        stop("dimensions of z are not length(x)(+1) times length(y)(+1)")
-    }
-# for small matrices, we transform them into regular ones.
-    if (!spamversion) {
-      .Internal(image(as.double(x), as.double(y), as.integer(as.matrix(zi)),col))
-    } else {
       if (missing(cex)) {
         warning("default value for 'cex' in 'image' might be a bad choice", call.=FALSE)
         cex <- 1
@@ -134,6 +118,7 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
              pch='.', cex=cex*.Spam$cex/sum(z@dimension),
              col=col[zi+1])
     }
+  
     box()
   }
 

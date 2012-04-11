@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/tests/helper.R
+# This is file ../spam0.29-0/tests/helper.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -78,22 +78,22 @@ set.seed(14)
 cat("For rmvnorm.canonical:\n- comparing sample mean with truth:\n")
 for (i in 10^(1:4))
   cat('    sample size n=',i,' yields  Frobenius-norm:',
-      norm( apply(rmvnorm.canonical(i, b, Q, Lstruct=struct), 2,mean)- solve(Q,b),'hs'),'\n')
+      norm( apply(rmvnorm.canonical(i, b, Q, Lstruct=struct), 2,mean)- solve(Q,b),'f'),'\n')
 cat("- comparing sample variance with truth:\n")
 for (i in 10^(1:4)){
   cat('    sample size n=',i,' yields Frobenius-norm:',
-      norm( var( rmvnorm.canonical(i, b, Q=Q, Lstruct=struct))- Sigma,'hs'),'\n')
+      norm( var( rmvnorm.canonical(i, b, Q=Q, Lstruct=struct))- Sigma,'f'),'\n')
 }
 
 set.seed(14)
 cat("For rmvnorm.prec:\n- comparing sample mean with truth:\n")
 for (i in 10^(1:4))
   cat('    sample size n=',i,' yields  Frobenius-norm:',
-      norm( apply(rmvnorm.prec(i, b, Q, Lstruct=struct), 2,mean)- b,'hs'),'\n')
+      norm( apply(rmvnorm.prec(i, b, Q, Lstruct=struct), 2,mean)- b,'f'),'\n')
 cat("- comparing sample variance with truth:\n")
 for (i in 10^(1:4)){
   cat('    sample size n=',i,' yields Frobenius-norm:',
-      norm( var( rmvnorm.prec(i, Q=Q, Lstruct=struct))- Sigma,'hs'),'\n')
+      norm( var( rmvnorm.prec(i, Q=Q, Lstruct=struct))- Sigma,'f'),'\n')
 }
 
 
@@ -103,12 +103,15 @@ set.seed(14)
 cat("For rmvnorm.spam:\n- comparing sample mean with truth:\n")
 for (i in 10^(1:4))
   cat('    sample size n=',i,' yields  Frobenius-norm:',
-      norm( apply(rmvnorm.spam(i, b, as.spam(Sigma), Lstruct=struct), 2,mean)- b,'hs'),'\n')
+      norm( apply(rmvnorm.spam(i, b, as.spam(Sigma), Lstruct=struct), 2,mean)- b,'f'),'\n')
 cat("- comparing sample variance with truth:\n")
 for (i in 10^(1:4)){
   cat('    sample size n=',i,' yields Frobenius-norm:',
-      norm( var( rmvnorm.spam(i, b, as.spam(Sigma), Lstruct=struct))- Sigma,'hs'),'\n')
+      norm( var( rmvnorm.spam(i, b, as.spam(Sigma), Lstruct=struct))- Sigma,'f'),'\n')
 }
 
 
 
+
+
+options( echo=TRUE)

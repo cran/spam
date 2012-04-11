@@ -1,4 +1,4 @@
-% This is file ../spam0.28-0/man/spam-class.Rd
+% This is file ../spam0.29-0/man/spam-class.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -19,6 +19,17 @@
 \alias{spam-class}
 \alias{as.matrix,spam-method}
 \alias{as.matrix.spam}
+\alias{[<-,spam,ANY,ANY,ANY-method}
+\alias{[<-,spam,matrix,matrix,ANY-method}
+\alias{[<-,spam,matrix,missing,ANY-method}
+\alias{[<-,spam,missing,missing,ANY-method}
+\alias{[<-,spam,missing,vector,ANY-method}
+\alias{[<-,spam,missing,vector,spam-method}
+\alias{[<-,spam,spam,missing,ANY-method}
+\alias{[<-,spam,vector,missing,ANY-method}
+\alias{[<-,spam,vector,missing,spam-method}
+\alias{[<-,spam,vector,vector,ANY-method}
+\alias{[<-,spam,vector,vector,spam-method}
 \alias{[<-,spam,missing,missing,numeric-method}
 \alias{[<-,spam,missing,vector,numeric-method}
 \alias{[<-,spam,vector,missing,numeric-method}
@@ -27,14 +38,16 @@
 \alias{[<-,spam,matrix,matrix,numeric-method}
 \alias{[<-,spam,spam,missing,numeric-method}
 \alias{[<-,spam,ANY-method}
-\alias{[,spam,missing,missing-method}
-\alias{[,spam,missing,vector-method}
-\alias{[,spam,vector,missing-method}
-\alias{[,spam,vector,vector-method}
-\alias{[,spam,matrix,missing-method}
-\alias{[,spam,matrix,matrix-method}
-\alias{[,spam,spam,missing-method}
-\alias{[,spam,ANY-method}
+\alias{[,spam,missing,missing,ANY-method}
+\alias{[,spam,missing,vector,ANY-method}
+\alias{[,spam,vector,missing,logical-method}
+\alias{[,spam,vector,missing,missing-method}
+\alias{[,spam,vector,vector,ANY-method}
+\alias{[,spam,matrix,missing,missing-method}
+\alias{[,spam,matrix,missing,logical-method}
+\alias{[,spam,matrix,matrix,ANY-method}
+\alias{[,spam,spam,missing,ANY-method}
+\alias{[,spam,ANY,ANY,ANY-method}
 \alias{Arith,spam,missing-method}
 \alias{Arith,spam,numeric-method}
 \alias{Arith,numeric,spam-method}

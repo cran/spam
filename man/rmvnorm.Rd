@@ -1,4 +1,4 @@
-% This is file ../spam0.28-0/man/rmvnorm.Rd
+% This is file ../spam0.29-0/man/rmvnorm.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -27,7 +27,7 @@ rmvnorm.canonical(n, b, Q, Rstruct=NULL, ...)
 \item{\dots}{arguments passed to \code{chol}.}
 }
 \details{The functions \code{rmvnorm.prec} and \code{rmvnorm.canonical}
-  do not requrie sparse precision matrices. 
+  do not require sparse precision matrices. 
   For \code{rmvnorm.spam}, the differences between regular and sparse
   covariance matrices are too significant to be implemented here.  \cr
   Often (e.g., in a Gibbs sampler setting), the sparsity structure of
@@ -56,11 +56,12 @@ Sigma <- solve( Sigmainv)  # for verification
 iidsample <- array(rnorm(N*n),c(n,N))
 
 mvsample <- backsolve( chol(Sigmainv), iidsample)
-norm( var(t(mvsample)) - Sigma, type="HS")
+norm( var(t(mvsample)) - Sigma, type="m")
 
 # compare with:
-mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample)
-norm( var(t(mvsample)) - Sigma, type="HS")
+mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample, n)
+   #### ,n as patch 
+norm( var(t(mvsample)) - Sigma, type="m")
 
 
 
@@ -68,8 +69,8 @@ norm( var(t(mvsample)) - Sigma, type="HS")
 b <- rnorm( n)
 R <- chol(Sigmainv)
 norm( backsolve( R, forwardsolve( R, b))-
-      solve( Sigmainv, b),type="HS") 
-norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma,type="HS") 
+      solve( Sigmainv, b) )
+norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma )
 
 
 }

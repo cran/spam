@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/R/spam_solve.R
+# This is file ../spam0.29-0/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -151,18 +151,36 @@ setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
 setMethod("as.spam","spam.chol.NgPeyton", as.spam.chol.NgPeyton)
 
 
+##NB setGeneric("backsolve", def = function(r, x, ...) standardGeneric("backsolve"),
+#                 useAsDefault= function(r, x,...) base::backsolve(r, x, ...))
 
+# We have some issues here... hence I postpone the proper implementation!!!
+# http://r.789695.n4.nabble.com/class-extension-and-documentation-tt4161373.html#none
 
-"backsolve" <- function(r,x, ...) UseMethod("backsolve")
+#"backsolve" <- function(r,x, ...) UseMethod("backsolve")
 #"backsolve.default" <- base::backsolve
-setGeneric("backsolve")
-setMethod("backsolve","matrix",base::backsolve)
+#setGeneric("backsolve")
+#setMethod("backsolve","matrix",base::backsolve)
   
-"forwardsolve" <- function(l,x, ...) UseMethod("forwardsolve")
+#"forwardsolve" <- function(l,x, ...) UseMethod("forwardsolve")
 #"forwardsolve.default" <- base::forwardsolve
-setGeneric("forwardsolve")
-setMethod("forwardsolve","matrix",base::forwardsolve)
+#setGeneric("forwardsolve")
+#setMethod("forwardsolve","matrix",base::forwardsolve)
 
+
+#setGeneric("backsolve", def = function(r, ...) standardGeneric("backsolve"),
+#           useAsDefault= function(r, ...) base::backsolve(r, ...))
+
+setGeneric("forwardsolve", def = function(l, ...) standardGeneric("forwardsolve"),
+           useAsDefault= function(l, ...) base::forwardsolve(l, ...))
+
+# adapted from methods
+#setGeneric("forwardsolve", function(l, x, k, upper.tri = FALSE, transpose = FALSE, ...)
+#           standardGeneric("forwardsolve"),
+#           useAsDefault = function(l, x, k = ncol(l), upper.tri = FALSE, transpose = FALSE, ...)
+#                  base::forwardsolve(l, x, k = k, upper.tri = upper.tri, transpose = transpose, ... ),
+#           signature = c("l", "x"))#, where = where)
+##### setGenericImplicit("forwardsolve")#, restore=FALSE)
 
   
 "ordering.default" <- function(x,inv=FALSE) stop('Operation not defined form this class')
@@ -413,6 +431,24 @@ solve.spam <- function (a, b, ...) {
   return( z)
 }
 
+chol2inv.spam <- function (x, ...) {
+  nrow <- x@dimension[1]
+  
+  if (is(x,"spam.chol.NgPeyton")) {
+    y <- vector("double",nrow*nrow)
+    y[1L + 0L:(nrow - 1L) * (nrow + 1L)] <- 1.0
+
+    z <- .Fortran("backsolves", m = nrow,
+                  as.integer( length(x@supernodes)-1), nrow, x@colindices,
+                  x@colpointers, dcheck(x@entries),
+                  x@rowpointers, x@invpivot, x@pivot,
+                  x@supernodes, vector("double",nrow), sol = vector("double",nrow*nrow), y,
+                  DUP=FALSE,NAOK = !.Spam$safemode[3],PACKAGE = "spam")$sol
+    dim(z) <- c(nrow,nrow)
+  } else z <- backsolve.spam(x, forwardsolve.spam( t(x), diag(nrow)))
+  return( z)
+}
+
 backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
 # r: spam.chol.NgPeyton structure as returned by chol.spam or a spam object
 # x: rhs a vector or a matrix in dense form
@@ -464,6 +500,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
   if (p>1)     dim(z) <- c(m,p)
   return(z)
 }
+
 forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
 #  l: spam.chol.NgPeyton structure as returned by chol.spam
 #         or an ordinary lower triangular spam matrix
@@ -507,7 +544,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
                   ial=l@rowpointers,
                   DUP=FALSE,NAOK = !.Spam$safemode[3],
                   PACKAGE="spam")
-    if (z$m<0) stop(gettextf("singular matrix in 'backsolve'. First zero in diagonal [%d]",
+    if (z$m<0) stop(gettextf("singular matrix in 'forwardsolve'. First zero in diagonal [%d]",
             -z$m), domain = NA)
     else z <- z$sol
   }
@@ -520,9 +557,14 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
 
 setMethod("chol","spam", chol.spam)
 setMethod("solve","spam",solve.spam)
+setMethod("chol2inv","spam", chol2inv.spam)
+setMethod("chol2inv","spam.chol.NgPeyton", chol2inv.spam)
 
-setMethod("backsolve","spam",                  backsolve.spam)
-setMethod("backsolve","spam.chol.NgPeyton",    backsolve.spam)
+setMethod("backsolve","spam",#signature(r="spam",x='ANY'),
+          backsolve.spam)
+setMethod("backsolve","spam.chol.NgPeyton",#signature(r="spam.chol.NgPeyton",x='ANY'),
+          backsolve.spam,sealed=TRUE)
+#setMethod("backsolve","spam.chol.NgPeyton",    backsolve.spam)
 setMethod("forwardsolve","spam",               forwardsolve.spam)
 setMethod("forwardsolve","spam.chol.NgPeyton", forwardsolve.spam)
 
@@ -742,3 +784,12 @@ setMethod("chol","spam.chol.NgPeyton",
           })
 ########################################################################
 
+### system.time({ for (i in 1:1000) x=1:1000000})           # 8.820 
+### system.time({ for (i in 1:1000) x=seq(length=1000000)}) # 8.397
+### system.time({ for (i in 1:1000) x=seq_len(1000000)})    # 8.628
+### system.time({ for (i in 1:1000) x=seq.int(1000000)})    # 8.944
+
+### system.time({ for (i in 1:100000) x=1:10000})           # 2.161
+### system.time({ for (i in 1:100000) x=seq(length=10000)}) # 3.288
+### system.time({ for (i in 1:100000) x=seq_len(10000)})    # 2.060
+### system.time({ for (i in 1:100000) x=seq.int(10000)})    # 2.249

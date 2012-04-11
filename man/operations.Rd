@@ -1,4 +1,4 @@
-% This is file ../spam0.28-0/man/operations.Rd
+% This is file ../spam0.29-0/man/operations.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -73,7 +73,10 @@
 \alias{norm,ANY-method} 
 \alias{norm,spam,character-method} 
 \alias{norm,spam,missing-method} 
-%\alias{norm,numeric-method} 
+\alias{norm,numeric,missing-method} 
+\alias{norm,numeric,character-method} 
+\alias{norm,matrix,missing-method} 
+\alias{norm,matrix,character-method} 
 %\alias{t,ANY-method} 
 %\alias{t,spam-method} 
 \alias{t.spam}
@@ -91,9 +94,9 @@
 \alias{[<-,spam,matrix,matrix-method}
 \alias{[<-,spam,spam,missing-method}
 \alias{[<-,spam,ANY,ANY-method}
-\alias{[,spam,ANY,ANY-method}
 \alias{plot.spam}
 \alias{subset.spam}
+\alias{subset.rows.spam}
 \alias{assign.spam}
 \title{Basic Linear Algebra for Sparse Matrices}
 \description{Basic linear algebra operations for sparse matrices

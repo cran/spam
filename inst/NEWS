@@ -1,4 +1,88 @@
-	CHANGES IN VERSION 0.27
+	CHANGES IN VERSION 0.29
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+   o	There is a generic conflict with 'backsolve' between spam
+   	and other packages (e.g., bdsmatrix). To avoid the issue,
+	we use the standard generic implemented in 'methods' which
+	requires an additional argument. This may change in the 
+	future. See also PR#14883.
+
+	Currently, this conflict is not properly solved. I propose
+	to load 'spam' first then the other packages, followed by
+	manually calling:
+
+	  setMethod("backsolve","spam.chol.NgPeyton",backsolve.spam)
+	  setMethod("backsolve","spam",backsolve.spam)
+
+	Stay tuned...
+
+   o	Calls like:
+        
+	  mat <- diag.spam(4)
+	  diag( mat[-1,]) <- 3
+  	  diag.spam( mat[,-1]) <-2
+
+	now work. They are, however, somewhat inefficient. 
+	'toeplitz.spam' is to be prefered. Pointed out by
+	Florian Gerber.
+
+
+NEW FEATURES
+
+   o	New functions 'rmvnorm.const', 'rmvnorm.prec.const' and
+   	'rmvnorm.canonical.const' to draw constrained multivariate
+	normal variates.
+
+   o	New functions 'precmat' (wrapper to), 'precmat.RW1', 'precmat.RW2', 
+    	'precmat.season', 'precmat.IGMRFreglat' and 'precmat.IGMRFirreglat'
+   	to create precision matrices for IGMRF.
+
+   o	New methods 'rowSums', 'colSums' and  'rowMeans', 'colMeans' for
+   	'spam' objects.
+
+   o	New methods 'head' and 'tail' for 'spam' and 'spam.chol.NgPeyton' 
+   	objects.
+
+   o 	New method 'chol2inv' for 'spam' object.
+
+   o	New option 'inefficiencywarning': handling of warnings issued 
+   	in case of an inefficient calculation. 
+
+   o	New option 'structurebased': should operations be performed on
+   	the nonzero entries or on including the zeros. Classical example:
+	what should the cosine of a sparse matrix look like?
+	In the near future, all operations from Math and Ops will include
+	this option. Some loss of backwards compatibility might be 
+	lost in the future.  
+
+
+
+INTERNAL CHANGES
+
+   o	New much faster approach to extract rows. For not too sparse 
+   	large matrices improvements over two orders of magnitudes are
+	achieved.
+	
+   o 	Elininated '.Internal()' calls that induce a 'Note' on CRAN
+   	checks. This also implied a minor rewrite of 'image.spam'.	
+
+   o 	Minor code improvements.
+  
+
+BUG FIXES
+
+   o 	Bug fix that occures when multiplying elementwise matrices 
+   	that have non-intersecting structures (pointed out by 
+	Corentin Barbu).
+
+   o	Bug fix in triangular backsolves involving 'spam' objects 
+   	and rhs matrices.
+
+
+
+
+	CHANGES IN VERSION 0.28
 
 NEW FEATURES
 

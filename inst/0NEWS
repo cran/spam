@@ -9,7 +9,7 @@
 
     o 	New functions bandwidth, permutation, mle[.nomean][.spam],
     	neg2loglikelihood[.spam].
-    	.	
+    		
 
     o	Renamed adiag.spam to bdiag.spam.
 

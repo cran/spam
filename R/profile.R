@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/R/profile.R
+# This is file ../spam0.29-0/R/profile.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -35,11 +35,15 @@ class(spam.version) <- "simple.list"
                 drop=FALSE,                # drop passed to subset functions
                 printsize=100,             # the max size which we print as regular matrices
                 imagesize=10000,           # the max size which we display as regular matrices
-                trivalues=FALSE,           # with upper./lower/.tri return values (TRUE) or only structure?
-                cex=1200,                  # scaling factor for scatter displays
+                 cex=1200,                  # scaling factor for scatter displays
 
+                structurebased=FALSE,      # calculating on nonzero entries only...
+                
+                inefficiencywarning=1e6,  # tell when something inefficient is done
+                
+               trivalues=FALSE,           # with upper./lower/.tri return values (TRUE) or only structure?
                 listmethod='PE',           # method to be used when using spam.list
-             
+
                 safemode=c(TRUE,TRUE,TRUE),  # verify double and integer formats and else...
                 dopivoting=TRUE,           # what type of back/forwardsolve?
                 cholsymmetrycheck=TRUE,     # Should symmetry be tested in the cholesky factorization
@@ -51,13 +55,24 @@ class(spam.version) <- "simple.list"
                 )
 #noquote(unlist(format(.Spam[-1])) )
 
-
+"inefficiencywarning" <- function(msg,size) {
+  maxsize <- if (is.logical(.Spam$inefficiencywarning)) {
+    ifelse(.Spam$inefficiencywarning,1,Inf) } else { 
+    .Spam$inefficiencywarning
+  }
+  if (size>maxsize) warning("Logical subsetting may be inefficient, is this really what you want?")
+}
+    
 ".onAttach" <- function (lib, pkg) {
-   packageStartupMessage("Package 'spam' is loaded. ", spam.version$version.string,".",
-       "\nType demo( spam) for some demos,",
-       " help( Spam) for an overview\nof this package.",
-       "\nHelp for individual functions is optained by ",
-       "adding the\nsuffix '.spam' to the function name, e.g. 'help(chol.spam)'.")
+   packageStartupMessage( spam.version$version.string," is loaded.",
+#       "\nType demo( spam) for some demos,",
+#       " help( Spam) for an overview\nof this package.",
+#       "\nHelp for individual functions is obtained by ",
+#       "adding the\nsuffix '.spam' to the function name, e.g. 'help(chol.spam)'.")
+       "\nType 'help( Spam)' or 'demo( spam)' for a short introduction ",
+       "\nand overview of this package.",
+       "\nHelp for individual functions is also obtained by ",
+       "adding the\nsuffix '.spam' to the function name, e.g. 'help( chol.spam)'.")
    unlockBinding(".Spam", asNamespace("spam"))
  }
 

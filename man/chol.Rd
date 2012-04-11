@@ -1,4 +1,4 @@
-% This is file ../spam0.28-0/man/chol.Rd
+% This is file ../spam0.29-0/man/chol.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -130,8 +130,8 @@ mvsample <- ( array(rnorm(N*n),c(N,n)) \%*\% R)[,iord]
 
 # 'mvsample' is of class 'spam'. We need to transform it to a
 # regular matrix, as there is no method 'var' for 'spam' (should there?).
-norm( var( as.matrix( mvsample)) - Sigma, type="HS")
-norm( t(R) \%*\% R - Sigma, type="sup")
+norm( var( as.matrix( mvsample)) - Sigma, type='m')
+norm( t(R) \%*\% R - Sigma)
 
 
 # To speed up factorizations, memory allocations can be optimized:

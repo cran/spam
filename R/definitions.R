@@ -1,4 +1,4 @@
-# This is file ../spam0.28-0/R/definitions.R
+# This is file ../spam0.29-0/R/definitions.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -799,7 +799,7 @@ function(e1,e2)
   nnz <- z$rowpointers[e1row+1]-1
   if(identical(z$entries,0)){#trap zero matrix
     z$colindices <- 1L
-    z$rowpointers <- c(1L,rep(2L,nrow))
+    z$rowpointers <- c(1L,rep(2L,e1row))
   }
   return(new("spam",entries=z$entries[1:nnz],colindices=z$colindices[1:nnz],rowpointers=z$rowpointers,dimension=c(e1row,e1col)))
 }
@@ -898,205 +898,6 @@ if(is.numeric(e1) && length(e1) == 1)
 }
 
 
-# SUBSETTING
-##########################################################################################
-
-# notice the drop catch...
-#   I don't know the best and official way, but it works as it is here...
-
-setMethod("[", signature(x = "spam",
-			 i = "missing", j = "missing", drop = "ANY"),
-	  function (x, i, j, drop) { # cat("missmiss")
-           x})
-
-setMethod("[",signature(x="spam",i="vector",j="missing", drop = "ANY"),
-	  function (x, i, j, drop) { # cat("vecmiss")
-            subset.spam(x,rw=i,cl=1:x@dimension[2],drop)})
-
-setMethod("[",signature(x="spam",i="vector",j="vector", drop = "ANY"),
-	  function (x, i, j,drop) { # cat("vecvec")
-            subset.spam(x,rw=i,cl=j,drop)} )
-
-setMethod("[",signature(x="spam",i="missing",j="vector", drop = "ANY"),
-	  function (x, i, j,drop) { # cat("missvec")
-            subset.spam(x,rw=1:x@dimension[1],cl=j,drop)} )
-
-setMethod("[",signature(x="spam",i="matrix",j="missing", drop = "ANY"),
-	  function (x, i, j, drop) {subset.spam(x,rw=i,drop) })
-
-setMethod("[",signature(x="spam",i="matrix",j="matrix", drop = "ANY"),
-	  function (x, i, j, drop) {subset.spam(x,rw=cbind(c(i),c(j)),drop) })
-
-setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
-	  function (x, i, j, drop=.Spam$drop) 
-{
-  # drop is not implemented yet
-  dimx <- x@dimension
-  nrow <- dimx[1]
-  ncol <- dimx[2]
-  if ( i@dimension[1]>nrow | i@dimension[2]>ncol)
-    stop("subscript out of bounds",call.=FALSE)
-  z <- .Fortran("amask",
-                nrow=nrow,
-                ncol=ncol,
-                a=dcheck(x@entries),
-                colindices=icheck(x@colindices),
-                rowpointers=icheck(x@rowpointers),
-                jmask=i@colindices,
-                imask=c(i@rowpointers,rep(i@rowpointers[length(i@rowpointers)],nrow+1-length(i@rowpointers))),
-                c=dcheck(x@entries),
-                jc=icheck(x@colindices),
-                ic=icheck(x@rowpointers),           
-                iw=logical(ncol),
-                nzmax=length(i@colindices) ,
-                ierr=0L,
-                PACKAGE="spam")
-  nz <- z$ic[nrow+1]-1
-  if (nz==0) return( numeric(0))
-  if (drop) {
-    ic <- unique( z$ic[1:(z$nrow+1)])
-    dimx <- as.integer(c(length(ic)-1,max(z$jc[1:nz])))    
-  } else {
-    ic <-z$ic[1:(z$nrow+1)]
-  }
-  return(new("spam",entries=z$c[1:nz],colindices=z$jc[1:nz],rowpointers=ic,
-               dimension=dimx))
-}      )
-
-setMethod("[", signature(x = "spam", i = "ANY", j = "ANY", drop = "ANY"),
-	  function(x,i,j, drop)
-          stop("Invalid or not-yet-implemented 'spam' subsetting"))
-
-# the proper S3 subsetting causes problems... 
-"[.spam" <- function (x, rw, cl,drop=.Spam$drop) {subset.spam(x,rw=rw,cl=cl,drop) }
-
-"subset.spam" <-
-function (x,rw,cl,drop=.Spam$drop,...)
-{
-  # we separate into cases where:
-  # (A) rw matrix:
-  #     1: logical: transformation to spam and extract structure
-  #     2: two column matrix: extract (i,j) as given by the lines.
-  #     3: all else extract   x[ c( rw)]
-  # (B) rw and cl one element: ((i,j)
-  # (C) rw and cl vectors:  (i1:i2,j1:j2)               [i1<=i2, j1<=j2]
-  #                         (c(i1,...,ii),c(j1,...,jj)) [arbitrary block]
-
-  if (missing(drop)) drop <- .Spam$drop
-  dimx <- x@dimension
-  nrow <- dimx[1]
-  ncol <- dimx[2]
-  
-  if (is.matrix(rw)) {
-    if (is.logical(rw)) {
-      return( x[as.spam.matrix(rw)] )
-    }
-    if (dim(rw)[2]==2) {
-      ir <- rw[,1]
-      jr <- rw[,2]
-    } else  {
-      ir <- c(rw-1) %% nrow + 1
-      jr <- c(rw-1) %/% nrow + 1
-    }
-    if ( (min(ir)<1)|(max(ir)>x@dimension[1])|(min(jr)<1)|(max(jr)>x@dimension[2]))
-      stop("subscript out of bounds",call.=FALSE)
-    nir <- length(ir)
-    return(.Fortran("getallelem",
-                    nir,
-                    as.integer(ir),
-                    as.integer(jr),
-                    dcheck(x@entries),icheck(x@colindices),icheck(x@rowpointers),
-                    integer(nir),
-                    allelem=vector("double",nir),
-                    DUP=FALSE,
-                      PACKAGE="spam")$allelem)
-
-  }
-  # negative values:
-  if ( max(rw)<0 )       rw <- seq_len( nrow)[rw] 
-  if ( max(cl)<0 )       cl <- seq_len( ncol)[cl] 
-  
-  # logical
-  if (is.logical(rw))    rw <- seq_len( nrow)[rw] 
-  if (is.logical(cl))    cl <- seq_len( ncol)[cl] 
-  
-  if (length(cl)==0) stop("You should subset at least one element for the columns",call.=FALSE)
-  if (length(rw)==0) stop("You should subset at least one element for the rows",call.=FALSE)
-
-  if ( (min(rw)<1)|(max(rw)>x@dimension[1])|(min(cl)<1)|(max(cl)>x@dimension[2]))
-    stop("subscript out of bounds",call.=FALSE)
-  
-  if (length(rw)==1 & length(cl)==1){
-                                        # function to extract only one element
-    return(.Fortran("getelem",
-                    as.integer(rw),
-                    as.integer(cl),
-                    dcheck(x@entries),icheck(x@colindices),icheck(x@rowpointers),
-                    iadd=0L,
-                    elem=as.double(0),
-                    PACKAGE="spam")$elem)
-  }
-  if (is.vector(rw) && is.vector(cl)) {
-    nrw <- length(rw)   # length returns an integer, so is a product therof
-    ncl <- length(cl)
-    diffrw <- diff(rw)
-    diffcl <- diff(cl)
-    nz <- as.integer( min( (1+sum(diff(sort(rw))==0))*(1+sum(diff(sort(cl))==0))*
-                          length(x@entries), prod(nrw,ncl)))  # very pessimistic
-    if (all(diffrw==1) & all(diffcl==1)) {
-      z <- .Fortran("submat",
-                    nrow,
-                    job=1L, # need values as well
-                    i1=as.integer(rw[1]),
-                    i2=as.integer(rw[nrw]),
-                    j1=as.integer(cl[1]),
-                    j2=as.integer(cl[ncl]),
-                    dcheck(x@entries),x@colindices,x@rowpointers,
-                    nr=0L,
-                    nc=0L,
-                    entries=vector("double",nz),
-                    colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
-                    NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam")
-      nz <- z$rowpointers[z$nr+1]-1
-    } else {
-      z <- .Fortran("getblock",
-                    dcheck(x@entries),x@colindices,x@rowpointers,
-                    nr=nrw,as.integer(rw),
-                    nc=ncl,as.integer(cl),
-                    nz=nz, entries=vector("double",nz),
-                    colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
-                    NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam")
-      nz <- z$nz
-    }
-    if (nz==0) {#trap zero matrix
-      if (drop==TRUE && (z$nr==1 || z$nc==1)) return( vector("double",max(z$nr,z$nc)))
-      else
-        return(new("spam",rowpointers=c(1L,rep.int(2L,z$nr )),
-                   dimension = c(z$nr,z$nc)))
-    }  
-    
-    if (drop==TRUE && (z$nr==1 || z$nc==1))
-      # this is essentially a c() call
-      return(.Fortran("spamcsrdns",
-                 nrow=z$nr,
-                 entries=z$entries[1:nz],
-                 colindices=z$colindices[1:nz],
-                 rowpointers=z$rowpointers[1:(z$nr+1)],
-                 res=vector("double",prod(z$nr,z$nc)),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res)
-    else {
-      newx <- new("spam")
-      slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
-      slot(newx,"colindices",check=FALSE) <- z$colindices[1:nz]
-      slot(newx,"rowpointers",check=FALSE) <- z$rowpointers[1:(z$nr+1)]
-      slot(newx,"dimension",check=FALSE) <- c(z$nr,z$nc)
-      return(newx)
-    }
-  
-  }
-  stop("invalid or not-yet-implemented 'spam' subsetting")
-}
-
 # ASSIGNING:
 ##########################################################################################
 
@@ -1109,6 +910,24 @@ setReplaceMethod("[", signature(x = "spam",
 			 i = "missing", j = "missing", value = "ANY"),
 	  function (x, i, j, value) {#cat("mm");
                                      assign.spam(x,1:x@dimension[1],1:x@dimension[2],value)})
+
+
+setMethod("[<-",signature(x="spam",i="vector",j="vector", value = "spam"),
+	  function (x, i, j, value)
+          {#### FIXME Highly inefficient!
+            inefficiencywarning( "Performing inefficient replacement...", prod(dim(value)))
+            as.spam(assign.spam(x,i,j,as.matrix(value)))} )
+setMethod("[<-",signature(x="spam",i="missing",j="vector", value = "spam"),
+	  function (x, i, j, value)
+          {#### FIXME Highly inefficient!
+            inefficiencywarning( "Performing inefficient replacement...", prod(dim(value)))
+            as.spam(assign.spam(x,1:x@dimension[1],j,as.matrix(value)))} )
+setMethod("[<-",signature(x="spam",i="vector",j="missing", value = "spam"),
+	  function (x, i, j, value)
+          {#### FIXME Highly inefficient!
+            inefficiencywarning( "Performing inefficient replacement...", prod(dim(value)))
+            as.spam(assign.spam(x,i,1:x@dimension[2],as.matrix(value)))} )
+
 
 setMethod("[<-",signature(x="spam",i="vector",j="missing", value = "ANY"),
 	  function (x, i, j, value) {#cat(i);
@@ -1178,7 +997,7 @@ function (x, rw, cl,value)
 #  print(rw)
 #  print(cl)
 #  print(value)
-  if (!is.numeric(value)) stop("Assignment of numeric structures only")
+  if (!is.numeric(value)) stop(paste("Assignment of numeric structures only, here",class(value)))
   
   dimx <- x@dimension
   nrow <- dimx[1]
@@ -1554,36 +1373,6 @@ setGeneric("upper.tri")
 setMethod("upper.tri","spam",upper.tri.spam)
 setGeneric("lower.tri")
 setMethod("lower.tri","spam",lower.tri.spam)
-
-########################################################################
-
-norm <- function(x, type = "sup", ...){
-  typ <- charmatch(tolower(type), c("sup",'l1',"frobenius","hs"))
-  if (is.na(typ))          stop("undefined norm '",type,"'.",call.=FALSE)
-
-  switch(typ,
-         max(abs(x)),
-         sum(abs(x)),
-         sqrt(sum(x^2)),sqrt(sum(x^2))
-         )
-}
-norm.spam <- function(x, type = "sup", ...){
-  typ <- charmatch(tolower(type), c("sup",'l1',"frobenius","hs"))
-  if (is.na(typ))          stop("undefined norm '",type,"'.",call.=FALSE)
-
-  switch(typ,
-         max(abs(x@entries)),
-         sum(abs(x@entries)),
-         sqrt(sum(x@entries^2)),
-         sqrt(sum(x@entries^2))
-         )
-}
-
-setGeneric("norm",function(x, type = "sup",...)standardGeneric("norm"))
-setMethod("norm",signature(x="spam",type="character"), norm.spam)
-setMethod("norm",signature(x="spam",type="missing"),
-          function(x,type) norm.spam(x,"sup"))
-
 
 
 
