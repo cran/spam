@@ -1,4 +1,4 @@
-% This is file ../spam0.29-0/man/rowcolstats.Rd
+% This is file ../spam0.29-1/man/rowcolstats.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -53,6 +53,5 @@ Reinhard Furrer
 x <- spam( rnorm(20), 5, 4)
 rowSums( x)
 c( x \%*\% rep(1,4))
-
 }
 \keyword{manip}

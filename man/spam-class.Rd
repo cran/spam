@@ -1,4 +1,4 @@
-% This is file ../spam0.29-0/man/spam-class.Rd
+% This is file ../spam0.29-1/man/spam-class.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -81,12 +81,13 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
 \section{Slots}{
   \describe{
     \item{\code{entries}:}{Object of class \code{"numeric"} contains the
-      nonzero values }
+      nonzero values. }
     \item{\code{colindices}:}{Object of class \code{"integer"} ordered indices
-      of the nonzero values }
+      of the nonzero values. }
     \item{\code{rowpointers}:}{Object of class \code{"integer"} pointer to the beginning
-    of each row in the arrays \code{entries} and \code{colindices}}
-    \item{\code{dimension}:}{Object of class \code{"integer"} ~~ }
+    of each row in the arrays \code{entries} and \code{colindices}.}
+    \item{\code{dimension}:}{Object of class \code{"integer"} specifying
+    the dimension of the matrix.}
   }
 }
 \section{Methods}{

@@ -1,4 +1,4 @@
-# This is file ../spam0.29-0/R/spam_solve.R
+# This is file ../spam0.29-1/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -168,11 +168,11 @@ setMethod("as.spam","spam.chol.NgPeyton", as.spam.chol.NgPeyton)
 #setMethod("forwardsolve","matrix",base::forwardsolve)
 
 
-#setGeneric("backsolve", def = function(r, ...) standardGeneric("backsolve"),
-#           useAsDefault= function(r, ...) base::backsolve(r, ...))
+setGeneric("backsolve", def = function(r, x, ...) standardGeneric("backsolve"),
+           useAsDefault= function(r, x, ...) base::backsolve(r, x, ...))
 
-setGeneric("forwardsolve", def = function(l, ...) standardGeneric("forwardsolve"),
-           useAsDefault= function(l, ...) base::forwardsolve(l, ...))
+setGeneric("forwardsolve", def = function(l, x, ...) standardGeneric("forwardsolve"),
+           useAsDefault= function(l, x, ...) base::forwardsolve(l, x, ...))
 
 # adapted from methods
 #setGeneric("forwardsolve", function(l, x, k, upper.tri = FALSE, transpose = FALSE, ...)
@@ -552,7 +552,6 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
     dim(z) <- c(m,p)
   return(z)
 }
-
 
 
 setMethod("chol","spam", chol.spam)

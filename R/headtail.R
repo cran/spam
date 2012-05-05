@@ -1,4 +1,4 @@
-# This is file ../spam0.29-0/R/headtail.R
+# This is file ../spam0.29-1/R/headtail.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -39,7 +39,8 @@ tail.spam <- function (x, n = 6L, m = n, addrownums = TRUE,  ...)
       }
     ans
 }
-  
+
+
 setMethod("head","spam",head.spam)
 setMethod("tail","spam",tail.spam)
 

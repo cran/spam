@@ -1,4 +1,4 @@
-# This is file ../spam0.29-0/tests/dist.R
+# This is file ../spam0.29-1/tests/dist.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.

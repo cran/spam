@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.29-0/tests/norm.R
+> # This is file ../spam0.29-1/tests/norm.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # written and maintained by Reinhard Furrer.
@@ -30,11 +30,11 @@ Type 'q()' to quit R.
 > 
 > 
 > options( echo=FALSE)
-Spam version 0.29-0 (2012-04-11) is loaded.
+Spam version 0.29-1 (2012-05-05) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
 suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
 > proc.time()
    user  system elapsed 
-  0.812   0.036   0.877 
+  0.784   0.032   0.813 
