@@ -1,6 +1,6 @@
 Package: spam
-Version: 0.29-1
-Date: 2012-05-05
+Version: 0.29-2
+Date: 2012-08-17
 Author: Reinhard Furrer
 Maintainer: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Depends: R (>= 2.11), methods
@@ -15,6 +15,6 @@ LazyData: Yes
 License: GPL | file LICENSE
 Title: SPArse Matrix
 URL: http://www.math.uzh.ch/furrer/software/spam/
-Packaged: 2012-05-05 07:41:13 UTC; furrer
+Packaged: 2012-08-17 09:43:09 UTC; furrer
 Repository: CRAN
-Date/Publication: 2012-05-05 09:23:42
+Date/Publication: 2012-08-17 11:09:49

@@ -1,4 +1,4 @@
-# This is file ../spam0.29-1/R/plotting.R
+# This is file ../spam0.29-2/R/plotting.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -11,6 +11,14 @@
 
 
 
+# Similar to misc3D
+if(! exists(".bincode", envir = .BaseNamespaceEnv))
+    .bincode <- function(v, breaks, ...) {
+        .C("bincode", as.double(v), length(v), as.double(breaks),
+           length(breaks), code = integer(length(v)), as.logical(TRUE),
+           as.logical(TRUE), nok = TRUE, NAOK = TRUE, DUP = FALSE,
+           PACKAGE = "base")$code
+    }
 
 
 image.spam <- 
@@ -100,10 +108,9 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
           stop("must have one more break than colour")
         if (any(!is.finite(breaks)))
           stop("breaks must all be finite")
-        zi <- .C("bincode", as.double(zvals), length(zvals), as.double(breaks),
-                 length(breaks), code = vector("integer",length(zvals)), (TRUE),
-                 (TRUE), nok = TRUE, NAOK = TRUE, DUP = FALSE, PACKAGE = "base")$code -
-                   1
+        # Patch proposed by BR see email.
+        zi <- .bincode(zvals, breaks, TRUE, TRUE) - 1
+        
       }
       if (!add)
         plot(NA, NA, xlim = xlim, ylim = ylim, type = "n", xaxs = xaxs,
@@ -169,8 +176,11 @@ plot.spam <- function(x,y,xlab=NULL,ylab=NULL,...)
        ylab=ifelse(missing(ylab),paste(lab,'[,2]',sep=''),ylab),...)
 }
 
-setGeneric("image", function(x, ...) standardGeneric("image")) 
+#setGeneric("image", function(x, ...) standardGeneric("image")) 
 setMethod("image","spam",function(x,cex=NULL,...){image.spam(x,cex=cex,...)})
+
+# the following is unfortunately not possible
+#setMethod("image",signature(x="numeric",y="numeric",z="spam"),function(x,y,z,cex=NULL,...){image.spam(x,cex=cex,...)})
 
 setGeneric("display",function(x,...)standardGeneric("display"))
 setMethod("display","spam",display.spam)

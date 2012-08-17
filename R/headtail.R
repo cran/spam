@@ -1,4 +1,4 @@
-# This is file ../spam0.29-1/R/headtail.R
+# This is file ../spam0.29-2/R/headtail.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.

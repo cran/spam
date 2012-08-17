@@ -1,4 +1,4 @@
-# This is file ../spam0.29-1/R/diff.R
+# This is file ../spam0.29-2/R/diff.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -29,4 +29,5 @@ function (x, lag = 1, differences = 1, ...)
     }
     return( x)
 }
+
 setMethod("diff","spam",diff.spam)

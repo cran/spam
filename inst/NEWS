@@ -1,4 +1,4 @@
-	CHANGES IN VERSION 0.29-0, 0.29-1
+	CHANGES IN VERSION 0.29-0, 0.29-1, 0.29-2
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
@@ -28,6 +28,10 @@ SIGNIFICANT USER-VISIBLE CHANGES
 	now work. They are, however, somewhat inefficient. 
 	'toeplitz.spam' is to be prefered. Pointed out by
 	Florian Gerber.
+
+   o	The Gibbs sampler in the demo article-jss-example2 contains 
+   	several bugs, pointed out by Steve Geinitz and Andrea Riebler. 
+	I'll post an updated sampler in a future release.
 
 
 NEW FEATURES
@@ -68,7 +72,12 @@ INTERNAL CHANGES
    o 	Elininated '.Internal()' calls that induce a 'Note' on CRAN
    	checks. This also implied a minor rewrite of 'image.spam'.	
 
-   o 	Minor code improvements.
+   o 	Minor code improvements. 
+
+   o	Eliminated non-API calls (29.1).
+
+   o	Rewritten .C("bincode",...) call as suggested by Brian Ripley
+   	(29.2).
   
 
 BUG FIXES
@@ -79,6 +88,9 @@ BUG FIXES
 
    o	Bug fix in triangular backsolves involving 'spam' objects 
    	and rhs matrices.
+
+   o	Bug fix in triangular backsolve causing errors on some
+   	architectures.
 
 
 

@@ -1,4 +1,4 @@
-# This is file ../spam0.29-1/demo/article-jss-example2.R
+# This is file ../spam0.29-2/demo/article-jss-example2.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -16,7 +16,7 @@
 # - more comments, e.g. how to run the code using regular matrices 
 # - the code to construct the figures
 
-
+cat("\nThis demo contains the R code of the second example\nin the JSS article. As pointed out by Steve Geinitz\nand Andrea Riebler, the Gibbs sampler is not correct\nand contains several bugs. \n\nI'll post an updated sampler in a future release.\n\n") 
 
 
 # INITALIZE AND FUNCTIONS:

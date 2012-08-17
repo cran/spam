@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.29-1/tests/foreign.R
+> # This is file ../spam0.29-2/tests/foreign.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # written and maintained by Reinhard Furrer.
@@ -122,4 +122,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-  0.172   0.028   0.192 
+  0.172   0.020   0.186 
