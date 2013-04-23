@@ -1,4 +1,4 @@
-	CHANGES IN VERSION 0.29-0, 0.29-1, 0.29-2
+	CHANGES IN VERSION 0.29-0, 0.29-1, 0.29-2, 0.29-2
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
@@ -79,6 +79,9 @@ INTERNAL CHANGES
    o	Rewritten .C("bincode",...) call as suggested by Brian Ripley
    	(29.2).
   
+   o	Fixing -fbounds-check issues (29.3, in several Fortan routines).
+
+
 
 BUG FIXES
 

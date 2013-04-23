@@ -1,8 +1,7 @@
 
-R version 2.15.0 (2012-03-30)
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
-Platform: i686-pc-linux-gnu (32-bit)
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -16,7 +15,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam0.29-2/tests/helper.R
+> # This is file ../spam0.29-3/tests/helper.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # written and maintained by Reinhard Furrer.
@@ -30,7 +29,7 @@ Type 'q()' to quit R.
 > 
 > 
 > options( echo=FALSE)
-Spam version 0.29-2 (2012-08-17) is loaded.
+Spam version 0.29-3 (2013-04-23) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -78,4 +77,4 @@ For rmvnorm.spam:
 > 
 > proc.time()
    user  system elapsed 
-  1.088   0.028   1.111 
+  2.100   0.072   2.184 

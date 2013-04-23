@@ -1,4 +1,4 @@
-# This is file ../spam0.29-2/tests/demo_article-jss.R
+# This is file ../spam0.29-3/tests/demo_article-jss.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -141,7 +141,6 @@ for (ix in 1:xseql) {
                              )[stsel]
   Rprof( NULL)
   table[ix,4] <- summaryRprof( memory="both")$by.total[rPsx,rPsy]
-
 }
 
 if (F) {
@@ -173,7 +172,7 @@ egdx <- expand.grid( 1:x, 1:x)
 
 
 table <- array(NA, c(dvall,5))
-
+if(F){
 for (id in 1:dvall) {
 
   mat <- nearest.dist( egdx, delta=dval[id],upper=NULL)
@@ -188,15 +187,16 @@ for (id in 1:dvall) {
   Rprof( NULL)
   table[id,2] <- summaryRprof( memory="both")$by.total[rPsx,rPsy]
   
-  Rprof( memory.profiling=TRUE, interval = rPint)
-  table[id,3] <- system.time( { ch1 <- chol(mat);
-                                for (i in 1:N) ch2 <- update(ch1,mat) }
-                             )[stsel]
+#  Rprof( memory.profiling=TRUE, interval = rPint)
+#  table[id,3] <- system.time( { ch1 <- chol(mat);
+#                                for (i in 1:N) ch2 <- update(ch1,mat) }
+#                             )[stsel]
   Rprof( NULL)
   table[id,4] <- summaryRprof( memory="both")$by.total[rPsx,rPsy]
+cat('-')
 
 }
-
+}
 
 if (F) {
   # Since we have a small N, elements in table might be zero.
@@ -324,10 +324,12 @@ Rprof( NULL)
 table[8,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
 
 # Update only
-Rprof( memory.profiling=TRUE, interval = rPint)
-table[9,1] <- system.time(   for (i in 1:N) ch1 <- update(ch1,gridmat)   )[stsel]
-Rprof( NULL)
-table[9,2] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
+#Rprof( memory.profiling=TRUE, interval = rPint)
+#table[9,1] <- system.time(   for (i in 1:N) ch1 <- update(ch1,gridmat)   )[stsel]
+
+#Rprof( NULL)
+#table[9,2] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
+
 
 Rprof( memory.profiling=TRUE, interval = rPint)
 table[9,3] <- system.time(   for (i in 1:N) ch2 <- update(ch2,USmat)   )[stsel]
@@ -366,6 +368,7 @@ for (i in 1:len.1)
   for(j in 1:len.2) 
     grid[i,j] <- !is.null(update(struct, In + theta.1[i]*UScounties.storder
                        + theta.2[j]* UScounties.ndorder))
+
 
 
 options( echo=TRUE)

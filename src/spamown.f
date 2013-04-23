@@ -1193,7 +1193,7 @@ c
          iadd = imid 
          goto 20
       endif
-      if (ibeg .ge. iend) goto 20
+c      if (ibeg .ge. iend) goto 20
 c     
 c     else     update the interval bounds. 
 c     
@@ -1202,6 +1202,10 @@ c
       else 
          ibeg = imid +1
       endif
+c  moved the above line to here and added the second test
+      if (ibeg .ge. iend) goto 20   
+      if (iend .lt. 1) goto 20
+
       goto 10  
 c     
  20   if (iadd .ne. 0)     elem = a(iadd) 

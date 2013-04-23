@@ -1,4 +1,4 @@
-# This is file ../spam0.29-2/tests/demo_article-jss-example2.R
+# This is file ../spam0.29-3/tests/demo_article-jss-example2.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
