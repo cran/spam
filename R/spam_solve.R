@@ -1,4 +1,4 @@
-# This is file ../spam0.29-3/R/spam_solve.R
+# This is file ../spam/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -398,14 +398,10 @@ chol.spam <- function(x, pivot = "MMD",
   invisible(newx)
 }
 
-solve.spam <- function (a, b, ...) {
+solve.spam <- function (a, b,  Rstruct = NULL, ...) {
   nrow <- a@dimension[1]
   ncol <- a@dimension[2]
   if (ncol != nrow)      stop("only square matrices can be inverted")
-
-  # if we have a spam matrix, we calculate the Cholesky factor
-  if (is(a,"spam"))
-    a <- chol.spam(a,...)
 
   if (missing(b)) {
     b <- diag(1, ncol)
@@ -413,7 +409,15 @@ solve.spam <- function (a, b, ...) {
     if(!is.matrix(b)) b <- as.matrix(b)
   }
   p <- dim(b)[2]
-  if(nrow!=dim(b)[1])stop("'b' must be compatible with 'a'")  
+  if(nrow!=dim(b)[1])stop("'b' must be compatible with 'a'")
+  
+  # if we have a spam matrix, we calculate the Cholesky factor
+  if (is(a,"spam"))
+    if (is(Rstruct, "spam.chol.NgPeyton")) 
+        a <- update.spam.chol.NgPeyton(Rstruct, a, ...)
+    else a <- chol.spam(a, ...)
+
+
   if (is(a,"spam.chol.NgPeyton")) {
       # The following is a fast way to perform:
       #     z <- backsolve(a,forwardsolve( t(a),b))
@@ -422,9 +426,10 @@ solve.spam <- function (a, b, ...) {
                   nsuper, p, a@colindices,
                   a@colpointers, dcheck(a@entries),
                   a@rowpointers, a@invpivot, a@pivot,
-                  a@supernodes, vector("double",nrow), sol = vector("double",nrow*p), as.vector(b,"double"),
+                  a@supernodes, vector("double",nrow), sol = vector("double",nrow*p),
+                  as.vector(b,"double"),
                   DUP=FALSE,NAOK = !.Spam$safemode[3],PACKAGE = "spam")$sol
-  } else z <- backsolve(a,forwardsolve( t(a),b))
+  } else z <- backsolve(a, forwardsolve( t(a),b))
     # see the helpfile for a comment about the 't(a)' construct.
   
   if ( p!=1)    dim(z) <- c(nrow,p)
@@ -505,7 +510,11 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
 #  l: spam.chol.NgPeyton structure as returned by chol.spam
 #         or an ordinary lower triangular spam matrix
 #  x: rhs a vector a matrix in dense form
-#  dimensions:  ( m x n) ( n x p) 
+#  dimensions:  ( m x n) ( n x p)
+#  if (!any(is.null(c(upper.tri,k,transpose ))))
+#    warning("'k', 'upper.tri' and 'transpose' argument do not have any effect here")
+
+  
   m <- l@dimension[1]
   if(is.vector(x)) {
     n <- length(x)

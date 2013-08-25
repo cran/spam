@@ -1,4 +1,4 @@
-% This is file ../spam0.29-3/man/display.Rd
+% This is file ../spam/man/display.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.

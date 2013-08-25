@@ -1,4 +1,4 @@
-# This is file ../spam0.29-3/R/makeprec.R
+# This is file ../spam/R/makeprec.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -6,7 +6,10 @@
 
 
 
-"make.prec" <- function(par, dims, model = "m1p1",  eps = .Spam$eps){
+"precmat.GMRFreglat" <- function(n,m, par=.1, model = "m1p1",  eps = .Spam$eps){
+  if((n<2)|(m<2))
+    stop("n and m need to be >1")
+  dims <- c(n,m)
   if (model=="m1p1"){
     x <- numeric(dims[1])
     x[1:2] <- c(1,-par[1])

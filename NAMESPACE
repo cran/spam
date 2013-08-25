@@ -59,8 +59,6 @@ export("dcheck",
        "circulant.spam",
        "toeplitz.spam",
 
-       "make.prec",
-       
        "determinant.spam",
        "determinant.spam.chol.NgPeyton",
        "chol.spam",
@@ -89,11 +87,27 @@ export("dcheck",
        "rmvnorm.canonical.const",
        "rmvnorm.prec.const",
 
+       "precmat",
        "precmat.RW1",
        "precmat.RW2",
+       "precmat.RWn",
        "precmat.season",
        "precmat.IGMRFreglat",
        "precmat.IGMRFirreglat",
+       "precmat.GMRFreglat",
+
+       "covmat",
+       "cov.exp",
+       "cov.sph",
+       "cov.nug",
+       "cov.wu1",
+       "cov.wu2",
+       "cov.wu3",
+       "cov.wend1",
+       "cov.wend2",
+       "cov.mat",
+
+       
        
        "rowSums.spam",
        "colSums.spam",
@@ -142,8 +156,16 @@ export("dcheck",
        "map.landkreis",
        "adjacency.landkreis",
 
-       "cleanup",
-       "backsolve"
+       "germany.plot",
+
+       "grid_trace2",
+       "grid_zoom",
+
+       
+       "cleanup"
+#       "backsolve"
+
+     
        )
 
 

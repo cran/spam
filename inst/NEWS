@@ -1,4 +1,40 @@
-	CHANGES IN VERSION 0.29-0, 0.29-1, 0.29-2, 0.29-2
+	CHANGES IN VERSION 0.30
+
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+   o	Added several plots to visualize several MCMC chains
+   	('grid_trace2', 'grid_zoom', ...). 
+
+
+NEW FEATURES
+
+   o    New function 'germany.plot' to draw the landkreise.
+   	('map.landkreis' is now obsolete).
+
+   o	Switched from 'tim.colors' to 'colorRampPalette'
+   	in 'germany.plot'.
+
+   o 	Metadata in 'germany.info', polygon definitions in
+   	'germany.poly' ('germany' kept for backwards 
+	compatibility).
+
+
+INTERNAL CHANGES
+
+   o 	Switched to mercurial for maintaining the package.
+
+   o    Updated ChangeLog file (hg log).
+
+   o 	Increased dependency to >= R 2.15.
+
+   o    Minor code and help cleanup.
+
+
+
+
+
+	CHANGES IN VERSION 0.29-0, 0.29-1, 0.29-2, 0.29-3
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
@@ -79,9 +115,6 @@ INTERNAL CHANGES
    o	Rewritten .C("bincode",...) call as suggested by Brian Ripley
    	(29.2).
   
-   o	Fixing -fbounds-check issues (29.3, in several Fortan routines).
-
-
 
 BUG FIXES
 
@@ -198,7 +231,6 @@ NEW FEATURES
 
 
     
-
 
 
 

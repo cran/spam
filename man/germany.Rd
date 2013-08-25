@@ -1,4 +1,4 @@
-% This is file ../spam0.29-3/man/germany.Rd
+% This is file ../spam/man/germany.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -8,48 +8,47 @@
 
 
 
+\name{germany.plot}
+\alias{germany.plot}
 
-
-
-
-
-\name{germany}
-\alias{map.landkreis}
-\alias{adjacency.landkreis}
-\alias{germany.graph}
-\title{Administrative districts of Germany}
-\description{Constructing the adjacency graph and displaying the data
+\title{Plot administrative districts of Germany}
+\description{Displaying data
   over the administrative districts of Germany}
 \usage{
-adjacency.landkreis( loc)
-map.landkreis(data, col=NULL, zlim=range(data), add=FALSE,
-              legendpos=c( 0.88,0.9,0.05,0.4))
+germany.plot(vect,  col=NULL, zlim=range(vect), legend=TRUE, 
+             main=NULL, cex.axis=1, add=FALSE, ... )
 }
 \arguments{
-\item{loc}{location of the graph structure, can be an URL.}
-\item{data}{vector of length 544}
-\item{col}{color scheme to be used. By default uses \code{tim.colors} if
-available or a generic gray scale.}
+\item{vect}{vector of length 544}
+\item{col}{color scheme to be used. By default uses \code{colorRampPalette(brewer.pal(9,"Blues"))(100)}.}
 \item{zlim}{the minimum and maximum values for which colors should be
-          plotted, defaulting to the range of \code{data}.}
+  plotted, defaulting to the range of \code{data}.}
+\item{legend}{Should the legend be added, see \sQuote{Details}.}
+\item{main}{an overall title for the plot.}
+\item{cex.axis}{label size of legend.} 
 \item{add}{logical, if true adds to current plot.}
-\item{legendpos}{if package \pkg{fields} is loaded, puts a legend at that position.}
+\item{\dots}{additional arguments passed to \code{polygon}.}
 }
-\references{The code of \code{map.landkreis} is very similar to
-\code{germany.map} from the package \pkg{INLA}.}
-\details{\code{adjacency.landkreis} is included as an example on how to
-construct adjacency matrices form a (common) adjacency structure.
-For the particular example, note that the nodes are not numbered
-consecutively and that they start from zero.\cr
-The perfect position of the legend is an art per se and depends on
-various \code{par} parameters. See also the source code of the function
+\references{See also \url{http://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl\%C3\%BCssel}
+and \url{http://de.wikipedia.org/wiki/Liste_der_Landkreise_in_Deutschland}
+%The code of \code{map.landkreis} is very similar to
+%\code{germany.map} from the package \pkg{INLA}.}
+}
+\details{The legend is only added, provided (a) function
+  \code{image.plot} is available.\cr
+
+  The perfect position of the legend is an art per se and depends on
+  various \code{par} parameters. One possiblity for finer control is to
+  not plot it and to manually call the function
 \code{image.plot} of \pkg{fields}.}
 \seealso{\code{\link{Oral}}.}
 \examples{
-loc <- system.file("demodata/germany.adjacency", package="spam")
-display( adjacency.landkreis( loc))
+data( Oral)
+germany.plot( Oral$Y/Oral$E)
 
-map.landkreis( Oral$E)
+
+# Plot the Bundeslaender:
+germany.plot(germany.info$id\%/\%1000,col=rep(2:8,3), legend=FALSE)
 }
 \author{Reinhard Furrer}
 \keyword{hplot}

@@ -1,4 +1,4 @@
-# This is file ../spam0.29-3/R/profile.R
+# This is file ../spam/R/profile.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -14,8 +14,8 @@
 # Framework introduce with much input from Roger Bivand for 0.13-2 and higher.
 
 spam.Version <- function() {
-  release <- utils:::packageDescription("spam",field="Version")
-  date <- utils:::packageDescription("spam",field="Date")
+  release <- utils::packageDescription("spam",field="Version")
+  date <- utils::packageDescription("spam",field="Date")
   list(status="",
               major=sub("-","",substr(release,1,4)),
               minor=substr(sub("-","",substr(release,5,7)),1,1),
@@ -23,8 +23,8 @@ spam.Version <- function() {
               month=substr(sub("200.-","",date),1,2),
               day=sub("200.-..-","",date),
               version.string= paste("Spam version ",
-                utils:::packageDescription("spam",field="Version")," (",
-                utils:::packageDescription("spam",field="Date"),")",sep='')
+                utils::packageDescription("spam",field="Version")," (",
+                utils::packageDescription("spam",field="Date"),")",sep='')
               )
 }
                 

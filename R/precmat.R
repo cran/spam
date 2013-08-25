@@ -1,32 +1,48 @@
-# This is file ../spam0.29-3/R/preccovmat.R
+# This is file ../spam/R/precmat.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
      
 
 
-# construct various precision and covariance matrices
+# construct various precision matrices
 
 
 
-precmat <- function(n, season=12, m=n, A=NULL,..., type="RW1") {
-  avtype <- c("rw1", "rw2", "season","igmrfreglat","igmrfirreglat")
+precmat <- function(n, season=12, m=n, A=NULL, order=1, ... , type="RW1") {
+  avtype <- c("rw1", "rw2", "rwn", "season","igmrfreglat","igmrfirreglat","gmrfreglat")
   method <- pmatch(tolower(type), avtype)
   if (is.na(method)) 
      stop("Precision matrix type not implemented yet. Please ask for.")
   switch(method,
          return(precmat.RW1(n)),
          return(precmat.RW2(n)),
+         return(precmat.RWn(n, order)),
          return(precmat.season(n,season)),
          return(precmat.IGMRFreglat(n,m,...)),
-         return(precmat.IGMRFirreglat(A,...)))
+         return(precmat.IGMRFirreglat(A,...)),
+         return(precmat.GMRFreglat(n,m,...)))
 }
-precmat.IGMRFreglat <- function(n, m, anisotropy=1) {
-  if( anisotropy<0|anisotropy>2)
-    stop("anisotropy parameter needs to be in [0,2]")
-  return( kronecker(precmat.RW1(n),diag.spam(anisotropy,m)) +
-          kronecker(diag.spam(2-anisotropy,n),precmat.RW1(m)))
-         
+
+precmat.IGMRFreglat <- function (n, m, order=1, anisotropy = 1)
+{
+  if((n<2)|(m<2))
+    stop("n and m need to be >1")
+  if(order==1) {
+    if (anisotropy < 0 | anisotropy > 2) 
+        stop("anisotropy parameter needs to be in [0,2]")
+    return(kronecker(precmat.RW1(m), diag.spam(2-anisotropy, n)) + 
+        kronecker(diag.spam(anisotropy, m), precmat.RW1(n)))
+  } else if (order==2) {
+    return(kronecker(precmat.RW2(m), diag.spam(n)) + 
+        kronecker(diag.spam( m), precmat.RW2(n)))
+  }
+  if( (order<1)|(order>=min(n,m)))
+        stop("order needs to be between 1 and min(n,m)-1")
+  Dn <- diff.spam(diag.spam(n), lag = 1, differences = order) 
+  Dm <- diff.spam(diag.spam(m), lag = 1, differences = order) 
+  return(kronecker(t(Dm)%*%Dm, diag.spam(n)) +             
+        kronecker(diag.spam( m), t(Dn)%*%Dn))
 }
 
 precmat.IGMRFirreglat <- function(A, eps= .Spam$eps) {
@@ -62,6 +78,15 @@ precmat.RW2<- function(n) {
 
   return(Q + t(Q) + diag.spam(c(1,5, rep.int(6, n-4), 5,1)))
 }
+
+precmat.RWn <- function(n, order=3)
+{
+  if( (order<1)|(order>=n))
+	stop("order needs to be between 1 and n-1")
+  D <- diff.spam(diag.spam(n), lag=1, differences=order)	
+  return( t(D)%*%D )
+}
+
 
 precmat.season <- function(n, season=12) {
   if(n<2*season)

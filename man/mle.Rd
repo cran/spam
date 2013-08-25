@@ -1,4 +1,4 @@
-% This is file ../spam0.29-3/man/mle.Rd
+% This is file ../spam/man/mle.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -96,7 +96,7 @@ In the zero-mean case, the \code{neg2loglikelihood} is calculated by setting
 the parameters \code{X} or \code{beta} to zero.
 }
 %\references{}
-\seealso{\code{\link{chol}}
+\seealso{\code{\link{covmat}}
 }
 \examples{
 # True parameter values:
@@ -104,41 +104,29 @@ truebeta <- c(1,2,.2)    # beta = (intercept, linear in x, linear in y)
 truetheta <- c(.5,2,.02) # theta = (range, sill, nugget)
 
 
-# Auxiliary covariance function, parameterized by
-#    theta = (range, sill, nugget)
-spherical <- function(distmat, theta, eps = 1e-06) {
-  Sigma <- distmat
-  d <- Sigma@entries/theta[1]
- 
-  Sigma@entries <- ifelse(d < eps,
-                     theta[3]+ theta[2],
-                   ifelse(d < 1, theta[2]*(1 - 1.5*d + 0.5*d^3), 0))
-  return( Sigma)
-}
 
 # We now define a grid, distance matrix, and a sample:
 x <- seq(0,1,l=5)
 locs <- expand.grid( x, x)
 X <- as.matrix( cbind(1,locs))  # design matrix
-Covariance <- 'spherical'      # covariance function
 
 distmat <- nearest.dist( locs, upper=NULL) # distance matrix
-Sigma <- spherical( distmat, truetheta)    # true covariance matrix
+Sigma <- cov.sph( distmat, truetheta)    # true covariance matrix
 
 
 set.seed(15)
 y <- c(rmvnorm.spam(1,X \%*\% truebeta,Sigma)) # construct sample
 
 # Here is the negative 2 log likelihood:
-neg2loglikelihood.spam( y, X, distmat, Covariance,
+neg2loglikelihood.spam( y, X, distmat, cov.sph,
                        truebeta, truetheta)
 
 # We pass now to the mle:
-res <- mle.spam(y, X, distmat, Covariance,
+res <- mle.spam(y, X, distmat, cov.sph,
          truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
 # Similar parameter estimates here, of course:
-mle.nomean.spam(y-X\%*\%res$par[1:3], distmat, Covariance,
+mle.nomean.spam(y-X\%*\%res$par[1:3], distmat, cov.sph,
          truetheta, thetalower=c(0,0,0), thetaupper=c(1,Inf,Inf))
 }
 \author{Reinhard Furrer }

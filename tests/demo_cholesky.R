@@ -1,4 +1,4 @@
-# This is file ../spam0.29-3/tests/demo_cholesky.R
+# This is file ../spam/tests/demo_cholesky.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -116,6 +116,7 @@ fmat1 <- fmat1+20*diag(xn)
 fmat1[fmat1<32] <- 0
 smat1 <- as.spam(fmat1)
 smat2 <- smat1 + 1* diag.spam(xn)
+
 
 # Generic Cholesky
 # tmp <- gc(F);Rprof(memory.profiling=TRUE, interval = 0.01)

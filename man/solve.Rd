@@ -1,4 +1,4 @@
-% This is file ../spam0.29-3/man/solve.Rd
+% This is file ../spam/man/solve.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % written and maintained by Reinhard Furrer.
@@ -40,17 +40,20 @@
 of a matrix if the right-hand-side is missing.
 }
 \usage{
-# solve(a, b, ...)
-# solve.spam(a, b, ...)
+\S4method{solve}{spam}(a, b, Rstruct=NULL, \dots)
+\S4method{backsolve}{spam}(r, x, ...)
+\S4method{forwardsolve}{spam}(l, x, ...)
 
-\S3method{solve}{spam}(a, b, ...)
 
-# backsolve(r, x, ...)
-backsolve.spam(r, x, ...)
-# forwardsolve(l, x, ...)
-forwardsolve.spam(l, x, ...)
+\S3method{solve}{spam}(a, b, Rstruct=NULL, ...)
+\S3method{backsolve}{spam}(r, x, ...)
+\S3method{forwardsolve}{spam}(l, x, ...)
 
 chol2inv(x,...)
+
+# backsolve.spam(r, x, ...)
+# forwardsolve.spam(l, x, ...)
+# solve.spam(a, b, Rstruct=NULL, ...)
 }
 \arguments{
 \item{a}{symmetric positive definite matrix of class \code{spam} or a Cholesky factor 
@@ -58,22 +61,23 @@ chol2inv(x,...)
 \item{l,r}{object of class \code{spam} or \code{spam.chol.}\emph{method} returned by the function
 \code{chol}.}
 \item{x,b}{vector or regular matrix of right-hand-side(s) of a system of linear equations.}
+\item{Rstruct}{the Cholesky structure of \code{a}.}
 \item{\dots}{further arguments passed to or from other methods, see \sQuote{Details} below.}
 }
 \details{
   We can solve \code{A \%*\% x = b} by first computing the Cholesky decomposition \code{A =
   t(R)\%*\%R)}, then solving \code{t(R)\%*\%y = b} for \code{y}, and
-finally solving \code{R\%*\%x = y} for \code{x}.
+  finally solving \code{R\%*\%x = y} for \code{x}.
    \code{solve} combines \code{chol}, a Cholesky decomposition of a
 symmetric positive definite sparse matrix, with \code{forwardsolve} and
 then \code{backsolve}.\cr
 
-In case \code{a} is from a \code{chol}, then \code{solve} is an
+In case \code{a} is from a \code{chol} call, then \code{solve} is an
    efficient way to calculate \code{backsolve(a, forwardsolve( t(a), b))}.
 
 
    However, for \code{a.spam} and \code{a.mat} from a \code{chol} call
-   wit a sparse and ordinary matrix,  note that
+   with a sparse and ordinary matrix,  note that
    \code{forwardsolve( a.mat, b, transpose=T, upper.tri=T)}
    is equivalent to
    \code{forwardsolve( t(a.mat), b)}

@@ -1,4 +1,4 @@
-# This is file ../spam0.29-3/tests/mle.R
+# This is file ../spam/tests/mle.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # written and maintained by Reinhard Furrer.
@@ -24,6 +24,8 @@ test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE, tag=NULL){
 
 }
 
+################## _DO NOT CHANGE THE PARAMETERS_ #################
+# Optimization uses these values for a quick run through!!!
 
 
 truebeta <- c(1,2,.2)
@@ -52,11 +54,11 @@ xl <- 10
 x <- seq(0,1,l=xl)
 locs <- expand.grid(x,x)
 X <- as.matrix(cbind(1,locs))  # design matrix
-Covariance <- 'spherical'      # covariance function
-Covariancemat <- 'sphericalmat'      # covariance function
+cov.sph.mat <- function(...)
+  as.matrix(cov.sph(...))     # covariance function
 
 distmat <- nearest.dist(locs,upper=NULL) # distance matrix
-Sigma <- spherical(distmat,truetheta)    # true covariance matrix
+Sigma <- cov.sph(distmat,truetheta)    # true covariance matrix
 
 
 set.seed(15)
@@ -64,30 +66,36 @@ y <- c(rmvnorm.spam(1,X%*%truebeta,Sigma)) # construct samples
 
 
 
-test.for.zero(round(neg2loglikelihood.spam( y, X, distmat, Covariance,
+test.for.zero(round(neg2loglikelihood.spam( y, X, distmat, cov.sph,
                        truebeta, truetheta),2), 262.98)
 
-test.for.zero(round(neg2loglikelihood( y, X, distmat, Covariance,
+test.for.zero(round(neg2loglikelihood( y, X, distmat, cov.sph,
                        truebeta, truetheta),2), 262.98)
 
-test.for.zero(round(neg2loglikelihood( y, X, distmat, Covariancemat,
+test.for.zero(round(neg2loglikelihood( y, X, distmat, cov.sph.mat,
                        truebeta, truetheta),2), 262.98)
 
-test.for.zero(round(neg2loglikelihood.spam( y, X, distmat, Covariancemat,
+test.for.zero(round(neg2loglikelihood.spam( y, X, distmat, cov.sph.mat,
                        truebeta, truetheta),2), 262.98, tag="Expect a warning")
 
 # we pass now to the mle:
 
-res1 <- mle.spam(y, X, distmat, Covariance,
-         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
+# not that we should set:
+#    ,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf)
+# for quicker testing we use
+res1 <- mle.spam(y, X, distmat, cov.sph,
+         truebeta, truetheta,thetalower=c(0.4,1.5,0.02),thetaupper=c(.6,2.5,.1))
+#         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
 betahat <- res1$par[1:3]
 
-res2 <- mle(y, X, distmat, Covariance,
-         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
+res2 <- mle(y, X, distmat, cov.sph,
+         truebeta, truetheta,thetalower=c(0.4,1.5,0.02),thetaupper=c(.6,2.5,.1))
+#         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
-res3 <- mle(y, X, distmat, Covariancemat,
-         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
+res3 <- mle(y, X, distmat, cov.sph.mat,
+         truebeta, truetheta,thetalower=c(0.4,1.5,0.02),thetaupper=c(.6,2.5,.1))
+#         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
 test.for.zero(round(res1$par,2), c(2.35,  1.45, -0.58,  0.50,  1.70,  0.08))
 test.for.zero(round(res1$val,2), 259.03)
@@ -99,13 +107,14 @@ test.for.zero(round(res3$par,2), c(2.35,  1.45, -0.58,  0.50,  1.70,  0.08))
 test.for.zero(round(res3$val,2), 259.03)
 
 
-res1 <- mle.nomean.spam(y-X%*%betahat, distmat, Covariance,
+res1 <- mle.nomean.spam(y-X%*%betahat, distmat, cov.sph,
+#         truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
+         truetheta,thetalower=c(0.4,1,0.02),thetaupper=c(.6,2.5,.1))
+
+res2 <- mle.nomean(y-X%*%betahat, distmat, cov.sph,
          truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
-res2 <- mle.nomean(y-X%*%betahat, distmat, Covariance,
-         truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
-
-res3 <- mle.nomean(y-X%*%betahat, distmat, Covariancemat,
+res3 <- mle.nomean(y-X%*%betahat, distmat, cov.sph.mat,
          truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
 test.for.zero(round(res1$par,2), c(  0.50,  1.70,  0.08))
@@ -122,17 +131,17 @@ test.for.zero(round(res3$val,2), 259.03)
 
 if (F){
 system.time({
-res1 <- mle.spam(y, X, distmat, Covariance,
+res1 <- mle.spam(y, X, distmat, cov.sph,
          truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 })
 
 system.time({
-res2 <- mle(y, X, distmat, Covariance,
+res2 <- mle(y, X, distmat, cov.sph,
          truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 })
 
 system.time({
-res3 <- mle(y, X, distmat, Covariancemat,
+res3 <- mle(y, X, distmat, cov.sph.mat,
          truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 })
 
