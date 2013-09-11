@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R Under development (unstable) (2013-08-22 r63659) -- "Unsuffered Consequences"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -32,7 +31,7 @@ Type 'q()' to quit R.
 > #options( echo=FALSE)
 > library( spam, warn.conflict=FALSE)
 Loading required package: grid
-Spam version 0.30-1 (2013-08-25) is loaded.
+Spam version 0.40-0 (2013-09-11) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -114,7 +113,7 @@ Testing subsetting
 > 
 > tmp <- cbind(sample(1:3,24,rep=T),sample(1:5,24,rep=T))
 > test.for.zero(ss[tmp],tt[tmp])
-## FAILED test value =  7.184904  at tolerance  1e-06
+** PASSED test at tolerance  1e-06
 > 
 > 
 > test.for.zero(diag(10)[1:2,9:10],diag.spam(10)[1:2,9:10],rel=F)
@@ -122,15 +121,64 @@ Testing subsetting
 > 
 > rs <- sample(c(0,1:(2*n)),2*m,replace=T)
 > test.for.zero(ss[rs],tt[rs])
-## FAILED test value =  9.281093  at tolerance  1e-06
+** PASSED test at tolerance  1e-06
 > # NAs simply work!
 > rs <- sample(c(0,1:(2*n),NA),2*m,replace=T)
 > test.for.zero(ss[rs],tt[rs])
-## FAILED test value =  11.42761  at tolerance  1e-06
+** PASSED test at tolerance  1e-06
 > 
 > rs <- sample(c(T,F,NA),2*m,replace=T)
 > test.for.zero(ss[rs],tt[rs])
 ** PASSED test at tolerance  1e-06
+> 
+> # stuff from 0.31:
+> 
+> tt <- array(1:36,c(6,6))
+> ss <- as.spam( tt)
+> 
+> for (i in 1:4) {
++   rs <- cbind(rep(1:i,each=i),rep(1:i,i))
++   test.for.zero(ss[rs],tt[rs])
++   test.for.zero(ss[rs+1],tt[rs+1])
++   test.for.zero(ss[rs+2],tt[rs+2])
++ 
++   ti <- array(1:(i^2),c(i,i))
++   si <- as.spam( ti)
++   test.for.zero(si[rs],ti[rs])  
++ 
++   si <- spam(0,i,i)
++   ti <- as.matrix(si)
++   test.for.zero(si[rs],ti[rs])
++ 
++   si <- diag.spam(i)
++   ti <- diag(i)
++   test.for.zero(si[rs],ti[rs])
++ }
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+** PASSED test at tolerance  1e-06
+> 
 > 
 > if (F) {
 + # large timing example
@@ -156,4 +204,4 @@ Testing subsetting
 > 
 > proc.time()
    user  system elapsed 
-  0.724   0.028   0.751 
+  0.972   0.032   1.274 

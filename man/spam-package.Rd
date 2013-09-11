@@ -38,8 +38,8 @@ in a S3 structure visible to the user (exported via \code{NAMESPACE}).\cr
 There exist many methods for sparse matrices that work identically as in
 the case of ordinary matrices. All the methods are discussed in the help
 and can be accessed directly via a \code{*.spam} concatenation to the
-function. For example, \code{help{chol.spam}} calls the help directly,
-whereas with  \code{help{chol}} the user has to choose first between the
+function. For example, \code{help(chol.spam)} calls the help directly,
+whereas with  \code{help(chol)} the user has to choose first between the
 basis help and the help provided by \code{spam}.\cr
 
 Sparseness is used when handling large matrices. Hence, care has been
@@ -69,6 +69,11 @@ Related packages are \code{\link[fields]{fields}},
 }
 \examples{
 \dontrun{
+## Citations:
+citation('spam')
+citation('spam',auto=TRUE)
+
+
 ## History of changes
 file.show(system.file("NEWS", package = "spam"))
 }

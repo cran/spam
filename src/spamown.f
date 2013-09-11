@@ -1162,6 +1162,7 @@ c-----------------------------------------------------------------------
 c     noel m. nachtigal october 28, 1990 -- youcef saad jan 20, 1991.
 c
 c     Reinhard Furrer: converted to subroutine and eliminated sorted
+c         many manipulations... last for 0.31; Sept 13
 c----------------------------------------------------------------------- 
       implicit none
 
@@ -1178,38 +1179,42 @@ c
       ibeg = ia(i)
       iend = ia(i+1)-1
 
-      if (iend .lt. ibeg) then
 c     empty line! test at beginning
-         return
+ 10   if (iend .lt. ibeg) return
+
+c     
+c     begin binary search: 
+c     test of bounds
+      if (ja(ibeg).gt.j) return
+      if (ja(iend).lt.j) return
+
+      if (ja(ibeg).eq.j) then
+         iadd = ibeg 
+         goto 20
       endif
-c     
-c     begin binary search.   compute the middle index.
-c     
- 10   imid = ( ibeg + iend ) / 2
-c     
-c     test if  found
-c     
+      if (ja(iend).eq.j) then
+         iadd = iend 
+         goto 20
+      endif
+     
+c     compute the middle index and test if found
+      imid = ( ibeg + iend ) / 2
       if (ja(imid).eq.j) then
          iadd = imid 
          goto 20
       endif
-c      if (ibeg .ge. iend) goto 20
-c     
-c     else     update the interval bounds. 
-c     
+
+c     update the interval bounds. 
       if (ja(imid).gt.j) then
          iend = imid -1
       else 
          ibeg = imid +1
       endif
-c  moved the above line to here and added the second test
-      if (ibeg .ge. iend) goto 20   
-      if (iend .lt. 1) goto 20
 
       goto 10  
 c     
- 20   if (iadd .ne. 0)     elem = a(iadd) 
-c
+c     set iadd and elem before returning
+ 20   elem = a(iadd) 
       return
 c--------end-of-getelem-------------------------------------------------
 c-----------------------------------------------------------------------

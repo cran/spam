@@ -1,7 +1,6 @@
 
-R version 2.15.2 (2012-10-26) -- "Trick or Treat"
-Copyright (C) 2012 The R Foundation for Statistical Computing
-ISBN 3-900051-07-0
+R Under development (unstable) (2013-08-22 r63659) -- "Unsuffered Consequences"
+Copyright (C) 2013 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -32,7 +31,7 @@ Type 'q()' to quit R.
 > # This is a simple demo, wrapping up the functionality of spam.
 > options( echo=FALSE)
 Loading required package: grid
-Spam version 0.30-1 (2013-08-25) is loaded.
+Spam version 0.40-0 (2013-09-11) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -51,4 +50,4 @@ Class 'spam'
 > 
 > proc.time()
    user  system elapsed 
-  0.708   0.044   0.751 
+  0.904   0.040   1.126 

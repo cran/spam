@@ -89,6 +89,31 @@ test.for.zero(ss[rs],tt[rs])
 rs <- sample(c(T,F,NA),2*m,replace=T)
 test.for.zero(ss[rs],tt[rs])
 
+# stuff from 0.31:
+
+tt <- array(1:36,c(6,6))
+ss <- as.spam( tt)
+
+for (i in 1:4) {
+  rs <- cbind(rep(1:i,each=i),rep(1:i,i))
+  test.for.zero(ss[rs],tt[rs])
+  test.for.zero(ss[rs+1],tt[rs+1])
+  test.for.zero(ss[rs+2],tt[rs+2])
+
+  ti <- array(1:(i^2),c(i,i))
+  si <- as.spam( ti)
+  test.for.zero(si[rs],ti[rs])  
+
+  si <- spam(0,i,i)
+  ti <- as.matrix(si)
+  test.for.zero(si[rs],ti[rs])
+
+  si <- diag.spam(i)
+  ti <- diag(i)
+  test.for.zero(si[rs],ti[rs])
+}
+
+
 if (F) {
 # large timing example
 
