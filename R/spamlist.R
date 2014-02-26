@@ -1,7 +1,7 @@
 # This is file ../spam/R/spamlist.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -56,7 +56,7 @@
                 entries=vector("double",nz),
                 colindices=vector("integer",nz),
                 rowpointers=vector("integer",nrow+1),eps,
-                NAOK=TRUE, DUP = FALSE#, PACKAGE = "spam"
+                NAOK=TRUE, DUP=DUPFALSE, PACKAGE = "spam"
                 )
 #  print(z)
   if (identical(z$nz, 0L))

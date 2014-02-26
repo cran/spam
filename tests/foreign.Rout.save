@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2013-08-22 r63659) -- "Unsuffered Consequences"
-Copyright (C) 2013 The R Foundation for Statistical Computing
+R Under development (unstable) (2014-02-24 r65073) -- "Unsuffered Consequences"
+Copyright (C) 2014 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -18,7 +18,7 @@ Type 'q()' to quit R.
 > # This is file ../spam/tests/foreign.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
-> # written and maintained by Reinhard Furrer.
+> # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
 >      
 > 
 > 
@@ -121,4 +121,4 @@ Type 'q()' to quit R.
 > 
 > proc.time()
    user  system elapsed 
-  0.188   0.024   0.251 
+  0.184   0.020   0.194 

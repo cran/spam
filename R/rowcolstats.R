@@ -1,7 +1,7 @@
 # This is file ../spam/R/rowcolstats.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -11,7 +11,7 @@ rowSums.spam <- function(x,...) {
                    dcheck(x@entries), icheck(x@colindices), icheck(x@rowpointers),
                    x@dimension[1],
                    rs=vector("double",x@dimension[1]),
-                   NAOK=!.Spam$safemode[3], DUP = FALSE, PACKAGE="spam")$rs)
+                   NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$rs)
   
 }
 
@@ -20,7 +20,7 @@ colSums.spam <- function(x,...) {
                    dcheck(x@entries), icheck(x@colindices), icheck(x@rowpointers),
                    x@dimension[1],
                    cs=vector("double",x@dimension[2]),
-                   NAOK=!.Spam$safemode[3], DUP = FALSE, PACKAGE="spam")$cs)
+                   NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$cs)
 }
 
 rowMeans.spam <- function(x,...) {
@@ -29,7 +29,7 @@ rowMeans.spam <- function(x,...) {
                    x@dimension[1],x@dimension[2],
                    as.logical(.Spam$structurebased),
                    rm=vector("double",x@dimension[1]),
-                   NAOK=!.Spam$safemode[3], DUP = FALSE, PACKAGE="spam")$rm)
+                   NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$rm)
 }
 
 colMeans.spam <- function(x,...) {
@@ -38,7 +38,7 @@ colMeans.spam <- function(x,...) {
                 x@dimension[1],x@dimension[2],
                 as.logical(.Spam$structurebased),
                 cm=vector("double",x@dimension[2]),vector("integer",x@dimension[2]),
-                NAOK=!.Spam$safemode[3], DUP = FALSE, PACKAGE="spam")$cm)
+                NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$cm)
 }
 
 

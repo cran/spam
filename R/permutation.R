@@ -1,7 +1,7 @@
 # This is file ../spam/R/permutation.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -54,7 +54,7 @@ checkpivot <- function(pivot, len, type="Pivot") {
                   entries = vector("double",nz), 
                   colindices = vector("integer", nz),
                   rowpointers = vector("integer", nrow + 1),P, 
-                  NAOK = !.Spam$safemode[3], DUP = FALSE, PACKAGE = "spam")
+                  NAOK = !.Spam$safemode[3], DUP=DUPFALSE, PACKAGE = "spam")
   } else {  
     if (is.null(P)){
 #      subroutine cperm (nrow,a,ja,ia,ao,jao,iao,perm,iwork) 
@@ -71,7 +71,7 @@ checkpivot <- function(pivot, len, type="Pivot") {
                       colindices = vector("integer", nz),
                       rowpointers = vector("integer", nrow + 1),
                       Q,
-                      NAOK = !.Spam$safemode[3], DUP = FALSE, PACKAGE = "spam")
+                      NAOK = !.Spam$safemode[3], DUP=DUPFALSE, PACKAGE = "spam")
       } else {  
 #      subroutine dperm (nrow,a,ja,ia,ao,jao,iao,pperm,qperm,iwork)
 #      B = P A Q 
@@ -88,7 +88,7 @@ checkpivot <- function(pivot, len, type="Pivot") {
                       colindices = vector("integer", nz),
                       rowpointers = vector("integer", nrow + 1),
                       P,Q,
-                      NAOK = !.Spam$safemode[3], DUP = FALSE, PACKAGE = "spam")
+                      NAOK = !.Spam$safemode[3], DUP=DUPFALSE, PACKAGE = "spam")
       }   
     
   }

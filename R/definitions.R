@@ -1,7 +1,7 @@
 # This is file ../spam/R/definitions.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -148,7 +148,7 @@ summary.spam <- function(object,...) {
                   entries=vector("double",length(x@entries)),
                   colindices=vector("integer",length(x@entries)),
                   rowpointers=vector("integer",last),
-                  NAOK = !.Spam$safemode[3], DUP=FALSE, PACKAGE = "spam")
+                  NAOK = !.Spam$safemode[3], DUP=DUPFALSE, PACKAGE = "spam")
     if (identical(z$nz,1L) )
       return(new("spam",rowpointers=c(1L,rep.int(2L,as.integer(value[1]))),
                  dimension=as.integer(value)))
@@ -210,7 +210,7 @@ setMethod("c","spam", function(x,...,recursive=TRUE){
                  colindices=x@colindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",prod(dimx)),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res
+                 NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")$res
   if (length( list(...)) < 1)
     return( cx)
   else
@@ -289,7 +289,7 @@ setMethod("c","spam", function(x,...,recursive=TRUE){
                 len = len,
                 diag = vector("double",len),
                 NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                 PACKAGE = "spam"
                 )$diag)
 }
@@ -308,7 +308,7 @@ setMethod("diag<-","spam",get("diag<-.spam"))
                 entries=vector("double",nz),colindices=vector("integer",nz),
                 rowpointers=vector("integer",dimx[2]+1),
                 NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                 PACKAGE = "spam")
   t.x <- new("spam")
   slot(t.x,"entries",check=FALSE) <- z$entries[1:nz]
@@ -370,7 +370,7 @@ setMethod("t","spam",t.spam)
                 rowpointers=vector("integer",dimx[1]+1),
                 eps=as.double(eps),
                 NAOK=!.Spam$safemode[3],
-                DUP = FALSE,
+                DUP=DUPFALSE,
                 PACKAGE = "spam"
                 )
   nz <- z$rowpointers[dimx[1]+1]-1
@@ -475,7 +475,7 @@ setMethod("t","spam",t.spam)
                 rowpointers=vector("integer",dimx[1]+1),
                 eps=as.double(eps),
                 NAOK=TRUE,
-                DUP = FALSE,
+                DUP=DUPFALSE,
                 PACKAGE = "spam"
                 )
   nz <- z$rowpointers[dimx[1]+1]-1
@@ -570,7 +570,7 @@ function(x, ...){
                         rowpointers=x@rowpointers,
                         res=vector("double",prod(dimx)),  # numeric is double! 
                         NAOK=!.Spam$safemode[3],
-                        DUP=FALSE,
+                        DUP=DUPFALSE,
                         PACKAGE = "spam"
                         )$res,
                dimx)      # we preserve dimensions
@@ -605,7 +605,7 @@ setMethod("as.matrix","spam",as.matrix.spam)
                 colindices = vector("integer",nz),
                 rowpointers = vector("integer",nrow+1),
                 NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                 PACKAGE="spam"
                 )
   newx <- new("spam")
@@ -704,7 +704,7 @@ function(A,B,s)
                 A@colindices,               A@rowpointers,
                 B@colindices,               B@rowpointers,
                 vector("integer",nrow),nnz=vector("integer",1),vector("integer",ncol),
-                NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam"
+                NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam"
                 )$nnz
 
   z <- .Fortran("aplsb1",
@@ -722,7 +722,7 @@ function(A,B,s)
                 rowpointers = vector("integer",nrow+1),
                 as.integer(nzmax+1),
                 ierr = vector("integer",1),
-                NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam"
+                NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam"
                 )
   if(z$ierr != 0) stop("insufficient space for sparse matrix addition")
   nz <- z$rowpointers[nrow+1]-1
@@ -792,7 +792,7 @@ function(e1,e2)
                 double(e1col),
                 as.integer(nnzmax),
                 ierr = vector("integer",1),
-                DUP = FALSE,
+                DUP=DUPFALSE,
                 PACKAGE = "spam"
                 )
   if(z$ierr != 0)      stop("insufficient space for element-wise sparse matrix multiplication")
@@ -841,7 +841,7 @@ if(is.numeric(e1) && length(e1) == 1)
                       integer(ncol),
                       double(ncol),
                       ierr = vector("integer",1),
-                      DUP = FALSE,
+                      DUP=DUPFALSE,
                       PACKAGE = "spam"
                       )
         if(z$ierr != 0) stop("insufficient space for element-wise sparse matrix division")
@@ -1040,7 +1040,7 @@ function (x, rw, cl,value)
                   colindices=vector("integer",nzmax),
                   rowpointers=vector("integer",nrow+1),
                   nzmax=nzmax,
-                  DUP=FALSE,
+                  DUP=DUPFALSE,
                   PACKAGE="spam")
     cnz <- z$rowpointers[nrow+1]-1
     if (cnz<0) {
@@ -1132,7 +1132,7 @@ function(x,y)
                   x@colindices,
                   x@rowpointers,
                   NAOK=!.Spam$safemode[3],
-                  DUP=FALSE,
+                  DUP=DUPFALSE,
                   PACKAGE = "spam")$y
     dim(z) <- c(nrow,ycol)
     return(z)
@@ -1156,7 +1156,7 @@ function(x,y)
                   y@colindices,
                   y@rowpointers,
                 NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                   PACKAGE = "spam")$y
     dim(z) <- c(1,nrow)
     return(z)
@@ -1173,7 +1173,7 @@ function(x,y)
                   x@colindices,
                   x@rowpointers,
                 NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                   PACKAGE = "spam")$y
     dim(z) <- c(nrow,1)
     return(z)
@@ -1198,7 +1198,7 @@ function(x,y)
                 nz = vector("integer",1),
                 integer(yl),
                 NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                 PACKAGE = "spam")
   nzmax <- z$nz
   z <- .Fortran("amub",
@@ -1212,7 +1212,7 @@ function(x,y)
                 integer(yl),
                 ierr = vector("integer",1),
                 NAOK=!.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                 PACKAGE = "spam")
   nz <- z$rowpointers[xn+1]-1
   if(z$ierr != 0) stop("insufficient space for sparse matrix multiplication")
@@ -1524,7 +1524,7 @@ setMethod("all.equal",signature(target="matrix",current="spam"),
         x = as.double(target), dimx[1], entries = vector("double",
             nz), colindices = vector("integer", nz), rowpointers = vector("integer",
             dimx[1] + 1), eps = as.double(eps), NAOK = !.Spam$safemode[3],
-        DUP = FALSE, PACKAGE = "spam")
+        DUP=DUPFALSE, PACKAGE = "spam")
 
     lt <- z$rowpointers[dimx[1] + 1] - 1
     lc <- length(current)

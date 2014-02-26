@@ -1,7 +1,7 @@
 % This is file ../spam/man/grid_zoom.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
-% written and maintained by Reinhard Furrer.
+% by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
 
@@ -85,7 +85,7 @@ grid_zoom(inputGrob = gt,
           x='topright', zoom_xlim=c(.6,.73), zoom_ylim=c(.3,.43),ratio=.4,
           zoom_xaxis = NULL, zoom_gp = gpar(cex=3))
 }
-\author{Florian Gerber}
+\author{Florian Gerber <florian.gerber@math.uzh.ch>}
 \keyword{zoom_grid}
 \keyword{zoom}
 \keyword{plot}

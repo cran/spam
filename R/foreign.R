@@ -1,7 +1,7 @@
 # This is file ../spam/R/foreign.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -70,7 +70,7 @@ as.dgCMatrix.spam <- function(x)  {
                     a = dcheck(x@entries),ja = x@colindices, ia = x@rowpointers,
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", dimx[2] + 1),
-                    NAOK = !.Spam$safemode[3], DUP = FALSE,
+                    NAOK = !.Spam$safemode[3], DUP=DUPFALSE,
                     PACKAGE = "spam")
       newx <- new(p=0:0,'dgCMatrix')
       slot(newx,"x",check=FALSE) <- z$entries
@@ -109,7 +109,7 @@ as.spam.dgCMatrix <- function(x)  {
                     a = dcheck(x@x),ja = x@i+1L, ia = x@p+1L,
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", x@Dim[1] + 1),
-                    NAOK = !.Spam$safemode[3], DUP = FALSE,
+                    NAOK = !.Spam$safemode[3], DUP=DUPFALSE,
                     PACKAGE = "spam")
       newx <- new('spam')
       slot(newx,"entries",check=FALSE) <- z$entries
@@ -204,7 +204,7 @@ read.HB <- function(file)
                   a = vals,ja = ind, ia = ptr,
                   entries = vector("double",nz), colindices = vector("integer", nz),
                   rowpointers = vector("integer", nr + 1),
-                  NAOK = !.Spam$safemode[3], DUP = FALSE,
+                  NAOK = !.Spam$safemode[3], DUP=DUPFALSE,
                   PACKAGE = "spam")
     newx <- new('spam')
     slot(newx,"entries",check=FALSE) <- z$entries
@@ -278,7 +278,7 @@ read.MM <- function(file)  {
                   x = x, nr, entries = vector("double",nz),
                   colindices = vector("integer", nz), rowpointers = vector("integer",nr + 1),
                   eps = spam.options('eps'), NAOK = TRUE,
-                  DUP = FALSE, PACKAGE = "spam")
+                  DUP=DUPFALSE, PACKAGE = "spam")
     
     warning("returning a (possibly) dense 'spam' object", call. = FALSE)
     nz <- z$rowpointers[nr+1]-1

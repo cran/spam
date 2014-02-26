@@ -1,7 +1,7 @@
 # This is file ../spam/R/toepliz.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -44,7 +44,7 @@
                 entries= vector("double", nz),
                 colindices = vector("integer", nz),
                 rowpointers = vector("integer",  n + 1),
-                 NAOK = TRUE, DUP = FALSE, PACKAGE = "spam")
+                 NAOK = TRUE, DUP=DUPFALSE, PACKAGE = "spam")
 
                 
   newx <- new("spam")
@@ -87,7 +87,7 @@ toeplitz.spam <- function(x,y=NULL, eps = .Spam$eps)
                 colindices = vector("integer", nz),
                 rowpointers = vector("integer",  n + 1),
                 nnz=as.integer(1),
-                NAOK = TRUE, DUP = FALSE, PACKAGE = "spam")
+                NAOK = TRUE, DUP=DUPFALSE, PACKAGE = "spam")
 
                 
   newx <- new("spam")

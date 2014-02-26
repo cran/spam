@@ -1,7 +1,7 @@
 # This is file ../spam/R/subset.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -74,7 +74,7 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
                 iw=logical(ncol),
                 nzmax=length(i@colindices) ,
                 ierr=0L,
-                NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE="spam")
+                NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE="spam")
   nz <- z$ic[nrow+1]-1
   if (nz==0) return( numeric(0))
   if (drop) {
@@ -120,7 +120,7 @@ function (x, i, ..., drop=.Spam$drop)
                       colindices=x@colindices,
                       rowpointers=x@rowpointers,
                       res=vector("double",prod(dimx)),  
-                      NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res[i])
+                      NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")$res[i])
     }
     
     if (mini<0) {
@@ -132,7 +132,7 @@ function (x, i, ..., drop=.Spam$drop)
                  colindices=x@colindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",prod(dimx)),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res[-i])
+                 NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")$res[-i])
     }
     # eliminate zeros,
     # force too large to NA, keep NAs
@@ -151,7 +151,7 @@ function (x, i, ..., drop=.Spam$drop)
              dcheck(x@entries),icheck(x@colindices),icheck(x@rowpointers),
              iadd=vector("integer",nir),
              allelem=vector("double",nir),
-             NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE="spam")$allelem
+             NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE="spam")$allelem
 # getallelem(nir,ir,jr,a,ja,ia,alliadd,allelem)
     return(z)
   }
@@ -188,7 +188,7 @@ function (x, i, ..., drop=.Spam$drop)
                     newnz=nz,
                     entries=vector("double",nz),
                     colindices=vector("integer",nz),rowpointers=vector("integer",ni+1),
-                    NAOK=!.Spam$safemode[3],DUP = FALSE,
+                    NAOK=!.Spam$safemode[3],DUP=DUPFALSE,
                     PACKAGE="spam")
   #    print(c(nz,z$newni,is.integer(nz), is.integer(z$newni),z$newni!=ni))
      if(z$newnz!=nz) stop(gettextf("Subsetting error, please report %d, %d",z$newnz,nz))
@@ -202,7 +202,7 @@ function (x, i, ..., drop=.Spam$drop)
                  colindices=z$colindices,
                  rowpointers=z$rowpointers,
                  res=vector("double",prod(ni,ncol)),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res)
+                 NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")$res)
     else {
       newx <- new("spam")
       slot(newx,"entries",check=FALSE) <- z$entries
@@ -253,7 +253,7 @@ function (x, i, ..., drop=.Spam$drop)
                     dcheck(x@entries),icheck(x@colindices),icheck(x@rowpointers),
                     integer(nir),
                     allelem=vector("double",nir),
-                    DUP=FALSE,
+                    DUP=DUPFALSE,
                       PACKAGE="spam")$allelem)
 
   }
@@ -301,7 +301,7 @@ function (x, i, ..., drop=.Spam$drop)
                     nc=0L,
                     entries=vector("double",nz),
                     colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
-                    NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam")
+                    NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")
       nz <- z$rowpointers[z$nr+1]-1
     } else {
       z <- .Fortran("getblock",
@@ -310,7 +310,7 @@ function (x, i, ..., drop=.Spam$drop)
                     nc=ncl,as.integer(cl),
                     nz=nz, entries=vector("double",nz),
                     colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
-                    NAOK=!.Spam$safemode[3],DUP = FALSE,PACKAGE = "spam")
+                    NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")
       nz <- z$nz
     }
     if (nz==0) {#trap zero matrix
@@ -328,7 +328,7 @@ function (x, i, ..., drop=.Spam$drop)
                  colindices=z$colindices[1:nz],
                  rowpointers=z$rowpointers[1:(z$nr+1)],
                  res=vector("double",prod(z$nr,z$nc)),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res)
+                 NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")$res)
     else {
       newx <- new("spam")
       slot(newx,"entries",check=FALSE) <- z$entries[1:nz]

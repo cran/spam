@@ -15,11 +15,15 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam/tests/mle.R
+> # This is file ../spam/tests/covmat.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
 >      
+> 
+> 
+> 
+> 
 > 
 > 
 > 
@@ -31,22 +35,18 @@ Type 'help( Spam)' or 'demo( spam)' for a short introduction
 and overview of this package.
 Help for individual functions is also obtained by adding the
 suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-testing:  Expect a warning
-** PASSED test at tolerance  1e-06
-Warning message:
-In neg2loglikelihood.spam(y, X, distmat, cov.sph.mat, truebeta,  :
-  'Covariance' should return a spam object. Forced to spam.
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
-** PASSED test at tolerance  1e-06
+Results of the form '[1] TRUE' are from 'all.equal'
+
+[1] TRUE
+[1] FALSE
+[1] FALSE
+[1] FALSE
+[1] FALSE
+[1] FALSE
+[1] FALSE
+[1] FALSE
+[1] FALSE
+[1] FALSE
 > proc.time()
    user  system elapsed 
-  7.672   0.056   7.731 
+  0.992   0.072   1.057 

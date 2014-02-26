@@ -1,7 +1,7 @@
 # This is file ../spam/R/helper.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -18,7 +18,7 @@ bandwidth <- function(A) {
   }
   ret <- .Fortran("getbwd",A@dimension[1],A@entries,A@colindices,
                   A@rowpointers,low=integer(1),upp=integer(1),
-                 NAOK = !.Spam$safemode[3], DUP=FALSE, PACKAGE = "spam")
+                 NAOK = !.Spam$safemode[3], DUP=DUPFALSE, PACKAGE = "spam")
   return(c(ret$low,ret$upp))
 }
                   
@@ -233,84 +233,124 @@ grid_zoom <- function(inputGrob = pointsGrob(runif(200),runif(200)),
 }
 
 
+grid_trace2 <- function (chain1, chain2 = NULL,
+                         xlim = NULL, ylim1 = NULL, ylim2=NULL,
+                         chain1_lab = "", chain2_lab = "", main = "",
+                         chain1_yaxis_at = NULL, chain2_yaxis_at = NULL,
+                         log = FALSE,
+                         cex_points = unit(.2, "mm"),
+                         cex_main = unit(1.2, "mm"),
+                         lwd_lines = unit(.1, "mm"),
+                         lwd_frame = unit(.8, "mm"),
+                         draw = TRUE) 
+{
+    if (is.null(chain2)) {
+        chain2 <- chain1[, 2]
+        chain1 <- chain1[, 1]
+    }
+    if (log) {
+        chain1 <- log(chain1)
+        chain2 <- log(chain2)
+    }
+    stopifnot(identical(length(chain1), length(chain2)))
+    
+    n <- length(chain1)
+    if(!is.null(xlim)){
+      stopifnot(length(xlim)==2)
+      chain1.sub <- chain1[xlim[1]:xlim[2]]
+      chain2.sub <- chain2[xlim[1]:xlim[2]]
+    }else{
+      chain1.sub <- chain1
+      chain2.sub <- chain2
+    }
+    if(!is.null(ylim1))
+      stopifnot(length(ylim1)==2)
+    if(!is.null(ylim2))
+      stopifnot(length(ylim2)==2)
+       
+    vp1 <- plotViewport(unit(c(2.5, 3, 2.5, 2), "cm"), name = "frame")
+    vp2 <- viewport(layout = grid.layout(nrow = 1, ncol = 3, 
+        respect = rbind(c(0, 0, 1)), widths = unit(c(1, 0.3, 
+            1), c("null", "cm", "null"))), name = "lay1")
+    vp3 <- viewport(layout.pos.col = 1, name = "traces")
+    vp4 <- viewport(layout = grid.layout(nrow = 2, ncol = 1), 
+        name = "lay2")
+    vp5 <- viewport(layout.pos.row = 1, name = "trace1")
+    vp5data <- dataViewport(xData = 1L:n, yData = chain1,
+                            xscale = xlim, yscale = ylim1,
+                            extension = c(0.02, 
+        0.03), name = "trace1data", clip="off")
+    vp5data_clip <- dataViewport(xData = 1L:n, yData = chain1,
+                            xscale = xlim, yscale = ylim1,
+                            extension = c(0.02, 
+                              0.03), name = "trace1data_clip", clip="on")
 
-grid_trace2 <- function(chain1, chain2 = NULL,
-                        chain1_lab = '',
-                        chain2_lab = '',
-                        chain1_yaxis_at = NULL,
-                        chain2_yaxis_at = NULL,
-                        log = FALSE,
-                        draw = TRUE) {
- 
-  ## chain1 <- runif(1000)
-  ## chain2 <- runif(1000)
-  ## chain1_lab=''
-  ## chain2_lab=''
-  ## chain1_yaxis_at=NULL
-  ## chain2_yaxis_at=NULL
-  ## log=FALSE
-  ## draw=TRUE
-  
-  if (is.null( chain2)) {
-    chain2 <- chain1[,2]
-    chain1 <- chain1[,1]
-  }
-  if(log) {
-    chain1 <- log(chain1)
-    chain2 <- log(chain2)
-  }
-  stopifnot(identical(length(chain1), length(chain2)))
-  n <- length(chain1)
-  
-  
-  vp1 <- plotViewport(unit(c(2.5,3,1,2),"cm"), name='frame')
-  vp2 <- viewport(layout = grid.layout(nrow = 1, ncol = 3, respect = rbind(c(0,0,1)),
-                    widths = unit(c(1,.3,1), c('null', 'cm', 'null'))), name='lay1')
-  
-  vp3 <- viewport(layout.pos.col=1, name='traces')
-  vp4 <- viewport(layout = grid.layout(nrow = 2, ncol = 1), name='lay2')
-  
-  vp5 <- viewport(layout.pos.row=1, name='trace1')
-  vp5data <- dataViewport(xData=1L:n, yData=chain1, extension=c(.02,.03), name='trace1data' )
-  
-  vp6 <- viewport(layout.pos.row=2, name='trace2')
-  vp6data <- dataViewport(xData=1L:n, yData=chain2, extension=c(.02,.03), name='trace2data' )
-  
-  vp7 <- viewport(layout.pos.col=3, name='scatter')
-  vp7data <- dataViewport(xData=chain1, yData=chain2, extension=.03, name='scatterData' )
-  
-  vps <- vpStack(vp1, vp2, vpList(vpStack(vp3, vp4, vpList(vpStack(vp5, vp5data),vpStack(vp6,vp6data))), vpStack(vp7,vp7data)))
-  
-  grs <- gList(rectGrob(vp='frame::lay1::traces::lay2::trace1', gp=gpar(lwd=1.5),
-                        name='rect_trace1'),
-               linesGrob(x=1L:n,y= chain1, gp=gpar(lty=1), default.units="native",
-                          vp = 'frame::lay1::traces::lay2::trace1::trace1data',
-                         name = 'lines_chain1'),
-               yaxisGrob(at=chain1_yaxis_at,
-                          vp = 'frame::lay1::traces::lay2::trace1::trace1data',
-                         name='yaxis_chain1'),
-               rectGrob(vp='frame::lay1::traces::lay2::trace2', gp=gpar(lwd=1.5),
-                        name='rect_trace2'),
-               linesGrob(x=1L:n,y= chain2, gp=gpar(lty=1), default.units="native",
-                          vp = 'frame::lay1::traces::lay2::trace2::trace2data',
-                         name = 'lines_chain2'),
-               yaxisGrob(at=chain2_yaxis_at,
-                          vp = 'frame::lay1::traces::lay2::trace2::trace2data',
-                         name = 'yaxis_chain2'),
-               xaxisGrob(vp = 'frame::lay1::traces::lay2::trace2::trace2data', name='xaxis_chains'),
-               pointsGrob(x=chain1, y=chain2, pch=".", gp=gpar(cex=2.5), default.units="native",
-                           vp = 'frame::lay1::scatter::scatterData', name = 'points_scatter'),
-               rectGrob(vp='frame::lay1::scatter::scatterData', gp=gpar(lwd=1.5),
-                        name='rect_scatter'),
-               textGrob(chain1_lab, y = unit(-1,"line")-unit(.2,"cm"),
-                         vp='frame::lay1::scatter', name='text_scatter_lab1'),
-               textGrob(chain2_lab, x = unit(1,"npc")+unit(.5,"cm"), rot=90,
-                         vp='frame::lay1::scatter', name='text_scatter_lab2'))
-  
-  out <- gTree(childrenvp=vps, children = grs)
+    vp6 <- viewport(layout.pos.row = 2, name = "trace2")
+    vp6data_clip <- dataViewport(xData = 1L:n, yData = chain2,
+                            xscale = xlim, yscale = ylim2,
+                            extension = c(0.02, 
+        0.03), name = "trace2data_clip", clip="on")
+    vp6data <- dataViewport(xData = 1L:n, yData = chain2,
+                            xscale = xlim, yscale = ylim2,
+                            extension = c(0.02, 
+                              0.03), name = "trace2data", clip="off")
 
-  if(draw)
-    grid.draw(out)
-  invisible(out)
+    vp7 <- viewport(layout.pos.col = 3, name = "scatter")
+    vp7data_clip <- dataViewport(xData = chain1, yData = chain2,
+                            xscale = ylim1, yscale = ylim2,
+                            extension = 0.03, 
+                                 name = "scatterData_clip", clip="on")
+    vp7data <- dataViewport(xData = chain1, yData = chain2,
+                            xscale = ylim1, yscale = ylim2,
+                            extension = 0.03, 
+        name = "scatterData", clip="off")
+
+    vps <- vpStack(vp1, vp2, vpList(vpStack(vp3, vp4, vpList(vpStack(vp5, 
+        vp5data, vp5data_clip), vpStack(vp6, vp6data, vp6data_clip))), vpStack(vp7, vp7data, vp7data_clip)))
+
+   
+    grs <- gList(rectGrob(vp = "frame::lay1::traces::lay2::trace1", 
+        gp = gpar(lwd = lwd_frame), name = "rect_trace1"),
+                 linesGrob(x = 1L:n, y = chain1, gp = gpar(lty = 1, lwd = lwd_lines), default.units = "native",  vp = "frame::lay1::traces::lay2::trace1::trace1data::trace1data_clip",  name = "lines_chain1"),
+                 yaxisGrob(at = chain1_yaxis_at,
+                           vp = "frame::lay1::traces::lay2::trace1::trace1data", 
+                           name = "yaxis_chain1"),
+                 rectGrob(vp = "frame::lay1::traces::lay2::trace2", 
+                          gp = gpar(lwd = lwd_frame), name = "rect_trace2"),
+                 linesGrob(x = 1L:n, 
+                           y = chain2, gp = gpar(lty = 1, lwd = lwd_lines), default.units = "native", 
+                           vp = "frame::lay1::traces::lay2::trace2::trace2data::trace2data_clip", 
+                           name = "lines_chain2"),
+                 yaxisGrob(at = chain2_yaxis_at, 
+                           vp = "frame::lay1::traces::lay2::trace2::trace2data", 
+                           name = "yaxis_chain2"),
+                 xaxisGrob(vp = "frame::lay1::traces::lay2::trace2::trace2data", 
+                           name = "xaxis_chains"),
+                 pointsGrob(x = chain1.sub, y = chain2.sub, 
+                            pch = 20, gp = gpar(cex = cex_points),
+                            default.units = "native", 
+                            vp = "frame::lay1::scatter::scatterData::scatterData_clip",
+                            name = "points_scatter"), 
+                 rectGrob(vp = "frame::lay1::scatter::scatterData",
+                          gp = gpar(lwd = lwd_frame),  name = "rect_scatter"),
+                 textGrob(chain1_lab, y = unit(-1, "line") - unit(0.2, "cm"),
+                          vp = "frame::lay1::scatter", 
+                          name = "text_scatter_lab1"),
+                 textGrob(chain2_lab, 
+                          x = unit(1, "npc") + unit(0.5, "cm"), rot = 90,
+                          vp = "frame::lay1::scatter", 
+                          name = "text_scatter_lab2"),
+                 textGrob(main, 
+                          x = unit(.5, "npc") + grobHeight(rectGrob())*.5,
+                          y = unit(1, "npc") + max(stringHeight("Fg"),unit(.6, "cm")),
+                          vp = "frame::lay1::traces", 
+                          name = "title",
+                          just=c(.5, .5),
+                          gp=gpar(cex=cex_main))
+                 )
+    out <- gTree(childrenvp = vps, children = grs)
+    if (draw) 
+        grid.draw(out)
+    invisible(out)
 }
 

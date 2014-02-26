@@ -1,7 +1,7 @@
 # This is file ../spam/R/dist.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -112,7 +112,7 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
                   rowpointers=vector("integer",n1+1),
                   entries=vector("double",nnz),
                   nnz=as.integer(nnz),
-                  iflag=as.integer(0),DUP=FALSE,NAOK=!TRUE,
+                  iflag=as.integer(0),DUP=DUPFALSE,NAOK=!TRUE,
                   PACKAGE="spam")
     
     if (d$iflag==0) break else {

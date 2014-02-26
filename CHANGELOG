@@ -1,3 +1,15 @@
+spam_0.41-0    2014-02-26    (RF)
+	- addressed several Rdevel CMD check --as-cran Notes.
+	- minor changes in tests/mle (improving speed)
+	- minor code tiding
+	- file header edits
+
+spam_0.40-1    2014-02-20    (Florian Gerber)
+	- update grid_trace2() and grid_trace2.Rd
+	- eliminate bug in cov.mat() and correct typo in cov.Rd
+	  add tests/covmat.R tests/covmat.Rout.save
+
+
 changeset:   4:66173a00f913
 tag:         tip
 user:        Reinhard Furrer @ lappi <reinhard.furrer@math.uzh.ch>

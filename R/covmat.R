@@ -1,7 +1,7 @@
 # This is file ../spam/R/covmat.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -154,7 +154,7 @@ cov.mat <- function(h, theta,  ... ,  eps= .Spam$eps)
     tmp <- h@entries/theta[1]
     h@entries <- ifelse(tmp < eps, theta[2] + theta[4],
                         theta[2] * (((2^(-(theta[3] - 1)))/gamma(theta[3])) * 
-                                    (h^theta[3]) * besselK(tmp, nu = theta[3])))
+                                    (tmp^theta[3]) * besselK(tmp, nu = theta[3])))
        
     return( h)    
   } else {

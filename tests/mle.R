@@ -1,7 +1,7 @@
 # This is file ../spam/tests/mle.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -80,6 +80,7 @@ test.for.zero(round(neg2loglikelihood.spam( y, X, distmat, cov.sph.mat,
 
 # we pass now to the mle:
 
+
 # not that we should set:
 #    ,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf)
 # for quicker testing we use
@@ -88,6 +89,10 @@ res1 <- mle.spam(y, X, distmat, cov.sph,
 #         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
 betahat <- res1$par[1:3]
+test.for.zero(round(res1$par,2), c(2.35,  1.45, -0.58,  0.50,  1.70,  0.08))
+test.for.zero(round(res1$val,2), 259.03)
+
+if (F){ # takes too long...
 
 res2 <- mle(y, X, distmat, cov.sph,
          truebeta, truetheta,thetalower=c(0.4,1.5,0.02),thetaupper=c(.6,2.5,.1))
@@ -97,14 +102,14 @@ res3 <- mle(y, X, distmat, cov.sph.mat,
          truebeta, truetheta,thetalower=c(0.4,1.5,0.02),thetaupper=c(.6,2.5,.1))
 #         truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
 
-test.for.zero(round(res1$par,2), c(2.35,  1.45, -0.58,  0.50,  1.70,  0.08))
-test.for.zero(round(res1$val,2), 259.03)
 
 test.for.zero(round(res2$par,2), c(2.35,  1.45, -0.58,  0.50,  1.70,  0.08))
 test.for.zero(round(res2$val,2), 259.03)
 
 test.for.zero(round(res3$par,2), c(2.35,  1.45, -0.58,  0.50,  1.70,  0.08))
 test.for.zero(round(res3$val,2), 259.03)
+
+}
 
 
 res1 <- mle.nomean.spam(y-X%*%betahat, distmat, cov.sph,

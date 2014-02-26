@@ -1,7 +1,7 @@
 % This is file ../spam/man/cov.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
-% written and maintained by Reinhard Furrer.
+% by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
 \name{covmat}
@@ -55,7 +55,7 @@ cov.mat(h, theta, ... , eps= .Spam$eps)
   object \code{h} and any other numeric type. In the future, this might
   change and appropriate methods will be implemented. 
 }
-\value{Covariance function evaluated on code{h}.}
+\value{Covariance function evaluated on \code{h}.}
 %\note{There is intentionally no \acronym{S3} distinction between the classes
 %  \code{spam} and \code{spam.chol.}\emph{method}.}
 \references{Any classical book about geostatistics.}

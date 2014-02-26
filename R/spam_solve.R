@@ -1,7 +1,7 @@
 # This is file ../spam/R/spam_solve.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 ########################################################################
@@ -114,7 +114,7 @@ setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
                            nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
                            xja=vector("integer",nnzR),
                            NAOK = !.Spam$safemode[3],
-                           DUP=FALSE,
+                           DUP=DUPFALSE,
                            PACKAGE = "spam")$xja
   cx <- .Fortran("spamcsrdns",
                  nrow=nrow,
@@ -122,7 +122,7 @@ setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
                  colindices=xcolindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",nrow*nrow),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res
+                 NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")$res
   if (length( list(...)) < 1)
     return( cx)
   else
@@ -141,7 +141,7 @@ setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
                            nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
                            xja=vector("integer",nnzR),
                            NAOK = !.Spam$safemode[3],
-                           DUP=FALSE,
+                           DUP=DUPFALSE,
                            PACKAGE = "spam")$xja
   slot(newx,"rowpointers",check=FALSE) <- x@rowpointers
   slot(newx,"dimension",check=FALSE) <- x@dimension
@@ -234,7 +234,7 @@ update.spam.chol.NgPeyton <- function(object,x,...){
                 cachesize=object@memory[3],
                 ierr = 0L,         
                 NAOK = !.Spam$safemode[3],
-                DUP=FALSE,
+                DUP=DUPFALSE,
                 PACKAGE="spam")
 
   if(u$ierr>1) stop("Internal error in 'update.spam.chol.NgPeyton' code ", u$ierr,call.=FALSE)
@@ -342,7 +342,7 @@ chol.spam <- function(x, pivot = "MMD",
                 cachesize = as.integer(cache),
                 ierr = 0L,          
                 NAOK = !.Spam$safemode[3],
-                DUP=FALSE)
+                DUP=DUPFALSE)
 
   if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   if(z$ierr == 6) stop("Inconsitency in the input",call.=FALSE)
@@ -377,7 +377,7 @@ chol.spam <- function(x, pivot = "MMD",
                   cachesize = as.integer(cache),
                   ierr = 0L,          
                   NAOK = !.Spam$safemode[3],
-                  DUP=FALSE)
+                  DUP=DUPFALSE)
     
     if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   }
@@ -428,7 +428,7 @@ solve.spam <- function (a, b,  Rstruct = NULL, ...) {
                   a@rowpointers, a@invpivot, a@pivot,
                   a@supernodes, vector("double",nrow), sol = vector("double",nrow*p),
                   as.vector(b,"double"),
-                  DUP=FALSE,NAOK = !.Spam$safemode[3],PACKAGE = "spam")$sol
+                  DUP=DUPFALSE,NAOK = !.Spam$safemode[3],PACKAGE = "spam")$sol
   } else z <- backsolve(a, forwardsolve( t(a),b))
     # see the helpfile for a comment about the 't(a)' construct.
   
@@ -448,7 +448,7 @@ chol2inv.spam <- function (x, ...) {
                   x@colpointers, dcheck(x@entries),
                   x@rowpointers, x@invpivot, x@pivot,
                   x@supernodes, vector("double",nrow), sol = vector("double",nrow*nrow), y,
-                  DUP=FALSE,NAOK = !.Spam$safemode[3],PACKAGE = "spam")$sol
+                  DUP=DUPFALSE,NAOK = !.Spam$safemode[3],PACKAGE = "spam")$sol
     dim(z) <- c(nrow,nrow)
   } else z <- backsolve.spam(x, forwardsolve.spam( t(x), diag(nrow)))
   return( z)
@@ -476,7 +476,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
       z <- .Fortran("backsolve", m, nsuper, p, r@colindices,
                     r@colpointers, dcheck(r@entries), r@rowpointers, 
                     r@supernodes, sol = vector("double",m*p),
-                    DUP=FALSE,NAOK = !.Spam$safemode[3],
+                    DUP=DUPFALSE,NAOK = !.Spam$safemode[3],
                     PACKAGE="spam")$sol
     }else{
       z <- .Fortran("pivotbacksolve", m, nsuper, p, r@colindices,
@@ -484,7 +484,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
                     r@rowpointers,   r@invpivot, r@pivot,
                     r@supernodes, vector("double",m),
                     sol = vector("double",m*p), as.double(x),
-                    DUP=FALSE,NAOK = !.Spam$safemode[3],
+                    DUP=DUPFALSE,NAOK = !.Spam$safemode[3],
                     PACKAGE="spam")$sol
     }
   } else {
@@ -494,7 +494,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
                   m=m,p,sol = vector("double",m*p),x=as.vector(x,"double"),
                   al=dcheck(r@entries),jal=r@colindices,
                   ial=r@rowpointers,
-                  DUP=FALSE,NAOK = !.Spam$safemode[3],
+                  DUP=DUPFALSE,NAOK = !.Spam$safemode[3],
                   PACKAGE="spam")
     if (z$m<0) stop(gettextf("singular matrix in 'backsolve'. Last zero in diagonal [%d]",
             -z$m), domain = NA)
@@ -533,7 +533,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
       z <- .Fortran("forwardsolve", m, nsuper, p, l@colindices,
                     l@colpointers, dcheck(l@entries), l@rowpointers, 
                     l@supernodes, sol = vector("double",m*p),
-                    DUP=FALSE,NAOK = !.Spam$safemode[3],
+                    DUP=DUPFALSE,NAOK = !.Spam$safemode[3],
                     PACKAGE="spam")$sol
     }else{
       z <- .Fortran("pivotforwardsolve", m, nsuper, p, l@colindices,
@@ -541,7 +541,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
                     l@rowpointers,   l@invpivot, l@pivot,
                     l@supernodes, vector("double",m),
                     sol = vector("double",m*p), as.double(x),
-                    DUP=FALSE,NAOK = !.Spam$safemode[3],
+                    DUP=DUPFALSE,NAOK = !.Spam$safemode[3],
                     PACKAGE="spam")$sol
     }
   } else {
@@ -551,7 +551,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
                   m=m,p,sol = vector("double",m*p),x=as.vector(x,"double"),
                   al=dcheck(l@entries),jal=l@colindices,
                   ial=l@rowpointers,
-                  DUP=FALSE,NAOK = !.Spam$safemode[3],
+                  DUP=DUPFALSE,NAOK = !.Spam$safemode[3],
                   PACKAGE="spam")
     if (z$m<0) stop(gettextf("singular matrix in 'forwardsolve'. First zero in diagonal [%d]",
             -z$m), domain = NA)
@@ -663,7 +663,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                 cachesize = as.integer(cache),
                 ierr = 0L,          
                 NAOK = !.Spam$safemode[3],
-                DUP=FALSE)
+                DUP=DUPFALSE)
 
   if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   if(z$ierr == 6) stop("Inconsitency in the input",call.=FALSE)
@@ -696,7 +696,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                   cachesize = as.integer(cache),
                   ierr = 0L,          
                   NAOK = !.Spam$safemode[3],
-                  DUP=FALSE)
+                  DUP=DUPFALSE)
     
   }
  #### end from above 
@@ -750,7 +750,7 @@ setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
                            nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
                            xja=vector("integer",nnzR),
                            NAOK = !.Spam$safemode[3],
-                           DUP=FALSE,
+                           DUP=DUPFALSE,
                            PACKAGE = "spam")$xja
   return(array(.Fortran("spamcsrdns",
                  nrow=nrow,
@@ -758,7 +758,7 @@ setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
                  colindices=xcolindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",nrow*nrow),  
-                 NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")$res,
+                 NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")$res,
                c(nrow,nrow))      # we preserve dimensions
          )
 }

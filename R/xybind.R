@@ -1,7 +1,7 @@
 # This is file ../spam/R/xybind.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
-# written and maintained by Reinhard Furrer.
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
@@ -195,7 +195,7 @@ function(...,deparse.level=0)
                   entries=vector( "double", XYlen),
                   colindices=vector( "integer", XYlen),
                   rowpointers=vector( "integer", Xdim[1]+1),
-                  NAOK=!.Spam$safemode[3],DUP=FALSE,PACKAGE = "spam")
+                  NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")
 
     if (FALSE) {
     # a loop would be (in R...):
