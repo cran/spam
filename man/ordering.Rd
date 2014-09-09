@@ -4,18 +4,10 @@
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
-
-
-
-
-
-
-
-
-
 \name{ordering}
 \docType{methods}
 \alias{ordering}
+\alias{ordering.spam}
 \alias{ordering-methods}
 %\alias{ordering,spam.chol.NgPeyton-method}
 \alias{ordering.spam.chol}
@@ -48,7 +40,7 @@ ordering( x, inv=FALSE)
   
   See the examples, they speak more than 10 lines.
 }
-\seealso{\code{\link{chol}}, \code{\link{solve}}.
+\seealso{\code{\link{chol.spam}}, \code{\link{solve.spam}}.
 }
 \examples{
 # Construct a pd matrix S to work with (size n)
@@ -76,8 +68,6 @@ as.spam( t(I[ord,]) - I[,ord])  #
 as.spam( I[iord,] - I[,ord])
 as.spam( I[ord,]\%*\%S\%*\%I[,ord] - S[ord,ord] )
    # pre and post multiplication with P and P' is ordering
-
-
 }
 \author{Reinhard Furrer}
 \keyword{algebra}

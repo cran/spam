@@ -6,13 +6,6 @@
 
 
 
-
-
-
-
-
-
-
 \name{nearestdist}
 \alias{dist.spam}
 \alias{nearest.dist}
@@ -24,8 +17,7 @@
 \usage{
 nearest.dist( x, y=NULL, method = "euclidean",
              delta = 1, upper = if (is.null(y)) FALSE else NULL,
-             p=2, miles=TRUE, R=NULL,
-             eps = NULL, diag = NULL)
+             p=2, miles=TRUE, R=NULL)
 }
 \arguments{
   \item{x}{Matrix of first set of locations where each row gives the
@@ -48,8 +40,8 @@ nearest.dist( x, y=NULL, method = "euclidean",
           the radius is either in miles or kilometers depending on the
           values of the miles argument. If \code{R=1} then distances are of
           course in radians.}
-  \item{eps}{deprecated. Left for backwards consistency.} 
-  \item{diag}{deprecated. Left for backwards consistency. See \sQuote{Details}.} 
+%  \item{eps}{deprecated. Left for backwards consistency.} 
+%  \item{diag}{deprecated. Left for backwards consistency. See \sQuote{Details}.} 
 }
 \value{A \code{spam} object containing the distances spanned between
   zero and \code{delta}. The sparse matrix may contain many zeros
@@ -70,8 +62,8 @@ nearest.dist( x, y=NULL, method = "euclidean",
 
   Default value of Earth's radius is 3963.34miles (6378.388km).\cr
 
-  The arguments \code{eps} and \code{diag} do not have any effect and
-  are left for compatibility reasons. 
+  The formerly depreciated arguments \code{eps} and \code{diag} are now
+  eliminated. 
   
   \code{x} and \code{y} can be any object with an existing
   \code{as.matrix} method.\cr
@@ -83,16 +75,16 @@ nearest.dist( x, y=NULL, method = "euclidean",
   The Fortran code is based on a idea of Doug Nychka.
     }
 %\references{}
-%\seealso{\code{\link{chol}}}
+\seealso{\code{\link{spam_rdist}}}
 \examples{
 # Note that upper=T and using t(X)+X is quicker than upper=NULL;
 #     upper=T marginally slower than upper=F.
 
-# To compare nearest.dist with dist, use diag=FALSE, upper=TRUE
+# To compare nearest.dist with dist, use as.dist(...)
 nx <- 4
 x <- expand.grid(as.double(1:nx),as.double(1:nx))
-sum( (nearest.dist( x, delta=nx*2, diag=FALSE, upper=TRUE)@entries-
-              c(dist(x)))^2)
+sum( ( as.dist(nearest.dist( x, delta=nx*2))-
+          dist(x)                            )^2)
 
 # Create nearest neighbor structures:
 par(mfcol=c(1,2))

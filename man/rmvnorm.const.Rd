@@ -16,9 +16,9 @@
 rmvnorm.const(n, mu = rep(0, nrow(Sigma)), Sigma, Rstruct = NULL, 
               A = array(1, c(1,nrow(Sigma))), a=0, U=NULL,  ...) 
 rmvnorm.prec.const(n, mu = rep(0, nrow(Q)), Q, Rstruct = NULL, 
-              A = rep(1,nrow(Q)), a=0, U=NULL,  ...) 
+              A = array(1, c(1,nrow(Q))), a=0, U=NULL,  ...) 
 rmvnorm.canonical.const(n, b, Q, Rstruct = NULL, 
-              A = rep(1,nrow(Q)), a=0, U=NULL, ...) 
+              A = array(1, c(1,nrow(Q))), a=0, U=NULL, ...) 
 }
 \arguments{
 \item{n}{number of observations.}

@@ -9,10 +9,9 @@
 \alias{chol,ANY-method}
 \alias{chol,matrix-method}
 \alias{chol,spam-method}
-\alias{update}
+\alias{update.spam}
 \alias{update,spam.chol.NgPeyton-method}
 \alias{update.spam.chol.NgPeyton}
-% \alias{chol}              
 \title{Cholesky Factorization for Sparse Matrices}
 \description{
 \code{chol} performs a Cholesky
@@ -21,11 +20,11 @@ of class \code{spam}.}
 \usage{
 # chol(x, \dots)
 
-\S3method{chol}{spam}(x, pivot = "MMD", method = "NgPeyton", memory =
+\S4method{chol}{spam}(x, pivot = "MMD", method = "NgPeyton", memory =
                  list(), eps =  .Spam$eps, \dots)
 
 # update.spam.chol.NgPeyton(object, x,...)
-\S3method{update}{spam.chol.NgPeyton}(object, x,...)
+\S4method{update}{spam.chol.NgPeyton}(object, x,...)
 %chol(x, method, ordering, memory, \dots)
 }
 \arguments{
@@ -59,7 +58,8 @@ no permutation is done and for \code{TRUE} is equivalent to
 Often the sparsity structure is fixed and does not change, but the
 entries do. In those cases, we can update the Cholesky factor with
 \code{update.spam.chol.NgPeyton} by suppling a Cholesky factor and the
-updated matrix.
+updated matrix. Notice that the structure is effectively \code{object <-
+  update(object, x)}. The update feature without assignement has been disabled.
 
 The option \code{cholupdatesingular} determines how singular matrices
 are handled by \code{update}. The function hands back an error
@@ -86,10 +86,17 @@ based on the algorithm of Ng and Peyton (1993).  Whereas the Cholesky
 routine of the package \code{Matrix} are based on 
 \code{CHOLMOD} by Timothy A. Davis (\code{C} code).
 }
-\references{ 
-Ng, E. G. and B. W. Peyton (1993) Block sparse Cholesky algorithms
-on advanced uniprocessor computers, \emph{SIAM J. Sci. Comput.}, \bold{14},
+\references{
+Ng, E. G. and Peyton, B. W.  (1993) Block sparse Cholesky algorithms on
+advanced uniprocessor computers, \emph{SIAM J. Sci. Comput.}, \bold{14},
 1034--1056.
+
+
+Gilbert, J. R., Ng, E. G. and Peyton, B. W. (1994) An efficient
+   algorithm to compute row and column counts for sparse Cholesky
+   factorization, \emph{SIAM J. Matrix Anal. Appl.}, \bold{15},
+   1075--1091.
+
 
 George, A. and  Liu, J. (1981)
 \emph{Computer Solution of Large Sparse Positive Definite Systems},
@@ -108,8 +115,8 @@ If a permutation is supplied with \code{pivot},
 \code{spam.options( "cholpivotcheck")} determines if the permutation is
 tested for validity (defaults to \code{TRUE}). 
 }
-\seealso{\code{\link{det}}, \code{\link{solve}}, 
-  \code{\link{forwardsolve}}, \code{\link{backsolve}} and \code{\link{ordering}}.
+\seealso{\code{\link{det.spam}}, \code{\link{solve.spam}}, 
+  \code{\link{forwardsolve.spam}}, \code{\link{backsolve.spam}} and \code{\link{ordering}}.
 }
 \examples{
 # generate multivariate normals:

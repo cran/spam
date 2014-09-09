@@ -566,57 +566,7 @@ c-----------------------------------------------------------------------
       end   
 
 
-      subroutine cleanspam(nrow,a,ja,ia,eps)
-      
-      implicit none
-      integer nrow, ia(nrow+1), ja(*)
-      double precision  a(*), eps
-c
-c     this routine removes zero entries. for more complicated cleaning
-c     use the sparsekit2 subroutine clncsr.
-c
-c On entry:
-c----------
-c     nrow    -- row dimension of the matrix
-c     a,ja,ia -- input matrix in CSR format
-c
-c On return:
-c-----------
-c     a,ja,ia -- cleaned matrix
-c
-c Notes: 
-c-------
-c     Reinhard Furrer 2006-09-13
-c-----------------------------------------------------------------------
-c
-c     Local
-      integer i,j,k, oldia(nrow+1)
-
-      do  i = 1, nrow+1
-         oldia(i) = ia(i)
-      enddo
-
-      k = 1
-      do i = 1, nrow
-         ia(i) = k
-         do j=oldia(i),oldia(i+1)-1
-            if (dabs(a(j)) .gt. eps) then
-               
-               ja(k) = ja(j)
-               a(k) = a(j)
-               k = k + 1
-            endif
-            
-         enddo
-      enddo
-
-      ia(nrow+1) = k
-      return
-
-c---- end of cleanspam -------------------------------------------------
-c-----------------------------------------------------------------------
-      end
-
+ 
 
 
       subroutine disttospam(nrow,x,a,ja,ia,eps)
@@ -654,7 +604,7 @@ c     Local
          ia(i) = k
          do j=1 , i-1 
             tmp = nrow*(j-1)-j*(j-1)/2+i-j
-            if (dabs(x(tmp)) .gt. eps) then
+            if (.not.(dabs(x(tmp)) .le. eps)) then
                ja(k) = j
                a(k) = x(tmp)
                k = k + 1
@@ -928,7 +878,7 @@ c-----------------------------------------------------------------------
       ia(1) = 1
       do  i=1,nrow
          do  j=1, ncol
-            if (dabs(dns(i,j)) .gt. eps) then 
+            if (.not.(dabs(dns(i,j)) .le. eps)) then 
                ja(next) = j
                a(next) = dns(i,j)
                next = next+1

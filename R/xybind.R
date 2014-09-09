@@ -195,7 +195,7 @@ function(...,deparse.level=0)
                   entries=vector( "double", XYlen),
                   colindices=vector( "integer", XYlen),
                   rowpointers=vector( "integer", Xdim[1]+1),
-                  NAOK=!.Spam$safemode[3],DUP=DUPFALSE,PACKAGE = "spam")
+                  NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
 
     if (FALSE) {
     # a loop would be (in R...):

@@ -5,16 +5,8 @@
    
 
 
-
-
-
-
-
-
-
-
 \name{dim}
-%\alias{dim}
+\alias{dim.spam}
 \alias{dim<-.spam} 
 \alias{dim<-,spam-method}
 \title{Dimensions of an Object}
@@ -35,23 +27,16 @@
   the \code{dimension} slot of the object.  It is a vector
   of mode \code{integer}.
 
-  The replacemnt method changes the dimension of the object by
-  truncation or extension (with zeros).
+  The replacemnt method changes the dimension of the object by rearranging.
   
 }
 \details{
-  It is important to notice the different behavior of the replacement
-  method for ordinary arrays and \code{spam} objects (see
-  \sQuote{Examples}). Here, the elements are not simply rearranged but
-  an entirely new matrix is constructed. If the new column dimension is
-  smaller than the original, the matrix is also cleaned (with
-  \code{spam.option("eps")} as filter).
-
-  For the same operation as with regular arrays, use \code{spam}
+  In older version of \code{spam}, the behavior of the replacement
+  method was different and is now implemented in \code{\link{pad.spam}}.
 
 }
 %\references{}
-\seealso{\code{\link[base]{dim}}.
+\seealso{\code{\link{pad.spam}}.
 }
 \examples{
 x <- diag(4)
@@ -59,10 +44,10 @@ dim(x)<-c(2,8)
 x
 
 s <- diag.spam(4)
-dim(s) <- c(7,3)  # any positive value can be used
+dim(s) <- c(2,8)  # result is different than x
 
 s <- diag.spam(4)
-dim(s) <- c(2,8)  # result is different than x
+pad(s) <- c(7,3)  # any positive value can be used
 
 }
 \author{Reinhard Furrer}

@@ -5,51 +5,56 @@
    
 
 
-
-
-
-
-
-
-
-
 \name{Summary}
-\alias{Summary}
 \alias{Summary.spam}
 \alias{Summary,spam-method}
-\alias{all}
-\alias{any}
-\alias{max}
-\alias{min}
-\alias{prod}
-\alias{range}
-\alias{sum}
+\alias{all.spam}
+\alias{any.spam}
+\alias{max.spam}
+\alias{min.spam}
+\alias{prod.spam}
+\alias{range.spam}
+\alias{sum.spam}
+\alias{all,spam-method}
+\alias{any,spam-method}
+\alias{max,spam-method}
+\alias{min,spam-method}
+\alias{prod,spam-method}
+\alias{range,spam-method}
+\alias{sum,spam-method}
 \title{Rounding of Numbers}
-\description{Applies the \code{Math2} group functions to '\code{spam}' objects
+\description{Applies the \code{Math2} group functions to \code{spam} objects
 }
 \usage{# max(x,..., na.rm = FALSE)
 }
 \arguments{\item{x}{spam object.}
+   \item{na.rm}{a logical indicating whether missing values should be
+          removed.}
 }
-\value{All functions operate on the vector \code{x@entries} and return the
-  result thereof.
+\value{If \code{structurebased=TRUE}, all functions operate on the vector \code{x@entries} and return the
+  result thereof.\cr
+  Conversely, if \code{structurebased=FALSE}, the result is identical to
+  one with \code{as.matrix(x)} input.
 }
-\details{For this generic class typical \code{na.rm} argument has
-    no weight here as NA/NaN/Inf are not meaningful (yet).\cr
-
-
-%  Is implemented for R>=2.3.x only. However,
-%  it would be possible to use Martin's proposed workaround:
-%    \url{http://tolstoy.newcastle.edu.au/R/help/05/12/18192.html}
+\details{The \code{na.rm} argument is only meaninful if \code{NAOK=TRUE}.
 }
 %\references{
 %}
-\seealso{\code{\link{Math}} and \code{\link{Math2}}.}
+\seealso{\code{\link{Math.spam}} and \code{\link{Math2}}.}
 \examples{
 getGroupMembers("Summary")
 
 smat <- diag.spam( runif(15))
 range(smat)
+spam.options(structurebased=FALSE)
+range(smat)
+
+\dontrun{
+max( log(spam(c(1,-1))), na.rm=TRUE)
+}
+# allow 'NA's first:
+spam.options( NAOK=TRUE)
+max( log(spam(c(1,-1))), na.rm=TRUE)
 }
 \author{Reinhard Furrer}
 \keyword{manip}

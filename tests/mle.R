@@ -165,3 +165,4 @@ backsolve(cholS,forwardsolve(t(cholS), resid))-
 
 
 }
+options( echo=TRUE)

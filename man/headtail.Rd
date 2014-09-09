@@ -5,11 +5,9 @@
    
 
 \name{head}
-\alias{head}
 \alias{head.spam}
 \alias{head,spam-method}
 \alias{head,spam.chol.NgPeyton-method}
-\alias{tail}
 \alias{tail.spam}
 \alias{tail,spam-method}
 \alias{tail,spam.chol.NgPeyton-method}
@@ -21,10 +19,8 @@
   \code{\linkS4class{spam}} object.
 }
 \usage{
-head(x, \dots)
-tail(x, \dots)
-# head.spam(x, n = 6L, m = n, \dots)
-# tail.spam(x, n = 6L, m = n, addrownums = TRUE, \dots)
+\S4method{head}{spam}(x, n = 6L, m = n, \dots)
+\S4method{tail}{spam}(x, n = 6L, m = n, addrownums = TRUE, \dots)
 }
 \arguments{
   \item{x}{a \code{\linkS4class{spam}} object}

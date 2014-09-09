@@ -8,11 +8,6 @@
 
 
 
-
-
-
-
-
 \name{spam-class}
 \docType{class}
 \alias{spam.class}
@@ -48,11 +43,15 @@
 \alias{[,spam,matrix,matrix,ANY-method}
 \alias{[,spam,spam,missing,ANY-method}
 \alias{[,spam,ANY,ANY,ANY-method}
-\alias{Arith,spam,missing-method}
-\alias{Arith,spam,numeric-method}
-\alias{Arith,numeric,spam-method}
-\alias{Compare,numeric,spam-method}
-\alias{Compare,spam,numeric-method}
+\alias{Arith,spam,spam-method}
+\alias{Arith,spam,ANY-method}
+\alias{Arith,ANY,spam-method}
+\alias{Compare,ANY,spam-method}
+\alias{Compare,spam,ANY-method}
+\alias{Compare,spam,spam-method}
+\alias{!,spam-method}
+\alias{+,spam,missing-method}
+\alias{-,spam,missing-method}
 \alias{c,spam-method}
 \alias{t,spam-method}
 \alias{length<-,spam-method}
@@ -61,6 +60,10 @@
 \alias{kronecker,spam,ANY-method}
 \alias{kronecker,ANY,spam-method}
 \alias{kronecker,spam,spam-method}
+\alias{crossprod,spam,missing-method}
+\alias{tcrossprod,spam,missing-method}
+\alias{crossprod,ANY,spam-method}
+\alias{tcrossprod,ANY,spam-method}
 \alias{plot,spam,missing-method}
 \alias{plot,spam,spam-method}
 \alias{show,spam-method}
@@ -95,6 +98,9 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
     \item{as.matrix}{\code{signature(x = "spam")}:
       transforming a sparse
       matrix into a regular matrix.}
+    \item{as.vector}{\code{signature(x = "spam")}:
+      transforming a sparse
+      matrix into a vector (dependings on \code{structurebased}) see \code{\link{as.vector.spam}} for details.}
     \item{as.spam}{\code{signature(x = "spam")}:
       cleaning of a sparse matrix.}
     \item{[<-}{\code{signature(x = "spam", i,j, value)}:
@@ -114,10 +120,12 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
     see \code{\link{chol}} for details.}
     \item{diag}{\code{signature(x = "spam")}: 
     see \code{\link{diag}} for details.}
-  \item{dim<-}{\code{signature(x = "spam")}: truncates or augments
-    the matrix see \code{\link{dim}} for details.}
+  \item{dim<-}{\code{signature(x = "spam")}: rearranges 
+    the matrix to reflect a new dimension.}
     \item{dim}{\code{signature(x = "spam")}: gives the dimension of the
       sparse matrix.}
+  \item{pad<-}{\code{signature(x = "spam")}: truncates or augments
+    the matrix see \code{\link{dim}} for details.}
     \item{image}{\code{signature(x = "spam")}:
       see \code{\link{image}} for details.}
     \item{display}{\code{signature(x = "spam")}:

@@ -24,7 +24,12 @@ precmat.GMRFreglat(n,m, par, model = "m1p1",  eps = .Spam$eps)
 \value{A \code{spam} matrix of dimension \code{prod(dims)}x\code{prod(dims)}.}
 \details{The function should be illustrative on how to create precision
   matrices for gridded GMRF. Hence, no testing (positive definiteness is
-  done). Please see the examples on the meaning of the different models. 
+  done).
+
+  The model specification \code{"m"} determines the complexity and
+  \code{"p"} the number of parameters. 
+  
+  Please see the examples on the meaning of the different models. 
     }
 %\references{}
 \seealso{\code{\link{precmat}}, \code{\link{toeplitz.spam}}, \code{\link{kronecker.spam}}}
@@ -33,6 +38,10 @@ as.matrix(precmat.GMRFreglat(4, 3, c(.4),         'm1p1'))
 as.matrix(precmat.GMRFreglat(4, 3, c(.4,.3),      'm1p2'))
 as.matrix(precmat.GMRFreglat(4, 3, c(.4,.3,.2),   'm2p3'))
 as.matrix(precmat.GMRFreglat(4, 3, c(.4,.3,.2,.1),'m2p4'))
+
+# up to the diagonal, the following are equivalent:
+cleanup( precmat.IGMRFreglat(3,4) -
+             precmat.GMRFreglat(3,4,1, 'm1p1'))
 
 }
 \author{Reinhard Furrer}

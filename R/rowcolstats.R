@@ -8,37 +8,37 @@
 
 rowSums.spam <- function(x,...) {
   return( .Fortran("rowsums",
-                   dcheck(x@entries), icheck(x@colindices), icheck(x@rowpointers),
+                   as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
                    x@dimension[1],
                    rs=vector("double",x@dimension[1]),
-                   NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$rs)
+                   NAOK=.Spam$NAOK, DUP=DUPFALSE, PACKAGE="spam")$rs)
   
 }
 
 colSums.spam <- function(x,...) {
   return( .Fortran("colsums",
-                   dcheck(x@entries), icheck(x@colindices), icheck(x@rowpointers),
+                   as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
                    x@dimension[1],
                    cs=vector("double",x@dimension[2]),
-                   NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$cs)
+                   NAOK=.Spam$NAOK, DUP=DUPFALSE, PACKAGE="spam")$cs)
 }
 
 rowMeans.spam <- function(x,...) {
   return( .Fortran("rowmeans",
-                   dcheck(x@entries), icheck(x@colindices), icheck(x@rowpointers),
+                   as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
                    x@dimension[1],x@dimension[2],
                    as.logical(.Spam$structurebased),
                    rm=vector("double",x@dimension[1]),
-                   NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$rm)
+                   NAOK=.Spam$NAOK, DUP=DUPFALSE, PACKAGE="spam")$rm)
 }
 
 colMeans.spam <- function(x,...) {
    return( .Fortran("colmeans",
-                dcheck(x@entries), icheck(x@colindices), icheck(x@rowpointers),
+                as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
                 x@dimension[1],x@dimension[2],
                 as.logical(.Spam$structurebased),
                 cm=vector("double",x@dimension[2]),vector("integer",x@dimension[2]),
-                NAOK=!.Spam$safemode[3], DUP=DUPFALSE, PACKAGE="spam")$cm)
+                NAOK=.Spam$NAOK, DUP=DUPFALSE, PACKAGE="spam")$cm)
 }
 
 

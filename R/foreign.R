@@ -7,11 +7,6 @@
 
 
 
-
-
-
-
-
 # Contains two sections:
 # 1) Routines to transform spam objects to SparseM and Matrix
 # 2) Functions to read (and write) MM and HB formats.
@@ -21,14 +16,14 @@
 # 1a)  spam <-> SparseM
 as.spam.matrix.csr <- function(x)
   {
-    if (is.matrix.csr(x)) {
+#    if (is.matrix.csr(x)) {
       newx <- new("spam")
       slot(newx,"entries",check=FALSE) <- as.double( x@ra)
       slot(newx,"colindices",check=FALSE) <- x@ja
       slot(newx,"rowpointers",check=FALSE) <- x@ia
       slot(newx,"dimension",check=FALSE) <- x@dimension
       return(newx)
-    } else stop("Wrong object passed to 'as.spam.matrix.csr'")
+#    } else stop("Wrong object passed to 'as.spam.matrix.csr'")
   }
 
 
@@ -37,14 +32,14 @@ as.spam.matrix.csr <- function(x)
 # Is there anyway around this?
     
 as.matrix.csr.spam <- function(x,...) {
-  if (require('SparseM')){
+#  if (require('SparseM')){
     newx <- new("matrix.csr")
     slot(newx,"ra",check=FALSE) <- x@entries
     slot(newx,"ja",check=FALSE) <- x@colindices
     slot(newx,"ia",check=FALSE) <- x@rowpointers
     slot(newx,"dimension",check=FALSE) <- x@dimension
     return(newx)
-  }       
+#  }       
   
 }
 
@@ -67,10 +62,10 @@ as.dgCMatrix.spam <- function(x)  {
       dimx <- x@dimension
       nz <- x@rowpointers[dimx[1] + 1] - 1
       z <- .Fortran("transpose", n = dimx[1], m = dimx[2],
-                    a = dcheck(x@entries),ja = x@colindices, ia = x@rowpointers,
+                    a = as.double(x@entries),ja = x@colindices, ia = x@rowpointers,
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", dimx[2] + 1),
-                    NAOK = !.Spam$safemode[3], DUP=DUPFALSE,
+                    NAOK = .Spam$NAOK, DUP=DUPFALSE,
                     PACKAGE = "spam")
       newx <- new(p=0:0,'dgCMatrix')
       slot(newx,"x",check=FALSE) <- z$entries
@@ -106,10 +101,10 @@ as.spam.dgCMatrix <- function(x)  {
 
       nz <- x@p[x@Dim[2] + 1]
       z <- .Fortran("transpose", n = x@Dim[2], m = x@Dim[1],
-                    a = dcheck(x@x),ja = x@i+1L, ia = x@p+1L,
+                    a = as.double(x@x),ja = x@i+1L, ia = x@p+1L,
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", x@Dim[1] + 1),
-                    NAOK = !.Spam$safemode[3], DUP=DUPFALSE,
+                    NAOK = .Spam$NAOK, DUP=DUPFALSE,
                     PACKAGE = "spam")
       newx <- new('spam')
       slot(newx,"entries",check=FALSE) <- z$entries
@@ -204,7 +199,7 @@ read.HB <- function(file)
                   a = vals,ja = ind, ia = ptr,
                   entries = vector("double",nz), colindices = vector("integer", nz),
                   rowpointers = vector("integer", nr + 1),
-                  NAOK = !.Spam$safemode[3], DUP=DUPFALSE,
+                  NAOK = .Spam$NAOK, DUP=DUPFALSE,
                   PACKAGE = "spam")
     newx <- new('spam')
     slot(newx,"entries",check=FALSE) <- z$entries

@@ -4,15 +4,6 @@
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
-
-
-
-
-
-
-
-
-
 \name{spam}
 \alias{spam.creation}
 \alias{initialize,spam-method}
@@ -79,13 +70,18 @@ is.spam(x)
 \note{The zero matrix has the element zero stored in (1,1).\cr
 
   The functions do not test the presence of \code{NA/NaN/Inf}. Virtually
-  all call a Fortran routine with the \code{NAOK=!.Spam$safemode[3]}
+  all call a Fortran routine with the \code{NAOK=NAOK}
   argument, which defaults to \code{FALSE} resulting in an error.
   Hence, the \code{NaN} do not always properly propagate through (i.e.
   \code{spam} is not IEEE-754 compliant).
   
 }
-\references{\url{http://en.wikipedia.org/wiki/Sparse_matrix} as a start.}
+\references{Reinhard Furrer, Stephan R. Sain (2010). 
+  "spam: A Sparse Matrix R Package with Emphasis on MCMC
+  Methods for Gaussian Markov Random Fields.",
+        \emph{Journal of Statistical Software}, 36(10), 1-25,
+        \url{http://www.jstatsoft.org/v36/i10/.}
+}
 \seealso{
   \code{\link{SPAM}} for a general overview of the package;
   \code{\link{spam.options}} for details about the \code{safemode} flag;
@@ -107,8 +103,8 @@ system.time(smat[cbind(is,js)] <- 1:nz)
 getClass("spam")
 
 
-
-try(as.spam.numeric(NA))
+spam.options(NAOK=TRUE)
+as.spam( c(1, NA))
 
 }
 \author{Reinhard Furrer}

@@ -5,14 +5,6 @@
    
 
 
-
-
-
-
-
-
-
-
 \name{permutation}
 \alias{permutation}
 \alias{permutation.spam}

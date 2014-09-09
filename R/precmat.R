@@ -69,7 +69,7 @@ precmat.RW1 <- function(n) {
 
 precmat.RW2<- function(n) {
   if(n<4)
-    stop("Dimension 'n' should be larger than two")
+    stop("Dimension 'n' should be larger than three")
   Q <- spam(0,n,n)
   Q@entries <- c(-2,1,rep(c(-4,1),n-3),-2)
   Q@colindices <- as.integer( c(rep(2:(n-1),each=2)+c(0,1),n))

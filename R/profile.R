@@ -4,14 +4,11 @@
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
-
-
-
 ".onLoad" <- function (lib, pkg) {
 #    if (R.version$minor<paste(14))    require(methods) 
 }
 
-# Framework introduce with much input from Roger Bivand for 0.13-2 and higher.
+# Framework introduced with much input from Roger Bivand for 0.13-2 and higher.
 
 spam.Version <- function() {
   release <- utils::packageDescription("spam",field="Version")
@@ -37,21 +34,22 @@ class(spam.version) <- "simple.list"
                 imagesize=10000,           # the max size which we display as regular matrices
                  cex=1200,                  # scaling factor for scatter displays
 
-                structurebased=FALSE,      # calculating on nonzero entries only...
+                structurebased=!FALSE,      # calculating on nonzero entries only...
                 
                 inefficiencywarning=1e6,  # tell when something inefficient is done
                 
                trivalues=FALSE,           # with upper./lower/.tri return values (TRUE) or only structure?
                 listmethod='PE',           # method to be used when using spam.list
 
-                safemode=c(TRUE,TRUE,TRUE),  # verify double and integer formats and else...
+                NAOK=FALSE,      #  passing of !is.finite to fortran
+                safemodevalidity=TRUE,  # verify while S4 construction
                 dopivoting=TRUE,           # what type of back/forwardsolve?
                 cholsymmetrycheck=TRUE,     # Should symmetry be tested in the cholesky factorization
                 cholpivotcheck=TRUE,        # Should the pivot be tested?
                 cholupdatesingular="warning",     # ("error", "warning","NULL")
                 cholincreasefactor=c(1.25,1.25),
-                nearestdistincreasefactor=1.25,
-                nearestdistnnz=c(400^2,400)
+                nearestdistincreasefactor=1.3,
+                nearestdistnnz=c(500^2,500)
                 )
 #noquote(unlist(format(.Spam[-1])) )
 
@@ -60,7 +58,7 @@ class(spam.version) <- "simple.list"
     ifelse(.Spam$inefficiencywarning,1,Inf) } else { 
     .Spam$inefficiencywarning
   }
-  if (size>maxsize) warning("Logical subsetting may be inefficient, is this really what you want?")
+  if (size>maxsize) warning(msg, call. = FALSE)
 }
     
 ".onAttach" <- function (lib, pkg) {
@@ -107,10 +105,10 @@ powerboost <- function(flag="on") {
     else env <- parent.frame()
 
     current <- spam.options()
-    current[c("safemode","cholsymmetrycheck","cholpivotcheck","eps")] <-
+    current[c("NAOK","safemodevalidity","cholsymmetrycheck","cholpivotcheck","eps")] <-
     if (tolower(flag) %in% c("true","on","an","ein")) {
-            list(c(FALSE,FALSE,FALSE),FALSE,FALSE,1e-8)
-    } else { list(c(TRUE,TRUE,TRUE),TRUE,TRUE,.Machine$double.eps)
+            list(!FALSE,FALSE,FALSE,FALSE,1e-8)
+    } else { list(!TRUE,TRUE,TRUE,TRUE,.Machine$double.eps)
     }
     assign(".Spam", current, envir = env)
     invisible( current)

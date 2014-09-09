@@ -5,14 +5,6 @@
    
 
 
-
-
-
-
-
-
-
-
 \name{. SPAM .}
 \alias{overview}
 \alias{SPAM}
@@ -38,9 +30,9 @@ in a S3 structure visible to the user (exported via \code{NAMESPACE}).\cr
 There exist many methods for sparse matrices that work identically as in
 the case of ordinary matrices. All the methods are discussed in the help
 and can be accessed directly via a \code{*.spam} concatenation to the
-function. For example, \code{help(chol.spam)} calls the help directly,
-whereas with  \code{help(chol)} the user has to choose first between the
-basis help and the help provided by \code{spam}.\cr
+function. For example, \code{help(chol.spam)} calls the help
+directly. We deliberately avoided aliases according to analogue helps from the
+base package.\cr
 
 Sparseness is used when handling large matrices. Hence, care has been
 used to provide efficient and fast routines. Essentially, the functions
@@ -60,12 +52,12 @@ The packages \code{fields} and \code{spam} are closely linked.  \cr
 }
 \seealso{See \code{\link{spam.class}} for a detailed class description,
   \code{\link{spam}} and \code{\link{spam.ops}} for creation,
-  coercion and algebraic operations.\cr%
+  coercion and algebraic operations.%\cr%
 %  
-\code{demo(package='spam')} lists available demos.\cr% 
-Related packages are \code{\link[fields]{fields}},
-  \code{\link[Matrix]{Matrix}} and
-  \code{\link[SparseM]{SparseM.ontology}}.
+%\code{demo(package='spam')} lists available demos.\cr% 
+%Related packages are \code{\link[fields]{fields}},
+%  \code{\link[Matrix]{Matrix}} and
+%  \code{\link[SparseM]{SparseM.ontology}}.
 }
 \examples{
 \dontrun{
@@ -78,6 +70,7 @@ citation('spam',auto=TRUE)
 file.show(system.file("NEWS", package = "spam"))
 }
 }
-\author{Reinhard Furrer}
+\author{Reinhard Furrer, with the help of Florian Gerber, Kaspar
+  Moesinger and many others.}
 \keyword{documentation}
 \keyword{package}

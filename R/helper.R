@@ -18,7 +18,7 @@ bandwidth <- function(A) {
   }
   ret <- .Fortran("getbwd",A@dimension[1],A@entries,A@colindices,
                   A@rowpointers,low=integer(1),upp=integer(1),
-                 NAOK = !.Spam$safemode[3], DUP=DUPFALSE, PACKAGE = "spam")
+                 NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
   return(c(ret$low,ret$upp))
 }
                   
@@ -91,35 +91,36 @@ map.landkreis <- function(data, col=NULL, zlim=range(data), add=FALSE, legendpos
 # Added color argument, changed 'append' to 'add'.
 # Legend is tuned for a mai=rep(0,4) call 
 {
-  npoly <- length(germany)
+  npoly <- length(spam::germany)
   ymax <- ymin <- xmax <- xmin <- 1:npoly
 
   if (length(data)!=npoly)
     stop('data has wrong length')
   
   if (is.null(col)) {
-    if (exists('tim.colors'))
-      col <- tim.colors(64)
-    else
-      col <- gray(seq(.05,to=0.95,length=64))
+      if (requireNamespace("fields", quietly = TRUE)) {
+          col <- fields::tim.colors(64)
+      } else {
+          col <- gray(seq(.05,to=0.95,length=64))
+      }
   }
   ncol <- length(col)
   polycol <- col[round(((data-zlim[1])/diff(zlim)+1e-6)*(ncol-1))+1]
   
-  for(i in 1:length(germany)) {
-    xmin[i] <- min(germany[[i]][,2],na.rm=T)
-    xmax[i] <- max(germany[[i]][,2],na.rm=T)
-    ymin[i] <- min(germany[[i]][,3],na.rm=T)
-    ymax[i] <- max(germany[[i]][,3],na.rm=T)
+  for(i in 1:length(spam::germany)) {
+    xmin[i] <- min(spam::germany[[i]][,2],na.rm=T)
+    xmax[i] <- max(spam::germany[[i]][,2],na.rm=T)
+    ymin[i] <- min(spam::germany[[i]][,3],na.rm=T)
+    ymax[i] <- max(spam::germany[[i]][,3],na.rm=T)
   }
 
 
   if (!add)
     plot(c(min(xmin),max(xmax)),c(min(ymin),max(ymax)), type="n", axes=F, xlab="", ylab="")
   for(k in npoly:1)
-    polygon(germany[[k]][,2],germany[[k]][,3],col=polycol[k])
-  if (exists('image.plot'))
-    image.plot(as.matrix(data), zlim=zlim, legend.only=T, smallplot=legendpos, cex=.2, col=col)
+    polygon(spam::germany[[k]][,2],spam::germany[[k]][,3],col=polycol[k])
+  if (requireNamespace("fields", quietly = TRUE)) 
+    fields::image.plot(as.matrix(data), zlim=zlim, legend.only=T, smallplot=legendpos, cex=.2, col=col)
 
   invisible()
 }
@@ -129,12 +130,12 @@ map.landkreis <- function(data, col=NULL, zlim=range(data), add=FALSE, legendpos
 germany.plot <- function(vect,  col=NULL, zlim=range(vect), legend=TRUE, 
              main=NULL, cex.axis=1, add=FALSE, ... )
 {
-  if (length(vect) != germany.info$n) 
+  if (length(vect) != spam::germany.info$n) 
         stop("data has wrong length")
 
   if (!add) {
     par(mai=c(.1,.1,.1,.3))
-    plot(0,0, xlim=germany.info$xlim, ylim=germany.info$ylim,    
+    plot(0,0, xlim=spam::germany.info$xlim, ylim=spam::germany.info$ylim,    
          type = "n", axes = F, xlab = "", ylab = "")
   }
   if (is.null(col)) {
@@ -145,18 +146,18 @@ germany.plot <- function(vect,  col=NULL, zlim=range(vect), legend=TRUE,
   polycol <- (col)[round((((vect) - zlim[1])/diff(zlim) + 1e-06) * 
                             (ncol - 1)) + 1]
   
-  polygon( germany.poly[17965L:1L,],
-          col = (polycol[germany.info$polyid])[599L:1L], ...) 
+  polygon( spam::germany.poly[17965L:1L,],
+          col = (polycol[spam::germany.info$polyid])[599L:1L], ...) 
 
-  if (legend&&exists('image.plot')) {
+  if (legend&&requireNamespace("fields", quietly = TRUE)){
     legendpos <- c(0.845, 0.89, 0.05, 0.4)
-    image.plot(as.matrix(vect), zlim = zlim, legend.only = TRUE, 
+    fields::image.plot(as.matrix(vect), zlim = zlim, legend.only = TRUE, 
                smallplot = legendpos, axis.args=list(cex.axis=cex.axis,lwd=0, lwd.ticks=1.3),
                col = col)
   }
   
   if(!is.null(main))
-    text( min(germany.info$xlim), max(germany.info$ylim), main, cex=1.5, adj=c(0,1))
+    text( min(spam::germany.info$xlim), max(spam::germany.info$ylim), main, cex=1.5, adj=c(0,1))
   
   invisible()
 }

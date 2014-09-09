@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2014-02-24 r65073) -- "Unsuffered Consequences"
+R Under development (unstable) (2014-09-08 r66545) -- "Unsuffered Consequences"
 Copyright (C) 2014 The R Foundation for Statistical Computing
 Platform: x86_64-unknown-linux-gnu (64-bit)
 
@@ -30,7 +30,7 @@ Type 'q()' to quit R.
 > 
 > options( echo=FALSE)
 Loading required package: grid
-Spam version 0.41-0 (2014-02-26) is loaded.
+Spam version 1.0-1 (2014-09-09) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -49,4 +49,4 @@ Results of the form '[1] TRUE' are from 'all.equal'
 [1] FALSE
 > proc.time()
    user  system elapsed 
-  0.992   0.072   1.057 
+  0.837   0.018   0.836 

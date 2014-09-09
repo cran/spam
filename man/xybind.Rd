@@ -4,18 +4,7 @@
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
-
-
-
-
-
-
-
-
-
 \name{cbind}
-\alias{rbind}
-\alias{cbind}
 \alias{cbind.spam}
 \alias{rbind.spam}
 \alias{cbind,spam-method}

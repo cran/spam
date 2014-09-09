@@ -5,15 +5,8 @@
    
 
 
-
-
-
-
-
-
-
-
 \name{options}
+\alias{options.spam}
 \alias{spam.options}
 \alias{spam.getOption}
 \alias{.Spam}
@@ -32,7 +25,7 @@ spam.getOption(x)
 \arguments{
   \item{\dots}{any options can be defined, using \code{name = value} or
     by passing a list of such tagged values.  However, only the ones
-    below are used in \code{spam}.
+    below are used in \code{spam}.\cr
     Further, \code{spam.options('name') == spam.options()['name']}, see the example.
   }
   \item{x}{a character string holding an option name.}
@@ -78,9 +71,10 @@ spam.getOption(x)
 \item{\code{structurebased=FALSE}:}{should operations be carried out on
   the nonzero entries (the structure) or including the zeros.}
 
-\item{code{inefficiencywarning=1e6}:}{issue a warning when inefficient
+\item{\code{inefficiencywarning=1e6}:}{issue a warning when inefficient
   operations are performed and the matrix exceeds the specified size.
-  Valid value is a postive integer or a logical. \code{TRUE} corresponds to 1, \code{FALSE} to \code{Inf}.}
+  Valid value is a postive integer or a logical. \code{TRUE} corresponds
+  to 1 (always), \code{FALSE} to \code{Inf}.}
 
 \item{\code{trivalues=FALSE}:}{a flag whether to return the structure 
   (\code{FALSE}) or the values themselves (\code{TRUE}) when returning the
@@ -93,12 +87,13 @@ spam.getOption(x)
 \item{\code{dopivoting=TRUE}:}{default parameter for "solve" routines. \code{FALSE}
   would solve the system without using the permutation.}
   
-\item{\code{safemode=c(TRUE,TRUE,TRUE)}:}{The logicals are determine (1) 
-  verify double and integer formats when constructing
-  \code{spam} objects (2) quick sanity check when constructing sparse
-  matrices (3) testing for NAs in Fortan calls.
-  \code{TRUE}s are safer but slightly slower. The most relevant speedup
-  is the second flag.}
+\item{\code{NAOK=FALSE}:}{logical determines if NA, NaN and Inf are
+  allowed to Fortan. Setting to TRUE allows to work with these but
+  full functionality has not been tested.}
+
+\item{\code{safemodevalidity=TRUE}:}{logical determines if sanity check
+  is peformed when constructing sparse matrices.  
+  Default is safer but somewhat slower.}
 
 \item{\code{cholsymmetrycheck=TRUE}:}{for the Cholesky factorization,
   verify if the matrix is symmetric.}
@@ -116,9 +111,9 @@ spam.getOption(x)
   could be allocated, this is the step to increase it. }
 }
 }
-\seealso{\code{\link{print}},
-  \code{\link{display}},  \code{\link{image}}, \code{\link{upper.tri}},
-  \code{\link{chol}}, \code{\link{nearest.dist}}, etc.\cr
+\seealso{Functions influenced by these options include: \code{\link{print.spam}},
+  \code{\link{display.spam}},  \code{\link{image.spam}}, \code{\link{upper.tri.spam}},
+  \code{\link{chol.spam}}, \code{\link{nearest.dist}}, etc.\cr
   \code{\link{powerboost}}\cr
 }
 \author{\code{spam.options} is essentially identical to \code{sm.options}.}
@@ -141,7 +136,7 @@ spam.options( eps=.Machine$double.eps, drop=FALSE,
    printsize=100, imagesize=10000, cex=1200, 
    structurebased=FALSE, inefficiencywarning=1e6,
    trivalues=FALSE, listmethod="PE", 
-   safemode=c(TRUE,TRUE,TRUE), dopivoting=TRUE, 
+   NAOK=FALSE, safemodevalidity=TRUE, dopivoting=TRUE, 
    cholsymmetrycheck=TRUE, cholpivotcheck=TRUE,
    cholupdatesingular="warning", cholincreasefactor=c(1.25,1.25),
    nearestdistincreasefactor=1.25, nearestdistnnz=c(400^2,400)     )

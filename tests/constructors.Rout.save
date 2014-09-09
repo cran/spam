@@ -1,0 +1,45 @@
+
+R Under development (unstable) (2014-09-08 r66545) -- "Unsuffered Consequences"
+Copyright (C) 2014 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # This is file ../spam/tests/constructors.R
+> # This file is part of the spam package, 
+> #      http://www.math.uzh.ch/furrer/software/spam/
+> # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+>      
+> 
+> 
+> options( echo=FALSE)
+Loading required package: grid
+Spam version 1.0-1 (2014-09-09) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+Error : row pointers are not monotone increasing in `rowpointers<-`.
+Error : first element of row pointers is < 1 in `rowpointers<-`.
+Error : row pointers are not monotone increasing in `rowpointers<-`.
+Error : last element of row pointers does not conform in `rowpointers<-`.
+Error : last element of row pointers does not conform in `rowpointers<-`.
+Error : column indices exceed dimension `colindices<-`.
+Error : column indices exceed dimension `colindices<-`.
+Error : numerical required in `entries<-`.
+Error : wrong length in `entries<-`.
+Error : wrong length in `entries<-`.
+Error : modification through `dim' or `pad`
+> proc.time()
+   user  system elapsed 
+  0.834   0.023   0.839 

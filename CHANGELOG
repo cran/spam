@@ -1,38 +1,136 @@
-spam_0.41-0    2014-02-26    (RF)
-	- addressed several Rdevel CMD check --as-cran Notes.
-	- minor changes in tests/mle (improving speed)
-	- minor code tiding
-	- file header edits
+commit 3823eb2a93ac5466ec368de81a294c63fd9c8ddd
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Sep 9 12:53:07 2014 +0200
 
-spam_0.40-1    2014-02-20    (Florian Gerber)
-	- update grid_trace2() and grid_trace2.Rd
-	- eliminate bug in cov.mat() and correct typo in cov.Rd
-	  add tests/covmat.R tests/covmat.Rout.save
+    Addressing  approach
 
+commit fcc8e87858c7b77b3ef038b30b229bbeb2bafeca
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Sat Sep 6 22:15:47 2014 +0200
 
-changeset:   4:66173a00f913
-tag:         tip
-user:        Reinhard Furrer @ lappi <reinhard.furrer@math.uzh.ch>
-date:        Wed Aug 21 21:09:05 2013 +0200
-summary:     Adjusted DESCRIPTION, NEWS, ChangeLog for push to CRAN
+    Getting towards CRAN release
 
-changeset:   3:412496cbb8b3
-user:        Florian Gerber <florian.gerber@math.uzh.ch>
-date:        Tue Aug 20 15:36:34 2013 +0200
-summary:     gridBase NOT in dependency. comment germany.Rd about 'fields'
+commit 4f7ddb20efaf89efea79eaf03dfb411f293c36c4
+Merge: 55a7ace 764935f
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Sat Sep 6 21:32:58 2014 +0200
 
-changeset:   2:2526f2c1d501
-user:        Florian Gerber <florian.gerber@math.uzh.ch>
-date:        Mon Aug 19 15:42:49 2013 +0200
-summary:     add plot grid_zoom() and grid_trace2() incl help files.
+    Merge remote-tracking branch 'origin/tests_jss_areal_mapping'
 
-changeset:   1:2929fe7a2799
-user:        Florian Gerber <florian.gerber@math.uzh.ch>
-date:        Tue Aug 06 14:31:11 2013 +0200
-summary:     Test hg, small changes in spam0.30-0/man/mcmczoomPlot.Rd
+commit 55a7acee168a7bb260e90a32a60107c21e306f67
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Sat Sep 6 14:35:30 2014 +0200
 
-changeset:   0:0029fc2741f4
-user:        Reinhard Furrer <reinhard.furrer@math.uzh.ch>
-date:        Mon Aug 05 13:53:20 2013 +0200
-summary:     First Version that runs...
+    Help adjusts
 
+commit 764935f9f09336c07b316b3ccce923c94ca4d214
+Author: Florian Gerber <florian.gerber@math.uzh.ch>
+Date:   Thu Sep 4 10:55:54 2014 +0200
+
+    test script for BYM sampler of JSS-disease paper
+    
+    - inclusion of Leroux sampler not possible. depends on package:trucdist
+    
+    	new file:   tests/jss_areal_counts.R
+
+commit 9bf9597b6440aa40575d37544fad1a79e3546e0e
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Wed Sep 3 23:43:33 2014 +0200
+
+    corrected update
+
+commit 8ad11ea5c7eaddc8595716bdb5906eebd0cdec58
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Thu Aug 28 12:32:09 2014 +0200
+
+    Coercion and Wrappers... set to 0.80
+
+commit 7fc3c8aa594195a11f0002a9bf73f5ebf0ec8452
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 26 16:57:09 2014 +0200
+
+    coerce functions, ifelse works!
+
+commit a7177a6dce0d3c4e4642c303ec8c21040462d7ee
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Thu Aug 21 21:21:10 2014 +0200
+
+    first version of 0.60-0
+
+commit 0cd661154bc24ce7c05a25b87d1781bfd99ac5bc
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Wed Aug 13 16:06:28 2014 +0200
+
+    final fixes for freeze of version 0.50-0
+
+commit d85f2d2f4f181ae066c248774081edb0de4f7d96
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Wed Aug 13 13:33:25 2014 +0200
+
+    Test to pass non finite numbers through some fortran routines
+
+commit 55391e836d2f467b013b781fdddc2b97c281a837
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Wed Aug 13 10:11:48 2014 +0200
+
+    First stab at coherent 'Math' group handling
+
+commit 408115340155aac74e07501243eb27b34bdfc6eb
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 12 21:32:26 2014 +0200
+
+    first stab at coherent 'dim' and structure based operators
+
+commit 005135896e0f4f516fdbaa0d22f3e8580b24c808
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 12 10:47:37 2014 +0200
+
+    Bugfix assignment
+
+commit 36024017dfc777baf510c6780fe5aecbf230c4e6
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 12 10:35:47 2014 +0200
+
+    constructor: rowpointers part II
+
+commit 308101b2ee6311f33e783f6c6f09c2b4f444984d
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 12 10:34:55 2014 +0200
+
+    constructor: rowpointers
+
+commit 869bf80ef88bc93e343f99bc062a6bc5aa59b258
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 12 07:15:16 2014 +0200
+
+    crossprod help file and additional todo
+
+commit cdab58b0a625eacff0c4d9e3855b41349016324c
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 12 07:09:44 2014 +0200
+
+    News and Rd adjustment
+
+commit 775bf4c3ba574f8a0d89669eb0eaebfd8c06069f
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Mon Aug 11 21:24:23 2014 +0200
+
+    added crossprod and eliminated [d,i]check
+
+commit 78b101b99739be585f2c4c27e37733df32b7b088
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Wed Jun 11 20:35:48 2014 +0200
+
+    Fixed version number
+
+commit f21c8dfed9903a761c8306ba1cbe7db56a137136
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Wed Jun 11 20:33:13 2014 +0200
+
+    Eliminating nested structure
+
+commit 95fcaf89166c0029f3933bdcce27fa25eeb80b4e
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Wed Jun 11 20:27:33 2014 +0200
+
+    first commit

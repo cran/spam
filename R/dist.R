@@ -36,8 +36,8 @@
 nearest.dist <- function( x, y=NULL, method = "euclidean",
                          delta = 1,
                          upper = if(is.null(y)) FALSE else NULL,
-                         p = 2, miles=TRUE, R=NULL,
-                         eps =  NULL, diag = NULL
+                         p = 2, miles=TRUE, R=NULL
+#                         eps =  NULL, diag = NULL
                          )
 {
   # see help for exact parameter meaning
@@ -45,8 +45,8 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   # We always include all small distances. Hence, this function 
   #   works different than any other spam functions. An addititonal
   #   call to an as.spam would eliminate the small values. 
-  if (!is.null(diag)) warning("Argument 'diag' is deprecated")
-  if (!is.null(eps))  warning("Argument 'eps' is deprecated")
+#  if (!is.null(diag)) warning("Argument 'diag' is deprecated")
+#  if (!is.null(eps))  warning("Argument 'eps' is deprecated")
   
   if (!is.na(pmatch(method, "euclidian")))     method <- "euclidean"
   METHODS <- c("euclidean", "maximum", "minkowski", "greatcircle")
@@ -112,7 +112,7 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
                   rowpointers=vector("integer",n1+1),
                   entries=vector("double",nnz),
                   nnz=as.integer(nnz),
-                  iflag=as.integer(0),DUP=DUPFALSE,NAOK=!TRUE,
+                  iflag=as.integer(0),DUP=DUPFALSE,NAOK=.Spam$NAOK,
                   PACKAGE="spam")
     
     if (d$iflag==0) break else {
@@ -137,4 +137,16 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   slot(dmat,"dimension",check=FALSE) <-   as.integer(c(n1,n2))
   return( dmat)
 }
+
+# in fields:
+# rdist <- function (x1, x2) 
+
+spam_rdist <- function(x1, x2, delta = 1) 
+     nearest.dist(x1, y=x2,   delta = delta,  upper = NULL)
+
+# in fields:
+# rdist.earth <- function (x1, x2, miles = TRUE, R = NULL) 
+spam_rdist.earth <- function(x1, x2, delta=1, miles = TRUE, R = NULL)
+    nearest.dist( x1, y=x2, method = "greatcircle",
+                         delta = delta, miles=miles, R=R,  upper = NULL)
 

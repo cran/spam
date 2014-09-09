@@ -6,13 +6,6 @@
 
 
 
-
-
-
-
-
-
-
 \name{powerboost}
 \alias{powerboost}
 \title{Specific options Setting}

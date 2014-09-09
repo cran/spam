@@ -4,10 +4,7 @@
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
-
-
 \name{kronecker}
-%\alias{kronecker}
 \alias{kronecker.default}
 \alias{kronecker.spam}
 \title{Kronecker Products on Sparse Matrices}

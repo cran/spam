@@ -89,7 +89,7 @@ c-----------------------------------------------------------------------
       double precision a(*),ao(*),eps
       integer nrow,ncol,nnz,ir(*),jc(*),jao(*),iao(*)
 
-      integer     newnnz,   ipos,   k,  i, j, tmp1,tmp2 
+      integer     newnnz,   ipos,   k,  i, j, tmp1, tmp2 
       double precision tmp
 c-----------------------------------------------------------------------
 c  Triplet representation     to   Compressed Sparse Row
@@ -186,7 +186,7 @@ c Sort the individual rows
       enddo
 
       
-      call cleanspam2(nrow,ao,jao,iao,eps)
+      call cleanspam(nrow,ao,jao,iao,eps)
       nnz = iao(nrow+1)-1
       return
 c-----------------------------------------------------------------------
@@ -194,7 +194,7 @@ c-----------------------------------------------------------------------
 
 
 
-      subroutine cleanspam2(nrow,a,ja,ia,eps)
+      subroutine cleanspam(nrow,a,ja,ia,eps)
       
       implicit none
       integer nrow, ia(nrow+1), ja(*)
@@ -228,7 +228,7 @@ c     Local
       do i = 1, nrow
          ia(i) = k
          do j=oldia(i),oldia(i+1)-1
-            if (dabs(a(j)) .gt. eps) then
+            if (.not.(dabs(a(j)) .le. eps)) then
                
                ja(k) = ja(j)
                a(k) = a(j)

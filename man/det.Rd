@@ -4,17 +4,7 @@
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
-
-
-
-
-
-
-
-
-
 \name{det}
-\alias{det}
 \alias{det,spam-method}
 \alias{det,spam.chol.NgPeyton-method}
 \alias{det.spam}
@@ -70,7 +60,7 @@ Ng, E. G. and B. W. Peyton (1993) Block sparse Cholesky algorithms
 on advanced uniprocessor computers, \emph{SIAM J. Sci. Comput.}, \bold{14},
 1034--1056.
 }
-\seealso{\code{\link{chol}}
+\seealso{\code{\link{chol.spam}}
 }
 \examples{
 x <- spam( c(4,3,0,3,5,1,0,1,4),3)

@@ -6,13 +6,10 @@
 
 
 
-
-
-
-
-
 options( echo=FALSE)
-library( spam, warn.conflict=FALSE)  
+library( spam, warn.conflict=FALSE)
+
+spam.options( structurebased=FALSE) # test for equivalence!
 
 n <- 10
 x <- array(rnorm(n^2),c(n,n))

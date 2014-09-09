@@ -4,16 +4,13 @@
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
-
-
 \name{print}
-\alias{print}
+\docType{methods}
 \alias{print.spam}
 \alias{print,spam-method}
 %\alias{print,spam.chol.NgPeyton-method}
 \alias{print.spam.chol}
 \alias{print.spam.chol.NgPeyton}
-\alias{summary}
 \alias{summary.spam}
 \alias{summary,spam-method}
 %\alias{summary,spam.chol.NgPeyton-method}
@@ -24,8 +21,8 @@
   and summarizing the sparsity structure thereof. 
 }
 \usage{
-  print(x, ...)
-  summary(object, ...)
+  \S4method{print}{spam}(x, ...)
+\S4method{summary}{spam}(object, ...)
 }
 \arguments{\item{x}{matrix of class \code{spam} or \code{spam.chol.}\emph{method}.}
   \item{object}{matrix of class \code{spam} or \code{spam.chol.}\emph{method}.}

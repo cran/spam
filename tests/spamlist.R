@@ -34,11 +34,11 @@ j <- c(5,4,3,2,1)
 ss3 <- spam(0,5,5)
 ss3[cbind(i,j)] <- i/j
 test.for.zero(spam.list(list(i=i,j=j,i/j)), ss3)
-dim(ss3) <- c(13,13)
+pad(ss3) <- c(13,13)
 test.for.zero(spam.list(list(i=i,j=j,i/j),13,13), ss3)
-dim(ss3) <- c(3,3)
+pad(ss3) <- c(3,3)
 test.for.zero(spam.list(list(i=i,j=j,i/j),3,3), ss3)
-dim(ss3) <- c(2,2)
+pad(ss3) <- c(2,2)
 test.for.zero(spam.list(list(i=i,j=j,i/j),2,2), ss3,rel=F)
 
 

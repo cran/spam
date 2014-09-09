@@ -6,9 +6,22 @@
 
 
 
-library(spam)
 
-data(UKDriverDeaths)
+# JSS article:
+#     "spam: A Sparse Matrix R Package with Emphasis on
+#            MCMC Methods for Gaussian Markov Random Fields"
+#
+# Compared to the R code given in the article, here we give:
+# - improved formatting
+# - more comments
+# - the R code to construct the figures
+
+
+
+# SETUP:
+library("spam")
+spam.options(structurebased=TRUE)
+data("UKDriverDeaths")
 
 y <- sqrt(c(UKDriverDeaths))       # square root counts
 
@@ -17,7 +30,7 @@ m <- 12                            # We want to predict for one season.
 nm <- n+m                          # Total length of s and t
 
 
-priorshape <-  c(4,1,1)            # alpha's, as in Rue & Held (2005)
+priorshape <-  c(4, 1, 1)          # alpha's, as in Rue & Held (2005)
 priorinvscale <- c(4, 0.1, 0.0005) # beta's 
 
 # Construct the individual block precisions
@@ -25,19 +38,20 @@ priorinvscale <- c(4, 0.1, 0.0005) # beta's
 
 # Qsy, Qty are trivial:
 Qsy <- diag.spam(n)
-dim(Qsy) <- c(n+m,n)
+pad(Qsy) <- c(n+m, n)  # previously:  dim(Qsy) <- c(n+m, n)
 
 Qty <- Qsy
 
-Qst <- spam(0,nm,nm)
-Qst[cbind(1:n,1:n)] <- rep(1,n)
+Qst <- spam(0, nm, nm)
+Qst[cbind(1:n, 1:n)] <- rep(1, n)
 
 
 # The form of Qss is given by (Rue and Held equation 3.59).
 # Qss can be constructed with a loop:
-Qss <- spam(0,nm,nm)
+Qss <- spam(0, nm, nm)
 for (i in 0:(nm-m)) {
-    Qss[i+1:m,i+1:m] <- Qss[i+1:m,i+1:m]+1
+    Qss[i+1:m,i+1:m] <- Qss[i+1:m, i+1:m] + matrix(1,m,m)
+#    Qss[i+1:m,i+1:m] <- Qss[i+1:m, i+1:m]+1  # previously...
 }
 
 # Note that for the final version we need:
@@ -65,10 +79,12 @@ Qst_yk <- rbind(cbind(k[2]*Qss + k[1]*diag.spam(nm), k[1]*Qst),
                 
 struct <- chol(Qst_yk)
 
+        
+
 # Note that we do not provide the exactly the same ordering 
 # algorithms. Hence, the following is sightly different than
 # Figure RH4.2.
-cholQst_yk <- chol(Qst_yk,pivot='RCM')
+cholQst_yk <- chol(Qst_yk,pivot="RCM")
 P <- ordering(cholQst_yk)
 display(Qst_yk)
 display(Qst_yk[P,P])
@@ -82,6 +98,7 @@ display(Qst_yk[P,P])
 ngibbs <- 100   # In the original version is 500!
 burnin <- 10    # > 0
 totalg <- ngibbs+burnin
+set.seed(14)
 
 # Initialize parameters:
 spost <- tpost <- array(0, c(totalg, nm))
@@ -101,7 +118,6 @@ for (ig in 2:totalg) {
                    kpost[ig-1,1]*Qst),
              cbind(kpost[ig-1,1]*Qst,  
                    kpost[ig-1,3]*Qtt + kpost[ig-1,1]*Qst))
-  
   
   b <- c(kpost[ig-1,1]*Qsy %*% y, kpost[ig-1,1]*Qsy %*% y)
   
@@ -149,7 +165,7 @@ matlines( t(postquant)^2, col=4,lty=1)
 
 legend("topright",legend=c("Posterior median", "Quantiles of posterior sample",
                     "Quantiles of predictive distribution"),
-       bty='n',col=c(2,4,3),lty=1)
+       bty="n",col=c(2,4,3),lty=1)
 
 
 
@@ -166,7 +182,7 @@ kpostmedian <- apply(kpost,2,median)
 
 par(mfcol=c(1,3),mai=c(.65,.65,.01,.01),cex=.85,mgp=c(2.6,1,0))
 
-matplot( log( kpost), lty=1, type='l',xlab='Index')
+matplot( log( kpost), lty=1, type="l",xlab="Index")
 abline(h=log(kpostmedian),col=3)
 acf( kpost[,3],ylab=expression(kappa[t]))
 plot(kpost[,2:3],ylab=expression(kappa[t]),xlab=expression(kappa[s]),cex=.8)
@@ -178,9 +194,9 @@ allkappas <- rbind(apply(kpost,2,mean),
                    apply(kpost,2,median),
                    apply(1/kpost,2,mean),
                    apply(1/kpost,2,median))
-colnames(allkappas) <- c('kappa_y', 'kappa_s', 'kappa_t')
-rownames(allkappas) <- c('Prec (mean)', 'Prec (median)',
-                         'Var (mean)', 'Var (median) ')
+colnames(allkappas) <- c("kappa_y", "kappa_s", "kappa_t")
+rownames(allkappas) <- c("Prec (mean)", "Prec (median)",
+                         "Var (mean)", "Var (median) ")
 print(allkappas,4)
 
 png("example1_m1.png",width=300,height=300)

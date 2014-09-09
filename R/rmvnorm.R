@@ -21,7 +21,7 @@ rmvnorm.spam <- function(n,mu=rep(0, nrow(Sigma)), Sigma, Rstruct=NULL, ...) {
   N <- dim(Sigma)[1]
 
   R <- as.spam(cholS)
-  retval <- ( array(rnorm(n*N),c(n,N)) %*% R)[,iord,drop=F]
+  retval <- as.matrix( ( array(rnorm(n*N),c(n,N)) %*% R)[,iord,drop=F])
      # It is often better to order the sample than the matrix
      # R itself.
   return(sweep(retval, 2, mu, "+"))
@@ -67,6 +67,9 @@ rmvnorm.const <- function (n, mu = rep(0, nrow(Sigma)), Sigma,
                                 Rstruct = NULL, 
                                 A = array(1, c(1,nrow(Sigma))), a=0, U=NULL,  ...) 
 {
+    N <- dim(Sigma)[1]
+    if (!identical(ncol(A), N)) stop("Incorrect constraint specification")
+
     if (is(Rstruct, "spam.chol.NgPeyton")) 
         cholS <- update.spam.chol.NgPeyton(Rstruct, Sigma, ...)
     else cholS <- chol.spam(Sigma, ...)
@@ -87,40 +90,34 @@ rmvnorm.const <- function (n, mu = rep(0, nrow(Sigma)), Sigma,
 
 rmvnorm.prec.const <- function (n, mu = rep(0, nrow(Q)), Q,
                                 Rstruct = NULL, 
-                                A = rep(1,nrow(Q)), a=0, U=NULL,  ...) 
+                                A = array(1, c(1,nrow(Q))), a=0, U=NULL,  ...) 
 {
+    N = dim(Q)[1]
+    if (!identical(ncol(A), N)) stop("Incorrect constraint specification")
+
     if (is(Rstruct, "spam.chol.NgPeyton")) 
         R <- update.spam.chol.NgPeyton(Rstruct, Q, ...)
     else R <- chol(Q, ...)
-    N <- dim(Q)[1]
     x <- backsolve(R, array(rnorm(n * N), c(N, n)), k=N) + mu
 
-    if (is.null(dim(A))) {
-      
-      if (is.null(U)){
-        V <- c(backsolve( R, forwardsolve( R, A), k=N))
-        W <- sum( A * V)
-        U <- V/W
-      }
-      correct <- sum( A * x) - a
-      return(t(x-  U * correct))
-
-    } else {
-    
-      if (is.null(U)){
-        V <- backsolve( R, forwardsolve( R, t(A)), k=N)
-        W <- A %*% V
-        U <- solve(W, t(V))
-      }
-      correct <- A %*% x - a
-      return(t(x- t(U) %*% correct))
+       
+    if (is.null(U)){
+        tV <- t( backsolve( R, forwardsolve( R, t(A)), k=N))
+        W <- tcrossprod(A, tV)
+        U <- solve(W, tV)
     }
-  }
+    correct <- A %*% x - a
+    return(t(x- t(U) %*% correct))
+}
+
+
 
 rmvnorm.canonical.const <- function (n, b, Q, Rstruct = NULL, 
-                                     A = rep(1,nrow(Q)), a=0, U=NULL, ...) 
+                                     A = array(1, c(1,nrow(Q))), a=0, U=NULL, ...) 
 {
     N = dim(Q)[1]
+    if (!identical(ncol(A), N)) stop("Incorrect constraint specification")
+
     if (is(Rstruct, "spam.chol.NgPeyton")) 
         R <- update.spam.chol.NgPeyton(Rstruct, Q, ...)
     else R <- chol(Q, ...)
@@ -132,25 +129,14 @@ rmvnorm.canonical.const <- function (n, b, Q, Rstruct = NULL,
     }
     x <- backsolve(R, array(rnorm(n * N), c(N, n)), k=N) + mu
 
-    if (is.null(dim(A))) {
-
-      if (is.null(U)){
-        V <- c(backsolve( R, forwardsolve( R, A), k=N))
-        W <- sum( A * V)
-        U <- V/W
-      }
-      correct <- sum( A * x) - a
-      return(t(x-  U * correct))
-    } else {
-    
-      if (is.null(U)){
-        V <- backsolve( R, forwardsolve( R, t(A)), k=N)
-        W <- A %*% V
-        U <- solve(W, t(V))
-      }
-      correct <- A %*% x - a
-      return(t(x- t(U) %*% correct))
+   
+    if (is.null(U)){
+        tV <- t( backsolve( R, forwardsolve( R, t(A)), k=N))
+        W <- tcrossprod(A, tV)
+        U <- solve(W, tV)
     }
-
-      
-  }
+    correct <- A %*% x - a
+    return(t(x- t(U) %*% correct))
+ 
+    
+}

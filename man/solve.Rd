@@ -4,30 +4,23 @@
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
    
 
-
-
-
-
-
-
 \name{spam solve}
-\alias{solve.spam}
+\alias{backsolve}
+\alias{forwardsolve}
 \alias{backsolve-methods}
 \alias{backsolve,ANY-method}
 \alias{backsolve,spam-method}
 \alias{backsolve,matrix-method}
-\alias{backsolve}
 \alias{backsolve.spam}
 \alias{forwardsolve-methods}
 \alias{forwardsolve,ANY-method}
 \alias{forwardsolve,spam-method}
 \alias{forwardsolve,matrix-method}
-\alias{forwardsolve}
 \alias{forwardsolve.spam}
-\alias{chol2inv}
 \alias{chol2inv.spam}
 \alias{chol2inv,spam-method}
 \alias{chol2inv,spam.chol.NgPeyton-method}
+\alias{solve.spam}
 \alias{solve,ANY-method}
 \alias{solve,spam-method}
 \title{Linear Equation Solving for Sparse Matrices}
@@ -41,19 +34,10 @@ of a matrix if the right-hand-side is missing.
 }
 \usage{
 \S4method{solve}{spam}(a, b, Rstruct=NULL, \dots)
-\S4method{backsolve}{spam}(r, x, ...)
-\S4method{forwardsolve}{spam}(l, x, ...)
+\S4method{backsolve}{spam}(r, x, \dots)
+\S4method{forwardsolve}{spam}(l, x, \dots)
 
-
-\S3method{solve}{spam}(a, b, Rstruct=NULL, ...)
-\S3method{backsolve}{spam}(r, x, ...)
-\S3method{forwardsolve}{spam}(l, x, ...)
-
-chol2inv(x,...)
-
-# backsolve.spam(r, x, ...)
-# forwardsolve.spam(l, x, ...)
-# solve.spam(a, b, Rstruct=NULL, ...)
+\S4method{chol2inv}{spam}(x, \dots)
 }
 \arguments{
 \item{a}{symmetric positive definite matrix of class \code{spam} or a Cholesky factor 
@@ -113,7 +97,7 @@ Recall that the Cholesky factors are from ordered matrices.
   \code{spam} and \code{spam.chol.}\emph{method}.}
 \references{See references in \code{\link{chol}}. 
 }
-\seealso{\code{\link{det}}, \code{\link{chol}} and \code{\link{ordering}}.
+\seealso{\code{\link{chol.spam}} and \code{\link{ordering}}.
 }
 \examples{
 # Generate multivariate form a covariance inverse:
@@ -144,6 +128,11 @@ R <- chol(Sigmainv)
 norm( backsolve( R, forwardsolve( R, b))-
       solve( Sigmainv, b) )
 norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma )
+
+
+# 'update':
+R1 <- update( R, Sigmainv + diag.spam( n))
+
 
 
 }

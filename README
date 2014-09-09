@@ -1,0 +1,17 @@
+Versions of `spam` prior to 1.00 included a LICENSE file that
+described the license of some Fortran routines incompatible with the
+general R philosophy.  The routines are in src/cholmodified.f.  For
+the packages `SparseM` and `spam`, Esmond Ng and Barry Peyton have
+very kindly given permission to use their routines under an open
+source license (2012/03/09 and 2014/08/29).  They have requested that
+their code be credited via the following two publications:
+
+   Esmond G. Ng and Barry W. Peyton, "Block sparse Cholesky algorithms
+   on advanced uniprocessor computers". SIAM J. Sci. Stat. Comput.
+   14  (1993), pp. 1034-1056.
+
+   John R. Gilbert, Esmond G. Ng, and Barry W. Peyton, "An efficient
+   algorithm to compute row and column counts for sparse Cholesky
+   factorization". SIAM J. Matrix Anal. Appl. 15 (1994), pp. 1075-1091.
+
+The old license file of `spam` versions <1.0 is in ./inst/0LICENCE 

@@ -5,16 +5,8 @@
    
 
 
-
-
-
-
-
-
-
-
 \name{spam methods}
-\alias{diff.spam}
+\alias{methods.spam}
 \title{Methods for sparse matrices}
 \description{Methods without any additional parameters for sparse matrices.
 }

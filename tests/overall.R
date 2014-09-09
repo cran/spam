@@ -6,28 +6,20 @@
 
 
 
-
-
-
-
-
 options( echo=FALSE)
 library( spam, warn.conflict=FALSE)
 
+spam.options(structurebased=FALSE)
 
-test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE,
-tag=NULL){
+test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE, tag=NULL){
 
-  if( !is.null(tag)){
-     cat( "testing: ", tag, fill=TRUE)}
+  if( !is.null(tag))     cat( "testing: ", tag, fill=TRUE)
 
-  denom<-   ifelse( relative, mean( abs(c(xtrue))),1.0)
+  denom <- ifelse( relative, mean( abs(c(xtrue))),1.0)
 
   test.value <- sum( abs(c(xtest) - c( xtrue) ) ) /denom
-  if(   test.value < tol ){
-          cat("** PASSED test at tolerance ", tol, fill=TRUE)}
-  else{ cat( "## FAILED test value = ", test.value, " at tolerance ", tol,
-              fill=TRUE)}
+  if( test.value < tol ){  cat("** PASSED test at tolerance ", tol, fill=TRUE)
+  }else{ cat( "## FAILED test value = ", test.value, " at tolerance ", tol, fill=TRUE)}
 
 }
 
@@ -367,22 +359,6 @@ if (F) { # the following should cause errors:
   spam.list( list(ind=1, j=0, 2))
   spam.list( list(ind=numeric(0), j=numeric(0), numeric(0)))
 }
-
-test.for.zero(spam( list(ind=numeric(0), j=numeric(0), numeric(0)),nrow=4,ncol=3),
-              spam(0,4,3),rel=FALSE)
-
-i <- c(1,2,3,4,5)
-j <- c(5,4,3,2,1)
-ss3 <- spam(0,5,5)
-ss3[cbind(i,j)] <- i/j
-test.for.zero(spam(list(i=i,j=j,i/j)), ss3)
-dim(ss3) <- c(13,13)
-test.for.zero(spam(list(i=i,j=j,i/j),13,13), ss3)
-dim(ss3) <- c(3,3)
-test.for.zero(spam(list(i=i,j=j,i/j),3,3), ss3)
-dim(ss3) <- c(2,2)
-test.for.zero(spam(list(i=i,j=j,i/j),2,2), ss3,rel=F)
-
 
 
 

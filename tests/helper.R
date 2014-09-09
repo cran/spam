@@ -15,7 +15,7 @@ options( echo=FALSE)
 library( spam, warn.conflict=FALSE)
 
 test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE,
-tag=NULL){
+                          tag=NULL){
 
   if( !is.null(tag)){
      cat( "testing: ", tag, fill=TRUE)}
@@ -109,9 +109,6 @@ for (i in 10^(1:4)){
   cat('    sample size n=',i,' yields Frobenius-norm:',
       norm( var( rmvnorm.spam(i, b, as.spam(Sigma), Lstruct=struct))- Sigma,'f'),'\n')
 }
-
-
-
 
 
 options( echo=TRUE)
