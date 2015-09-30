@@ -18,7 +18,7 @@ bandwidth <- function(A) {
   }
   ret <- .Fortran("getbwd",A@dimension[1],A@entries,A@colindices,
                   A@rowpointers,low=integer(1),upp=integer(1),
-                 NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
+                 NAOK = .Spam$NAOK, PACKAGE = "spam")
   return(c(ret$low,ret$upp))
 }
                   

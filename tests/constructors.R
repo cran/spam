@@ -22,6 +22,7 @@ re <- A@rowpointers
 rowpointers(A) <- re
 
 # following will case error, thus the `try`
+cat("===A series of errors caught by 'try':\n")
 r <- re; r[1:2] <- rev(r[1:2]); try( rowpointers(A) <- r  )
 r <- re; r[1] <- 0;             try( rowpointers(A) <- r  )
 r <- re; r[n+1] <- 2;           try( rowpointers(A) <- r  )
@@ -36,7 +37,7 @@ colindices(A) <- ce
 
 r <- ce; r[1:4] <- rev(r[1:4]); try( colindices(A) <- r  )
 r <- ce; r[1] <- 0;             try( colindices(A) <- r  )
-r <- ce; r[1] <- 20;          try( colindices(A) <- r  )
+r <- ce; r[1] <- 20;            try( colindices(A) <- r  )
 
 entries(A) <- A@entries
 try( entries(A) <- as.logical(A@entries))
@@ -44,3 +45,7 @@ try( entries(A) <- c(r,1))
 try( entries(A) <- r[-1])
 
 try( dimension(A) <- c(1,2))
+
+cat('===end of errors.\n')
+
+options( echo=TRUE)

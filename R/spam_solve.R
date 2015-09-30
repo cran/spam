@@ -110,14 +110,14 @@ setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
   xcolindices <- .Fortran('calcja',
                            nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
                            xja=vector("integer",nnzR),
-                           NAOK = .Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$xja
+                           NAOK = .Spam$NAOK,PACKAGE = "spam")$xja
   cx <- .Fortran("spamcsrdns",
                  nrow=nrow,
                  entries=as.double(x@entries),
                  colindices=xcolindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",nrow*nrow),  
-                 NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$res
+                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res
   if (length( list(...)) < 1)
     return( cx)
   else
@@ -135,7 +135,7 @@ setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
   slot(newx,"colindices",check=FALSE) <- .Fortran('calcja',
                            nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
                            xja=vector("integer",nnzR),
-                           NAOK = .Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$xja
+                           NAOK = .Spam$NAOK,PACKAGE = "spam")$xja
   slot(newx,"rowpointers",check=FALSE) <- x@rowpointers
   slot(newx,"dimension",check=FALSE) <- x@dimension
   return(newx)
@@ -332,7 +332,7 @@ chol.spam <- function(x, pivot = "MMD",
                 xsuper = vector("integer",nrow+1),   
                 cachesize = as.integer(cache),
                 ierr = 0L,          
-                NAOK = .Spam$NAOK,DUP=DUPFALSE,PACKAGE="spam")
+                NAOK = .Spam$NAOK,PACKAGE="spam")
 
   if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   if(z$ierr == 6) stop("Inconsitency in the input",call.=FALSE)
@@ -366,7 +366,7 @@ chol.spam <- function(x, pivot = "MMD",
                   xsuper = vector("integer",nrow+1),   
                   cachesize = as.integer(cache),
                   ierr = 0L,          
-                  NAOK = .Spam$NAOK,DUP=DUPFALSE,PACKAGE="spam")
+                  NAOK = .Spam$NAOK,PACKAGE="spam")
     
     if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   }
@@ -417,7 +417,7 @@ solve.spam <- function (a, b,  Rstruct = NULL, ...) {
                   a@rowpointers, a@invpivot, a@pivot,
                   a@supernodes, vector("double",nrow), sol = vector("double",nrow*p),
                   as.vector(b,"double"),
-                  DUP=DUPFALSE,NAOK = .Spam$NAOK,PACKAGE = "spam")$sol
+                  NAOK = .Spam$NAOK,PACKAGE = "spam")$sol
   } else z <- backsolve(a, forwardsolve( t(a),b))
     # see the helpfile for a comment about the 't(a)' construct.
   
@@ -437,7 +437,7 @@ chol2inv.spam <- function (x, ...) {
                   x@colpointers, as.double(x@entries),
                   x@rowpointers, x@invpivot, x@pivot,
                   x@supernodes, vector("double",nrow), sol = vector("double",nrow*nrow), y,
-                  DUP=DUPFALSE,NAOK = .Spam$NAOK,PACKAGE = "spam")$sol
+                  NAOK = .Spam$NAOK,PACKAGE = "spam")$sol
     dim(z) <- c(nrow,nrow)
   } else z <- backsolve.spam(x, forwardsolve.spam( t(x), diag(nrow)))
   return( z)
@@ -465,7 +465,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
       z <- .Fortran("backsolve", m, nsuper, p, r@colindices,
                     r@colpointers, as.double(r@entries), r@rowpointers, 
                     r@supernodes, sol = vector("double",m*p),
-                    DUP=DUPFALSE,NAOK = .Spam$NAOK,
+                    NAOK = .Spam$NAOK,
                     PACKAGE="spam")$sol
     }else{
       z <- .Fortran("pivotbacksolve", m, nsuper, p, r@colindices,
@@ -473,7 +473,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
                     r@rowpointers,   r@invpivot, r@pivot,
                     r@supernodes, vector("double",m),
                     sol = vector("double",m*p), as.double(x),
-                    DUP=DUPFALSE,NAOK = .Spam$NAOK,PACKAGE="spam")$sol
+                    NAOK = .Spam$NAOK,PACKAGE="spam")$sol
     }
   } else {
     if (n!=m) stop("Triangular matrix 'r' not compatible with 'x'")
@@ -482,7 +482,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
                   m=m,p,sol = vector("double",m*p),x=as.vector(x,"double"),
                   al=as.double(r@entries),jal=r@colindices,
                   ial=r@rowpointers,
-                  DUP=DUPFALSE,NAOK = .Spam$NAOK,PACKAGE="spam")
+                  NAOK = .Spam$NAOK,PACKAGE="spam")
     if (z$m<0) stop(gettextf("singular matrix in 'backsolve'. Last zero in diagonal [%d]",
             -z$m), domain = NA)
      else z <- z$sol
@@ -520,14 +520,14 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
       z <- .Fortran("forwardsolve", m, nsuper, p, l@colindices,
                     l@colpointers, as.double(l@entries), l@rowpointers, 
                     l@supernodes, sol = vector("double",m*p),
-                    DUP=DUPFALSE,NAOK = .Spam$NAOK,PACKAGE="spam")$sol
+                    NAOK = .Spam$NAOK,PACKAGE="spam")$sol
     }else{
       z <- .Fortran("pivotforwardsolve", m, nsuper, p, l@colindices,
                     l@colpointers,  as.double(l@entries),
                     l@rowpointers,   l@invpivot, l@pivot,
                     l@supernodes, vector("double",m),
                     sol = vector("double",m*p), as.double(x),
-                    DUP=DUPFALSE,NAOK = .Spam$NAOK,PACKAGE="spam")$sol
+                    NAOK = .Spam$NAOK,PACKAGE="spam")$sol
     }
   } else {
     if (n!=m) stop("Triangular matrix 'l' not compatible with 'x'")
@@ -536,7 +536,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
                   m=m,p,sol = vector("double",m*p),x=as.vector(x,"double"),
                   al=as.double(l@entries),jal=l@colindices,
                   ial=l@rowpointers,
-                  DUP=DUPFALSE,NAOK = .Spam$NAOK,PACKAGE="spam")
+                  NAOK = .Spam$NAOK,PACKAGE="spam")
     if (z$m<0) stop(gettextf("singular matrix in 'forwardsolve'. First zero in diagonal [%d]",
             -z$m), domain = NA)
     else z <- z$sol
@@ -646,7 +646,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                 xsuper = vector("integer",nrow+1),   
                 cachesize = as.integer(cache),
                 ierr = 0L,          
-                NAOK = .Spam$NAOK,DUP=DUPFALSE, PACKAGE = "spam")
+                NAOK = .Spam$NAOK, PACKAGE = "spam")
 
   if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   if(z$ierr == 6) stop("Inconsitency in the input",call.=FALSE)
@@ -678,7 +678,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                   xsuper = vector("integer",nrow+1),   
                   cachesize = as.integer(cache),
                   ierr = 0L,          
-                  NAOK = .Spam$NAOK,DUP=DUPFALSE, PACKAGE = "spam")
+                  NAOK = .Spam$NAOK, PACKAGE = "spam")
     
   }
  #### end from above 
@@ -731,14 +731,14 @@ setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
   xcolindices <- .Fortran('calcja',
                            nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
                            xja=vector("integer",nnzR),
-                           NAOK = .Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$xja
+                           NAOK = .Spam$NAOK,PACKAGE = "spam")$xja
   return(array(.Fortran("spamcsrdns",
                  nrow=nrow,
                  entries=as.double(x@entries),
                  colindices=xcolindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",nrow*nrow),  
-                 NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$res,
+                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res,
                c(nrow,nrow))      # we preserve dimensions
          )
 }

@@ -7,12 +7,6 @@
 
 
 
-
-
-
-
-
-
 \name{spam operations}
 \alias{Ops.spam}
 \alias{spam.ops}
@@ -81,8 +75,7 @@
 \alias{norm,matrix,missing-method} 
 \alias{norm,matrix,character-method} 
 %\alias{t,ANY-method} 
-%\alias{t,spam-method} 
-\alias{t.spam}
+\alias{t.spam} 
 \alias{ncol,spam-method} 
 \alias{nrow,spam-method} 
 \alias{dim,ANY-method} 
@@ -99,7 +92,6 @@
 \alias{[<-,spam,ANY,ANY-method}
 \alias{plot.spam}
 \alias{subset.spam}
-\alias{subset.rows.spam}
 \alias{assign.spam}
 \title{Basic Linear Algebra for Sparse Matrices}
 \description{Basic linear algebra operations for sparse matrices
@@ -151,7 +143,7 @@ form) and a sparse matrix, similarly to the operator \code{\%d+\%}.
 
 }
 \references{Some Fortran functions are based on 
-  \url{http://www-users.cs.umn.edu/~saad/software/SPARSKIT/sparskit.html}
+  \url{http://www-users.cs.umn.edu/~saad/software/SPARSKIT/}
 }
 \seealso{
 \code{\link{spam}} for coercion and other class relations involving the

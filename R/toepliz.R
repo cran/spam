@@ -44,7 +44,7 @@
                 entries= vector("double", nz),
                 colindices = vector("integer", nz),
                 rowpointers = vector("integer",  n + 1),
-                 NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
+                 NAOK = .Spam$NAOK, PACKAGE = "spam")
 
                 
   newx <- new("spam")
@@ -87,7 +87,7 @@ toeplitz.spam <- function(x,y=NULL, eps = .Spam$eps)
                 colindices = vector("integer", nz),
                 rowpointers = vector("integer",  n + 1),
                 nnz=as.integer(1),
-                NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
+                NAOK = .Spam$NAOK, PACKAGE = "spam")
 
                 
   newx <- new("spam")

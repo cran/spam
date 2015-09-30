@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2014-09-08 r66545) -- "Unsuffered Consequences"
-Copyright (C) 2014 The R Foundation for Statistical Computing
-Platform: x86_64-unknown-linux-gnu (64-bit)
+R Under development (unstable) (2015-09-24 r69424) -- "Unsuffered Consequences"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -15,87 +15,30 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam/R/definitions.R
+> # This is file ../spam/tests/dim.R
 > # This file is part of the spam package, 
 > #      http://www.math.uzh.ch/furrer/software/spam/
 > # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
 >      
 > 
 > 
-> library( spam, warn.conflict=FALSE)
+> options( echo=FALSE)
 Loading required package: grid
-Spam version 1.0-1 (2014-09-09) is loaded.
+Spam version 1.2-1 (2015-09-30) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
 suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
-> 
-> 
-> test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=FALSE,
-+ tag=NULL){
-+   # slightly different test function!
-+   if( !is.null(tag)){
-+      cat( "testing: ", tag, fill=TRUE)}
-+ 
-+   denom<-   ifelse( relative, mean( abs(c(xtrue))),1.0)
-+ 
-+   if (any(dim(xtest)!=dim(xtrue)))
-+     return( cat("## FAILED dimensions  ", dim(xtest), " and ", dim(xtrue),
-+               fill=TRUE))
-+   test.value <- sum( abs(c(as.matrix(xtest)) - c( xtrue) ),na.rm=T ) /denom
-+   if(   test.value < tol ){
-+           cat("** PASSED test at tolerance ", tol, fill=TRUE)}
-+   else{ cat( "## FAILED test value = ", test.value, " at tolerance ", tol,
-+               fill=TRUE)}
-+ 
-+ }
-> 
-> 
-> 
-> # simple tests:
-> ########################################################################
-> 
-> 
-> # construct matrices:
-> n <- 10
-> m <- 15
-> 
-> set.seed(14)
-> tt <- matrix(rnorm(m*n),n,m)
-> tt[tt<0] <- 0
-> 
-> ss <- as.spam(tt)
-> 
-> 
-> 
-> 
-> test.for.zero(ss,tt)
 ** PASSED test at tolerance  1e-06
-> 
-> dim(ss) <- c(m,n)
-> dim(tt) <- c(m,n)
-> test.for.zero(ss,tt)
 ** PASSED test at tolerance  1e-06
-> 
-> dim(ss) <- c(m*n,1)
-> dim(tt) <- c(m*n,1)
-> test.for.zero(ss,tt)
 ** PASSED test at tolerance  1e-06
-> 
-> dim(ss) <- c(1, m*n)
-> dim(tt) <- c(1, m*n)
-> test.for.zero(ss,tt)
 ** PASSED test at tolerance  1e-06
-> 
-> try( dim(ss) <- c(-1, -m*n))
+Two obvious errors caught by 'try':
 Error in spam.list(slist, nrow = value[1], ncol = value[2], eps = .Machine$double.eps) : 
   Indices need to be positive
-> try( dim(ss) <- c(1, m, n))
 Error in `dim<-`(`*tmp*`, value = c(1, 15, 10)) : 
   dims should be of length 1 or 2
 > 
-> 
-> 
 > proc.time()
    user  system elapsed 
-  0.836   0.025   0.844 
+  0.486   0.015   0.490 

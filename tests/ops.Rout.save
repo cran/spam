@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2014-09-08 r66545) -- "Unsuffered Consequences"
-Copyright (C) 2014 The R Foundation for Statistical Computing
-Platform: x86_64-unknown-linux-gnu (64-bit)
+R Under development (unstable) (2015-09-24 r69424) -- "Unsuffered Consequences"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -22,57 +22,13 @@ Type 'q()' to quit R.
 >      
 > 
 > 
-> library( spam, warn.conflict=FALSE)
+> options( echo=FALSE)
 Loading required package: grid
-Spam version 1.0-1 (2014-09-09) is loaded.
+Spam version 1.2-1 (2015-09-30) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
 suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
-> 
-> 
-> test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=FALSE,
-+ tag=NULL){
-+   # slightly different test function!
-+   if( !is.null(tag)){
-+      cat( "testing: ", tag, fill=TRUE)}
-+ 
-+   denom <- ifelse( relative, mean( abs(c(xtrue))),1.0)
-+ 
-+   if (any(dim(xtest)!=dim(xtrue)))
-+     return( cat("## FAILED dimensions  ", dim(xtest), " and ", dim(xtrue),
-+               fill=TRUE))
-+   test.value <- sum( abs(c(as.matrix(xtest)) - c( xtrue) ),na.rm=T ) /denom
-+   if(   test.value < tol ){
-+           cat("** PASSED test at tolerance ", tol, fill=TRUE)}
-+   else{ cat( "## FAILED test value = ", test.value, " at tolerance ", tol,
-+               fill=TRUE)}
-+ 
-+ }
-> 
-> 
-> 
-> 
-> 
-> # construct matrices:
-> n <- 10
-> m <- 5
-> 
-> set.seed(14)
-> tt <- matrix(rnorm(m*n),n,m)
-> rr <- matrix(rnorm(m*n),n,m)
-> tt[tt<0] <- 0
-> rr[rr>0] <- 0
-> 
-> ss <- as.spam(tt)
-> qq <- as.spam(rr)
-> spam.options( structurebased=FALSE) # test for equivalence!
-> 
-> spam.options( NAOK=TRUE) # test for equivalence!
-> 
-> 
-> for (f in rev(getGroupMembers("Arith")))
-+     test.for.zero( do.call(f, list(ss,qq)), do.call(f, list(tt,rr)), tag=f)
 testing:  /
 ** PASSED test at tolerance  1e-06
 testing:  %/%
@@ -87,9 +43,6 @@ testing:  -
 ** PASSED test at tolerance  1e-06
 testing:  +
 ** PASSED test at tolerance  1e-06
->                   
-> for (f in getGroupMembers("Compare"))
-+     test.for.zero( do.call(f, list(ss,qq)), do.call(f, list(tt,rr)), tag=f)
 testing:  ==
 ** PASSED test at tolerance  1e-06
 testing:  >
@@ -102,42 +55,10 @@ testing:  <=
 ** PASSED test at tolerance  1e-06
 testing:  >=
 ** PASSED test at tolerance  1e-06
->                   
-> for (f in getGroupMembers("Logic"))
-+     test.for.zero( do.call(f, list(ss,qq)), do.call(f, list(tt,rr)), tag=f)
 testing:  &
 ** PASSED test at tolerance  1e-06
 testing:  |
 ** PASSED test at tolerance  1e-06
-> 
-> 
-> tv <- sv <- ss@entries
-> qv <- qq@entries
-> spam.options( structurebased=TRUE)
-> 
-> 
-> test.for.zero <- function( xtest, xtrue, tol= 1.0e-6, relative=FALSE, tag=NULL){
-+   # slightly different test function!
-+   if( !is.null(tag)){
-+      cat( "testing: ", tag, fill=TRUE)}
-+ 
-+   denom <- ifelse( relative, mean( abs(c(xtrue))),1.0)
-+ 
-+   test.value <- sum( abs(xtest@entries - c( xtrue) ),na.rm=T ) /denom
-+   if(   test.value < tol ){
-+           cat("** PASSED test at tolerance ", tol, fill=TRUE)}
-+   else{ cat( "## FAILED test value = ", test.value, " at tolerance ", tol,
-+               fill=TRUE)}
-+ 
-+ }
-> 
-> for (g in getGroupMembers("Ops")) {
-+     for (f in getGroupMembers(g)) {
-+         test.for.zero( do.call(f, list(ss,sv)), do.call(f, list(tv,sv)), tag=f)
-+         test.for.zero( do.call(f, list(sv,ss)), do.call(f, list(sv,tv)), tag=f)
-+         test.for.zero( do.call(f, list(ss,4)), do.call(f, list(tv,4)), tag=f)
-+     }
-+ }
 testing:  +
 ** PASSED test at tolerance  1e-06
 testing:  +
@@ -228,28 +149,14 @@ testing:  |
 ** PASSED test at tolerance  1e-06
 testing:  |
 ** PASSED test at tolerance  1e-06
-> try(do.call(f, list(ss,1:2)))
+One error caught by 'try':
 Error in <S4 object of class structure("spam", package = "spam")> | 1:2 : 
   incompatible lengths for '|' operation.
-> 
-> ####################################################################################################################################
-> 
-> {
-+ spam.options(inefficiencywarning=TRUE)
-+ spam.options(structurebased=FALSE)
-+ 
-+ diag(2)+diag.spam(2)
-+ }
      [,1] [,2]
 [1,]    2    0
 [2,]    0    2
 Class 'spam'
 > 
-> 
-> ####################################################################################################################################
-> 
-> options( echo=TRUE)
-> 
 > proc.time()
    user  system elapsed 
-  0.848   0.025   0.857 
+  0.521   0.022   0.525 

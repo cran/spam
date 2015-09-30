@@ -1,26 +1,26 @@
-# This is file ../spam/R/definitions.R
+# This is file ../spam/R/math.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
-# ‘"Ops"’:
-#      ‘"+"’, ‘"-"’, ‘"*"’, ‘"/"’, ‘"^"’, ‘"%%"’, ‘"%/%"’
-#      ‘"&"’, ‘"|"’, ‘"!"’
-#      ‘"=="’, ‘"!="’, ‘"<"’, ‘"<="’, ‘">="’, ‘">"’
+# `"Ops"':
+#      `"+"', `"-"', `"*"', `"/"', `"^"', `"%%"', `"%/%"'
+#      `"&"', `"|"', `"!"'
+#      `"=="', `"!="', `"<"', `"<="', `">="', `">"'
 
 
-#     ‘Math’ ‘"abs"’, ‘"sign"’, ‘"sqrt"’, ‘"ceiling"’, ‘"floor"’,
-#          ‘"trunc"’, ‘"cummax"’, ‘"cummin"’, ‘"cumprod"’, ‘"cumsum"’,
-#          ‘"log"’, ‘"log10"’, ‘"log2"’, ‘"log1p"’, ‘"acos"’, ‘"acosh"’,
-#          ‘"asin"’, ‘"asinh"’, ‘"atan"’, ‘"atanh"’, ‘"exp"’, ‘"expm1"’,
-#          ‘"cos"’, ‘"cosh"’, ‘"cospi"’, ‘"sin"’, ‘"sinh"’, ‘"sinpi"’,
-#          ‘"tan"’, ‘"tanh"’, ‘"tanpi"’, ‘"gamma"’, ‘"lgamma"’,
-#          ‘"digamma"’, ‘"trigamma"’
+#     `Math' `"abs"', `"sign"', `"sqrt"', `"ceiling"', `"floor"',
+#          `"trunc"', `"cummax"', `"cummin"', `"cumprod"', `"cumsum"',
+#          `"log"', `"log10"', `"log2"', `"log1p"', `"acos"', `"acosh"',
+#          `"asin"', `"asinh"', `"atan"', `"atanh"', `"exp"', `"expm1"',
+#          `"cos"', `"cosh"', `"cospi"', `"sin"', `"sinh"', `"sinpi"',
+#          `"tan"', `"tanh"', `"tanpi"', `"gamma"', `"lgamma"',
+#          `"digamma"', `"trigamma"'
 
-#     ‘Math2’ ‘"round"’, ‘"signif"’
+#     `Math2' `"round"', `"signif"'
 
-#     ‘Summary’ ‘"max"’, ‘"min"’, ‘"range"’, ‘"prod"’, ‘"sum"’, ‘"any"’, ‘"all"’
+#     `Summary' `"max"', `"min"', `"range"', `"prod"', `"sum"', `"any"', `"all"'
 
 
 ##############
@@ -40,12 +40,12 @@ setMethod("!",signature(x="spam"),    function(x){
 setMethod("+",signature(e1="spam",e2="missing"), function(e1) e1 )                
 setMethod("-",signature(e1="spam",e2="missing"), function(e1) { e1@entries <- -e1@entries; e1} )                
               
-#     ‘Math2’ :
+#     `Math2' :
 
 setMethod("Math2",signature(x = "spam", digits = "ANY"),
           function(x, digits){ x@entries <- callGeneric(x@entries, digits = digits); x })
 
-#     ‘Math’ :
+#     `Math' :
 
 setMethod("Math","spam", function(x){
     if(.Spam$structurebased) {
@@ -57,7 +57,7 @@ setMethod("Math","spam", function(x){
     }
 })
 
-#     ‘Math’, where we pass to matrix first...
+#     `Math', where we pass to matrix first...
 
 spam_Math <- function(x) {
     if(.Spam$structurebased) {
@@ -72,7 +72,7 @@ spam_Math <- function(x) {
 setMethod("exp","spam", spam_Math )
 setMethod("log10","spam", spam_Math )
 setMethod("log2","spam", spam_Math )
-# from ?log: Do not set S4 methods on ‘logb’ itself.
+# from ?log: Do not set S4 methods on `logb' itself.
 # special case to set base...          
 setMethod("log","spam", function(x,...) {
     if(.Spam$structurebased) {
@@ -103,7 +103,7 @@ setMethod("cumprod","spam", spam_Math )
 setMethod("cumsum","spam", spam_Math )
 
 
-#     ‘Summary’ :
+#     `Summary' :
 setMethod("Summary","spam", function(x,...,na.rm=FALSE){
     if(.Spam$structurebased) {
         callGeneric(x@entries,...,na.rm=na.rm) 
@@ -135,11 +135,11 @@ setMethod("all","spam", logical_Summary)
 
 
 ################################################################################################################################################################################################################################################################################################
-#     ‘Ops’ ‘"Arith"’, ‘"Compare"’, ‘"Logic"’
+#     `Ops' `"Arith"', `"Compare"', `"Logic"'
 
 
 
-#     ‘Logic’ ‘"&"’, ‘"|"’.
+#     `Logic' `"&"', `"|"'.
         
                                        
 "spam_Logic_vectorspam" <- function(e1, e2) {
@@ -182,7 +182,7 @@ setMethod("Logic",signature(e1="spam",e2="vector"), spam_Logic_spamvector)
 setMethod("Logic",signature(e1="vector",e2="spam"), spam_Logic_vectorspam)
 
 ##################################################################################################
-#     ‘Compare’ ‘"=="’, ‘">"’, ‘"<"’, ‘"!="’, ‘"<="’, ‘">="’                                     
+#     `Compare' `"=="', `">"', `"<"', `"!="', `"<="', `">="'                                     
 "spam_Compare" <- function(e1,e2) {
     inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)),  max(prod(dim(e1)), prod(dim(e2))))
     as.spam( callGeneric( as.matrix(e1), as.matrix(e2))  )            
@@ -222,7 +222,7 @@ setMethod("Compare",signature(e1="spam",e2="spam"),   spam_Compare )
 setMethod("Compare",signature(e1="spam",e2="vector"), spam_Compare_spamvector )
 setMethod("Compare",signature(e1="vector",e2="spam"), spam_Compare_vectorspam )
 ##################################################################################################
-#     ‘Arith’: ‘"+"’, ‘"-"’, ‘"*"’, ‘"^"’, ‘"%%"’, ‘"%/%"’, ‘"/"’
+#     `Arith': `"+"', `"-"', `"*"', `"^"', `"%%"', `"%/%"', `"/"'
 
 "spam_Arith_vectorspam" <- function(e1, e2){
     if(.Spam$structurebased) {
@@ -286,7 +286,7 @@ setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(
                 A@colindices,               A@rowpointers,
                 B@colindices,               B@rowpointers,
                 vector("integer",nrow),nnz=vector("integer",1),vector("integer",ncol),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$nnz
+                NAOK=.Spam$NAOK,PACKAGE = "spam")$nnz
 
   z <- .Fortran("aplsb1",
                 nrow,
@@ -298,7 +298,7 @@ setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(
                 colindices  = vector("integer",nzmax),
                 rowpointers = vector("integer",nrow+1),
                 as.integer(nzmax+1),  ierr = vector("integer",1),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                NAOK=.Spam$NAOK,PACKAGE = "spam")
   if(z$ierr != 0) stop("insufficient space for sparse matrix addition")
   nz <- z$rowpointers[nrow+1]-1
   newz <- new("spam")
@@ -367,7 +367,7 @@ setMethod("-",signature(e1="spam",e2="spam"),  function(e1,e2){ spam_add(e1, e2,
                 integer(e1col),
                 double(e1col),
                 as.integer(nnzmax),  ierr = vector("integer",1),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,  PACKAGE = "spam")
+                NAOK=.Spam$NAOK,  PACKAGE = "spam")
   if(z$ierr != 0)      stop("insufficient space for element-wise sparse matrix multiplication")
   nnz <- z$rowpointers[e1row+1]-1
   if(identical(z$entries,0L)){#trap zero matrix
@@ -495,7 +495,7 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
 #                      integer(ncol),
 #                      double(ncol),
 #                      ierr = vector("integer",1),
-#                      NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam"
+#                      NAOK=.Spam$NAOK,PACKAGE = "spam"
 #                      )
 #        if(z$ierr != 0) stop("insufficient space for element-wise sparse matrix division")
 #        nz <- z$rowpointers[nrow+1]-1

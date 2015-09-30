@@ -54,7 +54,7 @@ checkpivot <- function(pivot, len, type="Pivot") {
                   entries = vector("double",nz), 
                   colindices = vector("integer", nz),
                   rowpointers = vector("integer", nrow + 1),P, 
-                  NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
+                  NAOK = .Spam$NAOK, PACKAGE = "spam")
   } else {  
     if (is.null(P)){
 #      subroutine cperm (nrow,a,ja,ia,ao,jao,iao,perm,iwork) 
@@ -71,7 +71,7 @@ checkpivot <- function(pivot, len, type="Pivot") {
                       colindices = vector("integer", nz),
                       rowpointers = vector("integer", nrow + 1),
                       Q,
-                      NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
+                      NAOK = .Spam$NAOK, PACKAGE = "spam")
       } else {  
 #      subroutine dperm (nrow,a,ja,ia,ao,jao,iao,pperm,qperm,iwork)
 #      B = P A Q 
@@ -88,7 +88,7 @@ checkpivot <- function(pivot, len, type="Pivot") {
                       colindices = vector("integer", nz),
                       rowpointers = vector("integer", nrow + 1),
                       P,Q,
-                      NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
+                      NAOK = .Spam$NAOK, PACKAGE = "spam")
       }   
     
   }

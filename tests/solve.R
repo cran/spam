@@ -5,12 +5,6 @@
      
 
 
-
-
-
-
-
-
 options( echo=FALSE)
 library( spam, warn.conflict=FALSE)
 

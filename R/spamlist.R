@@ -56,7 +56,7 @@
                 entries=vector("double",nz),
                 colindices=vector("integer",nz),
                 rowpointers=vector("integer",nrow+1),eps,
-                NAOK=TRUE, DUP=DUPFALSE, PACKAGE = "spam"
+                NAOK=TRUE, PACKAGE = "spam"
                 )
 #  print(z)
   if (identical(z$nz, 0L))

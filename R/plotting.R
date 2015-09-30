@@ -16,7 +16,7 @@ if(! exists(".bincode", envir = .BaseNamespaceEnv))
     .bincode <- function(v, breaks, ...) {
         .C("bincode", as.double(v), length(v), as.double(breaks),
            length(breaks), code = integer(length(v)), as.logical(TRUE),
-           as.logical(TRUE), nok = TRUE, NAOK = TRUE, DUP = FALSE,
+           as.logical(TRUE), nok = TRUE, NAOK = TRUE, 
            PACKAGE = "base")$code
     }
 

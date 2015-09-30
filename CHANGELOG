@@ -1,3 +1,51 @@
+commit a291c56ed237afc1f4125ff7c9dc87132af64081
+Author: Florian Gerber <florian.gerber@math.uzh.ch>
+Date:   Wed Jan 21 16:16:58 2015 +0100
+
+    Changed names of jss15 demo, tests and vignette
+    
+    	renamed:    spam/vignettes/v63c01-vignette.pdf -> spam/vignettes/jss15.pdf
+    	renamed:    spam/vignettes/v63c01-vignette.pdf.asis -> spam/vignettes/jss15.pdf.asis
+    	deleted:    spam/tests/jss_areal_counts.R
+    	deleted:    spam/tests/jss_areal_counts.Rout.save
+
+commit 6e809a091014760db7d164d6e37fa6e9f4ac59d3
+Author: Florian Gerber <florian.gerber@math.uzh.ch>
+Date:   Mon Jan 19 22:43:44 2015 +0100
+
+    Add citation
+    	modified:   spam/inst/CITATION
+
+commit cb090dd4365455f6fdd32ce647aedcfd526c0941
+Author: Florian Gerber <florian.gerber@math.uzh.ch>
+Date:   Mon Jan 19 12:49:05 2015 +0100
+
+    - add vignette: JSS-Areal Cound Data
+    - add demos: jss-BYM.R and jss-Lereux.R
+    - add corresponding tests
+    
+    - spam/tests/demo_article-jss-Leroux.R uses the R package 'trucdist'.
+      Is this a problem?
+    
+    	new file:   spam/demo/jss-BYM.R
+    	new file:   spam/demo/jss-Leroux.R
+    	new file:   spam/tests/demo_article-jss-BYM.R
+    	new file:   spam/tests/demo_article-jss-Leroux.R
+    	new file:   spam/vignettes/v63c01-vignette.pdf
+    	new file:   spam/vignettes/v63c01-vignette.pdf.asis
+
+commit b56cd794f8f9dab2b7544f014d8a42bf050db193
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Sun Oct 19 17:57:50 2014 +0200
+
+    DESCRIPTION and NAMESPACE
+
+commit 4df6020434afbcc6716c5a7df0ed848bd587e8d8
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Sun Oct 19 07:41:13 2014 +0200
+
+    DUP removal
+
 commit 3823eb2a93ac5466ec368de81a294c63fd9c8ddd
 Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Date:   Tue Sep 9 12:53:07 2014 +0200

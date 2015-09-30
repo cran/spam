@@ -6,17 +6,11 @@
 
 
 
-
-
-
-
-
-
-
 \name{diag}
 \alias{diag}
 \alias{diag.of.spam}
 \alias{diag.spam}
+\alias{spam_diag}
 \alias{diag,spam-method}
 \alias{diag,ANY-method} 
 \alias{diag<-} 
@@ -35,6 +29,7 @@ diag(x=1, nrow, ncol)
 diag(x) <- value
 
 diag.spam(x=1, nrow, ncol)
+spam_diag(x=1, nrow, ncol)
 diag.spam(x) <- value
 }
 \arguments{
@@ -51,7 +46,10 @@ diag.spam(x) <- value
 
    \code{diag.spam} works as \code{diag} for spam matrices:
    If \code{x} is a vector (or 1D array) of length two or more, then
-   \code{diag.spam(x)} returns a diagonal matrix whose diagonal is \code{x}.
+   \code{diag.spam(x)} returns a diagonal matrix whose diagonal is
+   \code{x}.
+   \code{spam_diag} is an alias for  \code{diag.spam} and in the spirit
+   of the result of \code{diag} is a \code{spam} object.
 
    If \code{x} is a vector of length one then \code{diag.spam(x)} returns an
    identity matrix of order the nearest integer to \code{x}.  The

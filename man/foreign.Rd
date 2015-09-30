@@ -6,17 +6,10 @@
 
 
 
-
-
-
-
-
-
-
 \name{foreign}
 \alias{foreign}
 \alias{as.spam.matrix.csr}
-\alias{as.matrix.csr.spam}
+%\alias{as.matrix.csr.spam}
 \alias{as.dgRMatrix.spam}
 \alias{as.dgCMatrix.spam}
 \alias{as.spam.dgRMatrix}
@@ -26,7 +19,6 @@
   \code{matrix.csr} format of \code{SparseM} and  \code{dgRMatrix} format of \code{Matrix}}
 \usage{
 as.spam.matrix.csr(x)
-# as.matrix.csr.spam(x)
 as.dgRMatrix.spam(x)
 as.dgCMatrix.spam(x)
 as.spam.dgRMatrix(x)
@@ -52,7 +44,6 @@ as.spam.dgCMatrix(x)
 
 \dontrun{
 S <- diag.spam(4)
-U <- as.matrix.csr.spam( S) 
 R <- as.dgRMatrix.spam( S) 
 C <- as.dgCMatrix.spam( S)
 as.spam.dgCMatrix(C) 
@@ -63,6 +54,19 @@ slotNames(R)
 
 
 # as.spam(R) does not work.
+}
+
+\dontrun{
+# for transformations between SparseM and spam:
+as.matrix.csr.spam <- function(x,...) {
+    newx <- new("matrix.csr")
+    slot(newx,"ra",check=FALSE) <- x@entries
+    slot(newx,"ja",check=FALSE) <- x@colindices
+    slot(newx,"ia",check=FALSE) <- x@rowpointers
+    slot(newx,"dimension",check=FALSE) <- x@dimension
+    return(newx)
+  }       
+U <- as.matrix.csr.spam( S) 
 }
 
 \dontrun{

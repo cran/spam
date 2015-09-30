@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2014-09-08 r66545) -- "Unsuffered Consequences"
-Copyright (C) 2014 The R Foundation for Statistical Computing
-Platform: x86_64-unknown-linux-gnu (64-bit)
+R Under development (unstable) (2015-09-24 r69424) -- "Unsuffered Consequences"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -25,7 +25,7 @@ Type 'q()' to quit R.
 > 
 > options( echo=FALSE)
 Loading required package: grid
-Spam version 1.0-1 (2014-09-09) is loaded.
+Spam version 1.2-1 (2015-09-30) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -37,4 +37,4 @@ suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
 [1] TRUE
 > proc.time()
    user  system elapsed 
-  0.858   0.016   0.856 
+  0.490   0.025   0.496 

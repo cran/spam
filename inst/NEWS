@@ -1,3 +1,45 @@
+	CHANGES IN VERSION 1.2-0 
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   Renaming of demos from JSS10 paper. 
+
+    o   Continuing to implement 'spam_xxx' function names:
+        Like 'spam_rdist' there is now 'spam_diag'.
+
+    o   'subset.rows.spam' deprecated. There is an internal function 
+    	'subset_rows.spam'.
+
+
+INTERNAL CHANGES
+
+    o   Ample minor modifications in 'DESCRIPTION' and 'NAMESPACE'
+    	for CRAN check conformity.
+
+
+    o   Elimination of a few unnecessary functions (not exported).
+
+
+    o   Minor modifications in tests.  
+
+
+
+
+	CHANGES IN VERSION 1.1-0 
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   Upload of vignette linked to JSS15 paper. Related demos 
+    	and tests.
+
+
+    o   "DUP=FALSE" is deprecated and will be disabled in future 
+    	versions of R. All "DUP" arguments have been eliminated.
+	You have to expect a slightly slower version of spam.
+
+
+
+ 
 	CHANGES IN VERSION 1.0 and 1.0-1
  
     o   This version is up to 'DESCRIPTION' and its implied changes
@@ -11,6 +53,7 @@
 
 
     o	Implemented `1.1.3.1 Suggested packages` approach.
+
 
 
 

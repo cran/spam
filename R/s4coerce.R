@@ -1,7 +1,8 @@
-# This is file ../spam/R/definitions.R
+# This is file ../spam/R/s4coerce.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+     
 
 
 # a few coercions that make sense...

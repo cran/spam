@@ -1,4 +1,8 @@
-
+# This is file ../spam/R/dim.R
+# This file is part of the spam package, 
+#      http://www.math.uzh.ch/furrer/software/spam/
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+     
 
 # This is the actual dim...
 
@@ -68,7 +72,7 @@
                   entries=vector("double",length(x@entries)),
                   colindices=vector("integer",length(x@entries)),
                   rowpointers=vector("integer",last),
-                  NAOK = .Spam$NAOK, DUP=DUPFALSE, PACKAGE = "spam")
+                  NAOK = .Spam$NAOK, PACKAGE = "spam")
     if (identical(z$nz,1L) )
       return(new("spam",rowpointers=c(1L,rep.int(2L,as.integer(value[1]))),
                  dimension=as.integer(value)))

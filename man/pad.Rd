@@ -1,4 +1,4 @@
-% This is file ../spam/man/dim.Rd
+% This is file ../spam/man/pad.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]

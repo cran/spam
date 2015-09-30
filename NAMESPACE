@@ -1,14 +1,47 @@
 useDynLib(spam)
 
-importFrom("graphics",image)
-importFrom("graphics",plot)           
-import(grid)           
+import(grid)
+
+
+importFrom("grDevices", "gray", "heat.colors")
+importFrom("graphics",
+           "axis", "box", "image.default", "par", "points", "polygon", "text")
+importFrom("methods",
+           "callGeneric", "is", "new", "slot<-",  "validObject")
+importFrom("stats", "optim", "rnorm", "runif", "var")
+importFrom("utils", "help")
 
 # Next two paragraphs are from Matrix....
 # Currently, group generics need to be explicitly imported (Bug?):
 importFrom("methods", #Arith,Compare,
            Math, Math2, Summary#, Complex
            )
+
+
+S3method("all.equal","spam")
+#S3method("as.matrix.csr","spam")
+S3method("as.matrix","spam")
+S3method("as.vector","spam")
+S3method("determinant","spam")
+S3method("determinant","spam.chol.NgPeyton")
+S3method("chol","spam")
+S3method("diff","spam")
+S3method("dim<-","spam")
+S3method("head","spam")
+S3method("image","spam")
+S3method("isSymmetric","spam")
+S3method("plot","spam")
+S3method("print","spam")
+S3method("print","spam.chol.NgPeyton")
+S3method("solve","spam")
+#S3method("subset_rows","spam")
+S3method("subset","spam")
+S3method("summary","spam")
+S3method("summary","spam.chol.NgPeyton")
+S3method("t","spam")
+S3method("tail","spam")
+S3method("update","spam.chol.NgPeyton")
+  
 
 # Generic functions
 export(
@@ -41,6 +74,7 @@ export(
        
        "diag.of.spam",
        "diag.spam",
+       "spam_diag",
        "diag<-.spam",
        "diag.spam<-",
        "rbind.spam",
@@ -143,11 +177,11 @@ export(
 #       "solve.spam.dummy",
 
        "subset.spam",
-       "subset.rows.spam",
+#       "subset_rows.spam",
        
        "triplet",
        "as.spam.matrix.csr",
-       "as.matrix.csr.spam",
+#       "as.matrix.csr.spam",
        "as.dgRMatrix.spam",
        "as.dgCMatrix.spam",
        "as.spam.dgRMatrix",
@@ -160,24 +194,25 @@ export(
 
        "permutation.spam",
        
-             "crossprod.spam",
-              "tcrossprod.spam",
+    "crossprod.spam",
+    "tcrossprod.spam",
            
        "map.landkreis",
        "adjacency.landkreis",
 
        "germany.plot",
+#"germany.info",	
 
        "grid_trace2",
        "grid_zoom",
 
 
     "rowpointers<-",
-        "entries<-",
-        "colindices<-",
+    "entries<-",
+    "colindices<-",
     "dimension<-",
        
-       "cleanup"
+    "cleanup"
 #       "backsolve"
    
        )
@@ -192,7 +227,7 @@ exportMethods(
               "Math2",
               "Summary",
 
-              "show",
+         #     "show",
               "print",
               "image",
               "display",

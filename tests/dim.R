@@ -1,10 +1,11 @@
-# This is file ../spam/R/definitions.R
+# This is file ../spam/tests/dim.R
 # This file is part of the spam package, 
 #      http://www.math.uzh.ch/furrer/software/spam/
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
      
 
 
+options( echo=FALSE)
 library( spam, warn.conflict=FALSE)
 
 
@@ -60,7 +61,9 @@ dim(ss) <- c(1, m*n)
 dim(tt) <- c(1, m*n)
 test.for.zero(ss,tt)
 
+cat("Two obvious errors caught by 'try':\n")
 try( dim(ss) <- c(-1, -m*n))
 try( dim(ss) <- c(1, m, n))
 
 
+options( echo=TRUE)

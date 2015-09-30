@@ -1,3 +1,9 @@
+# This is file ../spam/R/tcrossprod.R
+# This file is part of the spam package, 
+#      http://www.math.uzh.ch/furrer/software/spam/
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+     
+
 crossprod.spam <- function(x, y=NULL) {
     dimx <- dim(x)
     if( is.null(y)) {

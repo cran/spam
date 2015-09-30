@@ -20,18 +20,18 @@ setMethod("[", signature(x = "spam",
 setMethod("[",signature(x="spam",i="vector",j="missing", drop = "logical"),
 	  function (x, i, j,..., drop) {  #cat("   log call was", deparse(match.call()), "\n")
             if (nargs()==3) {
-              subset.rows.spam(x, i,drop=drop)
+              subset_rows.spam(x, i,drop=drop)
             } else {
-              subset.rows.spam(x, i,,drop=drop)
+              subset_rows.spam(x, i,,drop=drop)
             }}
           )
 
 setMethod("[",signature(x="spam",i="vector",j="missing", drop = "missing"),
 	  function (x, i, j,..., drop) { #cat("    mis call was", deparse(match.call()), "\n")
             if (nargs()==2) {
-              subset.rows.spam(x, i)
+              subset_rows.spam(x, i)
             } else {
-              subset.rows.spam(x, i,)
+              subset_rows.spam(x, i,)
               }})
 
 setMethod("[",signature(x="spam",i="vector",j="vector", drop = "ANY"),
@@ -74,7 +74,7 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
                 iw=logical(ncol),
                 nzmax=length(i@colindices) ,
                 ierr=0L,
-                NAOK=.Spam$NAOK,DUP=TRUE,PACKAGE="spam") # some copying is required!!!!
+                NAOK=.Spam$NAOK,PACKAGE="spam") # some copying is required!!!!
   nz <- z$ic[nrow+1]-1
   if (nz==0) return( numeric(0))
   if (drop) {
@@ -95,15 +95,15 @@ setMethod("[", signature(x = "spam", i = "ANY", j = "ANY", drop = "ANY"),
 #  "[.spam" <- function (x, rw, cl,drop=.Spam$drop) {subset.spam(x,rw=rw,cl=cl,drop) }
 
 
-"subset.rows.spam" <-
+"subset_rows.spam" <-
 function (x, i, ..., drop=.Spam$drop)
   # approach: we extract rows (nargs=2) or elements (nargs=3)
   #  i is a vector of integers or logical!
   # nargs idea from Matrix!
 {
   nA <- nargs()+missing(drop)
-#  cat("subset.rows.spam call was", deparse(match.call()),' ',nargs(), ' ' , nA, "\n")
-  dimx <- x@dimension
+#  cat("subset_rows.spam call was", deparse(match.call()),' ',nargs(), ' ' , nA, "\n")
+ dimx <- x@dimension
   nrow <- dimx[1]
   ncol <- dimx[2]
   mini <- min(i, na.rm=TRUE)
@@ -120,7 +120,7 @@ function (x, i, ..., drop=.Spam$drop)
                       colindices=x@colindices,
                       rowpointers=x@rowpointers,
                       res=vector("double",prod(dimx)),  
-                      NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$res[i])
+                      NAOK=.Spam$NAOK,PACKAGE = "spam")$res[i])
     }
     
     if (mini<0) {
@@ -132,7 +132,7 @@ function (x, i, ..., drop=.Spam$drop)
                  colindices=x@colindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",prod(dimx)),  
-                 NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$res[i])
+                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res[i])
     }
     # eliminate zeros,
     # force too large to NA, keep NAs
@@ -151,7 +151,7 @@ function (x, i, ..., drop=.Spam$drop)
              as.double(x@entries),as.integer(x@colindices),as.integer(x@rowpointers),
              iadd=vector("integer",nir),
              allelem=vector("double",nir),
-             NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE="spam")$allelem
+             NAOK=.Spam$NAOK,PACKAGE="spam")$allelem
 # getallelem(nir,ir,jr,a,ja,ia,alliadd,allelem)
     return(z)
   }
@@ -196,7 +196,7 @@ function (x, i, ..., drop=.Spam$drop)
                     newnz=nz,
                     entries=vector("double",nz),
                     colindices=vector("integer",nz),rowpointers=vector("integer",ni+1),
-                    NAOK=.Spam$NAOK,DUP=DUPFALSE,
+                    NAOK=.Spam$NAOK,
                     PACKAGE="spam")
   #    print(c(nz,z$newni,is.integer(nz), is.integer(z$newni),z$newni!=ni))
      if(z$newnz!=nz) stop(gettextf("Subsetting error, please report %d, %d",z$newnz,nz))
@@ -210,7 +210,7 @@ function (x, i, ..., drop=.Spam$drop)
                  colindices=z$colindices,
                  rowpointers=z$rowpointers,
                  res=vector("double",prod(ni,ncol)),  
-                 NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$res)
+                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res)
     else {
       newx <- new("spam")
       slot(newx,"entries",check=FALSE) <- z$entries
@@ -261,7 +261,7 @@ function (x, i, ..., drop=.Spam$drop)
                     as.double(x@entries),as.integer(x@colindices),as.integer(x@rowpointers),
                     integer(nir),
                     allelem=vector("double",nir),
-                    NAOK=.Spam$NAOK,DUP=DUPFALSE, PACKAGE="spam")$allelem)
+                    NAOK=.Spam$NAOK, PACKAGE="spam")$allelem)
 
   }
   # negative values:
@@ -308,7 +308,7 @@ function (x, i, ..., drop=.Spam$drop)
                     nc=0L,
                     entries=vector("double",nz),
                     colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
-                    NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                    NAOK=.Spam$NAOK,PACKAGE = "spam")
       nz <- z$rowpointers[z$nr+1]-1
     } else {
       z <- .Fortran("getblock",
@@ -317,7 +317,7 @@ function (x, i, ..., drop=.Spam$drop)
                     nc=ncl,as.integer(cl),
                     nz=nz, entries=vector("double",nz),
                     colindices=vector("integer",nz),rowpointers=vector("integer",nrw+1),
-                    NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                    NAOK=.Spam$NAOK,PACKAGE = "spam")
       nz <- z$nz
     }
     if (nz==0) {#trap zero matrix
@@ -335,7 +335,7 @@ function (x, i, ..., drop=.Spam$drop)
                  colindices=z$colindices[1:nz],
                  rowpointers=z$rowpointers[1:(z$nr+1)],
                  res=vector("double",prod(z$nr,z$nc)),  
-                 NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$res)
+                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res)
     else {
       newx <- new("spam")
       slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
@@ -347,4 +347,11 @@ function (x, i, ..., drop=.Spam$drop)
   
   }
   stop("invalid or not-yet-implemented 'spam' subsetting")
+}
+
+
+
+#subset.rows.spam <- function(x, i, ..., drop=.Spam$drop) {
+subset.rows.spam <- function(...) {
+    .Deprecated("spam:::subset_rows.spam", msg="'subset.rows.spam' is deprecated.\nUse 'spam:::subset_rows.spam' instead.\n")
 }

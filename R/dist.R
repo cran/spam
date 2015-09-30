@@ -112,7 +112,7 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
                   rowpointers=vector("integer",n1+1),
                   entries=vector("double",nnz),
                   nnz=as.integer(nnz),
-                  iflag=as.integer(0),DUP=DUPFALSE,NAOK=.Spam$NAOK,
+                  iflag=as.integer(0),NAOK=.Spam$NAOK,
                   PACKAGE="spam")
     
     if (d$iflag==0) break else {

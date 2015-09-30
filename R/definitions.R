@@ -157,7 +157,7 @@ setMethod("c","spam", function(x,...,recursive=TRUE){
                  colindices=x@colindices,
                  rowpointers=x@rowpointers,
                  res=vector("double",prod(dimx)),  
-                 NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$res
+                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res
   if (length( list(...)) < 1)
     return( cx)
   else
@@ -198,7 +198,7 @@ setMethod("c","spam", function(x,...,recursive=TRUE){
   return(newx)
 }
 
-
+spam_diag <- function(x=1, nrow, ncol)  diag.spam(x=1, nrow, ncol)
 
 "diag<-.spam" <-  function(x,value) {
   nrow <- x@dimension[1]
@@ -237,7 +237,7 @@ setMethod("c","spam", function(x,...,recursive=TRUE){
                 rowpointers = x@rowpointers,
                 len = len,
                 diag = vector("double",len),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam"
+                NAOK=.Spam$NAOK,PACKAGE = "spam"
                 )$diag)
 }
 
@@ -254,7 +254,7 @@ setMethod("diag<-","spam",get("diag<-.spam"))
                 a=as.double(x@entries),ja=x@colindices,ia=x@rowpointers,
                 entries=vector("double",nz),colindices=vector("integer",nz),
                 rowpointers=vector("integer",dimx[2]+1),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                NAOK=.Spam$NAOK,PACKAGE = "spam")
   t.x <- new("spam")
   slot(t.x,"entries",check=FALSE) <- z$entries[1:nz]
   slot(t.x,"colindices",check=FALSE) <- z$colindices[1:nz]
@@ -316,7 +316,7 @@ setMethod("t","spam",t.spam)
                 colindices=vector("integer",nz),
                 rowpointers=vector("integer",dimx[1]+1),
                 eps=as.double(eps),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam"
+                NAOK=.Spam$NAOK,PACKAGE = "spam"
                 )
   nz <- z$rowpointers[dimx[1]+1]-1
 
@@ -422,7 +422,7 @@ setMethod("t","spam",t.spam)
                 colindices=vector("integer",lenx),
                 rowpointers=vector("integer",dimx[1]+1),
                 eps=as.double(eps),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE, PACKAGE = "spam")
+                NAOK=.Spam$NAOK, PACKAGE = "spam")
   nz <- z$rowpointers[dimx[1]+1]-1
 
   if(nz==0) return(new("spam",rowpointers=c(1L,rep(2L,dimx[1])), dimension=dimx))
@@ -513,7 +513,7 @@ triplet <- function(x, tri=FALSE){
                         colindices=x@colindices,
                         rowpointers=x@rowpointers,
                         res=vector("double",prod(dimx)),  # numeric is double! 
-                        NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam"
+                        NAOK=.Spam$NAOK,PACKAGE = "spam"
                         )$res,
                dimx)      # we preserve dimensions
          )
@@ -557,7 +557,7 @@ setMethod("as.vector","spam",as.vector.spam)
                 as.integer(nz),
                 colindices = vector("integer",nz),
                 rowpointers = vector("integer",nrow+1),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE="spam"
+                NAOK=.Spam$NAOK,PACKAGE="spam"
                 )
   newx <- new("spam")
   slot(newx,"entries",check=FALSE) <- rep.int(1.0,nz)
@@ -711,7 +711,7 @@ function (x, rw, cl,value)
                   colindices=vector("integer",nzmax),
                   rowpointers=vector("integer",nrow+1),
                   nzmax=nzmax,
-                  NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE="spam")
+                  NAOK=.Spam$NAOK,PACKAGE="spam")
     cnz <- z$rowpointers[nrow+1]-1
     if (cnz<0) {
       cat('Negative cnz in subassigning, forced to one. Please report.')
@@ -801,7 +801,7 @@ function(x,y)
                   as.double(x@entries),
                   x@colindices,
                   x@rowpointers,
-                  NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$y
+                  NAOK=.Spam$NAOK,PACKAGE = "spam")$y
     dim(z) <- c(nrow,ycol)
     return(z)
   }
@@ -823,7 +823,7 @@ function(x,y)
                   as.double(y@entries),
                   y@colindices,
                   y@rowpointers,
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$y
+                NAOK=.Spam$NAOK,PACKAGE = "spam")$y
     dim(z) <- c(1,nrow)
     return(z)
   } 
@@ -838,7 +838,7 @@ function(x,y)
                   as.double(x@entries),
                   x@colindices,
                   x@rowpointers,
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")$y
+                NAOK=.Spam$NAOK,PACKAGE = "spam")$y
     dim(z) <- c(nrow,1)
     return(z)
   }
@@ -861,7 +861,7 @@ function(x,y)
                 integer(xn),
                 nz = vector("integer",1),
                 integer(yl),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                NAOK=.Spam$NAOK,PACKAGE = "spam")
   nzmax <- z$nz
   z <- .Fortran("amub",
                 xn,yl,
@@ -873,7 +873,7 @@ function(x,y)
                 as.integer(nzmax),
                 integer(yl),
                 ierr = vector("integer",1),
-                NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                NAOK=.Spam$NAOK,PACKAGE = "spam")
   nz <- z$rowpointers[xn+1]-1
   if(z$ierr != 0) stop("insufficient space for sparse matrix multiplication")
   
@@ -1035,8 +1035,8 @@ setMethod("%d+%",signature(x="matrix",y="ANY"),      function(x,y){ x+y } )
 setMethod("%d+%",signature(x="numeric",y="matrix"),  function(x,y){ diag(x)+y} )
 setMethod("%d+%",signature(x="numeric",y="numeric"), function(x,y){ diag(x)+y} )
 
-setMethod("%d+%",signature(x="spam",y="spam"),     function(x,y){ .spam.addsubsparsesparse(e1,e2,1)})
-setMethod("%d+%",signature(x="spam",y="ANY"),      function(x,y){ .spam.addsparsefull(e1,e2)})
+setMethod("%d+%",signature(x="spam",y="spam"),     function(x,y){ x+y})
+setMethod("%d+%",signature(x="spam",y="ANY"),      function(x,y){ x+y})
 setMethod("%d+%",signature(x="numeric",y="spam"),  .spam.diagaddmat )
 
 
@@ -1126,7 +1126,7 @@ setMethod("all.equal",signature(target="matrix",current="spam"),
         x = as.double(target), dimx[1], entries = vector("double",
             nz), colindices = vector("integer", nz), rowpointers = vector("integer",
             dimx[1] + 1), eps = as.double(eps),
-                  NAOK = .Spam$NAOK,DUP=DUPFALSE, PACKAGE = "spam")
+                  NAOK = .Spam$NAOK, PACKAGE = "spam")
 
     lt <- z$rowpointers[dimx[1] + 1] - 1
     lc <- length(current)

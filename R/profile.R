@@ -6,6 +6,7 @@
 
 ".onLoad" <- function (lib, pkg) {
 #    if (R.version$minor<paste(14))    require(methods) 
+
 }
 
 # Framework introduced with much input from Roger Bivand for 0.13-2 and higher.
@@ -115,5 +116,4 @@ powerboost <- function(flag="on") {
 }
 
 
-DUPFALSE <- FALSE
 

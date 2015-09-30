@@ -2,5 +2,9 @@ cholesky Illustrates the decompostion of the Cholesky factorization
 spam    Explore some properties of the sparse matrix package 
 timing	Compare times required to perform operations on full and sparse matrices
 article-jss	Code to reproduce the figures and the table of the JSS article
-article-jss-example1	Code of example 1 of the JSS article
-article-jss-example2	Code of example 2 of the JSS article
+article-jss-example1	Depreciated
+article-jss-example2	Depreciated
+jss10-example1	Code of example 1 of the JSS10 article
+jss10-example2	Comment about the code of example 2 of the JSS10 article
+jss15-BYM	Code of BYM sampler in Section 2.2 of the JSS15 article
+jss15-Leroux	Code of Leroux sampler in Section 3.1 of the JSS15 article

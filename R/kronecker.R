@@ -61,7 +61,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
                   entries=vector( "double", kronlen),
                   colindices=vector( "integer", kronlen),
                   rowpointers=vector( "integer",Xdim[1]*Ydim[1]+1),
-                  NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                  NAOK=.Spam$NAOK,PACKAGE = "spam")
     slot(kronxy, "entries", check=FALSE) <-  z$entries
    }else {
     z <- .Fortran("kronecker",Xdim[1],Xentries,Xcol,Xrow,
@@ -69,7 +69,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
                   ent1=vector( "double",kronlen),ent2=vector( "double",kronlen),
                   colindices=vector( "integer",kronlen),
                   rowpointers=vector( "integer",Xdim[1]*Ydim[1]+1),
-                  NAOK=.Spam$NAOK,DUP=DUPFALSE,PACKAGE = "spam")
+                  NAOK=.Spam$NAOK,PACKAGE = "spam")
     FUN <- match.fun(FUN)
     slot(kronxy, "entries", check=FALSE) <-  FUN(z$ent1,z$ent2,...)
     if (z$rowpointers[Xdim[1]*Ydim[1]+1]-1 < prod(Xdim,Ydim))

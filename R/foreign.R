@@ -31,23 +31,23 @@ as.spam.matrix.csr <- function(x)
 # as."matrix.csr".spam and not "as.matrix".csr.spam.
 # Is there anyway around this?
     
-as.matrix.csr.spam <- function(x,...) {
+#as.matrix.csr.spam <- function(x,...) {
 #  if (require('SparseM')){
-    newx <- new("matrix.csr")
-    slot(newx,"ra",check=FALSE) <- x@entries
-    slot(newx,"ja",check=FALSE) <- x@colindices
-    slot(newx,"ia",check=FALSE) <- x@rowpointers
-    slot(newx,"dimension",check=FALSE) <- x@dimension
-    return(newx)
+#    newx <- new("matrix.csr")
+#    slot(newx,"ra",check=FALSE) <- x@entries
+#    slot(newx,"ja",check=FALSE) <- x@colindices
+#    slot(newx,"ia",check=FALSE) <- x@rowpointers
+#    slot(newx,"dimension",check=FALSE) <- x@dimension
+#    return(newx)
 #  }       
   
-}
+#}
 
 
 # 1b) spam <-> Matrix
 
 as.dgRMatrix.spam <- function(x) {
-    if (require('Matrix')) {
+    if (requireNamespace('Matrix')) {
       newx <- new(p=0:0,'dgRMatrix')
       slot(newx,"x",check=FALSE) <- x@entries
       slot(newx,"j",check=FALSE) <- x@colindices-1L
@@ -58,14 +58,14 @@ as.dgRMatrix.spam <- function(x) {
   }
 
 as.dgCMatrix.spam <- function(x)  {
-    if (require('Matrix')) {
+    if (requireNamespace('Matrix')) {
       dimx <- x@dimension
       nz <- x@rowpointers[dimx[1] + 1] - 1
       z <- .Fortran("transpose", n = dimx[1], m = dimx[2],
                     a = as.double(x@entries),ja = x@colindices, ia = x@rowpointers,
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", dimx[2] + 1),
-                    NAOK = .Spam$NAOK, DUP=DUPFALSE,
+                    NAOK = .Spam$NAOK,
                     PACKAGE = "spam")
       newx <- new(p=0:0,'dgCMatrix')
       slot(newx,"x",check=FALSE) <- z$entries
@@ -104,7 +104,7 @@ as.spam.dgCMatrix <- function(x)  {
                     a = as.double(x@x),ja = x@i+1L, ia = x@p+1L,
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", x@Dim[1] + 1),
-                    NAOK = .Spam$NAOK, DUP=DUPFALSE,
+                    NAOK = .Spam$NAOK,
                     PACKAGE = "spam")
       newx <- new('spam')
       slot(newx,"entries",check=FALSE) <- z$entries
@@ -199,7 +199,7 @@ read.HB <- function(file)
                   a = vals,ja = ind, ia = ptr,
                   entries = vector("double",nz), colindices = vector("integer", nz),
                   rowpointers = vector("integer", nr + 1),
-                  NAOK = .Spam$NAOK, DUP=DUPFALSE,
+                  NAOK = .Spam$NAOK,
                   PACKAGE = "spam")
     newx <- new('spam')
     slot(newx,"entries",check=FALSE) <- z$entries
@@ -273,7 +273,7 @@ read.MM <- function(file)  {
                   x = x, nr, entries = vector("double",nz),
                   colindices = vector("integer", nz), rowpointers = vector("integer",nr + 1),
                   eps = spam.options('eps'), NAOK = TRUE,
-                  DUP=DUPFALSE, PACKAGE = "spam")
+                  PACKAGE = "spam")
     
     warning("returning a (possibly) dense 'spam' object", call. = FALSE)
     nz <- z$rowpointers[nr+1]-1

@@ -5,6 +5,7 @@
      
 
 
+options( echo=FALSE)
 library( spam, warn.conflict=FALSE)
 
 
@@ -85,6 +86,7 @@ for (g in getGroupMembers("Ops")) {
         test.for.zero( do.call(f, list(ss,4)), do.call(f, list(tv,4)), tag=f)
     }
 }
+cat("One error caught by 'try':\n")
 try(do.call(f, list(ss,1:2)))
 
 ####################################################################################################################################
