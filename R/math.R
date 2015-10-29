@@ -224,7 +224,8 @@ setMethod("Compare",signature(e1="vector",e2="spam"), spam_Compare_vectorspam )
 ##################################################################################################
 #     `Arith': `"+"', `"-"', `"*"', `"^"', `"%%"', `"%/%"', `"/"'
 
-"spam_Arith_vectorspam" <- function(e1, e2){
+"spam_Arith_vectorspam" <- function(e1, e2){    
+#    cat("spam_Arith_vectorspam")
     if(.Spam$structurebased) {
         if(identical(length(e1),1L) | identical(length(e1), length(e2@entries))) {
             e2@entries <- callGeneric(e1, e2@entries)
@@ -239,6 +240,7 @@ setMethod("Compare",signature(e1="vector",e2="spam"), spam_Compare_vectorspam )
     }
 }
 "spam_Arith_spamvector" <- function(e1, e2){
+#    cat("spam_Arith_spamvector")
     if(.Spam$structurebased) {
         if(identical(length(e2),1L) | identical(length(e2), length(e1@entries))) {
             e1@entries <- callGeneric(e1@entries, e2)
@@ -276,6 +278,8 @@ setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(
 #######################################################################
 "spam_add" <- function(A, B, s=1)
 {
+
+    # cat("spam_add")
   nrow <- A@dimension[1]
   ncol <- A@dimension[2]
   if(ncol != B@dimension[2] || nrow != B@dimension[1])
@@ -383,41 +387,43 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
 
 
 ##########################################################################################################################################################################################################################################################################################################################################################################################################################################################################################################
-#".spam.addsparsefull" <- function(A,B){
-#  # A is sparse, B is full
-#  if (missing(B)) return(A)
-#  if (!is.numeric(B)) stop("numeric argument expected")
-#  nrow <- A@dimension[1]
-#  ncol <- A@dimension[2]
-#  pdim <- prod(nrow,ncol)
+"matrix_add_spammatrix" <- function(A,B){
+#    cat("matrix_add_spammatrix")
+  # A is sparse, B is full
+                 #  if (missing(B)) return(A)
+                 #  if (!is.numeric(B)) stop("numeric argument expected")
+  nrow <- A@dimension[1]
+  ncol <- A@dimension[2]
+  pdim <- prod(nrow,ncol)
 #  if (is.matrix(B)) {
-#    if(ncol != dim(B)[2] || nrow != dim(B)[1])
-#      stop("non-conformable matrices")
+    if(ncol != dim(B)[2] || nrow != dim(B)[1])
+      stop("non-conformable matrices")
 #  } else {
 #    if(pdim%%length(B)!=0) {
 #      stop("longer object length
 #        is not a multiple of shorter object length")
 #    } else  B <- rep(B,pdim %/% length(B))
 #  }
-#  return(array( .Fortran("addsparsefull",
-#                          nrow,as.double(A@entries),A@colindices,
-#                          A@rowpointers,b=as.double(B),NAOK=.Spam$NAOK,PACKAGE = "spam"
-#                          )$b,c(nrow,ncol)))
-# }
-#
-#".spam.subfullsparse" <- function(A,B){
-#  # A is sparse, B is full
+  return(array( .Fortran("addsparsefull",
+                          nrow,as.double(A@entries),A@colindices,
+                          A@rowpointers,b=as.double(B),NAOK=.Spam$NAOK,PACKAGE = "spam"
+                          )$b,c(nrow,ncol)))
+ }
+
+"matrix_sub_spammatrix" <- function(A,B){
+#    cat("matrix_sub_spammatrix")
+  # A is sparse, B is full
 #  if (missing(B)) {
 #    A@entries <- -A@entries
 #    return(A)
 #  }
 #  if (!is.numeric(B)) stop("numeric argument expected")
-#  nrow <- A@dimension[1]
-#  ncol <- A@dimension[2]
+  nrow <- A@dimension[1]
+  ncol <- A@dimension[2]
 #  pdim <- prod(nrow,ncol)
 #  if (is.matrix(B)) {
-#    if(ncol != dim(B)[2] || nrow != dim(B)[1])
-#      stop("non-conformable matrices")
+    if(ncol != dim(B)[2] || nrow != dim(B)[1])
+      stop("non-conformable matrices")
 #  } else {
 #    if(pdim %% length(B)!=0) {
 #      stop("longer object length
@@ -425,21 +431,22 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
 #    } else  B <- rep(B,pdim %/% length(B))
 #  }
 #  if (!is.double(B[1]))  B <- as.double(B)
-#  return(array( .Fortran("subfullsparse",
-#                          nrow,ncol,as.double(A@entries),A@colindices,
-#                          A@rowpointers,b=as.double(B),NAOK=.Spam$NAOK,PACKAGE = "spam"
-#                          )$b,c(nrow,ncol)))
-#}
-#
-#".spam.subsparsefull" <- function(B,A){
-#  # A is sparse, B is full
-#  if (!is.numeric(B)) stop("numeric argument expected")
-#  nrow <- A@dimension[1]
-#  ncol <- A@dimension[2]
+  return(array( .Fortran("subfullsparse",
+                          nrow,ncol,as.double(A@entries),A@colindices,
+                          A@rowpointers,b=as.double(B),NAOK=.Spam$NAOK,PACKAGE = "spam"
+                          )$b,c(nrow,ncol)))
+}
+
+"matrix_sub_matrixspam" <- function(B,A){
+#    cat("matrix_sub_spammatrix")
+  # A is sparse, B is full
+  if (!is.numeric(B)) stop("numeric argument expected")
+  nrow <- A@dimension[1]
+  ncol <- A@dimension[2]
 #  pdim <- prod(nrow,ncol)
 #  if (is.matrix(B)) {
-#    if(ncol != dim(B)[2] || nrow != dim(B)[1])
-#      stop("non-conformable matrices")
+    if(ncol != dim(B)[2] || nrow != dim(B)[1])
+      stop("non-conformable matrices")
 #  } else {
 #    if(pdim %% length(B)!=0) {
 #      stop("longer object length
@@ -447,23 +454,17 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
 #    } else  B <- rep(B,pdim %/% length(B))
 #  }
 #  if (!is.double(B[1]))  B <- as.double(B)
-#  return(array( .Fortran("subsparsefull",
-#                          nrow,as.double(A@entries),A@colindices,
-#                          A@rowpointers,b=as.double(B),NAOK=.Spam$NAOK,PACKAGE = "spam"
-#                          )$b,c(nrow,ncol)))
-#}
+  return(array( .Fortran("subsparsefull",
+                          nrow,as.double(A@entries),A@colindices,
+                          A@rowpointers,b=as.double(B),NAOK=.Spam$NAOK,PACKAGE = "spam"
+                          )$b,c(nrow,ncol)))
+}
 #
-#setMethod("+",signature(e1="spam",   e2="ANY"),
-#          function(e1,e2){ .spam.addsparsefull(e1,e2)})
-#setMethod("+",signature(e1="ANY",   e2="spam"),
-#          function(e1,e2){ .spam.addsparsefull(e2,e1)})
-#
-#
-#setMethod("-",signature(e1="spam",   e2="ANY"),
-#          function(e1,e2){ .spam.subfullsparse(e1,e2)})
-#setMethod("-",signature(e1="ANY",   e2="spam"),
-#          function(e1,e2){ .spam.subsparsefull(e1,e2)})
-#
+setMethod("+",signature(e1="spam",   e2="matrix"), function(e1,e2){ matrix_add_spammatrix(e1,e2)})
+setMethod("+",signature(e1="matrix",   e2="spam"), function(e1,e2){ matrix_add_spammatrix(e2,e1)})
+setMethod("-",signature(e1="matrix",   e2="spam"), function(e1,e2){ matrix_sub_matrixspam(e1,e2)})
+setMethod("-",signature(e1="spam",   e2="matrix"), function(e1,e2){ matrix_sub_spammatrix(e1,e2)})
+
                                       
 #"spam_division" <- function(e1,e2) { # Element-wise matrix division of two spams
 #  if(is.numeric(e1) && length(e1) == 1)

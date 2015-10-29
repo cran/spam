@@ -38,7 +38,7 @@ Type 'q()' to quit R.
 > # SETUP:
 > library("spam")
 Loading required package: grid
-Spam version 1.2-1 (2015-09-30) is loaded.
+Spam version 1.3-0 (2015-10-24) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -251,4 +251,4 @@ default value for 'cex' in 'display' might not be the optimal choice
 > 
 > proc.time()
    user  system elapsed 
-  1.443   0.029   1.460 
+  1.334   0.017   1.332 

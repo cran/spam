@@ -22,7 +22,8 @@ spam_rdist.earth( x1, x2, delta = 1, miles=TRUE, R=NULL)
           coordinates of a particular point. }
   \item{x2}{Matrix of second set of locations where each row gives the
           coordinates of a particular point.}
-  \item{delta}{only distances smaller than \code{delta} are recorded} 
+  \item{delta}{only distances smaller than \code{delta} are recorded,
+    see Details.} 
   \item{miles}{For great circle distance: If true distances are in statute miles if false distances in
           kilometers.} 
   \item{R}{Radius to use for sphere to find spherical distances. If \code{NULL}
@@ -37,7 +38,15 @@ spam_rdist.earth( x1, x2, delta = 1, miles=TRUE, R=NULL)
 \details{These functions are wrappers to \code{rdist} and
   \code{rdist.earth} in \code{fields}. They are used
   to simplify the use of sparse matrices in functions like \code{mKrig}.
-    }
+  \cr
+
+  For great circle distance, the matrices \code{x1} and \code{x2}
+  contain the degrees longitudes in the first and the degrees latitudes
+  in the second column.  \code{delta} is in degrees. Hence to restrict
+  to distances smaller than \code{delta.km}, one has to specify
+  \code{delta=delta.km*360/(6378.388*2*pi)}.
+
+}
 %\references{}
 \seealso{\code{\link{nearest.dist}}}
 \examples{

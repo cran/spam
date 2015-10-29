@@ -1,3 +1,39 @@
+commit 3f4033bffe257dd62b4408d420dff6fd12bbceda
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Mon Oct 26 16:04:03 2015 +0100
+
+    JL bugfix
+
+commit 749a73a08b4fe4bf2a26c0bb3fbcc54e2418192b
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Fri Oct 23 12:53:08 2015 +0200
+
+    version 1.2.1
+
+commit f8433f721291cce4dcd9a62519ebbd55d90a56f0
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Sep 1 21:28:47 2015 +0200
+
+    add technical vignette
+
+commit 74da80bc1e66b51c553fcfd3ff05a34131133f8b
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 25 11:36:02 2015 +0200
+
+    Correct headers
+
+commit f3da9a367c1c24a39feae847007a0e6476a57159
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 25 11:04:20 2015 +0200
+
+    addressing checks p2
+
+commit 165b06bbe2b7179f3f11f6eb2866f0979ba888a1
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Tue Aug 25 11:03:36 2015 +0200
+
+    addressing checks
+
 commit a291c56ed237afc1f4125ff7c9dc87132af64081
 Author: Florian Gerber <florian.gerber@math.uzh.ch>
 Date:   Wed Jan 21 16:16:58 2015 +0100

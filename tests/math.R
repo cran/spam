@@ -28,8 +28,17 @@ tag=NULL){
 }
 
 
-
-
+# see Matrix::rsparsematrix
+spam_random <- function(n, m=n, size=min(m-1,4)*n, fill=rnorm, seed=NULL, ...)
+    {
+        if (!is.null(seed)) set.seed(seed)
+        ind <- sample.int((n*m), size=size)
+#
+#        as.spam( list(i=(ind %% m)+1, j=(ind %/% n)+1, fill(length(ind), ...)))
+        tmp <- matrix(0,n,m)
+        tmp[ind] <- fill(length( ind), ...)
+        as.spam(tmp)
+    }
 
 # construct matrices:
 n <- 10
@@ -121,3 +130,8 @@ for (f in getGroupMembers("Math"))
     test.for.zero( do.call(f, list(ss)),
                   do.call(f, list(tt)), tag=f)
                   
+
+
+
+
+spam.options( structurebased=TRUE) # test for equivalence!

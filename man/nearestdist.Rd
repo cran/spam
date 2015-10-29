@@ -48,11 +48,11 @@ nearest.dist( x, y=NULL, method = "euclidean",
   (e.g., collocated data). However, to calculate covariances, these zeros
   are essential.}
 
-\details{For great circle distance, the by 2 matrices \code{x} and \code{y} contain
-  the degrees longitudes in the first and the degrees latitudes in the second column.
-  \code{eps} and \code{delta} are in degrees. Hence to restrict to
-  distances smaller than \code{delta.km}, one has to specify
-  \code{delta=delta.km*360/(6378.388*2*pi)}.
+\details{For great circle distance, the matrices \code{x} and \code{y}
+  contain the degrees longitudes in the first and the degrees latitudes
+  in the second column.  \code{eps} and \code{delta} are in
+  degrees. Hence to restrict to distances smaller than \code{delta.km},
+  one has to specify \code{delta=delta.km*360/(6378.388*2*pi)}.
 
   The distance is
   in single precision (I am still not sure where I lose the double precision in

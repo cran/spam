@@ -7,15 +7,10 @@
 
 
 
-
-
-
-
-
-
 \name{allequal}
 \alias{all.equal.spam}
 \alias{all.equal,matrix,spam-method}
+\alias{all.equal,spam,matrix-method}
 \alias{all.equal,spam,spam-method}
 \title{Test if Two 'spam' Objects are (Nearly) Equal}
 \description{Utility to compare two \code{spam} objects

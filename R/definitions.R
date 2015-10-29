@@ -1171,4 +1171,6 @@ setMethod("all.equal",signature(target="matrix",current="spam"),
 
 }
  )
+setMethod("all.equal",signature(target="spam",current="matrix"), function(target, current, ...)
+     { all.equal(current, target, ...) })
 setMethod("isSymmetric","spam", isSymmetric.spam)

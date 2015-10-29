@@ -1,4 +1,23 @@
-	CHANGES IN VERSION 1.2-0 
+	CHANGES IN VERSION 1.3-0 
+
+BUG FIXES
+
+    o   Adding nonsparse to sparse matrices did not always dispatch
+    	properly and caused some errors. Thanks to Johan Lindström
+	for pointing out.
+ 
+
+SIGNIFICANT USER-VISIBLE CHANGES
+  
+    o   Help improvements
+
+    o   Added additional method dispatching for 'all.equal'. 
+
+ 
+ 
+  
+	CHANGES IN VERSION 1.2-0 and 1.2-1
+ 
 
 SIGNIFICANT USER-VISIBLE CHANGES
 

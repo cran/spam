@@ -36,9 +36,13 @@
 \alias{\%d+\%,numeric,spam-method}
 \alias{\%d+\%,numeric,numeric-method}
 \alias{+,spam,spam-method}
+\alias{+,matrix,spam-method}
+\alias{+,spam,matrix-method}
 \alias{+,ANY,spam-method}
 \alias{+,spam,ANY-method}
 \alias{-,spam,spam-method}
+\alias{-,matrix,spam-method}
+\alias{-,spam,matrix-method}
 \alias{-,ANY,spam-method}
 \alias{-,spam,ANY-method}
 \alias{*,spam,spam-method}
