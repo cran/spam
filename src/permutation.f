@@ -2,7 +2,7 @@ c     It has been tested that embedding the loop over the right hand
 c     side into the backsolve routine is not faster.
 
 c----------------------------------------------------------------------- 
-      subroutine getbwd(n,a,ja,ia,ml,mu)
+      subroutine getbwd(n,  ja,ia,ml,mu)
 c-----------------------------------------------------------------------
 c gets the bandwidth of lower part and upper part of A.
 c does not assume that A is sorted.
@@ -10,8 +10,7 @@ c-----------------------------------------------------------------------
 c on entry:
 c----------
 c n	= integer = the row dimension of the matrix
-c a, ja,
-c    ia = matrix in compressed sparse row format.
+c ja, ia = matrix in compressed sparse row format.
 c 
 c on return:
 c----------- 
@@ -27,10 +26,10 @@ c
 c       ml = max ( (i-j)  s.t. a(i,j) .ne. 0  )
 c       mu = max ( (j-i)  s.t. a(i,j) .ne. 0  )
 c----------------------------------------------------------------------c
-c Y. Saad, Sep. 21 1989                                                c
+c Y. Saad, Sep. 21 1989 | simplified by R. Furrer Sept. 2016           c
 c----------------------------------------------------------------------c
       implicit none
-      double precision a(*) 
+c     double precision a(*) 
       integer n,ja(*),ia(n+1),ml,mu
 
       integer ldist,i,k 
@@ -267,7 +266,7 @@ c local variables
       double precision tmp, tmp1
 c
       init      = 1
-      tmp	= x(init)	
+      tmp       = x(init)
       ii        = perm(init)
       perm(init)= -perm(init)
       k         = 0
@@ -278,9 +277,9 @@ c
 c
 c save the chased element --
 c 
-      tmp1	  = x(ii) 
+      tmp1      = x(ii) 
       x(ii)     = tmp
-      next	  = perm(ii) 
+      next      = perm(ii) 
       if (next .lt. 0 ) goto 65
 c     
 c test for end 
@@ -299,8 +298,8 @@ c
  65   init      = init+1
       if (init .gt. n) goto 101
       if (perm(init) .lt. 0) goto 65
-      tmp	= x(init)
-      ii	= perm(init)
+      tmp = x(init)
+      ii = perm(init)
       perm(init)=-perm(init)
       goto 6
 c     
@@ -342,7 +341,7 @@ c local variables
       integer ii,k,j,next,init,tmp, tmp1
 c
       init      = 1
-      tmp	= ix(init)	
+      tmp       = ix(init)
       ii        = perm(init)
       perm(init)= -perm(init)
       k         = 0
@@ -353,9 +352,9 @@ c
 c
 c save the chased element --
 c 
-      tmp1	  = ix(ii) 
-      ix(ii)     = tmp
-      next	  = perm(ii) 
+      tmp1     = ix(ii) 
+      ix(ii)   = tmp
+      next     = perm(ii) 
       if (next .lt. 0 ) goto 65
 c     
 c test for end 
@@ -374,8 +373,8 @@ c
  65   init      = init+1
       if (init .gt. n) goto 101
       if (perm(init) .lt. 0) goto 65
-      tmp	= ix(init)
-      ii	= perm(init)
+      tmp       = ix(init)
+      ii        = perm(init)
       perm(init)=-perm(init)
       goto 6
 c     

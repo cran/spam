@@ -1,3 +1,21 @@
+commit 1342a2b7eb9b3e669cce0dfd2a26c5160af0673a
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Mon Aug 29 23:07:28 2016 +0200
+
+    some more for next release
+
+commit 53bb54e7da6c53ccb5152ce511fe87d2c90e6704
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Mon Aug 29 23:06:44 2016 +0200
+
+    gfortran compiling: cleaning most of...
+
+commit 20f7b4e6e788e53bca4974e1cb48b210110abbff
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Fri Oct 30 09:31:36 2015 +0100
+
+    Additions of .save
+
 commit 3f4033bffe257dd62b4408d420dff6fd12bbceda
 Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Date:   Mon Oct 26 16:04:03 2015 +0100

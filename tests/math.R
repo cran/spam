@@ -29,10 +29,10 @@ tag=NULL){
 
 
 # see Matrix::rsparsematrix
-spam_random <- function(n, m=n, size=min(m-1,4)*n, fill=rnorm, seed=NULL, ...)
+spam_random <- function(n, m=n, nnz=min(m-1,4)*n, fill=rnorm, seed=NULL, ...)
     {
         if (!is.null(seed)) set.seed(seed)
-        ind <- sample.int((n*m), size=size)
+        ind <- sample.int((n*m), size=nnz)
 #
 #        as.spam( list(i=(ind %% m)+1, j=(ind %/% n)+1, fill(length(ind), ...)))
         tmp <- matrix(0,n,m)
@@ -134,4 +134,36 @@ for (f in getGroupMembers("Math"))
 
 
 
-spam.options( structurebased=TRUE) # test for equivalence!
+for ( i in c(TRUE, FALSE)) {
+spam.options( structurebased=i) 
+
+set.seed(122)
+S1 <- spam_random(5, nnz=10)
+S2 <- spam_random(5, nnz=10)
+F1 <- as.matrix(S1)
+F2 <- as.matrix(S2)
+
+test.for.zero(S1+S2, F1+F2)
+test.for.zero(S1+F2, F1+F2)
+test.for.zero(F1+S2, F1+F2)
+
+test.for.zero(S1-S2, F1-F2)
+test.for.zero(S1-F2, F1-F2)
+test.for.zero(F1-S2, F1-F2)
+
+S1 <- spam_random(5, nnz=0)
+S2 <- spam_random(5, nnz=10)
+F1 <- as.matrix(S1)
+F2 <- as.matrix(S2)
+
+test.for.zero(S1+S2, F1+F2)
+test.for.zero(S1+F2, F1+F2)
+test.for.zero(F1+S2, F1+F2)
+
+test.for.zero(S1-S2, F1-F2)
+test.for.zero(S1-F2, F1-F2)
+test.for.zero(F1-S2, F1-F2)
+
+}
+
+

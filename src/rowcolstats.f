@@ -1,6 +1,6 @@
 
 c----------------------------------------------------------------------- 
-      subroutine rowsums(a,ja,ia, nrw, rs)
+      subroutine rowsums(a, ia, nrw, rs)
 c-----------------------------------------------------------------------
 c     purpose:
 c     -------- 
@@ -12,7 +12,7 @@ c     parameters:
 c     ----------- 
 c on entry: 
 c---------- 
-c     a,ja,ia = the matrix a in compressed sparse row format (input).
+c     a, ia = the matrix a in compressed sparse row format (input).
 c     nrw = number of rows
 c
 c on return:
@@ -26,7 +26,7 @@ c     allocated.
 c-----------------------------------------------------------------------
       implicit none
 
-      integer ia(*),ja(*), nrw
+      integer ia(*), nrw
       double precision a(*), rs(*)
 c
 c     local variables.
@@ -46,7 +46,7 @@ c-----------------------------------------------------------------------
       end 
 
 c----------------------------------------------------------------------- 
-      subroutine rowmeans(a,ja,ia, nrw, ncl, flag, rs)
+      subroutine rowmeans(a, ia, nrw, ncl, flag, rs)
 c-----------------------------------------------------------------------
 c     purpose:
 c     -------- 
@@ -56,7 +56,7 @@ c     Reinhard Furrer 2012-04-04
 c-----------------------------------------------------------------------
       implicit none
 
-      integer ia(*),ja(*), nrw, ncl, flag
+      integer ia(*), nrw, ncl, flag
       double precision a(*), rs(*)
 c
 c     local variables.

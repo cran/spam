@@ -8,7 +8,7 @@
 
 rowSums.spam <- function(x,...) {
   return( .Fortran("rowsums",
-                   as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
+                   as.double(x@entries), as.integer(x@rowpointers),
                    x@dimension[1],
                    rs=vector("double",x@dimension[1]),
                    NAOK=.Spam$NAOK, PACKAGE="spam")$rs)
@@ -25,7 +25,7 @@ colSums.spam <- function(x,...) {
 
 rowMeans.spam <- function(x,...) {
   return( .Fortran("rowmeans",
-                   as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
+                   as.double(x@entries), as.integer(x@rowpointers),
                    x@dimension[1],x@dimension[2],
                    as.logical(.Spam$structurebased),
                    rm=vector("double",x@dimension[1]),

@@ -297,7 +297,6 @@ function (x, i, ..., drop=.Spam$drop)
                           length(x@entries), prod(nrw,ncl)))  # very pessimistic
     if (all(diffrw==1) & all(diffcl==1)) {
       z <- .Fortran("submat",
-                    nrow,
                     job=1L, # need values as well
                     i1=as.integer(rw[1]),
                     i2=as.integer(rw[nrw]),

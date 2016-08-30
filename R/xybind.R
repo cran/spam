@@ -189,7 +189,7 @@ function(...,deparse.level=0)
          stop("Arguments have differing numbers of rows, in cbind.spam()",call.=FALSE)
 
     XYlen <- args[[1]]@rowpointers[Xdim[1]+1]+args[[2]]@rowpointers[Xdim[1]+1]-2L
-    z <- .Fortran("cbind", Xdim[2], Xdim[1], Ydim[2], XYlen,
+    z <- .Fortran("cbind", Xdim[2], Xdim[1], # not used anymore Ydim[2], XYlen,
                   args[[1]]@entries, args[[1]]@colindices, args[[1]]@rowpointers,
                   args[[2]]@entries, args[[2]]@colindices, args[[2]]@rowpointers,
                   entries=vector( "double", XYlen),

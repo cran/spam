@@ -1,10 +1,10 @@
 c     system("R CMD SHLIB ../src/xybind.f")
 
-      subroutine cbind(xncol,nrow,yncol, clen, a,ia,ja, b,ib,jb,
+      subroutine cbind(xncol,nrow, a,ia,ja, b,ib,jb,
      &     c,ic,jc) 
 
       implicit none
-      integer xncol, yncol, nrow, clen
+      integer xncol, nrow
       integer ia(*), ja(*), ib(*), jb(*), ic(*), jc(*)
 
       double precision  a(*), b(*), c(*)

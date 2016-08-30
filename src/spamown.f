@@ -1121,7 +1121,7 @@ c-----------------------------------------------------------------------
 c
 c     local variables.
 c
-      integer ibeg, iend, imid, k
+      integer ibeg, iend, imid
 c
 c     initialization 
 c
@@ -1202,7 +1202,7 @@ c-----------------------------------------------------------------------
       subroutine aemub (nrow,ncol,a,ja,ia,amask,jmask,imask,
      *                  c,jc,ic,iw,aw,nzmax,ierr)
 c---------------------------------------------------------------------
-      real*8 a(*),c(*),amask(*),aw(ncol)
+      real(8) a(*),c(*),amask(*),aw(ncol)
       integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*),imask(nrow+1)
       logical iw(ncol)
 c-----------------------------------------------------------------------
@@ -1295,7 +1295,7 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aemub1 (nrow,ncol,a,ja,ia,b,jb,ib,c,jc,ic,
      *     nzmax,ierr)
-      real*8 a(*), b(*), c(*)
+      real(8) a(*), b(*), c(*)
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1)
 c-----------------------------------------------------------------------
 c A modification of aplsb by Pin Ng on 6/12/02 to
@@ -1401,7 +1401,7 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aedib (nrow,ncol,job,a,ja,ia,b,jb,ib,
      *     c,jc,ic,nzmax,iw,aw,ierr)
-      real*8 a(*), b(*), c(*), aw(ncol) 
+      real(8) a(*), b(*), c(*), aw(ncol) 
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1),
      *     iw(ncol)
 c-----------------------------------------------------------------------
@@ -1496,7 +1496,7 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aeexpb (nrow,ncol,job,a,ja,ia,b,jb,ib,
      *     c,jc,ic,nzmax,iw,aw,ierr)
-      real*8 a(*), b(*), c(*), aw(ncol) 
+      real(8) a(*), b(*), c(*), aw(ncol) 
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1),
      *     iw(ncol)
 c-----------------------------------------------------------------------
@@ -1793,7 +1793,7 @@ c----------------------------------------------------------------------c
       integer n, p, jl(*),il(n+1)
       double precision  x(n,p), b(n,p), l(*)
 
-      integer i, k, j
+      integer i, j, k 
       double precision  t
 
 c-----------------------------------------------------------------------
@@ -1812,8 +1812,11 @@ c On return:
 c-----------
 c       x  = The solution of  L x  = b.
 c--------------------------------------------------------------------
-c     Reinhard Furrer June 2008, April 2012
+c     Reinhard Furrer June 2008, April 2012, Sept 2016
       
+
+c     initialize k for next setting
+      k=0
 c     if first diagonal element is zero, break
       if (l(1) .eq. 0.0 ) goto 5
 
@@ -1850,7 +1853,7 @@ c-----------------------------------------------------------------------
       integer n, p, jr(*),ir(n+1)
       double precision  x(n,p), b(n,p), r(*)
 
-      integer l, k, j
+      integer l, j, k
       double precision  t
 c-----------------------------------------------------------------------
 c             Solves   R x = b    R = upper triangular.
@@ -1867,8 +1870,9 @@ c On return:
 c-----------
 c       x = The solution of  R x = b .
 c--------------------------------------------------------------------
-c     Reinhard Furrer June 2008, April 2012
+c     Reinhard Furrer June 2008, April 2012, Sept 2016
 
+      k = n+1
       if (r(ir(n+1)-1) .eq. 0.0 ) goto 5
       do l=1,p
          x(n,l) = b(n,l) / r(ir(n+1)-1)

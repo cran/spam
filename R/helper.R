@@ -16,7 +16,7 @@ bandwidth <- function(A) {
     warning("Matrix not 'spam' object. Coerced to one")
     A <- as.spam(A)
   }
-  ret <- .Fortran("getbwd",A@dimension[1],A@entries,A@colindices,
+  ret <- .Fortran("getbwd",A@dimension[1], A@colindices,
                   A@rowpointers,low=integer(1),upp=integer(1),
                  NAOK = .Spam$NAOK, PACKAGE = "spam")
   return(c(ret$low,ret$upp))

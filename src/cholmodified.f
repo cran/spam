@@ -6,7 +6,7 @@
 
       implicit none
       integer m,nnzd
-      integer nsuper,nnzl,iwsiz,tmpsiz,
+      integer nsuper,tmpsiz,
      &        ierr,
      &        jd(nnzd),cachesize,
      &        id(m+1),lindx(*),xlindx(*),
@@ -370,6 +370,7 @@ C***********************************************************************
 C
 C
         YOFF1 = 0
+        IY1 = 0
         DO  200  ICOL = 1, Q
             YCOL = LDA - RELIND(ICOL)
             LBOT1 = XLNZ(YCOL+1) - 1
@@ -424,14 +425,14 @@ C
 C
 C***********************************************************************
 C
-        INTEGER*4           BROTHR(*)     , FSON(*)       ,
+        INTEGER(4)           BROTHR(*)     , FSON(*)       ,
      &                      PARENT(*)
 C
-        INTEGER*4           NEQNS
+        INTEGER(4)           NEQNS
 C
 C***********************************************************************
 C
-        INTEGER*4           LROOT , NODE  , NDPAR
+        INTEGER(4)           LROOT , NODE  , NDPAR
 C
 C***********************************************************************
 C
@@ -621,6 +622,7 @@ C*********************************************************************
 C
         IFLAG = 0
         NTINY = 0
+        NXTCOL = 0
 C
 C       -----------------------------------------------------------
 C       INITIALIZE EMPTY ROW LISTS IN LINK(*) AND ZERO OUT TEMP(*).
@@ -834,7 +836,8 @@ C           APPLY PARTIAL CHOLESKY TO THE COLUMNS OF JSUP.
 C           ----------------------------------------------
 CxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPC
             CALL CHLSUP ( JLEN, NJCOLS, SPLIT(FJCOL), XLNZ(FJCOL), LNZ,
-     &                    MXDIAG, NTINY, IFLAG )
+     &                    MXDIAG, NTINY)
+c     &                    MXDIAG, NTINY, IFLAG )
             IF  ( IFLAG .NE. 0 )  THEN
                 IFLAG = -1
                 RETURN
@@ -862,7 +865,7 @@ C 699    FORMAT(1X,' FOUND ',I6,' TINY DIAGONALS; REPLACED WITH INF')
 C
 C SET IFLAG TO -1 TO INDICATE PRESENCE OF TINY DIAGONALS
 C
-	IF(NTINY .NE. 0) IFLAG = -1
+        IF(NTINY .NE. 0) IFLAG = -1
 CxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPCxPC
         RETURN
       END
@@ -1213,7 +1216,7 @@ C
 C
 C***********************************************************************
 C
-        INTEGER*4           LROOT , NODE  , NDLSON, NDPAR
+        INTEGER(4)           LROOT , NODE  , NDLSON, NDPAR
 C
 C***********************************************************************
 C
@@ -1299,11 +1302,12 @@ C        X(*)   - ON OUTPUT, CONTAINS THE FACTORED COLUMNS OF
 C                 THE SUPERNODE.
 C        IFLAG  - UNCHANGED IF THERE IS NO ERROR.
 C                 =1 IF NONPOSITIVE DIAGONAL ENTRY IS ENCOUNTERED.
+c              RF: removed! 
 C
 C***********************************************************************
 C
-      SUBROUTINE  CHLSUP  ( M, N, SPLIT, XPNT, X, MXDIAG, NTINY, 
-     &                      IFLAG )
+      SUBROUTINE  CHLSUP  ( M, N, SPLIT, XPNT, X, MXDIAG, NTINY)
+c     &                      IFLAG )
 C
 C***********************************************************************
 C
@@ -1313,7 +1317,7 @@ C     -----------
 C
       EXTERNAL            MMPY8
 C
-      INTEGER             M, N, IFLAG
+      INTEGER             M, N
 C
       INTEGER             XPNT(*), SPLIT(*)
 C
@@ -1541,15 +1545,15 @@ C
 C
 C***********************************************************************
 C
-        INTEGER*4           BROTHR(*)     , COLCNT(*)     , 
+        INTEGER(4)           BROTHR(*)     , COLCNT(*)     , 
      &                      FSON(*)       , INVPOS(*)     , 
      &                      PARENT(*)     , STACK(*)
 C
-        INTEGER*4           ROOT
+        INTEGER(4)           ROOT
 C
 C***********************************************************************
 C
-        INTEGER*4           ITOP  , NDPAR , NODE  , NUM   , NUNODE
+        INTEGER(4)           ITOP  , NDPAR , NODE  , NUM   , NUNODE
 C
 C***********************************************************************
 C
@@ -1663,13 +1667,13 @@ C
 C
 C***********************************************************************
 C
-        INTEGER*4           ADJNCY(*)     , BROTHR(*)     ,
+        INTEGER(4)           ADJNCY(*)     , BROTHR(*)     ,
      &                      FSON(*)       , INVP(*)       ,
      &                      INVPOS(*)     , PARENT(*)     ,
      &                      PERM(*)
 C
-        INTEGER*4           XADJ(*)
-        INTEGER*4           NEQNS
+        INTEGER(4)           XADJ(*)
+        INTEGER(4)           NEQNS
 C
 C***********************************************************************
 C
@@ -1741,15 +1745,15 @@ C
 C
 C***********************************************************************
 C
-        INTEGER*4           BROTHR(*)     , FSON(*)       ,
+        INTEGER(4)           BROTHR(*)     , FSON(*)       ,
      &                      INVPOS(*)     , PARENT(*)     ,
      &                      STACK(*)
 C
-        INTEGER*4           ROOT
+        INTEGER(4)           ROOT
 C
 C***********************************************************************
 C
-        INTEGER*4           ITOP  , NDPAR , NODE  , NUM   , NUNODE
+        INTEGER(4)           ITOP  , NDPAR , NODE  , NUM   , NUNODE
 C
 C***********************************************************************
 C
@@ -1838,16 +1842,16 @@ C
 C
 C***********************************************************************
 C
-        INTEGER*4           ADJNCY(*)     , ANCSTR(*)     ,
+        INTEGER(4)           ADJNCY(*)     , ANCSTR(*)     ,
      &                      INVP(*)       , PARENT(*)     ,
      &                      PERM(*)
 C
-        INTEGER*4           NEQNS
-        INTEGER*4           XADJ(*)
+        INTEGER(4)           NEQNS
+        INTEGER(4)           XADJ(*)
 C
 C***********************************************************************
 C
-        INTEGER*4           I     , J     , JSTOP , JSTRT , NBR   ,
+        INTEGER(4)           I     , J     , JSTOP , JSTRT , NBR   ,
      &                      NEXT  , NODE
 C
 C***********************************************************************
@@ -2183,7 +2187,7 @@ C       --------------------------------------------
         IF  ( CACHSZ .LE. 0 )  THEN
             CACHE = 2 000 000 000
         ELSE
-            CACHE = ( FLOAT(CACHSZ) * 1024. / 8. ) * 0.9
+            CACHE = INT( ( FLOAT(CACHSZ) * 1024. / 8. ) * 0.9 )
         ENDIF
 C
 C       ---------------
@@ -2852,14 +2856,14 @@ C
 C
 C***********************************************************************
 C
-        INTEGER*4           INVP(*)       , INVP2(*)      ,
+        INTEGER(4)           INVP(*)       , INVP2(*)      ,
      &                      PERM(*)
 C
-        INTEGER*4           NEQNS
+        INTEGER(4)           NEQNS
 C
 C***********************************************************************
 C
-        INTEGER*4           I     , INTERM, NODE
+        INTEGER(4)           I     , INTERM, NODE
 C
 C***********************************************************************
 C
@@ -4358,7 +4362,7 @@ C     -----------
 C
       EXTERNAL            SMXPY8
 C
-      INTEGER             M, N, IFLAG
+      INTEGER             M, N
 C
       INTEGER             XPNT(*)
 C

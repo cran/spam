@@ -2,7 +2,7 @@ c-----------------------------------------------------------------------
       subroutine amask (nrow,ncol,a,ja,ia,jmask,imask,
      *                  c,jc,ic,iw,nzmax,ierr)
 c---------------------------------------------------------------------
-      real*8 a(*),c(*)
+      real(8) a(*),c(*)
       integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*),imask(nrow+1)
       logical iw(ncol)
 c-----------------------------------------------------------------------
@@ -90,7 +90,7 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aplsb1 (nrow,ncol,a,ja,ia,s,b,jb,ib,c,jc,ic,
      *     nzmax,ierr)
-      real*8 a(*), b(*), c(*), s
+      real(8) a(*), b(*), c(*), s
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1)
 c-----------------------------------------------------------------------
 c performs the operation C = A+s B for matrices in sorted CSR format.
@@ -200,9 +200,9 @@ c-----------------------------------------------------------------------
       end
 c
 
-      subroutine submat (n,job,i1,i2,j1,j2,a,ja,ia,nr,nc,ao,jao,iao)
-      integer n,job,i1,i2,j1,j2,nr,nc,ia(*),ja(*),jao(*),iao(*)
-      real*8 a(*),ao(*)
+      subroutine submat (job,i1,i2,j1,j2,a,ja,ia,nr,nc,ao,jao,iao)
+      integer job,i1,i2,j1,j2,nr,nc,ia(*),ja(*),jao(*),iao(*)
+      real(8) a(*),ao(*)
 c-----------------------------------------------------------------------
 c extracts the submatrix A(i1:i2,j1:j2) and puts the result in
 c matrix ao,iao,jao
@@ -269,7 +269,7 @@ c-----------------------------------------------------------------------
       end
 c
       subroutine amux (n, x, y, a,ja,ia)
-      real*8  x(*), y(*), a(*)
+      real(8)  x(*), y(*), a(*)
       integer n, ja(*), ia(*)
 c-----------------------------------------------------------------------
 c         A times a vector
@@ -292,7 +292,7 @@ c
 c-----------------------------------------------------------------------
 c local variables
 c
-      real*8 t
+      real(8) t
       integer i, k
 c-----------------------------------------------------------------------
       do 100 i = 1,n
@@ -412,7 +412,7 @@ c
 
        subroutine amub (nrow,ncol,job,a,ja,ia,b,jb,ib,
      *                  c,jc,ic,nzmax,iw,ierr)
-      real*8 a(*), b(*), c(*)
+      real(8) a(*), b(*), c(*)
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(*),ic(*),iw(ncol)
 c-----------------------------------------------------------------------
 c performs the matrix by matrix product C = A B
@@ -459,9 +459,11 @@ c   The row dimension of B is not needed. However there is no checking
 c   on the condition that ncol(A) = nrow(B).
 c
 c-----------------------------------------------------------------------
-      real*8 scal
+      real(8) scal
       logical values
       values = (job .ne. 0)
+c  the following is not necessary... keep [-Wmaybe-uninitialized] quite
+      scal = 0.0
       len = 0
       ic(1) = 1
       ierr = 0
@@ -505,7 +507,7 @@ c
 c------------------------------------------------------------------------
       subroutine getl (n,a,ja,ia,ao,jao,iao)
       integer n, ia(*), ja(*), iao(*), jao(*)
-      real*8 a(*), ao(*)
+      real(8) a(*), ao(*)
 c------------------------------------------------------------------------
 c this subroutine extracts the lower triangular part of a matrix
 c and writes the result ao, jao, iao. The routine is in place in
@@ -527,7 +529,7 @@ c getl will overwrite the result on a, ja, ia.
 c
 c------------------------------------------------------------------------
 c local variables
-      real*8 t
+      real(8) t
       integer ko, kold, kdiag, k, i
 c
 c inititialize ko (pointer for output matrix)
@@ -565,7 +567,7 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine getu (n,a,ja,ia,ao,jao,iao)
       integer n, ia(*), ja(*), iao(*), jao(*)
-      real*8 a(*), ao(*)
+      real(8) a(*), ao(*)
 c------------------------------------------------------------------------
 c this subroutine extracts the upper triangular part of a matrix
 c and writes the result ao, jao, iao. The routine is in place in
@@ -587,7 +589,7 @@ c getu will overwrite the result on a, ja, ia.
 c
 c------------------------------------------------------------------------
 c local variables
-      real*8 t
+      real(8) t
       integer ko, k, i, kdiag, kfirst
       ko = 0
       do  7 i=1, n
@@ -619,7 +621,7 @@ c-----------------------------------------------------------------------
       end
 c-
       subroutine csrmsr (n,a,ja,ia,ao,jao,wk,iwk)
-      real*8 a(*),ao(*),wk(n)
+      real(8) a(*),ao(*),wk(n)
       integer ia(n+1),ja(*),jao(*),iwk(n+1)
 c-----------------------------------------------------------------------
 c Compressed Sparse Row   to      Modified - Sparse Row
@@ -726,7 +728,7 @@ c-----------------------------------------------------------------------
       end
 c
       subroutine getdia (nrow,ncol,job,a,ja,ia,len,diag,idiag,ioff)
-      real*8 diag(*),a(*)
+      real(8) diag(*),a(*)
       integer nrow, ncol, job, len, ioff, ia(*), ja(*), idiag(*)
 c-----------------------------------------------------------------------
 c this subroutine extracts a given diagonal from a matrix stored in csr
@@ -768,7 +770,7 @@ c-----------
 c len   = number of nonzero elements found in diag.
 c         (len .le. min(nrow,ncol-ioff)-max(1,1-ioff) + 1 )
 c
-c diag  = real*8 array of length nrow containing the wanted diagonal.
+c diag  = real(8) array of length nrow containing the wanted diagonal.
 c         diag contains the diagonal (a(i,j),j-i = ioff ) as defined
 c         above.
 c

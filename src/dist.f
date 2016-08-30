@@ -91,7 +91,7 @@ c     p power for minkowski
       double precision eta, entries(nnz)
       
 c     local variables
-      integer jja, i,j,k, ifrom,ito, jfrom, jto
+      integer jja, i,j,k, jfrom, jto
       double precision etap, tmp,pinv
       
 
@@ -171,7 +171,7 @@ c     in case nnz was too small, recall line to get a better estimate
       double precision eta, entries(nnz)
       
 c     local variables
-      integer jja, i,j,k, ifrom,ito, jfrom, jto
+      integer jja, i,j,k, jfrom, jto
       double precision  tmp
       
 
@@ -245,7 +245,7 @@ c     in case nnz was too small, recall line to get a better estimate
       
 c     local variables
       logical equi
-      integer jja, i,j,k, ifrom,ito, jfrom, jto
+      integer jja, i,j, jfrom, jto
       double precision etap, tmp, rad, tmp1, tmp2
       double precision scy12(ny), ccy12(ny), sy2(ny)
       double precision scx12,     ccx12,     sx2
