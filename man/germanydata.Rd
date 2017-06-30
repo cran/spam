@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/germanydata.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 

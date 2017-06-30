@@ -1,16 +1,16 @@
-# This is file ../spam/R/toepliz.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
-
+# HEADER ####################################################
+# This is file  spam/R/toepliz.R.                           #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 
 ########################################################################
 
-"circulant.spam" <- function(x, n=NULL, eps = .Spam$eps)
+"circulant.spam" <- function(x, n=NULL, eps = getOption("spam.eps"))
 {
   if (!(is.vector(x)|is.list(x)) )
     stop("'x' is not a vector or a list")
@@ -34,29 +34,60 @@
   
   n <- as.integer(n)
   len <- as.integer(length( ind)[1]) # see ?length@value
-  if(identical(len,0L))
-    return(new("spam", rowpointers = c(1L, rep.int(2L, n)), 
-               dimension = as.integer(c(n, n))))
+  if(identical(len,0))
+    return(.newSpam(
+        rowpointers = c(1, rep_len_long(2, n)), 
+        dimension = c(n, n)))
 #      subroutine circulant(nrow,len, x,j, a,ja,ia)
   nz <- n*len
-  z <- .Fortran('circulant',n, len,
-                as.double(x), as.integer(ind),
-                entries= vector("double", nz),
-                colindices = vector("integer", nz),
-                rowpointers = vector("integer",  n + 1),
-                 NAOK = .Spam$NAOK, PACKAGE = "spam")
+  ## z <- .Fortran("circulant",
+  ##               as.integer(n),
+  ##               as.integer(len),
+  ##               as.double(x),
+  ##               as.integer(ind),
+  ##               entries= vector("double", nz),
+  ##               colindices = vector("integer", nz),
+  ##               rowpointers = vector("integer",  n + 1),
+  ##               NAOK = getOption("spam.NAOK"),
+  ##               PACKAGE = "spam")
+  if( getOption("spam.force64") || nz > 2147483647 || n+1 > 2147483647)
+      SS <- .format64
+  else
+      SS <- .format32
+  z <- .C64("circulant",
+             SIGNATURE = c(SS$signature, SS$signature, "double", SS$signature,
+                 "double", SS$signature, SS$signature),
+             
+             n,
+             len,
+             x,
+             ind,
+            
+             entries = vector_dc( "double", nz),
+             colindices = vector_dc( SS$type, nz),
+             rowpointers = vector_dc( SS$type,  n + 1),
+
+             INTENT = c("r", "r", "r", "r",
+                 "rw", "rw", "rw" ),
+             NAOK = getOption("spam.NAOK"),
+             PACKAGE = SS$package)
 
                 
-  newx <- new("spam")
-  slot(newx, "entries", check = FALSE) <- z$entries
-  slot(newx, "colindices", check = FALSE) <- z$colindices
-  slot(newx, "rowpointers", check = FALSE) <- z$rowpointers
-  slot(newx, "dimension", check = FALSE) <- c(n, n)
-  return(newx)
-
+  ## newx <- new("spam")
+  ## slot(newx, "entries", check = FALSE) <- z$entries
+  ## slot(newx, "colindices", check = FALSE) <- z$colindices
+  ## slot(newx, "rowpointers", check = FALSE) <- z$rowpointers
+  ## slot(newx, "dimension", check = FALSE) <- c(n, n)
+  ## return(newx)
+  return(.newSpam(
+      entries = z$entries,
+      colindices = z$colindices,
+      rowpointers = z$rowpointers,
+      dimension = c(n,n)
+      ))
 }
 
-toeplitz.spam <- function(x,y=NULL, eps = .Spam$eps)
+toeplitz.spam <- function(x,y=NULL, eps = getOption("spam.eps"))
 {
   if (!is.vector(x)) 
     stop("'x' is not a vector")
@@ -76,29 +107,60 @@ toeplitz.spam <- function(x,y=NULL, eps = .Spam$eps)
  
   n <- as.integer(n)
   len <- as.integer(length( ind)[1]) # see ?length@value
-  if(identical(len,0L))
-    return(new("spam", rowpointers = c(1L, rep.int(2L, n)), 
-               dimension = as.integer(c(n, n))))
+  if(identical(len,0L)){
+      ## print("degenerate")
+      return(.newSpam(
+          rowpointers =  c(1, rep_len_long(2, n)),
+          dimension = c(n, n)))
+    ## return(new("spam", rowpointers = c(1L, rep.int(2L, n)), 
+    ##            dimension = as.integer(c(n, n))))
+  }
 #      subroutine toeplitz(nrow,len, x,j, a,ja,ia,kk)
   nz <- n*len
-  z <- .Fortran('toeplitz',n, len,
-                as.double(fullx), as.integer(ind),
-                entries= vector("double", nz),
-                colindices = vector("integer", nz),
-                rowpointers = vector("integer",  n + 1),
-                nnz=as.integer(1),
-                NAOK = .Spam$NAOK, PACKAGE = "spam")
+    ## z <- .Fortran("toeplitz",
+    ##             as.integer(n),
+    ##             as.integer(len),
+    ##             as.double(fullx),
+    ##             as.integer(ind),
+    ##             entries= vector("double", nz),
+    ##             colindices = vector("integer", nz),
+    ##             rowpointers = vector("integer",  n + 1),
+    ##             nnz=as.integer(1),
+    ##             NAOK = getOption("spam.NAOK"), PACKAGE = "spam")
+  if(getOption("spam.force64") || n+1 > 2147483647 || nz > 2147483647 )
+      SS <- .format64
+  else
+      SS <- .format32
+  
+  z <- .C64("toeplitz",
+            SIGNATURE = c(SS$signature, SS$signature, "double", SS$signature,
+                "double", SS$signature, SS$signature, SS$signature),
+
+            n,
+            len,
+            fullx,
+            ind,
+            
+            entries = vector_dc("double", nz),
+            colindices = vector_dc( SS$type, nz),
+            rowpointers = vector_dc( SS$type,  n + 1),
+            nnz = 1,
+
+            INTENT = c("r", "r", "r", "r",
+                "w", "w", "w", "rw"),
+            NAOK = getOption("spam.NAOK"),
+            PACKAGE = SS$package)
 
                 
-  newx <- new("spam")
-  slot(newx, "entries", check = FALSE) <- z$entries[1:z$nnz]
-  slot(newx, "colindices", check = FALSE) <- z$colindices[1:z$nnz]
-  slot(newx, "rowpointers", check = FALSE) <- z$rowpointers
-  slot(newx, "dimension", check = FALSE) <- c(n, n)
-  return(newx)
-
-
+  ## newx <- new("spam")
+  ## slot(newx, "entries", check = FALSE) <- z$entries[1:z$nnz]
+  ## slot(newx, "colindices", check = FALSE) <- z$colindices[1:z$nnz]
+  ## slot(newx, "rowpointers", check = FALSE) <- z$rowpointers
+  ## slot(newx, "dimension", check = FALSE) <- c(n, n)
+  ## return(newx)
+  return(.newSpam(
+      entries = z$entries[1:z$nnz],
+      colindices = z$colindices[1:z$nnz],
+      rowpointers = z$rowpointers,
+      dimension = c(n, n) ) )
 }
-
-
-#

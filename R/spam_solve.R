@@ -1,7 +1,11 @@
-# This is file ../spam/R/spam_solve.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+# HEADER ####################################################
+# This is file  spam/R/spam_solve.R.                        #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
+
      
 
 ########################################################################
@@ -62,21 +66,6 @@ print.spam.chol.NgPeyton <- function(x,...) {
   cat("Class 'spam.chol.NgPeyton'\n")
   invisible(NULL)
 }
-summary.spam.chol.NgPeyton <- function(object,...) {
-  nrow <- object@dimension[1]
-  nnzR <- object@rowpointers[nrow+1]-1
-  dens <- nnzR/(nrow^2)
-  nnzc <- length(object@colindices)
-  fill <- nnzR/((object@nnzA+nrow)/2)
-  cat("(Upper) Cholesky factor of class 'spam.chol.NgPeyton' of dimension ", nrow,
-                "x", nrow, " with ",nnzR," (row-wise) nonzero elements.", sep = "", fill=TRUE)
-  cat("    Density of the factor is ", signif(dens * 100, 3),"%.\n", sep = "")
-  cat("    Fill-in ratio is ", signif(fill, 3),"\n", sep = "")
-  cat("    (Optimal argument for 'chol' is 'memory=list(nnzR=",nnzR,
-            ifelse(object@nnzA<nnzc,paste(",nnzcolindices=",nnzc, sep = ""),""),")'.)\n", sep = "")
-  cat("Class 'spam.chol.NgPeyton'\n")
-  invisible(list(nnzR=nnzR,nnzcolindices=nnzc,density=dens,fillin=fill))
-}
 
 setMethod("show","spam.chol.NgPeyton", function(object) {
   nrow <- object@dimension[1]
@@ -89,6 +78,7 @@ setMethod("show","spam.chol.NgPeyton", function(object) {
   invisible(NULL)
         })
 
+
 "diag.of.spam.chol.NgPeyton" <- function(x, nrow, ncol)
   return( x@entries[x@rowpointers[-(x@dimension[1]+1)]])
 
@@ -96,49 +86,102 @@ setMethod("show","spam.chol.NgPeyton", function(object) {
 setMethod("diag",    "spam.chol.NgPeyton", diag.of.spam.chol.NgPeyton)
 #setMethod("diag<-",  "spam.chol.NgPeyton", function(x,...) stop("operation not allowed on 'spam.chol.NgPeyton' object"))
 setMethod("print",   "spam.chol.NgPeyton", print.spam.chol.NgPeyton)
-setMethod("summary", "spam.chol.NgPeyton", summary.spam.chol.NgPeyton)
+# setMethod("summary", "spam.chol.NgPeyton", summary.spam.chol.NgPeyton)  # moved to new file
 setMethod("dim",     "spam.chol.NgPeyton",function(x) x@dimension)
 setMethod("length",  "spam.chol.NgPeyton",function(x) x@rowpointers[x@dimension[1]+1]-1)
 setMethod("length<-","spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam.chol.NgPeyton' object") )
 setMethod("dim<-",   "spam.chol.NgPeyton",function(x,value) stop("operation not allowed on 'spam.chol.NgPeyton' object") )
 
-setMethod("c","spam.chol.NgPeyton", function(x,...,recursive=TRUE){
-  nrow <- x@dimension[1]
-  nnzR <- x@rowpointers[nrow+1]-1
-  newx <- new("spam")
-  nsuper <- as.integer( length(x@supernodes)-1)
-  xcolindices <- .Fortran('calcja',
-                           nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
-                           xja=vector("integer",nnzR),
-                           NAOK = .Spam$NAOK,PACKAGE = "spam")$xja
-  cx <- .Fortran("spamcsrdns",
-                 nrow=nrow,
-                 entries=as.double(x@entries),
-                 colindices=xcolindices,
-                 rowpointers=x@rowpointers,
-                 res=vector("double",nrow*nrow),  
-                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res
+setMethod("c","spam.chol.NgPeyton", function(x,...){
+    nrow <- x@dimension[1]
+    nnzR <- x@rowpointers[nrow+1]-1
+    ## newx <- new("spam") ## what is this doing here??? TODO
+    nsuper <- as.integer( length(x@supernodes)-1)
+    ## xcolindices <- .Fortran('calcja',
+    ##                         as.integer(nrow),
+    ##                         as.integer(nsuper),
+    ##                         as.integer(x@supernodes), 
+    ##                         as.integer(x@colindices),
+    ##                         as.integer(x@colpointers),
+    ##                         as.integer(x@rowpointers),
+    ##                         xja=vector("integer",nnzR),
+    ##                         NAOK = getOption("spam.NAOK"),
+    ##                         PACKAGE = "spam")$xja
+    if( getOption("spam.force64") || .format.spam(x)$package != "spam")
+        SS <- .format64
+    else
+        SS <- .format32
+    
+    xcolindices <- .C64('calcja',
+                        SIGNATURE = rep(SS$signature, 7),
+                        
+                        nrow,
+                        nsuper,
+                        x@supernodes,
+                        x@colindices,
+                        
+                        x@colpointers,
+                        x@rowpointers,
+                        xja = vector_dc( SS$type, nnzR),
+                        
+                        INTENT=c("r", "r", "r", "r",
+                                 "r", "r", "w"),
+                        NAOK = getOption("spam.NAOK"),
+                        PACKAGE = SS$package)$xja
+    cx <- .C64("spamcsrdns",
+               SIGNATURE = c(SS$signature, "double" , SS$signature, SS$signature,
+                             "double"),
+               
+               nrow = nrow,
+               entries = x@entries,
+               colindices = xcolindices,
+               rowpointers = x@rowpointers,
+               
+               res = vector_dc( "double", nrow*nrow),
+
+               INTENT = c("r", "r", "r", "r",
+                          "w"),
+               NAOK=getOption("spam.NAOK"),
+               PACKAGE = SS$package)$res
   if (length( list(...)) < 1)
     return( cx)
   else
-    c( cx,c(...,recursive),recursive)
+    c( cx,c(...))
 })
 
-
-"as.spam.chol.NgPeyton" <- function(x, eps = .Spam$eps){
+as.spam.chol.NgPeyton <- function(x, eps = getOption("spam.eps")) {
+    if( getOption("spam.force64") || .format.spam(x)$package != "spam")
+        SS <- .format64
+    else
+        SS <- .format32
+    
   if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
   nrow <- x@dimension[1]
   nnzR <- x@rowpointers[nrow+1]-1
-  newx <- new("spam")
-  nsuper <- as.integer( length(x@supernodes)-1)
-  slot(newx,"entries",check=FALSE) <- x@entries
-  slot(newx,"colindices",check=FALSE) <- .Fortran('calcja',
-                           nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
-                           xja=vector("integer",nnzR),
-                           NAOK = .Spam$NAOK,PACKAGE = "spam")$xja
-  slot(newx,"rowpointers",check=FALSE) <- x@rowpointers
-  slot(newx,"dimension",check=FALSE) <- x@dimension
-  return(newx)
+  nsuper <- length(x@supernodes)-1
+  
+  colindices <- .C64('calcja',
+                     SIGNATURE=rep(SS$signature, 7),
+                     
+                     nrow,
+                     nsuper,
+                     x@supernodes,
+                     x@colindices,
+                     
+                     x@colpointers,
+                     x@rowpointers,
+                     xja=vector(SS$type, nnzR), #!1#
+                     
+                     INTENT=c("r", "r", "r", "r", "r", "r", "w"),
+                     NAOK = getOption("spam.NAOK"),
+                     PACKAGE = SS$package)$xja
+  
+  return(.newSpam(
+    entries=x@entries,
+    colindices=colindices,
+    rowpointers=x@rowpointers,
+    dimension=x@dimension
+  ))
 }
 
 setMethod("as.spam","spam.chol.NgPeyton", as.spam.chol.NgPeyton)
@@ -203,35 +246,77 @@ setMethod("ordering","spam",function(x,inv=FALSE)
 
 
 update.spam.chol.NgPeyton <- function(object,x,...){
+    ## print("update.spam.chol.NgPeyton")
   nrow <- object@dimension[1]
   if (!is.spam(x))
     stop("Covariance should be a 'spam' object.")
   if ((x@rowpointers[nrow+1]-1) != object@nnzA)
     stop("Updated covariance entries do not match length of original one.") 
 
-  u <- .Fortran("updatefactor",
-                nrow,
-                object@nnzA,
-                d =  as.double(x@entries),  jd = x@colindices,
-                id = x@rowpointers,
-                object@invpivot,   object@pivot,
-                lindx=object@colindices,    xlindx=object@colpointers,
-                nsuper=as.integer( length(object@supernodes)-1),
-                entries = vector("double",length(object@entries)), #lnz
-                rowpointers = object@rowpointers,#xlnz
-                snode=object@snmember,  xsuper=object@supernodes,
-                cachesize=object@memory[3],
-                ierr = 0L,         
-                NAOK = .Spam$NAOK,PACKAGE="spam")
+  ## u <- .Fortran("updatefactor",
+  ##               as.integer(nrow),
+  ##               as.integer(object@nnzA),
+  ##               d =  as.double(x@entries),  jd = as.integer(x@colindices),
+  ##               id = as.integer(x@rowpointers),
+  ##               as.integer(object@invpivot),   as.integer(object@pivot),
+  ##               lindx=as.integer(object@colindices),    xlindx=as.integer(object@colpointers),
+  ##               nsuper=as.integer( length(object@supernodes)-1),
+  ##               entries = vector("double",length(object@entries)), #lnz
+  ##               rowpointers = as.integer(object@rowpointers),#xlnz
+  ##               snode=as.integer(object@snmember),  xsuper=as.integer(object@supernodes),
+  ##               cachesize=as.integer(object@memory[3]),
+  ##               ierr = 0L,         
+    ##               NAOK = getOption("spam.NAOK"),PACKAGE="spam")
+    if( getOption("spam.force64") || .format.spam(object)$package != "spam" || .format.spam(x)$package != "spam" )
+        SS <- .format64
+    else
+        SS <- .format32
+    
+    u <- .C64("updatefactor",
+     ##          subroutine updatefactor( m,nnzd,
+     ## &     d,jd,id, invp,perm, 
+     ## &                lindx,xlindx, nsuper,lnz,xlnz,
+     ## &                snode, xsuper,
+     ## &                cachesize,ierr)
+              SIGNATURE = c(SS$signature, SS$signature,
+                            "double", SS$signature, SS$signature,
+                            SS$signature, SS$signature, SS$signature, SS$signature, SS$signature,
+                            "double", SS$signature, SS$signature, SS$signature, SS$signature, SS$signature ),
+              nrow,
+              object@nnzA,
+              
+              d =  x@entries,
+              jd = x@colindices,
+              id = x@rowpointers,
+              
+              object@invpivot,
+              object@pivot,
+              lindx = object@colindices,
+              xlindx = object@colpointers,
+              nsuper = length(object@supernodes)-1,
+              
+              entries = vector_dc( "double", length(object@entries)), #lnz
+              rowpointers = object@rowpointers,#xlnz
+              snode = object@snmember,
+              xsuper = object@supernodes,
+              cachesize = object@memory[3],
+              ierr = 0,
+
+              ## INTENT = c("r", "r", 
+              ##            "r", "r", "r",
+              ##            "r", "r", "r", "r", "r",
+              ##            "rw", "rw", "r", "r", "rw", "rw"), 
+              NAOK = getOption("spam.NAOK"),
+              PACKAGE = SS$package)
 
   if(u$ierr>1) stop("Internal error in 'update.spam.chol.NgPeyton' code ", u$ierr,call.=FALSE)
 
   if(u$ierr == 1) {
-    if (.Spam$cholupdatesingular == "null")
+    if (getOption("spam.cholupdatesingular") == "null")
       return(NULL)
-    else if (.Spam$cholupdatesingular == "error")
+    else if (getOption("spam.cholupdatesingular") == "error")
       stop("Singularity problem when updating a Cholesky Factor.")
-    else if (.Spam$cholupdatesingular == "warning")
+    else if (getOption("spam.cholupdatesingular") == "warning")
       warning("Singularity problem when updating a Cholesky Factor.\n'object' not updated.")
     else
       stop("'cholupdatesingular' should be 'error', 'null' or 'warning'.")
@@ -242,22 +327,35 @@ update.spam.chol.NgPeyton <- function(object,x,...){
 }
 
 
+
 chol.spam <- function(x, pivot = "MMD",
                       method="NgPeyton",
                       memory=list(),
-                      eps = .Spam$eps, ...){
+                      eps = getOption("spam.eps"), ...){
+    
+    force64 <- getOption("spam.force64")
+  if(force64 || prod(dim(x)) > 2147483647)
+      SS <- .format64
+  else
+      SS <- .format32
+  #!3# 
+  
 
   if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
   nrow <- x@dimension[1]
-  nnzA <- as.integer( x@rowpointers[nrow+1]-1)
+  nnzA <- x@rowpointers[nrow+1]-1
   if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
 
-  if (any( diag.of.spam(x, nrow, nrow) < .Spam$eps))
+  if (any( diag(x, nrow, nrow) < getOption("spam.eps")))
     stop("Input matrix to 'chol' not positive definite (up to eps)",call.=FALSE)
+# base rule:
+#  `nrow(x) * .Machine$double.neg.eps * max(diag(x)`.
 
   
-  if(.Spam$cholsymmetrycheck) {
-    test <- isSymmetric.spam(x, tol = eps*100) 
+  if(getOption("spam.cholsymmetrycheck")) {
+    test <- isSymmetric(x, tol = eps*100) 
+#  from help of isSymmetric:  
+#     isSymmetric(object, tol = 100 * .Machine$double.eps, ...)
     if (!isTRUE(test))
       stop("Input matrix to 'chol' not symmetric (up to 100*eps)",call.=FALSE)
   }
@@ -268,20 +366,18 @@ chol.spam <- function(x, pivot = "MMD",
 
   if (length(pivot)==1) {
     if (pivot==FALSE) {
-      doperm <- 0L
+      doperm <- 0
       pivot <- seq_len(nrow)
     } else if(pivot==TRUE) {
-      doperm <- 1L
-      pivot <- vector("integer",nrow)
+      doperm <- 1
+      pivot <- vector(SS$type,nrow)
     } else {
       doperm <- as.integer( switch(match.arg(pivot,c("MMD","RCM")),MMD=1,RCM=2))
-      pivot <- vector("integer",nrow)
+      pivot <- vector(SS$type, nrow)
     }
   } else  if (length(pivot)==nrow) {
-    doperm <- 0L
-    if (!is.integer(pivot[1]))
-      pivot <- as.vector(pivot,"integer")
-    if (.Spam$cholpivotcheck) {
+    doperm <- 0
+    if (getOption("spam.cholpivotcheck")) {
       checkpivot(pivot,nrow)
     }
  } else stop("'pivot' should be 'MMD', 'RCM' or a valid permutation")
@@ -302,11 +398,17 @@ chol.spam <- function(x, pivot = "MMD",
     memory$nnzcolindices <- NULL
   }
   # nnzR = length of array holding the nonzero values of the factor 
-  if(is.null(memory$nnzR))    nnzR <- min(max(4*nnzA,floor(.4*nnzA^1.2))*nnzRfact[doperm+1],nrow*(nrow+1)/2)  else {
+  if(is.null(memory$nnzR)) {
+    nnzR <- min(max(4*nnzA,floor(.2*nnzA^1.3))*nnzRfact[doperm+1],nrow*(nrow+1)/2)
+  } else {
     nnzR <- memory$nnzR
     memory$nnzR <- NULL
   }
-  if(is.null(memory$cache))    cache <- 512  else {
+  
+#!4#
+  if(is.null(memory$cache))
+    cache <- 512
+  else {
     cache <- memory$cache 
     memory$cache <- NULL
   }
@@ -314,78 +416,115 @@ chol.spam <- function(x, pivot = "MMD",
   if (length( memory)>0 )
     warning("The component(s) ", paste("'",names(memory),"'",sep='',collapse=","),
             " of the argument 'memory'\npassed to function 'chol' not meaningful and hence ignored.",call.=FALSE)
-  nnzR <- as.integer(nnzR)
-  nnzcolindices <- as.integer(nnzcolindices)
-  z <- .Fortran("cholstepwise",
-                nrow = nrow,nnzA = nnzA,
-                d =  as.double(x@entries),jd = x@colindices,id = x@rowpointers,
-                doperm = doperm,invp = vector("integer",nrow), perm = pivot,
-                nnzlindx = vector("integer",1),             
-                nnzcolindices = as.integer(nnzcolindices),
-                lindx = vector("integer",nnzcolindices),     
-                xlindx = vector("integer",nrow+1),     #
-                nsuper = vector("integer",1),          #
-                nnzR = as.integer(nnzR),#
-                lnz = vector("double",nnzR),        #
-                xlnz = vector("integer",nrow+1),     #
-                snode = vector("integer",nrow),
-                xsuper = vector("integer",nrow+1),   
-                cachesize = as.integer(cache),
-                ierr = 0L,          
-                NAOK = .Spam$NAOK,PACKAGE="spam")
+   
+  cholstep.intent <- c("r", "r", "r", "r", 
+                    "r", "r", "rw", "rw",
+                    "rw", "r", "rw", "rw",
+                    "rw", "rw", "rw", "rw",
+                    "rw", "rw", "r", "rw")
+
+  cholstep.signature <- rep(SS$signature, 20)
+  cholstep.signature[c(3,15)] <- "double"
+   
+  z <- .C64("cholstepwise",
+            SIGNATURE=cholstep.signature,
+
+            nrow = nrow,
+            nnzA = nnzA,
+            d =  x@entries,
+            jd = x@colindices,
+            
+            id = x@rowpointers, #5
+            doperm = doperm,
+            invp = vector(SS$type,nrow),
+            perm = pivot,
+            
+            nnzlindx = 1L, #9       
+            nnzcolindices = nnzcolindices,
+            lindx = vector(SS$type, nnzcolindices),   
+            xlindx = vector(SS$type, nrow+1),
+            
+            nsuper = 1L, #13
+            nnzR = nnzR,
+            lnz = vector("double",nnzR),
+            xlnz = vector(SS$type, nrow+1), 
+                
+            snode = vector(SS$type, nrow), #17
+            xsuper = vector(SS$type, nrow+1),   
+            cachesize = cache,
+            ierr = 0L,
+            
+            INTENT=cholstep.intent,
+            NAOK = getOption("spam.NAOK"),
+            PACKAGE = SS$package)
 
   if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   if(z$ierr == 6) stop("Inconsitency in the input",call.=FALSE)
 
   while( z$ierr>1) {
     if(z$ierr == 4) {
-      tmp <- ceiling(nnzR*.Spam$cholincreasefactor[1])
+      tmp <- ceiling(nnzR*getOption("spam.cholincreasefactor")[1])
       warning("Increased 'nnzR' with 'NgPeyton' method\n",
                     "(currently set to ",tmp," from ",nnzR,")",call.=FALSE)
       nnzR <- tmp
     }
     if(z$ierr == 5) {
-      tmp <- ceiling(nnzcolindices*.Spam$cholincreasefactor[2])
+      tmp <- ceiling(nnzcolindices*getOption("spam.cholincreasefactor")[2])
       warning("Increased 'nnzcolindices' with 'NgPeyton' method\n",
          "(currently set to ",tmp," from ",nnzcolindices,")",call.=FALSE)
       nnzcolindices <- tmp
     }
-    z <- .Fortran("cholstepwise",
-                  nrow = nrow,nnzA = as.integer(x@rowpointers[nrow+1]-1),
-                  d =  as.double(x@entries),jd = x@colindices,id = x@rowpointers,
-                  doperm = doperm,invp = vector("integer",nrow), perm = pivot,
-                  nnzlindx = vector("integer",1),             
-                  nnzcolindices = as.integer(nnzcolindices),
-                  lindx = vector("integer",nnzcolindices),     
-                  xlindx = vector("integer",nrow+1),     #
-                  nsuper = vector("integer",1),          #
-                  nnzR = as.integer(nnzR),#
-                  lnz = vector("double",nnzR),        #
-                  xlnz = vector("integer",nrow+1),     #
-                  snode = vector("integer",nrow),
-                  xsuper = vector("integer",nrow+1),   
-                  cachesize = as.integer(cache),
-                  ierr = 0L,          
-                  NAOK = .Spam$NAOK,PACKAGE="spam")
+    z <- .C64("cholstepwise",
+              SIGNATURE=cholstep.signature,
+              
+              nrow = nrow,
+              nnzA = x@rowpointers[nrow+1]-1,
+              d =  x@entries,
+              jd = x@colindices,
+              
+              id = x@rowpointers,
+              doperm = doperm,
+              invp = vector(SS$type,nrow),
+              perm = pivot,
+              
+              nnzlindx = vector(SS$type,1),             
+              nnzcolindices = nnzcolindices,
+              lindx = vector(SS$type, nnzcolindices),     
+              xlindx = vector(SS$type, nrow+1),     #
+              
+              nsuper = 1,          #
+              nnzR = nnzR,#
+              lnz = vector("double",nnzR),        #
+              xlnz = vector(SS$type, nrow+1),     #
+              
+              snode = vector(SS$type, nrow),
+              xsuper = vector(SS$type, nrow+1),   
+              cachesize = cache,
+              ierr = 0L,       
+              
+              INTENT=cholstep.intent,
+              NAOK = getOption("spam.NAOK"),
+              PACKAGE = SS$package)
     
     if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   }
-  nnzR <- as.integer(z$xlnz[length(z$xlnz)]-1)
+  nnzR <- z$xlnz[length(z$xlnz)]-1
 
   newx <- new("spam.chol.NgPeyton")
   slot(newx,"entries",check=FALSE) <- z$lnz[1:nnzR]
   slot(newx,"colindices",check=FALSE) <- z$lindx[1:z$nnzlindx]
-  slot(newx,"colpointers",check=FALSE) <- z$xlindx[1:(z$nsuper+1)]   ########!!!!!!!
+  slot(newx,"colpointers",check=FALSE) <- z$xlindx[1:(z$nsuper+1)] 
   slot(newx,"rowpointers",check=FALSE) <- z$xlnz
   slot(newx,"dimension",check=FALSE) <- c(nrow,nrow)
   slot(newx,"pivot",check=FALSE) <- z$perm
   slot(newx,"invpivot",check=FALSE) <- z$invp
   slot(newx,"supernodes",check=FALSE) <- z$xsuper[1:(z$nsuper+1)]
   slot(newx,"snmember",check=FALSE) <- z$snode
-  slot(newx,"memory",check=FALSE) <- as.integer(c(nnzcolindices,z$nnzR,cache))
+  slot(newx,"memory",check=FALSE) <- c(nnzcolindices,z$nnzR,cache)
   slot(newx,"nnzA",check=FALSE) <- nnzA
   invisible(newx)
 }
+
 
 solve.spam <- function (a, b,  Rstruct = NULL, ...) {
   nrow <- a@dimension[1]
@@ -409,15 +548,44 @@ solve.spam <- function (a, b,  Rstruct = NULL, ...) {
 
   if (is(a,"spam.chol.NgPeyton")) {
       # The following is a fast way to perform:
-      #     z <- backsolve(a,forwardsolve( t(a),b))
+                                        #     z <- backsolve(a,forwardsolve( t(a),b))
+      ## print("a is spam.chol.NgPeyton in solve.spam")
     nsuper <- as.integer( length(a@supernodes)-1)
-    z <- .Fortran("backsolves", m = nrow,
-                  nsuper, p, a@colindices,
-                  a@colpointers, as.double(a@entries),
-                  a@rowpointers, a@invpivot, a@pivot,
-                  a@supernodes, vector("double",nrow), sol = vector("double",nrow*p),
-                  as.vector(b,"double"),
-                  NAOK = .Spam$NAOK,PACKAGE = "spam")$sol
+    ## z <- .Fortran("backsolves", m = nrow,
+    ##               as.integer(nsuper), as.integer(p), as.integer(a@colindices),
+    ##               as.integer(a@colpointers), as.double(a@entries),
+    ##               as.integer(a@rowpointers), as.integer(a@invpivot), as.integer(a@pivot),
+    ##               as.integer(a@supernodes), vector("double",nrow), sol = vector("double",nrow*p),
+    ##               as.vector(b,"double"),
+    ##               NAOK = getOption("spam.NAOK"),
+      ##               PACKAGE = "spam")$sol
+      if( getOption("spam.force64") || .format.spam(a)$package != "spam" )
+          SS <- .format64
+      else
+          SS <- .format32
+      
+      z <- .C64("backsolves",
+                SIGNATURE = c(rep(SS$signature,5),"double", rep(SS$signature, 4),
+                              rep("double",3)),
+                
+                m = nrow,
+                nsuper,
+                p,
+                a@colindices,
+                a@colpointers,
+                a@entries,
+                a@rowpointers,
+                a@invpivot,
+                a@pivot,
+                a@supernodes,
+                
+                vector_dc("double",nrow),
+                sol = vector_dc("double",nrow*p),
+                as.vector(b,"double"),
+
+                INTENT = c( rep( "r", 10), rep( "rw", 3)), 
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package )$sol
   } else z <- backsolve(a, forwardsolve( t(a),b))
     # see the helpfile for a comment about the 't(a)' construct.
   
@@ -426,33 +594,77 @@ solve.spam <- function (a, b,  Rstruct = NULL, ...) {
 }
 
 chol2inv.spam <- function (x, ...) {
-  nrow <- x@dimension[1]
-  
-  if (is(x,"spam.chol.NgPeyton")) {
-    y <- vector("double",nrow*nrow)
-    y[1L + 0L:(nrow - 1L) * (nrow + 1L)] <- 1.0
+    ## print("chol2inv.spam")
+    nrow <- x@dimension[1]
+    
+    if (is(x,"spam.chol.NgPeyton")) {
+        ## print("x = spam.chol.NgPeyton")
+        y <- vector("double",nrow*nrow)
+        y[1L + 0L:(nrow - 1L) * (nrow + 1L)] <- 1.0
+    
+        ## z <- .Fortran("backsolves", m = nrow,
+        ##               as.integer( length(x@supernodes)-1), as.integer(nrow), as.integer(x@colindices),
+        ##               as.integer(x@colpointers), as.double(x@entries),
+        ##               as.integer(x@rowpointers), as.integer(x@invpivot), as.integer(x@pivot),
+        ##               as.integer(x@supernodes), vector("double",nrow), sol = vector("double",nrow*nrow), as.double(y),
+        ##               NAOK = getOption("spam.NAOK"),
+        ##               PACKAGE = "spam")$sol
+    
+        if( getOption("spam.force64") || .format.spam(x)$package !="spam" )
+            SS <- .format64
+        else
+            SS <- .format32
+   
+        ## print(SS$package)
+        
+        z <- .C64("backsolves",
+          ##         subroutine backsolves(m,nsuper,nrhs,lindx,xlindx,lnz,
+     ## &                   xlnz,invp,perm,xsuper,newrhs,sol,b)
+                  SIGNATURE = c( rep( SS$signature, 5), "double", rep( SS$signature, 4),
+                                rep( "double", 3)),
+                  
+                  m = nrow, #r
+                  length(x@supernodes)-1, #r
+                  nrow, #r
+                  x@colindices,
+                  x@colpointers,
+                  x@entries,
+                  x@rowpointers,
+                  x@invpivot, #r
+                  x@pivot, #r
+                  x@supernodes, #r
+                  
+                  vector_dc("double",nrow), #rw
+                  sol = vector_dc("double",nrow*nrow), #w
+                  y, #r
 
-    z <- .Fortran("backsolves", m = nrow,
-                  as.integer( length(x@supernodes)-1), nrow, x@colindices,
-                  x@colpointers, as.double(x@entries),
-                  x@rowpointers, x@invpivot, x@pivot,
-                  x@supernodes, vector("double",nrow), sol = vector("double",nrow*nrow), y,
-                  NAOK = .Spam$NAOK,PACKAGE = "spam")$sol
-    dim(z) <- c(nrow,nrow)
-  } else z <- backsolve.spam(x, forwardsolve.spam( t(x), diag(nrow)))
-  return( z)
+                  INTENT = c( rep( "r", 10),
+                             "rw", "w", "r"),
+                  NAOK = getOption("spam.NAOK"),
+                  PACKAGE = SS$package)$sol
+        
+        dim(z) <- c(nrow,nrow)
+    } else z <- backsolve.spam(x, forwardsolve.spam( t(x), diag(nrow)))
+    return( z)
 }
 
 backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = NULL){
 # r: spam.chol.NgPeyton structure as returned by chol.spam or a spam object
 # x: rhs a vector or a matrix in dense form
 # dimensions:  ( m x n) ( n x p) 
+
+    if( getOption("spam.force64") || .format.spam(r)$package !="spam" )
+        SS <- .format64
+    else
+        SS <- .format32
+  
+
   m <- r@dimension[1]
   if(is.vector(x)) {
     n <- length(x)
-    p <- 1L
+    p <- 1
   } else {
-    if(!is.matrix(x)) x <- as.matrix(x)
+    x <- as.matrix(x)
     n <- nrow(x)
     p <- ncol(x)
   }
@@ -460,36 +672,86 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
   # we separate between "spam.chol.NgPeyton" and "spam"
   if (is(r,"spam.chol.NgPeyton")) {
     if (n!=m) stop("Cholesky factor 'r' not compatible with 'x'")
-    nsuper <- as.integer( length(r@supernodes)-1)
-    if (!.Spam$dopivoting) {
-      z <- .Fortran("backsolve", m, nsuper, p, r@colindices,
-                    r@colpointers, as.double(r@entries), r@rowpointers, 
-                    r@supernodes, sol = vector("double",m*p),
-                    NAOK = .Spam$NAOK,
-                    PACKAGE="spam")$sol
+    nsuper <- length(r@supernodes)-1
+    if (!getOption("spam.dopivoting")) {
+      
+      z <- .C64("backsolvef",
+                SIGNATURE=c(SS$signature, SS$signature, SS$signature, SS$signature, 
+                            SS$signature, "double", SS$signature, SS$signature, 
+                            "double"),
+                
+                m,
+                nsuper,
+                p,
+                r@colindices,
+                
+                r@colpointers,
+                r@entries,
+                r@rowpointers, 
+                r@supernodes,
+                
+                sol = vector("double",m*p),
+                
+                INTENT=c("r", "r", "r", "r", "r", "r", "r", "r", "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE=SS$package)$sol
+                    
     }else{
-      z <- .Fortran("pivotbacksolve", m, nsuper, p, r@colindices,
-                    r@colpointers,  as.double(r@entries),
-                    r@rowpointers,   r@invpivot, r@pivot,
-                    r@supernodes, vector("double",m),
-                    sol = vector("double",m*p), as.double(x),
-                    NAOK = .Spam$NAOK,PACKAGE="spam")$sol
+      z <- .C64("pivotbacksolve",
+                SIGNATURE=c(SS$signature, SS$signature, SS$signature, SS$signature,
+                            SS$signature, "double", SS$signature, SS$signature,
+                            SS$signature, SS$signature, "double", "double",
+                            "double"),
+
+                m,
+                nsuper,
+                p,
+                r@colindices,
+                
+                r@colpointers,
+                r@entries,
+                r@rowpointers,
+                r@invpivot,
+                
+                r@pivot,
+                r@supernodes,
+                vector("double",m),
+                sol = vector("double",m*p),
+                
+                x,
+                
+                INTENT=c("r", "r", "r", "r",
+                    "r", "r", "r", "r", 
+                    "r", "r", "r", "w",
+                    "r"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE=SS$package)$sol
     }
   } else {
     if (n!=m) stop("Triangular matrix 'r' not compatible with 'x'")
     # solve R sol = x
-    z <- .Fortran("spamback",
-                  m=m,p,sol = vector("double",m*p),x=as.vector(x,"double"),
-                  al=as.double(r@entries),jal=r@colindices,
-                  ial=r@rowpointers,
-                  NAOK = .Spam$NAOK,PACKAGE="spam")
+    z <- .C64("spamback",
+              SIGNATURE=c(SS$signature, SS$signature, "double", "double", 
+                          "double", SS$signature, SS$signature),
+              m=m,
+              unused=p,
+              sol = vector("double",m*p),
+              x=x,
+       
+              al=r@entries,
+              jal=r@colindices,
+              ial=r@rowpointers,
+              
+              INTENT=c("rw", "rw", "rw", "rw", "rw", "rw", "rw"),
+              NAOK = getOption("spam.NAOK"),
+              PACKAGE=SS$package)
     if (z$m<0) stop(gettextf("singular matrix in 'backsolve'. Last zero in diagonal [%d]",
             -z$m), domain = NA)
      else z <- z$sol
    
   }
   
-  if (p>1)     dim(z) <- c(m,p)
+  if (p>1) dim(z) <- c(m,p)
   return(z)
 }
 
@@ -500,8 +762,11 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
 #  dimensions:  ( m x n) ( n x p)
 #  if (!any(is.null(c(upper.tri,k,transpose ))))
 #    warning("'k', 'upper.tri' and 'transpose' argument do not have any effect here")
-
-  
+    if( getOption("spam.force64") || .format.spam(l)$package !="spam" )
+        SS <- .format64
+    else
+        SS <- .format32
+    
   m <- l@dimension[1]
   if(is.vector(x)) {
     n <- length(x)
@@ -515,30 +780,79 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
   # we separate between "spam.chol.NgPeyton" and "spam"
   if (is(l,"spam.chol.NgPeyton")) {
     if(n!=m) stop("Cholesky factor 'l' not compatible with 'x'")
-    nsuper <- as.integer( length(l@supernodes)-1)
-    if (!.Spam$dopivoting) {
-      z <- .Fortran("forwardsolve", m, nsuper, p, l@colindices,
-                    l@colpointers, as.double(l@entries), l@rowpointers, 
-                    l@supernodes, sol = vector("double",m*p),
-                    NAOK = .Spam$NAOK,PACKAGE="spam")$sol
+    nsuper <- length(l@supernodes)-1
+    if (!getOption("spam.dopivoting")) {
+      z <- .C64("forwardsolvef",
+                SIGNATURE=c(SS$signature, SS$signature, SS$signature, SS$signature, 
+                            SS$signature, "double", SS$signature, SS$signature, 
+                            "double"),
+
+                m,
+                nsuper,
+                p,
+                l@colindices,
+                
+                l@colpointers,
+                l@entries,
+                l@rowpointers, 
+                l@supernodes,
+                
+                sol = vector("double",m*p),
+                
+                INTENT=c("r", "r", "r", "r",
+                    "r", "r", "r", "r",
+                    "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE=SS$package)$sol
     }else{
-      z <- .Fortran("pivotforwardsolve", m, nsuper, p, l@colindices,
-                    l@colpointers,  as.double(l@entries),
-                    l@rowpointers,   l@invpivot, l@pivot,
-                    l@supernodes, vector("double",m),
-                    sol = vector("double",m*p), as.double(x),
-                    NAOK = .Spam$NAOK,PACKAGE="spam")$sol
+      z <- .C64("pivotforwardsolve",
+                SIGNATURE=c(SS$signature, SS$signature, SS$signature, SS$signature, 
+                            SS$signature, "double", SS$signature, SS$signature, 
+                            SS$signature, SS$signature, "double", "double", 
+                            "double"),
+                m,
+                nsuper,
+                p,
+                l@colindices,
+                
+                l@colpointers,
+                l@entries,
+                l@rowpointers,
+                l@invpivot,
+                
+                l@pivot,
+                l@supernodes,
+                vector("double",m), #!5#
+                sol = vector("double",m*p),
+                
+                x,
+                
+                INTENT=c("r", "r", "r", "r",
+                    "r", "r", "r", "r", 
+                    "r", "r", "r", "w",
+                    "r"),
+                PACKAGE=SS$package)$sol
     }
   } else {
     if (n!=m) stop("Triangular matrix 'l' not compatible with 'x'")
     # solve L sol = x
-    z <- .Fortran("spamforward",
-                  m=m,p,sol = vector("double",m*p),x=as.vector(x,"double"),
-                  al=as.double(l@entries),jal=l@colindices,
-                  ial=l@rowpointers,
-                  NAOK = .Spam$NAOK,PACKAGE="spam")
-    if (z$m<0) stop(gettextf("singular matrix in 'forwardsolve'. First zero in diagonal [%d]",
-            -z$m), domain = NA)
+    z <- .C64("spamforward",
+              SIGNATURE=c(SS$signature, SS$signature, "double", "double", 
+                          "double", SS$signature, SS$signature),
+
+              m=m,
+              p,
+              sol = vector("double",m*p),
+              x=x,
+              
+              al=l@entries,
+              jal=l@colindices,
+              ial=l@rowpointers,
+              
+              INTENT=c("rw", "r", "w", "r", "r", "r", "r"),
+              NAOK = getOption("spam.NAOK"),
+              PACKAGE=SS$package)
+    if (z$m<0) stop(gettextf("singular matrix in 'forwardsolve'. First zero in diagonal [%d]", -z$m), domain = NA)
     else z <- z$sol
   }
   if (p>1)
@@ -564,8 +878,9 @@ setMethod("forwardsolve","spam.chol.NgPeyton", forwardsolve.spam)
 ######################################################################
 
 determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton",
-                              memory=list(),eps = .Spam$eps, ...){
-  
+                              memory=list(),eps = getOption("spam.eps"), ...){
+   # print("determinant.spam")
+    
   if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
   logdet <- list()
  #### start from above 
@@ -573,7 +888,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   nnzA <- as.integer( x@rowpointers[nrow+1]-1)
   if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
 
-  if(.Spam$cholsymmetrycheck) {
+  if(getOption("spam.cholsymmetrycheck")) {
     test <- isSymmetric.spam(x, tol = eps*100) 
     if (!isTRUE(test))
       stop("Input matrix to 'chol' not symmetric (up to 100*eps)",call.=FALSE)
@@ -586,7 +901,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   if (length(pivot)==nrow) {
     doperm <- 0L
     pivot <- as.vector(pivot,"integer")
-    if (.Spam$cholpivotcheck) {
+    if (getOption("spam.cholpivotcheck")) {
       checkpivot(pivot,nrow)
     }
   } else if (length(pivot)==1) {
@@ -603,9 +918,10 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   } else stop("'pivot' should be 'MMD', 'RCM' or a permutation")
 
 
-  ### IMPROVEME get better parameter values
-  nnzcfact <- c(5,1,5)
-  nnzRfact <- c(5,1,2)
+  #!6# 
+    nnzcfact <- c(5,1,5)
+    nnzRfact <- c(5,1,2)
+    
   # nnzcolindices = length of array holding the colindices 
   if(is.null(memory$nnzcolindices))  {
     nnzcolindices <- ifelse((nnzA/nrow < 5), # very sparse matrix
@@ -629,24 +945,75 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   if (length( memory)>0 )
     warning("The component(s) ", paste("'",names(memory),"'",sep='',collapse=","),
             " of the argument 'memory'\npassed to function 'chol' not meaningful and hence ignored.",call.=FALSE)
-  
-  z <- .Fortran("cholstepwise",
-                nrow = nrow,nnzA = as.integer(x@rowpointers[nrow+1]-1),
-                d =  as.double(x@entries),jd = x@colindices,id = x@rowpointers,
-                doperm = doperm,invp = vector("integer",nrow), perm = pivot,
-                nnzlindx = vector("integer",1),             
-                nnzcolindices = as.integer(nnzcolindices),
-                lindx = vector("integer",nnzcolindices),     
-                xlindx = vector("integer",nrow+1),     #
-                nsuper = vector("integer",1),          #
-                nnzR = as.integer(nnzR),#
-                lnz = vector("double",nnzR),        #
-                xlnz = vector("integer",nrow+1),     #
-                snode = vector("integer",nrow),
-                xsuper = vector("integer",nrow+1),   
-                cachesize = as.integer(cache),
-                ierr = 0L,          
-                NAOK = .Spam$NAOK, PACKAGE = "spam")
+  ## print("determinant.spam")
+  ## z <- .Fortran("cholstepwise",
+  ##               nrow = as.integer(nrow) ,nnzA = as.integer(x@rowpointers[nrow+1]-1),
+  ##               d =  as.double(x@entries),jd = as.integer(x@colindices),id = as.integer(x@rowpointers),
+  ##               doperm = as.integer(doperm), invp = vector("integer",nrow), perm = as.integer(pivot),
+  ##               nnzlindx = vector("integer",1),             
+  ##               nnzcolindices = as.integer(nnzcolindices),
+  ##               lindx = vector("integer",nnzcolindices),     
+  ##               xlindx = vector("integer",nrow+1),     #
+  ##               nsuper = vector("integer",1),          #
+  ##               nnzR = as.integer(nnzR),#
+  ##               lnz = vector("double",nnzR),        #
+  ##               xlnz = vector("integer",nrow+1),     #
+  ##               snode = vector("integer",nrow),
+  ##               xsuper = vector("integer",nrow+1),   
+  ##               cachesize = as.integer(cache),
+  ##               ierr = 0L,          
+    ##               NAOK = getOption("spam.NAOK"), PACKAGE = "spam")
+
+    if( getOption("spam.force64") || prod(dim(x)) > 2147483647)
+        SS <- .format64
+    else
+        SS <- .format32
+    cholstep.intent <- c("r", "r", "r", "r", 
+                    "r", "rw", "rw", "rw",
+                    "rw", "rw", "rw", "rw",
+                    "rw", "rw", "rw", "rw",
+                    "rw", "rw", "rw", "rw")
+    cholstep.signature <- rep(SS$signature, 20)
+    cholstep.signature[c(3,15)] <- "double"
+    
+    z <- .C64("cholstepwise",
+      ##             subroutine cholstepwise(m,nnzd,
+     ## &     d,jd,id,    doperm,invp,perm,
+     ## &                nsub,nsubmax,
+     ## &                lindx,xlindx,nsuper,nnzlmax,lnz,xlnz,
+     ## &                snode,xsuper,
+     ## &                cachsz,ierr)
+              SIGNATURE = cholstep.signature,
+              
+              nrow = nrow ,
+              nnzA = x@rowpointers[nrow+1]-1,
+              d =  x@entries,
+              jd = x@colindices,
+              
+              id = x@rowpointers,
+              doperm = doperm,
+              invp = vector_dc( SS$type, nrow),
+              perm = pivot,
+              
+              nnzlindx = vector_dc( SS$type, 1),             
+              nnzcolindices = nnzcolindices,
+              lindx = vector_dc( SS$type, nnzcolindices),     
+              xlindx = vector_dc( SS$type,nrow+1),     #
+              
+              nsuper = vector_dc( SS$type,1),          #
+              nnzR = nnzR,#
+              lnz = vector_dc( "double", nnzR),        #
+              xlnz = vector_dc( SS$type, nrow+1),     #
+              
+              snode = vector_dc( SS$type, nrow),
+              xsuper = vector_dc( SS$type, nrow+1),   
+              cachesize = cache,
+              ierr = 0,
+
+              ## INTENT = cholstep.intent,
+              NAOK = getOption("spam.NAOK"),
+              PACKAGE = SS$package)
+
 
   if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.") 
   if(z$ierr == 6) stop("Inconsitency in the input",call.=FALSE)
@@ -654,14 +1021,15 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
   while( z$ierr>1) {
     if(z$ierr == 4) {
       warning("Increased 'nnzR' with 'NgPeyton' method\n",
-              "(currently set to ",nnzR," from ",ceiling(nnzR*.Spam$cholpar[1]),")",call.=FALSE)
-      nnzR <- ceiling(nnzR*.Spam$nnzRinc)
+              "(currently set to ",nnzR," from ",ceiling(nnzR*getOption("spam.cholpar")[1]),")",call.=FALSE)
+      nnzR <- ceiling(nnzR*getOption("spam.nnzRinc"))
     }
     if(z$ierr == 5) {
       warning("Increased 'nnzcolindices' with 'NgPeyton' method\n",
-         "(currently set to ",nnzcolindices," from ",ceiling(nnzcolindices*.Spam$cholpar[2]),")",call.=FALSE)
-      nnzcolindices <- ceiling(nnzcolindices*.Spam$cholpar[2])
+         "(currently set to ",nnzcolindices," from ",ceiling(nnzcolindices*getOption("spam$cholpar")[2]),")",call.=FALSE)
+      nnzcolindices <- ceiling(nnzcolindices*getOption("spam.cholpar")[2])
     }
+    print("whileloop in determinant.spam") ##TODO find a case with z$ierr > 1 before migration possible
     z <- .Fortran("cholstepwise",
                   nrow = nrow,nnzA = as.integer(x@rowpointers[nrow+1]-1),
                   d =  as.double(x@entries),jd = x@colindices,id = x@rowpointers,
@@ -678,7 +1046,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
                   xsuper = vector("integer",nrow+1),   
                   cachesize = as.integer(cache),
                   ierr = 0L,          
-                  NAOK = .Spam$NAOK, PACKAGE = "spam")
+                  NAOK = getOption("spam.NAOK"), PACKAGE = "spam")
     
   }
  #### end from above 
@@ -724,21 +1092,58 @@ setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
 
     
 "as.matrix.spam.chol.NgPeyton" <- function(x,...){
-  nrow <- x@dimension[1]
-  nnzR <- x@rowpointers[nrow+1]-1
-  newx <- new("spam")
-  nsuper <- as.integer( length(x@supernodes)-1)
-  xcolindices <- .Fortran('calcja',
-                           nrow, nsuper, x@supernodes, x@colindices, x@colpointers, x@rowpointers,
-                           xja=vector("integer",nnzR),
-                           NAOK = .Spam$NAOK,PACKAGE = "spam")$xja
-  return(array(.Fortran("spamcsrdns",
-                 nrow=nrow,
-                 entries=as.double(x@entries),
-                 colindices=xcolindices,
-                 rowpointers=x@rowpointers,
-                 res=vector("double",nrow*nrow),  
-                 NAOK=.Spam$NAOK,PACKAGE = "spam")$res,
+    ## print("as.matrix.spam.chol.NgPeyton")
+    nrow <- x@dimension[1]
+    nnzR <- x@rowpointers[nrow+1]-1
+    ## newx <- new("spam")
+    nsuper <-  length(x@supernodes)-1
+    ## xcolindices <- .Fortran('calcja',
+    ##                         as.integer(nrow), as.integer(nsuper), as.integer(x@supernodes), as.integer(x@colindices), as.integer(x@colpointers), as.integer(x@rowpointers),
+    ##                         xja=vector("integer",nnzR),
+    ##                         NAOK = getOption("spam.NAOK"),PACKAGE = "spam")$xja
+    if( getOption("spam.force64") || .format.spam(x)$package != "spam" )
+        SS <- .format64
+    else
+        SS <- .format32
+    
+    xcolindices <- .C64('calcja',
+                        SIGNATURE = c(rep(SS$signature,7)),
+                        nrow,
+                        nsuper,
+                        x@supernodes,
+                        x@colindices,
+                        
+                        x@colpointers,
+                        x@rowpointers,
+                        xja = vector_dc( SS$type, nnzR),
+
+                        INTENT=c("r", "r", "r", "r",
+                                 "r", "r", "w"),
+                        NAOK = getOption("spam.NAOK"),
+                        PACKAGE = SS$package)$xja
+  ## return(array(.Fortran("spamcsrdns",
+  ##                nrow = as.integer(nrow),
+  ##                entries = as.double(x@entries),
+  ##                colindices = as.integer(xcolindices),
+  ##                rowpointers = as.integer(x@rowpointers),
+  ##                res = vector("double",nrow*nrow),  
+  ##                NAOK=getOption("spam.NAOK"),PACKAGE = "spam")$res,
+  ##              c(nrow,nrow))      # we preserve dimensions
+  ##          )
+    return(array(.C64("spamcsrdns",
+                      SIGNATURE = c(SS$signature, "double" , SS$signature, SS$signature,
+                             "double"),
+                 nrow = nrow,
+                 entries = x@entries,
+                 colindices = xcolindices,
+                 rowpointers = x@rowpointers,
+                 
+                 res = vector_dc( "double", nrow*nrow),
+                 
+                 INTENT = c("r", "r", "r", "r",
+                            "w"),
+                 NAOK=getOption("spam.NAOK"),
+                 PACKAGE = SS$package)$res,
                c(nrow,nrow))      # we preserve dimensions
          )
 }
@@ -775,14 +1180,4 @@ setMethod("chol","spam.chol.NgPeyton",
           function(x){
            x
           })
-########################################################################
 
-### system.time({ for (i in 1:1000) x=1:1000000})           # 8.820 
-### system.time({ for (i in 1:1000) x=seq(length=1000000)}) # 8.397
-### system.time({ for (i in 1:1000) x=seq_len(1000000)})    # 8.628
-### system.time({ for (i in 1:1000) x=seq.int(1000000)})    # 8.944
-
-### system.time({ for (i in 1:100000) x=1:10000})           # 2.161
-### system.time({ for (i in 1:100000) x=seq(length=10000)}) # 3.288
-### system.time({ for (i in 1:100000) x=seq_len(10000)})    # 2.060
-### system.time({ for (i in 1:100000) x=seq.int(10000)})    # 2.249

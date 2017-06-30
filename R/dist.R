@@ -1,9 +1,10 @@
-# This is file ../spam/R/dist.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
+# HEADER ####################################################
+# This is file  spam/R/dist.R.                              #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 ### in base:
@@ -17,7 +18,7 @@
 ### in sp 
 # spDistsN1(pts, pt, longlat=FALSE)
 #
-### in amap     ### nbproc 	integer, Number of subprocess for parallelization
+### in amap     ### nbproc  integer, Number of subprocess for parallelization
 # Dist(x, method = "euclidean", nbproc = 1, diag = FALSE, upper = FALSE)
 #
 ### in argosfilter
@@ -45,8 +46,8 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   # We always include all small distances. Hence, this function 
   #   works different than any other spam functions. An addititonal
   #   call to an as.spam would eliminate the small values. 
-#  if (!is.null(diag)) warning("Argument 'diag' is deprecated")
-#  if (!is.null(eps))  warning("Argument 'eps' is deprecated")
+#  if (!is.null(diag)) warning("Argument "diag" is deprecated")
+#  if (!is.null(eps))  warning("Argument "eps" is deprecated")
   
   if (!is.na(pmatch(method, "euclidian")))     method <- "euclidean"
   METHODS <- c("euclidean", "maximum", "minkowski", "greatcircle")
@@ -85,10 +86,9 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
     n2 <- dim(y)[1]
     mi <- min(n1,n2)
     ma <- max(n1,n2)
-    nnz <- min(max(.Spam$nearestdistnnz[1],
-                   ma*.Spam$nearestdistnnz[2]),
-               (as.double(mi)*(mi+1)+(ma-mi)^2)/ ifelse( is.null(upper), 1, 2),
-               2^31-2)
+    nnz <- min(max(getOption("spam.nearestdistnnz")[1],
+                   ma*getOption("spam.nearestdistnnz")[2]),
+               (as.double(mi)*(mi+1)+(ma-mi)^2)/ ifelse( is.null(upper), 1, 2))
     # there is an as.double just in case that mi (and n1 below) is > 2^16
   } else {
     # x = y, i.e. proper distance matrix
@@ -98,44 +98,83 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
     }
     y <- x
     n2 <- n1
-    nnz  <- min(max(.Spam$nearestdistnnz[1],
-                    n1*.Spam$nearestdistnnz[2]),
-                (as.double(n1)*(n1+1))/ ifelse( is.null(upper), 1, 2),
-                2^31-2)
+    nnz  <- min(max(getOption("spam.nearestdistnnz")[1],
+                    n1*getOption("spam.nearestdistnnz")[2]),
+                (as.double(n1)*(n1+1))/ ifelse( is.null(upper), 1, 2))
   }
+  
+  # EXPLICIT-STORAGE-FORMAT     
+  if(max(n1,n2,nnz) > 2147483647 - 1 | getOption("spam.force64"))
+      SS <- .format64
+  else
+      SS <- .format32
+  
+  if(2147483647 < nnz) stop("Distance matrix is too dense (1)")
+
   repeat {
-    d <- .Fortran("closestdist", nd, as.double(x), n1,  as.double(y), n2, 
-                  part,
-                  as.double(p[1]), method, 
-                  as.double(abs( delta[1])),
-                  colindices=vector("integer",nnz),
-                  rowpointers=vector("integer",n1+1),
-                  entries=vector("double",nnz),
-                  nnz=as.integer(nnz),
-                  iflag=as.integer(0),NAOK=.Spam$NAOK,
-                  PACKAGE="spam")
+    d <- NULL # Free the memory allocated by a previous attemp
+    d <- .C64("closestdist",
+    ##              subroutine closestdist( ncol, x,nrowx, y, nrowy,
+    ##  &    part, p, method, 
+    ##  &    eta, colindices, rowpointers, entries, nnz, iflag)
+              SIGNATURE=c(SS$signature, "double", SS$signature, "double", SS$signature,
+                          SS$signature, "double", SS$signature, "double", SS$signature,
+                          SS$signature, "double", SS$signature, SS$signature),
+              
+              nd,
+              x,
+              n1, #w
+              y,
+              
+              n2, #w
+              part, #arg 6
+              p[1], 
+              method, 
+              
+              abs( delta[1]),
+              colindices=vector(SS$type, nnz),
+              rowpointers=vector(SS$type, n1+1), #arg 11
+              entries=vector("double",nnz), 
+              
+              nnz=nnz,
+              iflag=0,
+              
+              INTENT = c("r", "r", "r", "r",
+                     "r", "r", "rw", "r", 
+                     "r", "w", "w", "w", 
+                     "rw", "w"),
+              NAOK = getOption("spam.NAOK"),
+              PACKAGE=SS$package)
     
     if (d$iflag==0) break else {
-      if (nnz==2^31-2)
-        stop("distance matrix is too dense (more than 2^31 entries).")
-      nnz <-  min(2^31-2,nnz*.Spam$nearestdistincreasefactor*n1/(d$iflag-1))
+      nnz <-  nnz*getOption("spam.nearestdistincreasefactor")*n1/(d$iflag-1)
+        
+      # EXPLICIT-STORAGE-FORMAT     
+      if(max(n1,n2,nnz) > 2147483647 - 1 | getOption("spam.force64"))
+        SS <- .format64
+      else
+        SS <- .format32
+        
+      if(nnz > 2147483647) stop("Distance matrix is too dense (2)")
+      
       madens <- d$iflag
-      on.exit(
-              warning(paste("You ask for a 'dense' spase distance matrix, I require one more iteration.",
+      warning(paste("You ask for a 'dense' sparse distance matrix, I require one more iteration.",
                             "\nTo avoid the iteration, increase 'nearestdistnnz' option to something like\n",
-                            "'spam.options(nearestdistnnz=c(",d$nnz,",400))'\n(constructed ",madens,
+                            "'options(spam.nearestdistnnz=c(",d$nnz,",400))'\n(constructed ",madens,
                             " lines out of ",n1,").\n",sep=""), call. = TRUE)
-              )
+              
     }
   }
-
-
-  dmat <- new("spam")
-  slot(dmat,"entries",check=FALSE) <-     d$entries[1:d$nnz]
-  slot(dmat,"colindices",check=FALSE) <-  d$colindices[1:d$nnz]
-  slot(dmat,"rowpointers",check=FALSE) <- d$rowpointers
-  slot(dmat,"dimension",check=FALSE) <-   as.integer(c(n1,n2))
-  return( dmat)
+  
+  length(d$entries) <- d$nnz
+  length(d$colindices) <- d$nnz
+  
+  return(.newSpam(
+    entries=d$entries,
+    colindices=d$colindices,
+    rowpointers=d$rowpointers,
+    dimension=c(n1,n2)
+  ))
 }
 
 # in fields:

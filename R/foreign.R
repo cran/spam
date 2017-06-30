@@ -1,8 +1,10 @@
-# This is file ../spam/R/foreign.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
+# HEADER ####################################################
+# This is file  spam/R/foreign.R.                           #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 
@@ -23,7 +25,7 @@ as.spam.matrix.csr <- function(x)
       slot(newx,"rowpointers",check=FALSE) <- x@ia
       slot(newx,"dimension",check=FALSE) <- x@dimension
       return(newx)
-#    } else stop("Wrong object passed to 'as.spam.matrix.csr'")
+#    } else stop("Wrong object passed to "as.spam.matrix.csr"")
   }
 
 
@@ -32,7 +34,7 @@ as.spam.matrix.csr <- function(x)
 # Is there anyway around this?
     
 #as.matrix.csr.spam <- function(x,...) {
-#  if (require('SparseM')){
+#  if (require("SparseM")){
 #    newx <- new("matrix.csr")
 #    slot(newx,"ra",check=FALSE) <- x@entries
 #    slot(newx,"ja",check=FALSE) <- x@colindices
@@ -47,8 +49,11 @@ as.spam.matrix.csr <- function(x)
 # 1b) spam <-> Matrix
 
 as.dgRMatrix.spam <- function(x) {
-    if (requireNamespace('Matrix')) {
-      newx <- new(p=0:0,'dgRMatrix')
+    if(.format.spam(x)$package != "spam"){
+        stop("dgRMatrix structure is not compatible with numeric/large integer type.")
+    }
+    if (requireNamespace("Matrix")) {
+      newx <- new(p=0:0,"dgRMatrix")
       slot(newx,"x",check=FALSE) <- x@entries
       slot(newx,"j",check=FALSE) <- x@colindices-1L
       slot(newx,"p",check=FALSE) <- x@rowpointers-1L
@@ -58,16 +63,41 @@ as.dgRMatrix.spam <- function(x) {
   }
 
 as.dgCMatrix.spam <- function(x)  {
-    if (requireNamespace('Matrix')) {
+    if(.format.spam(x)$package != "spam"){
+        stop("dgCMatrix structure is not compatible with numeric/large integer type.")
+    } 
+    if (requireNamespace("Matrix")) {
       dimx <- x@dimension
       nz <- x@rowpointers[dimx[1] + 1] - 1
-      z <- .Fortran("transpose", n = dimx[1], m = dimx[2],
-                    a = as.double(x@entries),ja = x@colindices, ia = x@rowpointers,
+      z <- .Fortran("transpose", n = as.integer(dimx[1]), m = as.integer(dimx[2]),
+                    a = as.double(x@entries),ja = as.integer(x@colindices), ia = as.integer(x@rowpointers),
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", dimx[2] + 1),
-                    NAOK = .Spam$NAOK,
+                    NAOK = getOption("spam.NAOK"),
                     PACKAGE = "spam")
-      newx <- new(p=0:0,'dgCMatrix')
+      ## SS <- .format.spam(x)
+      ## z <- .C64("transpose",
+      ##           SIGNATURE = c( SS$signature, SS$signature,
+      ##                         "double", SS$signature, SS$signature,
+      ##                         "double", SS$signature, SS$signature),
+                
+      ##           n = dimx[1],
+      ##           m = dimx[2],
+                
+      ##           a = x@entries,
+      ##           ja = x@colindices,
+      ##           ia = x@rowpointers,
+                
+      ##           entries = vector_dc("double",nz),
+      ##           colindices = vector_dc(SS$type, nz),
+      ##           rowpointers = vector_dc(SS$type, dimx[2] + 1),
+
+      ##           INTENT = c("r", "r",
+      ##                      "r", "r", "r",
+      ##                      "w", "w", "w"),
+      ##           NAOK = getOption("spam.NAOK"),
+      ##           PACKAGE = SS$package)
+      newx <- new(p=0:0,"dgCMatrix")
       slot(newx,"x",check=FALSE) <- z$entries
       slot(newx,"i",check=FALSE) <- z$colindices-1L
       slot(newx,"p",check=FALSE) <- z$rowpointers-1L
@@ -79,11 +109,11 @@ as.dgCMatrix.spam <- function(x)  {
 
 as.spam.dgRMatrix <- function(x)  {
     
-    if (is(x,'dgRMatrix')){
+    if (is(x,"dgRMatrix")){
       if (identical(length(x@x),0L))  # zero matrix
         return(new("spam",rowpointers=c(1L,rep.int(2L,x@Dim[1])), dimension=x@Dim))
 
-      newx <- new('spam')
+      newx <- new("spam")
       slot(newx,"entries",check=FALSE) <- x@x
       slot(newx,"colindices",check=FALSE) <- x@j+1L
       slot(newx,"rowpointers",check=FALSE) <- x@p+1L
@@ -95,18 +125,18 @@ as.spam.dgRMatrix <- function(x)  {
     
 as.spam.dgCMatrix <- function(x)  {
     
-    if (is(x,'dgCMatrix')){
+    if (is(x,"dgCMatrix")){
       if (identical(length(x@x),0L))  # zero matrix
         return(new("spam",rowpointers=c(1L,rep.int(2L,x@Dim[1])), dimension=x@Dim))
 
       nz <- x@p[x@Dim[2] + 1]
-      z <- .Fortran("transpose", n = x@Dim[2], m = x@Dim[1],
-                    a = as.double(x@x),ja = x@i+1L, ia = x@p+1L,
+      z <- .Fortran("transpose", n = as.integer(x@Dim[2]), m = as.integer(x@Dim[1]),
+                    a = as.double(x@x),ja = as.integer(x@i+1L), ia = as.integer(x@p+1L),
                     entries = vector("double",nz), colindices = vector("integer", nz),
                     rowpointers = vector("integer", x@Dim[1] + 1),
-                    NAOK = .Spam$NAOK,
+                    NAOK = getOption("spam.NAOK"),
                     PACKAGE = "spam")
-      newx <- new('spam')
+      newx <- new("spam")
       slot(newx,"entries",check=FALSE) <- z$entries
       slot(newx,"colindices",check=FALSE) <- z$colindices
       slot(newx,"rowpointers",check=FALSE) <- z$rowpointers
@@ -136,9 +166,9 @@ readmany <- function(conn, nlines, nvals, fmt, conv)
 {
     if (!grep("[[:digit:]]+[DEFGI][[:digit:]]+", fmt))
 	stop("Not a valid format")
-    Iind <- regexpr('[DEFGI]', fmt)
-    nper <- as.integer(substr(fmt, regexpr('[[:digit:]]+[DEFGI]', fmt), Iind - 1))
-    iwd <- as.integer(substr(fmt, Iind + 1, regexpr('[\\.\\)]', fmt) - 1))
+    Iind <- regexpr("[DEFGI]", fmt)
+    nper <- as.integer(substr(fmt, regexpr("[[:digit:]]+[DEFGI]", fmt), Iind - 1))
+    iwd <- as.integer(substr(fmt, Iind + 1, regexpr("[\\.\\)]", fmt) - 1))
     rem <- nvals %% nper
     full <- nvals %/% nper
     ans <- vector("list", nvals %/% nper)
@@ -162,29 +192,29 @@ read.HB <- function(file)
         on.exit(close(file))
     }
     hdr <- readLines(file, 4, ok = FALSE)
-    Title <- sub('[[:space:]]+$', '', substr(hdr[1], 1, 72))
-    Key <- sub('[[:space:]]+$', '', substr(hdr[1], 73, 80))
+    Title <- sub("[[:space:]]+$", "", substr(hdr[1], 1, 72))
+    Key <- sub("[[:space:]]+$", "", substr(hdr[1], 73, 80))
     totln <- as.integer(substr(hdr[2], 1, 14))
     ptrln <- as.integer(substr(hdr[2], 15, 28))
     indln <- as.integer(substr(hdr[2], 29, 42))
     valln <- as.integer(substr(hdr[2], 43, 56))
     rhsln <- as.integer(substr(hdr[2], 57, 70))
-    if (!(t1 <- substr(hdr[3], 1, 1)) %in% c('C', 'R', 'P'))
+    if (!(t1 <- substr(hdr[3], 1, 1)) %in% c("C", "R", "P"))
         stop(paste("Invalid storage type:", t1))
-    if (t1 != 'R') stop("Only numeric sparse matrices allowed")
+    if (t1 != "R") stop("Only numeric sparse matrices allowed")
     ## _FIXME: Patterns should also be allowed
-    if (!(t2 <- substr(hdr[3], 2, 2)) %in% c('H', 'R', 'S', 'U', 'Z'))
+    if (!(t2 <- substr(hdr[3], 2, 2)) %in% c("H", "R", "S", "U", "Z"))
         stop(paste("Invalid storage format:", t2))
-    if (!(t3 <- substr(hdr[3], 3, 3)) %in% c('A', 'E'))
+    if (!(t3 <- substr(hdr[3], 3, 3)) %in% c("A", "E"))
         stop(paste("Invalid assembled indicator:", t3))
     nr <- as.integer(substr(hdr[3], 15, 28))
     nc <- as.integer(substr(hdr[3], 29, 42))
     nz <- as.integer(substr(hdr[3], 43, 56))
     nel <- as.integer(substr(hdr[3], 57, 70))
-    ptrfmt <- toupper(sub('[[:space:]]+$', '', substr(hdr[4], 1, 16)))
-    indfmt <- toupper(sub('[[:space:]]+$', '', substr(hdr[4], 17, 32)))
-    valfmt <- toupper(sub('[[:space:]]+$', '', substr(hdr[4], 33, 52)))
-    rhsfmt <- toupper(sub('[[:space:]]+$', '', substr(hdr[4], 53, 72)))
+    ptrfmt <- toupper(sub("[[:space:]]+$", "", substr(hdr[4], 1, 16)))
+    indfmt <- toupper(sub("[[:space:]]+$", "", substr(hdr[4], 17, 32)))
+    valfmt <- toupper(sub("[[:space:]]+$", "", substr(hdr[4], 33, 52)))
+    rhsfmt <- toupper(sub("[[:space:]]+$", "", substr(hdr[4], 53, 72)))
     if (!is.na(rhsln) && rhsln > 0) {
         h5 <- readLines(file, 1, ok = FALSE)
     }
@@ -195,18 +225,18 @@ read.HB <- function(file)
     # Spam related changes:
     if (t3 =="E")
         stop("Only assembled Harwell-Boeing formats implemented")      
-    z <- .Fortran("transpose", n = nc, m = nr,
-                  a = vals,ja = ind, ia = ptr,
+    z <- .Fortran("transpose", n = as.integer(nc), m = as.integer(nr),
+                  a = as.double(vals),ja = as.integer(ind), ia = as.integer(ptr),
                   entries = vector("double",nz), colindices = vector("integer", nz),
                   rowpointers = vector("integer", nr + 1),
-                  NAOK = .Spam$NAOK,
+                  NAOK = getOption("spam.NAOK"),
                   PACKAGE = "spam")
-    newx <- new('spam')
+    newx <- new("spam")
     slot(newx,"entries",check=FALSE) <- z$entries
     slot(newx,"colindices",check=FALSE) <- z$colindices
     slot(newx,"rowpointers",check=FALSE) <- z$rowpointers
     slot(newx,"dimension",check=FALSE) <- c(nr, nc)
-    if (t2 %in% c('H', 'S'))
+    if (t2 %in% c("H", "S"))
       newx <- newx+t.spam(newx)-diag.spam(spam(newx))
     if (t2 =="Z")
       newx <- newx-t.spam(newx)
@@ -269,10 +299,12 @@ read.MM <- function(file)  {
   }  else {
     nz <- nr*nc
     x <- scan(file, nmax = nz, quiet = TRUE, what=numeric())
-    z <- .Fortran("spamdnscsr", nrow = nr, ncol = nc,
-                  x = x, nr, entries = vector("double",nz),
+    z <- .Fortran("spamdnscsr",
+                  nrow = as.integer(nr),
+                  ncol = as.integer(nc),
+                  x = as.numeric(x), as.integer(nr), entries = vector("double",nz),
                   colindices = vector("integer", nz), rowpointers = vector("integer",nr + 1),
-                  eps = spam.options('eps'), NAOK = TRUE,
+                  eps = options("spam.eps"), NAOK = TRUE,
                   PACKAGE = "spam")
     
     warning("returning a (possibly) dense 'spam' object", call. = FALSE)

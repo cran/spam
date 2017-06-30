@@ -17,7 +17,7 @@
 
 # SETUP:
 library("spam")
-spam.options(structurebased=TRUE)
+options(spam.structurebased=TRUE)
 
 # BYM ---------------------------------------------
 data(Oral); attach(Oral) 

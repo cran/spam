@@ -1,7 +1,11 @@
-# This is file ../spam/R/s3only.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+# HEADER ####################################################
+# This is file  spam/R/s3only.R.                            #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
+
      
 
 eigen.spam <- function(x, ...) {

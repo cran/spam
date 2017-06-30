@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/solve.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{spam solve}
@@ -36,7 +39,6 @@ of a matrix if the right-hand-side is missing.
 \S4method{solve}{spam}(a, b, Rstruct=NULL, \dots)
 \S4method{backsolve}{spam}(r, x, \dots)
 \S4method{forwardsolve}{spam}(l, x, \dots)
-
 \S4method{chol2inv}{spam}(x, \dots)
 }
 \arguments{
@@ -46,7 +48,8 @@ of a matrix if the right-hand-side is missing.
 \code{chol}.}
 \item{x,b}{vector or regular matrix of right-hand-side(s) of a system of linear equations.}
 \item{Rstruct}{the Cholesky structure of \code{a}.}
-\item{\dots}{further arguments passed to or from other methods, see \sQuote{Details} below.}
+\item{\dots}{further arguments passed to or from other methods, see
+  \sQuote{Details} below.}
 }
 \details{
   We can solve \code{A \%*\% x = b} by first computing the Cholesky decomposition \code{A =

@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/precmat.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{precmat}
@@ -22,7 +25,7 @@ precmat.RW2(n)
 precmat.RWn(n, order=3)
 precmat.season(n, season=12)
 precmat.IGMRFreglat(n, m, order=1, anisotropy=1)
-precmat.IGMRFirreglat(A, eps=.Spam$eps)
+precmat.IGMRFirreglat(A, eps=getOption("spam.eps"))
 }
 \arguments{
 \item{n}{dimension of the field.}

@@ -1,10 +1,16 @@
 c-----------------------------------------------------------------------
       subroutine amask (nrow,ncol,a,ja,ia,jmask,imask,
-     *                  c,jc,ic,iw,nzmax,ierr)
+     *                  c,jc,ic,nzmax,ierr)
 c---------------------------------------------------------------------
+      implicit none
       real(8) a(*),c(*)
-      integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*),imask(nrow+1)
+      integer nrow, ncol
+      integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*)
+      integer imask(nrow+1), nzmax, ierr 
       logical iw(ncol)
+c-----------------------------------------------------------------------
+c futher used variables
+      integer k, len, ii, j, k1, k2
 c-----------------------------------------------------------------------
 c This subroutine builds a sparse matrix from an input matrix by
 c extracting only elements in positions defined by the mask jmask, imask
@@ -90,8 +96,15 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aplsb1 (nrow,ncol,a,ja,ia,s,b,jb,ib,c,jc,ic,
      *     nzmax,ierr)
+      implicit none
       real(8) a(*), b(*), c(*), s
+      integer nrow, ncol
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1)
+      integer nzmax, ierr
+c-----------------------------------------------------------------------
+c further used vaeriables
+      integer i, j1, j2, ka, kamax, kb, kbmax, kc
+
 c-----------------------------------------------------------------------
 c performs the operation C = A+s B for matrices in sorted CSR format.
 c the difference with aplsb is that the resulting matrix is such that
@@ -201,8 +214,12 @@ c-----------------------------------------------------------------------
 c
 
       subroutine submat (job,i1,i2,j1,j2,a,ja,ia,nr,nc,ao,jao,iao)
+      implicit none
       integer job,i1,i2,j1,j2,nr,nc,ia(*),ja(*),jao(*),iao(*)
       real(8) a(*),ao(*)
+c-----------------------------------------------------------------------
+c further used variables
+      integer i, ii, j, k, k1, k2, klen
 c-----------------------------------------------------------------------
 c extracts the submatrix A(i1:i2,j1:j2) and puts the result in
 c matrix ao,iao,jao
@@ -269,6 +286,7 @@ c-----------------------------------------------------------------------
       end
 c
       subroutine amux (n, x, y, a,ja,ia)
+      implicit none
       real(8)  x(*), y(*), a(*)
       integer n, ja(*), ia(*)
 c-----------------------------------------------------------------------
@@ -315,7 +333,14 @@ c-----------------------------------------------------------------------
       end
 c
       subroutine amubdg (nrow,ncol,ncolb,ja,ia,jb,ib,ndegr,nnz,iw)
-      integer ja(*),jb(*),ia(nrow+1),ib(ncol+1),ndegr(nrow),iw(ncolb)
+      implicit none
+      integer nrow, ncol, ncolb
+      integer ja(*),jb(*),ia(nrow+1),ib(ncol+1)
+      integer ndegr(nrow),iw(ncolb)
+      integer nnz
+c-----------------------------------------------------------------------
+c further used variables
+      integer ii, j, jc, jr, k, last, ldg
 c-----------------------------------------------------------------------
 c gets the number of nonzero elements in each row of A*B and the total
 c number of nonzero elements in A*B.
@@ -412,8 +437,14 @@ c
 
        subroutine amub (nrow,ncol,job,a,ja,ia,b,jb,ib,
      *                  c,jc,ic,nzmax,iw,ierr)
+      implicit none
       real(8) a(*), b(*), c(*)
+      integer nrow, ncol, job
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(*),ic(*),iw(ncol)
+      integer nzmax, ierr
+c-----------------------------------------------------------------------
+c other used variables
+      integer len, k, ka, kb, jpos, jcol, ii, jj, j
 c-----------------------------------------------------------------------
 c performs the matrix by matrix product C = A B
 c-----------------------------------------------------------------------
@@ -506,6 +537,7 @@ c-----------------------------------------------------------------------
 c
 c------------------------------------------------------------------------
       subroutine getl (n,a,ja,ia,ao,jao,iao)
+      implicit none
       integer n, ia(*), ja(*), iao(*), jao(*)
       real(8) a(*), ao(*)
 c------------------------------------------------------------------------
@@ -566,6 +598,7 @@ c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
       subroutine getu (n,a,ja,ia,ao,jao,iao)
+      implicit none
       integer n, ia(*), ja(*), iao(*), jao(*)
       real(8) a(*), ao(*)
 c------------------------------------------------------------------------
@@ -621,8 +654,13 @@ c-----------------------------------------------------------------------
       end
 c-
       subroutine csrmsr (n,a,ja,ia,ao,jao,wk,iwk)
+      implicit none
+      integer n
       real(8) a(*),ao(*),wk(n)
       integer ia(n+1),ja(*),jao(*),iwk(n+1)
+c-----------------------------------------------------------------------
+c other used variables
+      integer k, j, iptr, ii, icount, i
 c-----------------------------------------------------------------------
 c Compressed Sparse Row   to      Modified - Sparse Row
 c                                 Sparse row with separate main diagonal
@@ -728,8 +766,12 @@ c-----------------------------------------------------------------------
       end
 c
       subroutine getdia (nrow,ncol,job,a,ja,ia,len,diag,idiag,ioff)
+      implicit none
       real(8) diag(*),a(*)
       integer nrow, ncol, job, len, ioff, ia(*), ja(*), idiag(*)
+c-----------------------------------------------------------------------
+c further used variables
+      integer izero
 c-----------------------------------------------------------------------
 c this subroutine extracts a given diagonal from a matrix stored in csr
 c format. the output matrix may be transformed with the diagonal removed
@@ -791,7 +833,8 @@ c----------------------------------------------------------------------c
 c     local variables
       integer istart, max, iend, i, kold, k, kdiag, ko
 c
-      istart = max(0,-ioff)
+      izero = 0
+      istart = max(izero,-ioff)
       iend = min(nrow,ncol-ioff)
       len = 0
       do 1 i=1,nrow

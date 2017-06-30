@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/diag.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -24,8 +27,8 @@
      diagonal matrix.
 }
 \usage{
-# diag(x)
-diag(x=1, nrow, ncol)
+## diag(x)
+## diag(x=1, nrow, ncol, names = TRUE)
 diag(x) <- value
 
 diag.spam(x=1, nrow, ncol)

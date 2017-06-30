@@ -1,7 +1,11 @@
-# This is file ../spam/R/mle.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+# HEADER ####################################################
+# This is file  spam/R/mle.R.                               #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
+
      
 
 
@@ -11,7 +15,7 @@ neg2loglikelihood.spam <- function(y, X, distmat, Covariance,
 
   Sigma <- do.call(Covariance,list(distmat,theta))
   if (!is.spam(Sigma)){
-    warning("'Covariance' should return a spam object. Forced to spam.")
+    warning("\"Covariance\" should return a spam object. Forced to spam.")
     Sigma <- as.spam(Sigma)
   }
   if (is(Rstruct, "spam.chol.NgPeyton")) 
@@ -58,7 +62,7 @@ mle.spam <- function(y, X, distmat, Covariance,
     Sigma <- do.call(Covariance,
                      list(distmat,c(thetaupper[1],theta0[-1])))
     if (!is.spam(Sigma))
-      stop("'Covariance' should return a spam object.")
+      stop("\"Covariance\" should return a spam object.")
    
     Rstruct <- chol.spam(Sigma, ...)
   }
@@ -124,7 +128,7 @@ mle.nomean.spam <- function(y, distmat, Covariance,
     Sigma <- do.call(Covariance,
                      list(distmat,c(thetaupper[1],theta0[-1])))
     if (!is.spam(Sigma))
-      stop("'Covariance' should return a spam object.")
+      stop("\"Covariance\" should return a spam object.")
    
     Rstruct <- chol.spam(Sigma, ...)
   }

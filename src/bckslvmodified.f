@@ -1,4 +1,4 @@
-      subroutine backsolve(m,nsuper,nrhs,lindx,xlindx,lnz,
+      subroutine backsolvef(m,nsuper,nrhs,lindx,xlindx,lnz,
      &                   xlnz,xsuper,b)
 c see below...
       implicit none
@@ -14,7 +14,7 @@ c see below...
       end
 
 
-      subroutine forwardsolve(m,nsuper,nrhs,lindx,xlindx,
+      subroutine forwardsolvef(m,nsuper,nrhs,lindx,xlindx,
      &  lnz,xlnz,xsuper,b)
 c INPUT:
 c     m -- the number of column in the matrix

@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/cov.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{covmat}
@@ -21,15 +24,15 @@
 \usage{
 covmat(h, theta, ... , type="sph")
 
-cov.exp(h, theta, ... , eps= .Spam$eps)
-cov.sph(h, theta, ... , eps= .Spam$eps)
-cov.nug(h, theta, ... , eps= .Spam$eps)
-cov.wu1(h, theta, ... , eps= .Spam$eps)
-cov.wu2(h, theta, ... , eps= .Spam$eps)
-cov.wu3(h, theta, ... , eps= .Spam$eps)
-cov.wend1(h, theta, ... , eps= .Spam$eps)
-cov.wend2(h, theta, ... , eps= .Spam$eps)
-cov.mat(h, theta, ... , eps= .Spam$eps)
+cov.exp(h, theta, ... , eps= getOption("spam.eps"))
+cov.sph(h, theta, ... , eps= getOption("spam.eps"))
+cov.nug(h, theta, ... , eps= getOption("spam.eps"))
+cov.wu1(h, theta, ... , eps= getOption("spam.eps"))
+cov.wu2(h, theta, ... , eps= getOption("spam.eps"))
+cov.wu3(h, theta, ... , eps= getOption("spam.eps"))
+cov.wend1(h, theta, ... , eps= getOption("spam.eps"))
+cov.wend2(h, theta, ... , eps= getOption("spam.eps"))
+cov.mat(h, theta, ... , eps= getOption("spam.eps"))
 
 }
 \arguments{

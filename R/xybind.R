@@ -1,15 +1,10 @@
-# This is file ../spam/R/xybind.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
-
-
-
-
-
-
+# HEADER ####################################################
+# This is file  spam/R/xybind.R.                            #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 ########################################################################
@@ -126,10 +121,11 @@ function(...,deparse.level=0)
   }
 }
   
-  
-"cbind.spam" <-
-function(...,deparse.level=0)
+cbind.spam <- function(..., deparse.level=0)
 {
+
+  force64 <- getOption("spam.force64")
+    
   if (deparse.level!=0) warning("Only 'deparse.level=0' implemented, coerced to zero,")
   addnargs <- ifelse(missing(deparse.level),0,1)
 
@@ -144,7 +140,7 @@ function(...,deparse.level=0)
   nargs <- length(args) -  addnargs
   if (nargs == 0)     return( NULL)
   if (nargs == 1)     return( args[[1]])
-  if (nargs == 2) {
+   if (nargs == 2) {
 
     Ydim <- if (is.spam(args[[2]])) args[[2]]@dimension  else
           dim(args[[2]])
@@ -187,42 +183,57 @@ function(...,deparse.level=0)
 
     if(Xdim[1]!=Ydim[1])
          stop("Arguments have differing numbers of rows, in cbind.spam()",call.=FALSE)
-
-    XYlen <- args[[1]]@rowpointers[Xdim[1]+1]+args[[2]]@rowpointers[Xdim[1]+1]-2L
-    z <- .Fortran("cbind", Xdim[2], Xdim[1], # not used anymore Ydim[2], XYlen,
-                  args[[1]]@entries, args[[1]]@colindices, args[[1]]@rowpointers,
-                  args[[2]]@entries, args[[2]]@colindices, args[[2]]@rowpointers,
-                  entries=vector( "double", XYlen),
-                  colindices=vector( "integer", XYlen),
-                  rowpointers=vector( "integer", Xdim[1]+1),
-                  NAOK=.Spam$NAOK,PACKAGE = "spam")
-
-    if (FALSE) {
-    # a loop would be (in R...):
-      for (i in 1:nrow) {
-        if (args[[1]]@rowpointers[i]<args[[1]]@rowpointers[i+1])
-          stend1 <- args[[1]]@rowpointers[i]:(args[[1]]@rowpointers[i+1]-1)
-        else stend1 <- NULL
-        if (args[[2]]@rowpointers[i]<args[[2]]@rowpointers[i+1])
-          stend2 <- args[[2]]@rowpointers[i]:(args[[2]]@rowpointers[i+1]-1)
-        else stend2 <- NULL
-        entries <- c( entries, args[[1]]@entries[stend1], args[[2]]@entries[stend2])
-        colindices <-  c(  colindices, args[[1]]@colindices[stend1], args[[2]]@colindices[stend2]+Xdim[2])
-      }
-    }
-    newx <- new("spam")
-    slot(newx,"entries", check=FALSE)     <- z$entries
-    slot(newx,"colindices", check=FALSE)  <- z$colindices
-    slot(newx,"rowpointers", check=FALSE) <- z$rowpointers
-    slot(newx,"dimension", check=FALSE)   <- c(Ydim[1],Xdim[2]+Ydim[2])
-    return(newx)
     
-  } else {
-    # "recursive" approach only, e.g. no checking
-    tmp <- cbind.spam( args[[1]],args[[2]])
-    for ( i in 3:nargs)
-      tmp <- cbind.spam( tmp,args[[i]])
-    return( tmp)
+      XYlen <- as.numeric(args[[1]]@rowpointers[Xdim[1]+1])+as.numeric(args[[2]]@rowpointers[Xdim[1]+1])-2
+      if(force64 || XYlen > 2147483647 || .format.spam(args[[1]])$package =="spam64" || .format.spam(args[[2]])$package =="spam64")
+          SS <- .format64
+      else
+          SS <- .format32
+      
+      #xncol,nrow,yncol, clen,
+      #a,ia,ja, b,ib,jb, c,ic,jc
+      z <- .C64("cbindf", 
+                SIGNATURE=c(SS$signature, SS$signature,  
+                    "double", SS$signature, SS$signature,
+                    "double", SS$signature, SS$signature,
+                    "double", SS$signature, SS$signature),
+
+                xncol=Xdim[2],
+                nrow=Xdim[1],
+                
+                a=args[[1]]@entries,
+                ia=args[[1]]@colindices,
+                ja=args[[1]]@rowpointers,
+                
+                b=args[[2]]@entries,
+                ib=args[[2]]@colindices,
+                jb=args[[2]]@rowpointers,
+                
+                entries=vector_dc("double", XYlen),
+                colindices=vector_dc(SS$type, XYlen),
+                rowpointers=vector_dc(SS$type, Xdim[1]+1),
+                
+                INTENT=c("r", "r",
+                         "r", "r", "r",
+                         "r", "r", "r",
+                         "w", "w", "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)
+      
+      return(.newSpam(
+          entries=z$entries,
+          colindices=z$colindices,
+          rowpointers=z$rowpointers,
+          dimension=c(Xdim[1], Xdim[2] + Ydim[2]),
+          force64=force64))
+    
+  }
+  else {
+      ## "recursive" approach only
+    tmp <- cbind.spam(args[[1]], args[[2]])
+    for(i in 3:nargs)
+      tmp <- cbind.spam(tmp, args[[i]])
+    return(tmp)
   }
 }
   

@@ -93,7 +93,7 @@ c     cachsz -- size of the cache (in kilobytes) on the target
 c               machine
 c     ierr -- error flag
 c       1 -- insufficient work space in call to extract
-c       2 -- insufficient storage in iwork when calling ordmmd;
+c       2 -- (not defined)
 c       3 -- insufficient storage in iwork when calling sfinit;
 c       4 -- nnzl > nnzlmax when calling sfinit
 c       5 -- nsub > nsubmax when calling sfinit
@@ -128,7 +128,7 @@ c     &        adj(m+1),adjncy(nnzd-m),jd(nnzd),
       double precision d(nnzd),lnz(nnzlmax)
 
 c temp and working stuff, loops, etc
-      integer i,j,k,  nnzadj, jtmp
+      integer i,j,k,  nnzadj, jtmp, intmp1, intmp2
       integer iwork(7*m+3)
 
 c iwsiz is used temporalily
@@ -182,8 +182,7 @@ c initialize iwsiz to the later used value...
 c
 c
 c reorder the matrix using minimum degree ordering routine.
-c we call the genmmd function directly (do not pass via ordmmd).
-
+c we call the genmmd function directly.
 
       if (doperm.eq.1) then
 
@@ -193,9 +192,11 @@ c       maxint - maximum machine representable (short) integer
 c                (any smaller estimate will do) for marking
 c                nodes.
 c                set to 32767 below
-         call genmmd  (  m, xlindx,lindx, invp,perm,0,
+         intmp1 = 0
+         intmp2 = 32767
+         call genmmd  (  m, xlindx,lindx, invp,perm,intmp1,
      1        iwork(1),  iwork(m+1), iwork(2*m+1), iwork(3*m+1) ,
-     1        32767, nsub   )
+     1        intmp2, nsub   )
       endif
       if (doperm.eq.2) then
          call genrcm ( m, nnzadj, xlindx,lindx, perm )
@@ -241,9 +242,6 @@ c ierr = -2 "inconsistency in the input"
          ierr = 6
          go to 100
       endif
-
-
-
 c
 c Input numerical values into data structures of L
       call inpnv(id,jd,d,perm,invp,nsuper,xsuper,xlindx,lindx,
@@ -425,14 +423,14 @@ C
 C
 C***********************************************************************
 C
-        INTEGER(4)           BROTHR(*)     , FSON(*)       ,
+        INTEGER           BROTHR(*)     , FSON(*)       ,
      &                      PARENT(*)
 C
-        INTEGER(4)           NEQNS
+        INTEGER           NEQNS
 C
 C***********************************************************************
 C
-        INTEGER(4)           LROOT , NODE  , NDPAR
+        INTEGER           LROOT , NODE  , NDPAR
 C
 C***********************************************************************
 C
@@ -1216,7 +1214,7 @@ C
 C
 C***********************************************************************
 C
-        INTEGER(4)           LROOT , NODE  , NDLSON, NDPAR
+        INTEGER           LROOT , NODE  , NDLSON, NDPAR
 C
 C***********************************************************************
 C
@@ -1545,15 +1543,15 @@ C
 C
 C***********************************************************************
 C
-        INTEGER(4)           BROTHR(*)     , COLCNT(*)     , 
+        INTEGER           BROTHR(*)     , COLCNT(*)     , 
      &                      FSON(*)       , INVPOS(*)     , 
      &                      PARENT(*)     , STACK(*)
 C
-        INTEGER(4)           ROOT
+        INTEGER           ROOT
 C
 C***********************************************************************
 C
-        INTEGER(4)           ITOP  , NDPAR , NODE  , NUM   , NUNODE
+        INTEGER           ITOP  , NDPAR , NODE  , NUM   , NUNODE
 C
 C***********************************************************************
 C
@@ -1667,13 +1665,13 @@ C
 C
 C***********************************************************************
 C
-        INTEGER(4)           ADJNCY(*)     , BROTHR(*)     ,
+        INTEGER           ADJNCY(*)     , BROTHR(*)     ,
      &                      FSON(*)       , INVP(*)       ,
      &                      INVPOS(*)     , PARENT(*)     ,
      &                      PERM(*)
 C
-        INTEGER(4)           XADJ(*)
-        INTEGER(4)           NEQNS
+        INTEGER           XADJ(*)
+        INTEGER           NEQNS
 C
 C***********************************************************************
 C
@@ -1745,15 +1743,15 @@ C
 C
 C***********************************************************************
 C
-        INTEGER(4)           BROTHR(*)     , FSON(*)       ,
+        INTEGER           BROTHR(*)     , FSON(*)       ,
      &                      INVPOS(*)     , PARENT(*)     ,
      &                      STACK(*)
 C
-        INTEGER(4)           ROOT
+        INTEGER           ROOT
 C
 C***********************************************************************
 C
-        INTEGER(4)           ITOP  , NDPAR , NODE  , NUM   , NUNODE
+        INTEGER           ITOP  , NDPAR , NODE  , NUM   , NUNODE
 C
 C***********************************************************************
 C
@@ -1842,16 +1840,16 @@ C
 C
 C***********************************************************************
 C
-        INTEGER(4)           ADJNCY(*)     , ANCSTR(*)     ,
+        INTEGER           ADJNCY(*)     , ANCSTR(*)     ,
      &                      INVP(*)       , PARENT(*)     ,
      &                      PERM(*)
 C
-        INTEGER(4)           NEQNS
-        INTEGER(4)           XADJ(*)
+        INTEGER           NEQNS
+        INTEGER           XADJ(*)
 C
 C***********************************************************************
 C
-        INTEGER(4)           I     , J     , JSTOP , JSTRT , NBR   ,
+        INTEGER           I     , J     , JSTOP , JSTRT , NBR   ,
      &                      NEXT  , NODE
 C
 C***********************************************************************
@@ -2187,7 +2185,7 @@ C       --------------------------------------------
         IF  ( CACHSZ .LE. 0 )  THEN
             CACHE = 2 000 000 000
         ELSE
-            CACHE = INT( ( FLOAT(CACHSZ) * 1024. / 8. ) * 0.9 )
+            CACHE = CACHSZ * 116!INT( ( FLOAT(CACHSZ) * 1024. / 8. ) * 0.9 )
         ENDIF
 C
 C       ---------------
@@ -2856,14 +2854,14 @@ C
 C
 C***********************************************************************
 C
-        INTEGER(4)           INVP(*)       , INVP2(*)      ,
+        INTEGER           INVP(*)       , INVP2(*)      ,
      &                      PERM(*)
 C
-        INTEGER(4)           NEQNS
+        INTEGER           NEQNS
 C
 C***********************************************************************
 C
-        INTEGER(4)           I     , INTERM, NODE
+        INTEGER           I     , INTERM, NODE
 C
 C***********************************************************************
 C
@@ -3041,7 +3039,14 @@ C            -----------------------------------------------------
                      DO  800  J = JSTRT, JSTOP
                          NODE = ADJNCY(J)
                          LINK = - NODE
-                         IF  ( NODE )  400, 900, 500
+                         if ( NODE < 0 )  then
+                            GO TO 400
+                         else if ( NODE == 0 ) then
+                            GO TO 900
+                         else
+                            GO TO 500
+                         end if
+                         
   500                    CONTINUE
                          IF  ( MARKER(NODE) .GE. TAG  .OR.
      1                         DFORW(NODE) .LT. 0 )  GO TO 800
@@ -3075,7 +3080,15 @@ C        --------------------------------------------------------
              DO  1700  I = ISTRT, ISTOP
                  RNODE = ADJNCY(I)
                  LINK = - RNODE
-                 IF  ( RNODE )  1100, 1800, 1200
+
+                 if ( RNODE < 0 )  then
+                     GO TO 1100
+                 else if ( RNODE == 0 ) then
+                     GO TO 1800
+                 else
+                     GO TO 1200
+                 end if
+                 
  1200            CONTINUE
 C                --------------------------------------------
 C                IF RNODE IS IN THE DEGREE LIST STRUCTURE ...
@@ -3392,7 +3405,14 @@ C            ---------------------------------------------
                  DO  700  I = ISTRT, ISTOP
                      ENODE = ADJNCY(I)
                      LINK = - ENODE
-                     IF  ( ENODE )  400, 800, 500
+                     
+                     if ( ENODE < 0 )  then
+                           GO TO 400
+                        else if ( ENODE == 0 ) then
+                           GO TO 800
+                        else
+                           GO TO 500
+                     end if
 C
   500                CONTINUE
                      IF  ( QSIZE(ENODE) .EQ. 0 )  GO TO 700
@@ -3523,7 +3543,14 @@ C                                    -------------------------------
                                      DO  1900  J = JSTRT, JSTOP
                                          NODE = ADJNCY(J)
                                          LINK = - NODE
-                                         IF  ( NODE )  1700, 2000, 1800
+C                                       
+                                         if ( NODE < 0 )  then
+                                            GO TO 1700
+                                         else if ( NODE == 0 ) then
+                                            GO TO 2000
+                                         else
+                                            GO TO 1800
+                                         end if
 C
  1800                                    CONTINUE
                                          IF  ( MARKER(NODE) .GE. TAG )
@@ -3713,17 +3740,17 @@ C
         QQ = MIN(M,Q)
         IYBEG = 1
         LENY = LDY - 1
-        DO  200 J = 1, QQ-1 , 2
+        do J = 1, QQ-1 , 2
 CDIR$   IVDEP
-            DO  100  I = 1, N
-                I1 = XPNT(I+1) - MM
-                A1 = X(I1)
-                Y(IYBEG) = Y(IYBEG) - A1*A1
-  100       CONTINUE
-            IYBEG = IYBEG + 2*LENY + 1
-            LENY = LENY - 2
-            MM = MM - 2
-  200   CONTINUE
+           do I = 1, N
+              I1 = XPNT(I+1) - MM
+              A1 = X(I1)
+              Y(IYBEG) = Y(IYBEG) - A1*A1
+           end do
+           IYBEG = IYBEG + 2*LENY + 1
+           LENY = LENY - 2
+           MM = MM - 2
+        end do
 C       
 C       -------------------------------------------------------
 C       UPDATE TWO COLUMNS OF Y AT A TIME,  EXCEPT THE DIAGONAL 
@@ -3736,13 +3763,13 @@ C
         MM = M
         IYBEG = 1
         LENY = LDY - 1 
-C
-        DO  3000  J = 1, QQ-1, 2
+C         
+        do  J = 1, QQ-1, 2
 C
             IYBEG1 = IYBEG 
             IYBEG2 = IYBEG + LENY
 C
-            DO  400  K = 1, N-7, 8
+            do  K = 1, N-7, 8
 C
 C               -----------------------------------
 C               EIGHT COLUMNS UPDATING TWO COLUMNS.
@@ -3781,45 +3808,63 @@ C
      &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 - 
      &              A14*A14 - A15*A15 - A16*A16
 C
-                DO  300  I = 2, MM-1
-                    Y1 = Y(IYBEG1+I)
-                    B1 = X(I1+I)
-                    Y1 =  Y1 - B1 * A1
-                    Y2 = Y(IYBEG2+I)
-                    B2 = X(I2+I)
-                    Y2 =  Y2 - B1 * A9
-                    Y1 =  Y1 - B2 * A2
-                    B3 = X(I3+I)
-                    Y2 =  Y2 - B2 * A10
-                    Y1 =  Y1 - B3 * A3
-                    B4 = X(I4+I)
-                    Y2 =  Y2 - B3 * A11
-                    Y1 =  Y1 - B4 * A4
-                    B5 = X(I5+I)
-                    Y2 =  Y2 - B4 * A12
-                    Y1 =  Y1 - B5 * A5
-                    B6 = X(I6+I)
-                    Y2 =  Y2 - B5 * A13
-                    Y1 =  Y1 - B6 * A6
-                    B7 = X(I7+I)
-                    Y2 =  Y2 - B6 * A14
-                    Y1 = Y1 - B7 * A7
-                    B8 = X(I8+I)
-                    Y2 = Y2 - B7 * A15
-                    Y1 = Y1 - B8 * A8       
-                    Y(IYBEG1+I) = Y1
-                    Y2 =  Y2 - B8 * A16
-                    Y(IYBEG2+I) = Y2               
-  300           CONTINUE
+                do  I = 2, MM-1
+                   Y1 = Y(IYBEG1+I)
+                   B1 = X(I1+I)
+                   Y1 =  Y1 - B1 * A1
+                   Y2 = Y(IYBEG2+I)
+                   B2 = X(I2+I)
+                   Y2 =  Y2 - B1 * A9
+                   Y1 =  Y1 - B2 * A2
+                   B3 = X(I3+I)
+                   Y2 =  Y2 - B2 * A10
+                   Y1 =  Y1 - B3 * A3
+                   B4 = X(I4+I)
+                   Y2 =  Y2 - B3 * A11
+                   Y1 =  Y1 - B4 * A4
+                   B5 = X(I5+I)
+                   Y2 =  Y2 - B4 * A12
+                   Y1 =  Y1 - B5 * A5
+                   B6 = X(I6+I)
+                   Y2 =  Y2 - B5 * A13
+                   Y1 =  Y1 - B6 * A6
+                   B7 = X(I7+I)
+                   Y2 =  Y2 - B6 * A14
+                   Y1 = Y1 - B7 * A7
+                   B8 = X(I8+I)
+                   Y2 = Y2 - B7 * A15
+                   Y1 = Y1 - B8 * A8       
+                   Y(IYBEG1+I) = Y1
+                   Y2 =  Y2 - B8 * A16
+                   Y(IYBEG2+I) = Y2               
+                end do
 C
-  400       CONTINUE
-C
+             end do
+C     
 C           -----------------------------
 C           BOUNDARY CODE FOR THE K LOOP.
 C           -----------------------------
 C
-            GO TO ( 2000, 1700, 1500, 1300,
-     &              1100,  900,  700,  500  ), N-K+2
+            SELECT CASE( N-K+2 )
+         CASE(1)
+            GO TO 2000
+         CASE(2)
+            GO TO 1700
+         CASE(3)
+            GO TO 1500
+         CASE(4)
+            GO TO 1300
+         CASE(5)
+            GO TO 1100
+         CASE(6)
+            GO TO 900
+         CASE(7)
+            GO TO 700
+         CASE(8)
+            GO TO 500
+         CASE DEFAULT
+            GO TO 2000
+         END SELECT           
 C
   500       CONTINUE
 C
@@ -3857,33 +3902,33 @@ C
      &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 - 
      &              A14*A14 - A15*A15
 C
-                DO  600  I = 2, MM-1
-                    Y1 = Y(IYBEG1+I)
-                    B1 = X(I1+I)
-                    Y1 =  Y1 - B1 * A1
-                    Y2 = Y(IYBEG2+I)
-                    B2 = X(I2+I)
-                    Y2 =  Y2 - B1 * A9
-                    Y1 =  Y1 - B2 * A2
-                    B3 = X(I3+I)
-                    Y2 =  Y2 - B2 * A10
-                    Y1 =  Y1 - B3 * A3
-                    B4 = X(I4+I)
-                    Y2 =  Y2 - B3 * A11
-                    Y1 =  Y1 - B4 * A4
-                    B5 = X(I5+I)
-                    Y2 =  Y2 - B4 * A12
-                    Y1 =  Y1 - B5 * A5
-                    B6 = X(I6+I)
-                    Y2 =  Y2 - B5 * A13
-                    Y1 =  Y1 - B6 * A6
-                    B7 = X(I7+I)
-                    Y2 =  Y2 - B6 * A14
-                    Y1 = Y1 - B7 * A7
-                    Y(IYBEG1+I) = Y1
-                    Y2 = Y2 - B7 * A15
-                    Y(IYBEG2+I) = Y2               
-  600           CONTINUE
+                do  I = 2, MM-1
+                   Y1 = Y(IYBEG1+I)
+                   B1 = X(I1+I)
+                   Y1 =  Y1 - B1 * A1
+                   Y2 = Y(IYBEG2+I)
+                   B2 = X(I2+I)
+                   Y2 =  Y2 - B1 * A9
+                   Y1 =  Y1 - B2 * A2
+                   B3 = X(I3+I)
+                   Y2 =  Y2 - B2 * A10
+                   Y1 =  Y1 - B3 * A3
+                   B4 = X(I4+I)
+                   Y2 =  Y2 - B3 * A11
+                   Y1 =  Y1 - B4 * A4
+                   B5 = X(I5+I)
+                   Y2 =  Y2 - B4 * A12
+                   Y1 =  Y1 - B5 * A5
+                   B6 = X(I6+I)
+                   Y2 =  Y2 - B5 * A13
+                   Y1 =  Y1 - B6 * A6
+                   B7 = X(I7+I)
+                   Y2 =  Y2 - B6 * A14
+                   Y1 = Y1 - B7 * A7
+                   Y(IYBEG1+I) = Y1
+                   Y2 = Y2 - B7 * A15
+                   Y(IYBEG2+I) = Y2               
+                end do
 C
                 GO TO 2000
 C
@@ -3920,30 +3965,30 @@ C
      &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 - 
      &              A14*A14
 C
-                DO  800  I = 2, MM-1
-                    Y1 = Y(IYBEG1+I)
-                    B1 = X(I1+I)
-                    Y1 =  Y1 - B1 * A1
-                    Y2 = Y(IYBEG2+I)
-                    B2 = X(I2+I)
-                    Y2 =  Y2 - B1 * A9
-                    Y1 =  Y1 - B2 * A2
-                    B3 = X(I3+I)
-                    Y2 =  Y2 - B2 * A10
-                    Y1 =  Y1 - B3 * A3
-                    B4 = X(I4+I)
-                    Y2 =  Y2 - B3 * A11
-                    Y1 =  Y1 - B4 * A4
-                    B5 = X(I5+I)
-                    Y2 =  Y2 - B4 * A12
-                    Y1 =  Y1 - B5 * A5
-                    B6 = X(I6+I)
-                    Y2 =  Y2 - B5 * A13
-                    Y1 =  Y1 - B6 * A6
-                    Y(IYBEG1+I) = Y1
-                    Y2 =  Y2 - B6 * A14
-                    Y(IYBEG2+I) = Y2               
-  800           CONTINUE
+                do  I = 2, MM-1
+                   Y1 = Y(IYBEG1+I)
+                   B1 = X(I1+I)
+                   Y1 =  Y1 - B1 * A1
+                   Y2 = Y(IYBEG2+I)
+                   B2 = X(I2+I)
+                   Y2 =  Y2 - B1 * A9
+                   Y1 =  Y1 - B2 * A2
+                   B3 = X(I3+I)
+                   Y2 =  Y2 - B2 * A10
+                   Y1 =  Y1 - B3 * A3
+                   B4 = X(I4+I)
+                   Y2 =  Y2 - B3 * A11
+                   Y1 =  Y1 - B4 * A4
+                   B5 = X(I5+I)
+                   Y2 =  Y2 - B4 * A12
+                   Y1 =  Y1 - B5 * A5
+                   B6 = X(I6+I)
+                   Y2 =  Y2 - B5 * A13
+                   Y1 =  Y1 - B6 * A6
+                   Y(IYBEG1+I) = Y1
+                   Y2 =  Y2 - B6 * A14
+                   Y(IYBEG2+I) = Y2               
+                end do
 C
                 GO TO 2000
 C
@@ -4085,37 +4130,37 @@ C
 C
                 GO TO 2000
 C
- 1500       CONTINUE
-C
-C               ---------------------------------
-C               TWO COLUMNS UPDATING TWO COLUMNS.
-C               ---------------------------------
-C
+ 1500           CONTINUE
+C     
+C     ---------------------------------
+C     TWO COLUMNS UPDATING TWO COLUMNS.
+C     ---------------------------------
+C     
                 I1 = XPNT(K+1) - MM
                 I2 = XPNT(K+2) - MM
                 A1 = X(I1)
                 A2 = X(I2)
                 A9  = X(I1+1)
                 A10 = X(I2+1)
-C
+C     
                 Y(IYBEG1+1) =  Y(IYBEG1+1) -
-     &              A1*A9 - A2*A10
-C
+     &               A1*A9 - A2*A10
+C     
                 Y(IYBEG2+1) =  Y(IYBEG2+1) -
-     &              A9*A9 - A10*A10
-C
-                DO  1600  I = 2, MM-1
-                    Y1 = Y(IYBEG1+I)
-                    B1 = X(I1+I)
-                    Y1 =  Y1 - B1 * A1
-                    Y2 = Y(IYBEG2+I)
-                    B2 = X(I2+I)
-                    Y2 =  Y2 - B1 * A9
-                    Y1 =  Y1 - B2 * A2
-                    Y(IYBEG1+I) = Y1
-                    Y2 =  Y2 - B2 * A10
-                    Y(IYBEG2+I) = Y2               
- 1600           CONTINUE
+     &               A9*A9 - A10*A10
+C     
+                do  I = 2, MM-1
+                   Y1 = Y(IYBEG1+I)
+                   B1 = X(I1+I)
+                   Y1 =  Y1 - B1 * A1
+                   Y2 = Y(IYBEG2+I)
+                   B2 = X(I2+I)
+                   Y2 =  Y2 - B1 * A9
+                   Y1 =  Y1 - B2 * A2
+                   Y(IYBEG1+I) = Y1
+                   Y2 =  Y2 - B2 * A10
+                   Y(IYBEG2+I) = Y2               
+                end do
 C
                 GO TO 2000
 C
@@ -4124,28 +4169,28 @@ C
 C               --------------------------------
 C               ONE COLUMN UPDATING TWO COLUMNS.
 C               --------------------------------
+C     
+            I1 = XPNT(K+1) - MM
+            A1 = X(I1)
+            A9  = X(I1+1)
+C     
+            Y(IYBEG1+1) =  Y(IYBEG1+1) -
+     &           A1*A9
+C     
+            Y(IYBEG2+1) =  Y(IYBEG2+1) -
+     &           A9*A9
+C     
+            do  I = 2, MM-1
+               Y1 = Y(IYBEG1+I)
+               B1 = X(I1+I)
+               Y1 =  Y1 - B1 * A1
+               Y2 = Y(IYBEG2+I)
+               Y(IYBEG1+I) = Y1
+               Y2 =  Y2 - B1 * A9
+               Y(IYBEG2+I) = Y2               
+            end do
 C
-                I1 = XPNT(K+1) - MM
-                A1 = X(I1)
-                A9  = X(I1+1)
-C
-                Y(IYBEG1+1) =  Y(IYBEG1+1) -
-     &              A1*A9
-C
-                Y(IYBEG2+1) =  Y(IYBEG2+1) -
-     &              A9*A9
-C
-                DO  1800  I = 2, MM-1
-                    Y1 = Y(IYBEG1+I)
-                    B1 = X(I1+I)
-                    Y1 =  Y1 - B1 * A1
-                    Y2 = Y(IYBEG2+I)
-                    Y(IYBEG1+I) = Y1
-                    Y2 =  Y2 - B1 * A9
-                    Y(IYBEG2+I) = Y2               
- 1800           CONTINUE
-C
-                GO TO 2000
+            GO TO 2000
 C
 C           -----------------------------------------------
 C           PREPARE FOR NEXT PAIR OF COLUMNS TO BE UPDATED.
@@ -4156,7 +4201,7 @@ C
             IYBEG = IYBEG2 + LENY + 1
             LENY = LENY - 2
 C
- 3000   CONTINUE
+         end do
 C
 C       -----------------------------------------------------
 C       BOUNDARY CODE FOR J LOOP:  EXECUTED WHENVER Q IS ODD.
@@ -4240,79 +4285,6 @@ CDIR$   IVDEP
   100       CONTINUE
   200   CONTINUE
         RETURN
-C
-      END
-C***********************************************************************
-C***********************************************************************
-C
-C   Version:        0.4
-C   Last modified:  December 27, 1994
-C   Authors:        Esmond G. Ng and Barry W. Peyton
-C
-C   Mathematical Sciences Section, Oak Ridge National Laboratory
-C
-C***********************************************************************
-C***********************************************************************
-C****     ORDMMD ..... MULTIPLE MINIMUM EXTERNAL DEGREE     ************
-C***********************************************************************
-C***********************************************************************
-C
-C     PURPOSE - THIS ROUTINE CALLS LIU'S MULTIPLE MINIMUM DEGREE
-C               ROUTINE.
-C
-C     INPUT PARAMETERS -
-C        NEQNS  - NUMBER OF EQUATIONS.
-C        (XADJ,ADJNCY) - THE ADJACENCY STRUCTURE.
-C        IWSIZ  - SIZE OF INTEGER WORKING STORAGE.
-C
-C     OUTPUT PARAMETERS -
-C        PERM   - THE MINIMUM DEGREE ORDERING.
-C        INVP   - THE INVERSE OF PERM.
-C        NOFSUB - AN UPPER BOUND ON THE NUMBER OF NONZERO
-C                 SUBSCRIPTS FOR THE COMPRESSED STORAGE SCHEME.
-C        IFLAG  - ERROR FLAG.
-C                   0: SUCCESSFUL ORDERING
-C                  -1: INSUFFICIENT WORKING STORAGE
-C                      [IWORK(*)].
-C
-C     WORKING PARAMETERS -
-C        IWORK  - INTEGER WORKSPACE OF LENGTH 4*NEQNS.
-C
-C***********************************************************************
-C
-      SUBROUTINE ORDMMD  (  NEQNS , XADJ  , ADJNCY, INVP  , PERM  ,
-     1                      IWSIZ , IWORK , NOFSUB, IFLAG           )
-C
-C***********************************************************************
-C
-         INTEGER    ADJNCY(*), INVP(*)  , IWORK(*) , PERM(*)
-         INTEGER    XADJ(*)
-         INTEGER    DELTA , IFLAG , IWSIZ , MAXINT, NEQNS , 
-     &              NOFSUB
-C
-C*********************************************************************
-C
-        IFLAG = 0
-        IF  ( IWSIZ .LT. 4*NEQNS )  THEN
-            IFLAG = -1
-            RETURN
-        ENDIF
-C
-C       DELTA  - TOLERANCE VALUE FOR MULTIPLE ELIMINATION.
-C       MAXINT - MAXIMUM MACHINE REPRESENTABLE (SHORT) INTEGER
-C                (ANY SMALLER ESTIMATE WILL DO) FOR MARKING
-C                NODES.
-C
-        DELTA  = 0
-        MAXINT = 32767
-        CALL GENMMD  (  NEQNS , XADJ  , ADJNCY, INVP  , PERM  ,
-     1                  DELTA , 
-     1                  IWORK(1)              ,
-     1                  IWORK(NEQNS+1)        ,
-     1                  IWORK(2*NEQNS+1)      ,
-     1                  IWORK(3*NEQNS+1)      ,
-     1                  MAXINT, NOFSUB          )
-         RETURN
 C
       END
 C***********************************************************************
@@ -4609,8 +4581,26 @@ C***********************************************************************
 C
       REMAIN = MOD ( N, LEVEL )
 C
-      GO TO ( 2000, 100, 200, 300,
-     &         400, 500, 600, 700  ), REMAIN+1
+      SELECT CASE ( REMAIN+1 )
+      CASE(1)
+         GO TO 2000
+      CASE(2)
+         GO TO 100
+      CASE(3)
+         GO TO 200
+      CASE(4)
+         GO TO 300
+      CASE(5)
+         GO TO 400
+      CASE(6)
+         GO TO 500
+      CASE(7)
+         GO TO 600
+      CASE(8)
+         GO TO 700
+      CASE DEFAULT
+         GO TO 2000
+      END SELECT    
 C
   100 CONTINUE
       I1 = APNT(1+1) - M

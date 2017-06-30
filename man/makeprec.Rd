@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/makeprec.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -11,7 +14,7 @@
 \title{Create Precision Matrices}
 \description{Creates precision matrices for gridded GMRF.}
 \usage{
-precmat.GMRFreglat(n,m, par, model = "m1p1",  eps = .Spam$eps)
+precmat.GMRFreglat(n,m, par, model = "m1p1",  eps = getOption("spam.eps"))
 }
 \arguments{
   \item{n}{first dimension of the grid.}
@@ -19,7 +22,7 @@ precmat.GMRFreglat(n,m, par, model = "m1p1",  eps = .Spam$eps)
   \item{par}{parameters used to construct the matrix.}
   \item{model}{see details and examples.}
   \item{eps}{A tolerance parameter:  elements of \code{x} such that \code{abs(x)
-    <= eps} set to zero. Defaults to \code{eps = .Spam$eps}} 
+    <= eps} set to zero. Defaults to \code{eps = getOption("spam.eps")}} 
 }
 \value{A \code{spam} matrix of dimension \code{prod(dims)}x\code{prod(dims)}.}
 \details{The function should be illustrative on how to create precision

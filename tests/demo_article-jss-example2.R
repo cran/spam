@@ -23,7 +23,7 @@ cat("\nThis demo contains the R code of the second example\nin the JSS article. 
 
 # INITALIZE AND FUNCTIONS:
 require("fields", warn.conflict=FALSE)
-spam.options(structurebased=TRUE)
+options(spam.structurebased=TRUE)
 
 
 # READ DATA:

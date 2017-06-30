@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/math.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -89,7 +92,7 @@
 \item{base}{positive number. The base with respect to which logarithms
 are computed. Defaults to \code{e=exp(1)}.}
 }
-\value{If \code{structurebased=TRUE}, all functions operate on the vector \code{x@entries} and return the
+\value{If the option \code{spam.structurebased=TRUE}, all functions operate on the vector \code{x@entries} and return the
 result thereof.\cr
 Conversely, if \code{structurebased=FALSE}, the result is identical to
 one with \code{as.matrix(x)} input and an \code{as.spam} purger.
@@ -112,7 +115,7 @@ smat <- as.spam( mat)
 cos( mat)
 cos( smat)
 
-spam.options(structurebased=FALSE)
+options(spam.structurebased=FALSE)
 cos( smat)
 
 sqrt( smat)

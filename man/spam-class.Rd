@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/spam-class.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -57,13 +60,6 @@
 \alias{length<-,spam-method}
 \alias{length,spam-method}
 \alias{lower.tri,spam-method}
-\alias{kronecker,spam,ANY-method}
-\alias{kronecker,ANY,spam-method}
-\alias{kronecker,spam,spam-method}
-\alias{crossprod,spam,missing-method}
-\alias{tcrossprod,spam,missing-method}
-\alias{crossprod,ANY,spam-method}
-\alias{tcrossprod,ANY,spam-method}
 \alias{plot,spam,missing-method}
 \alias{plot,spam,spam-method}
 \alias{show,spam-method}

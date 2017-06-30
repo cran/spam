@@ -1,15 +1,19 @@
-# This is file ../spam/R/norm.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+# HEADER ####################################################
+# This is file  spam/R/norm.R.                              #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
+
      
 
 
 ########################################################################
 
 #norm <- function(x, type = "sup", ...){
-#  typ <- charmatch(tolower(type), c("sup",'l1',"frobenius","hs"))
-#  if (is.na(typ))          stop("undefined norm '",type,"'.",call.=FALSE)
+#  typ <- charmatch(tolower(type), c("sup","l1","frobenius","hs"))
+#  if (is.na(typ))          stop("undefined norm "",type,"".",call.=FALSE)
 
 #  switch(typ,
 #         max(abs(x)),
@@ -52,6 +56,6 @@ setMethod("norm", signature(x = "numeric", type = "missing"),
 setMethod("norm", signature(x = "matrix", type = "character"),
 	  function(x, type, ...) base::norm(x, type))
 setMethod("norm", signature(x = "matrix", type = "missing"),
-	  function(x, type, ...) base::norm(x, type='o'))
+	  function(x, type, ...) base::norm(x, type="o"))
 
 

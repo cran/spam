@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/coercion.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -35,9 +38,9 @@ ifelse( x, x, 1-x)
 ifelse( x, as.vector(x), 1-as.vector(x))
 
 x <- diag.spam(2)
-spam.options( structurebased=FALSE)
+options(spam.structurebased=FALSE)
 ifelse( x, as.vector(x), 1-as.vector(x))
-spam.options( structurebased=TRUE)
+options(spam.structurebased=TRUE)
 ifelse( x, as.vector(x), 1-as.vector(x))
 }
 \author{Reinhard Furrer}

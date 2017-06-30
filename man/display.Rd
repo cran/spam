@@ -1,18 +1,11 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/display.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-   
-
-
-
-
-
-
-
-
-
-
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  
 \name{display}
 \alias{display}
 \alias{display.spam}
@@ -50,9 +43,9 @@ smat <- spam(0, ln, ln)
 smat[cbind(sample(ln, nz), sample(ln, nz))] <- 1:nz
 
 par(mfcol=c(1,2), pty='s')
-spam.options(imagesize = 1000)
+options(spam.imagesize = 1000)
 display(smat)
-spam.options(imagesize = 10)
+options(spam.imagesize = 10)
 display(smat)
 
 

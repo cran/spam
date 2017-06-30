@@ -4,7 +4,8 @@
       double precision a(*),ao(*),eps
       integer nrow,ncol,nnz,ir(*),jc(*),jao(*),iao(*)
 
-      integer     kk,k,i,j,tmpi, cr(nrow), ig(nrow+1), g(nnz),st(nrow+1)
+      integer kk,k,i,j,tmpi, cr(nrow), ig(nrow+1), g(nnz)
+      integer st(nrow+1)
       double precision tmpa(ncol)
 
 C     We assume that we have the correct dimensions.

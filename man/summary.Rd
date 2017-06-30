@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/summary.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -46,15 +49,16 @@ getGroupMembers("Summary")
 
 smat <- diag.spam( runif(15))
 range(smat)
-spam.options(structurebased=FALSE)
+options(spam.structurebased=FALSE)
 range(smat)
 
 \dontrun{
 max( log(spam(c(1,-1))), na.rm=TRUE)
 }
 # allow 'NA's first:
-spam.options( NAOK=TRUE)
-max( log(spam(c(1,-1))), na.rm=TRUE)
+# TODO
+# options(spam.NAOK=TRUE)
+# max( log(spam(c(1,-1))), na.rm=TRUE)
 }
 \author{Reinhard Furrer}
 \keyword{manip}

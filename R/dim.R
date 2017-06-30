@@ -1,8 +1,11 @@
-# This is file ../spam/R/dim.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
+# HEADER ####################################################
+# This is file  spam/R/dim.R.                               #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
+
 
 # This is the actual dim...
 
@@ -46,56 +49,107 @@
 # dim and derivatives
 
 "pad<-.spam" <- function(x,value) {
-  if ( (min(value)<1 ) || any(!is.finite(value)))
-    stop("dims should be postive integers.")
-  if (!identical( length(value), 2L)) stop("dims should be of length 2.")
-  dimx <- x@dimension
-  last <- value[1]+1
 
+    force64 <- getOption("spam.force64")
+
+    # check if value is valid
+    if ( (min(value)<1 ) || any(!is.finite(value)))
+        stop("dims should be postive integers.")
+    if (!identical( length(value), 2L))
+        stop("dims should be of length 2.")
+    
+    dimx <- x@dimension
+    last <- value[1]+1
+    
   # In three steps:
   #  1) Address col truncation
             # to safe time, we also take into account if we have fewer or equal rows
   #  2) Augment rows
   #  3) if fewer rows and more columns, truncate
   # In any case, dimensions are fixed at the end.
+
   
   # If fewer cols required, we run reducedim
   if (dimx[2]>value[2]){
-#     subroutine reducedim(a,ja,ia,eps,bnrow,bncol,k,b,jb,ib)
-    z <- .Fortran("reducedim",
-                  oldra=as.double(x@entries),
-                  oldja=x@colindices,
-                  oldia=x@rowpointers,
-                  eps=.Spam$eps,
-                  as.integer(min(value[1],dimx[1])),as.integer(value[2]),
-                  nz=1L,
-                  entries=vector("double",length(x@entries)),
-                  colindices=vector("integer",length(x@entries)),
-                  rowpointers=vector("integer",last),
-                  NAOK = .Spam$NAOK, PACKAGE = "spam")
-    if (identical(z$nz,1L) )
-      return(new("spam",rowpointers=c(1L,rep.int(2L,as.integer(value[1]))),
-                 dimension=as.integer(value)))
 
-    nz <- z$nz-1
-    slot(x,"entries",check=FALSE) <- z$entries[1:nz]
-    slot(x,"colindices",check=FALSE) <- z$colindices[1:nz]
-    slot(x,"rowpointers",check=FALSE) <- z$rowpointers[1:min(last,dimx[1]+1)]
+#     subroutine reducedim(a,ja,ia,eps,bnrow,bncol,k,b,jb,ib)
+
+      if( force64 || .format.spam(x)$package == "spam64")
+          SS <- .format64
+      else
+          SS <- .format32
+      
+      z <- .C64("reducedim",
+                SIGNATURE=c("double", SS$signature, SS$signature,
+                    "double", SS$signature, SS$signature, SS$signature,
+                    "double", SS$signature, SS$signature),
+                oldra = x@entries,
+                oldja = x@colindices,
+                oldia = x@rowpointers,
+                
+                eps = getOption("spam.eps"),
+                min(value[1],dimx[1]),
+                value[2],
+                nz = 1,
+                
+                entries=vector_dc("double",length(x@entries)),
+                colindices=vector_dc(SS$type,length(x@entries)),
+                rowpointers=vector_dc(SS$type,last),
+
+                INTENT=c("r", "r", "r", 
+                         "r", "r", "r", "w", 
+                         "w", "w", "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)
+                
+    if (z$nz==1 ){ #was identical( z$nz,1L)
+        ## print("2")
+            return(
+                .newSpam(
+                    entries=x@entries,
+                    colindices=x@colindices,
+                    rowpointers=c(1,rep_len_long(2,value[1])), 
+                    dimension=value,
+                    force64=force64
+                    )
+                )
+    }
+      nz <- z$nz-1
+      x <- .newSpam(
+          entries=z$entries[1:nz],
+          colindices=z$colindices[1:nz],
+          rowpointers=z$rowpointers[1:min(last,dimx[1]+1)], 
+          dimension=value, #actually here dim 2 = value 2 but dim1 maybe not yet
+          force64=force64
+          )
   }
-  # augment rows
+    # augment rows
   if  (dimx[1]<value[1]){
-    slot(x,"rowpointers",check=FALSE) <- c(x@rowpointers,rep.int(
-                           x@rowpointers[length(x@rowpointers)],value[1]-dimx[1]))
+      ## print("3")
+      x <- .newSpam(
+              entries=x@entries,
+              colindices=x@colindices,
+              rowpointers= c( x@rowpointers,
+                  rep_len_long( x@rowpointers[length(x@rowpointers)],value[1]-dimx[1])),
+              dimension=value,
+              force64=force64
+              )
   }
-  # special case: fewer rows and more columns, truncate
-  if ((dimx[1]>value[1])&(dimx[2]<value[2])) {
-    lastelement <- (x@rowpointers[last]-1)
-    slot(x,"entries",check=FALSE) <- x@entries[1:lastelement]
-    slot(x,"colindices",check=FALSE) <- x@colindices[1:lastelement]
-    slot(x,"rowpointers",check=FALSE) <- x@rowpointers[1:last]
+
+    # special case: fewer rows and more columns, truncate
+  if((dimx[1]>=value[1])&(dimx[2]<=value[2])) { ## added =, think about it again 
+      ## print("4")
+      lastelement <- (x@rowpointers[last]-1)
+
+      x <- .newSpam(
+          entries= x@entries[1:lastelement],
+          colindices= x@colindices[1:lastelement],
+          rowpointers= x@rowpointers[1:last],
+          dimension=value,
+          force64=force64
+          )
   }
-        
-  slot(x,"dimension",check=FALSE) <- as.integer(value)                  
+    #before dim x = value x was here with slot option
   return(x)
 
 }

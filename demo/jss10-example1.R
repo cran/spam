@@ -20,7 +20,7 @@
 
 # SETUP:
 library("spam")
-spam.options(structurebased=TRUE)
+options(spam.structurebased=TRUE)
 data("UKDriverDeaths")
 
 y <- sqrt(c(UKDriverDeaths))       # square root counts

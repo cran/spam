@@ -1,10 +1,10 @@
-# This is file ../spam/R/plotting.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
-
+# HEADER ####################################################
+# This is file  spam/R/plotting.R.                          #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 
@@ -70,7 +70,7 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
     if (any(diff(x) <= 0) || any(diff(y) <= 0))
       stop("increasing 'x' and 'y' values expected")
     
-    spamversion <- (prod(z@dimension) > .Spam$imagesize)
+    spamversion <- (prod(z@dimension) > getOption("spam.imagesize"))
     if (!spamversion){
       image.default(x, y, as.matrix(z),...)
     } else {
@@ -122,7 +122,7 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
         cex <- 1
       }
       points( xx[rep.int((1:nrow(z)),diff(z@rowpointers))], yy[z@colindices],
-             pch='.', cex=cex*.Spam$cex/sum(z@dimension),
+             pch=".", cex=cex*getOption("spam.cex")/sum(z@dimension),
              col=col[zi+1])
     }
   
@@ -137,7 +137,7 @@ display.spam <- function(x,col=c("gray","white"),xlab="column",ylab="row", cex=N
   
 # For small matrices, we transform them into regular ones and use the image.default
 # routine.  
-  if (prod(nrow,ncol) < .Spam$imagesize) {
+  if (prod(nrow,ncol) < getOption("spam.imagesize")) {
     z <- vector("double", prod(nrow,ncol))
     dim(z) <- c(nrow,ncol)
     z[cbind(rep.int(nrow:1,diff(x@rowpointers)),x@colindices)] <- -1
@@ -148,7 +148,7 @@ display.spam <- function(x,col=c("gray","white"),xlab="column",ylab="row", cex=N
       warning("default value for 'cex' in 'display' might not be the optimal choice", call.=FALSE)
       cex <- 1
     }
-    plot( x@colindices, rep.int(-(1:nrow),diff(x@rowpointers)), pch='.', cex=cex*.Spam$cex/(ncol+nrow),
+    plot( x@colindices, rep.int(-(1:nrow),diff(x@rowpointers)), pch=".", cex=cex*getOption("spam.cex")/(ncol+nrow),
          col=col[1],xlab=xlab,ylab=ylab,axes=FALSE,
          ylim=c(-nrow,-0)-.5,xlim=c(0,ncol)+.5,xaxs = "i", yaxs = "i",...)
   }
@@ -172,8 +172,8 @@ plot.spam <- function(x,y,xlab=NULL,ylab=NULL,...)
   # 2nd case a matrix
   tmp <- x[,1:2, drop=FALSE] # extract the first two columns
   plot(c( tmp[,1]), c(tmp[,2]),
-       xlab=ifelse(missing(xlab),paste(lab,'[,1]',sep=''),xlab),
-       ylab=ifelse(missing(ylab),paste(lab,'[,2]',sep=''),ylab),...)
+       xlab=ifelse(missing(xlab),paste(lab,"[,1]",sep=""),xlab),
+       ylab=ifelse(missing(ylab),paste(lab,"[,2]",sep=""),ylab),...)
 }
 
 #setGeneric("image", function(x, ...) standardGeneric("image")) 

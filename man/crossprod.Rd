@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/crossprod.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -10,6 +13,14 @@
 \alias{crossprod.default}
 \alias{crossprod.spam}
 \alias{tcrossprod.spam}
+\alias{crossprod,spam,missing-method}
+\alias{tcrossprod,spam,missing-method}
+\alias{crossprod,ANY,spam-method}
+\alias{tcrossprod,ANY,spam-method}
+\alias{crossprod,spam,spam-method}
+\alias{tcrossprod,spam,spam-method}
+\alias{crossprod,spam,ANY-method}
+\alias{tcrossprod,spam,ANY-method}
 \title{Spam Matrix Crossproduct}
 \description{
      Given matrices \code{x} and \code{y} as arguments, return a matrix

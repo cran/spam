@@ -6,5 +6,5 @@
 
 
 # This demo is depreciated. Please run
-demo('JSS15-BYM')
+demo('jss15-BYM')
 

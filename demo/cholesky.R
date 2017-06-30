@@ -42,7 +42,7 @@ ch1 <- chol.spam( smat1)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 # Sparse Cholesky, without symmetry check
-spam.options(cholsymmetrycheck=FALSE)
+options(spam.cholsymmetrycheck=FALSE)
 tmp <- gc(F);Rprof(memory.profiling=TRUE, interval = 0.01)
 ch1 <- chol.spam( smat1)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
@@ -60,7 +60,7 @@ ch1 <- update.spam.chol.NgPeyton( ch1, smat2)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 # reset to default
-spam.options(cholsymmetrycheck=TRUE)
+options(spam.cholsymmetrycheck=TRUE)
 
 
 
@@ -87,7 +87,7 @@ ch1 <- chol.spam( smat1)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 # Sparse Cholesky, without symmetry check
-spam.options(cholsymmetrycheck=FALSE)
+options(spam.cholsymmetrycheck=FALSE)
 tmp <- gc(F);Rprof(memory.profiling=TRUE, interval = 0.01)
 ch1 <- chol.spam( smat1)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
@@ -105,7 +105,7 @@ ch1 <- update.spam.chol.NgPeyton( ch1, smat2)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 # reset to default
-spam.options(cholsymmetrycheck=TRUE)
+options(spam.cholsymmetrycheck=TRUE)
 
 
 
@@ -133,25 +133,25 @@ ch1 <- chol.spam( smat1)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 # Sparse Cholesky, without symmetry check
-spam.options(cholsymmetrycheck=FALSE)
+options(spam.cholsymmetrycheck=FALSE)
 tmp <- gc(F);Rprof(memory.profiling=TRUE, interval = 0.01)
 ch1 <- chol.spam( smat1)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 
 # Sparse Cholesky, reusing pivoting
-spam.options(cholsymmetrycheck=FALSE)
+options(spam.cholsymmetrycheck=FALSE)
 tmp <- gc(F);Rprof(memory.profiling=TRUE, interval = 0.01)
 ch1 <- chol.spam( smat1,pivot=ch1@pivot)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 
 # Sparse Cholesky, updating
-spam.options(cholsymmetrycheck=FALSE)
+options(spam.cholsymmetrycheck=FALSE)
 tmp <- gc(F);Rprof(memory.profiling=TRUE, interval = 0.01)
 ch1 <- update.spam.chol.NgPeyton( ch1, smat2)
 Rprof(NULL);print( summaryRprof(memory="both")$by.total)
 
 
 # reset to default
-spam.options(cholsymmetrycheck=TRUE)
+options(spam.cholsymmetrycheck=TRUE)

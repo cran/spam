@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/spam.creation.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{spam}
@@ -27,15 +30,16 @@
 \alias{as.spam.dist}
 \alias{as.spam.list}
 \alias{is.spam}
-\alias{validspamobject}
 \title{Sparse Matrix Class}
 \description{
 This group of functions evaluates and coerces changes in class structure.
 }
 \usage{
-spam(x, nrow = 1, ncol = 1, eps = .Spam$eps)
+spam(x, nrow = 1, ncol = 1, eps = getOption("spam.eps"))
+%     force64 = getOption("spam.force64"))
 
-as.spam(x, eps = .Spam$eps)
+as.spam(x, eps = getOption("spam.eps"))
+%, force64 = getOption("spam.force64"))
 
 is.spam(x)
 }
@@ -47,8 +51,12 @@ is.spam(x)
     object or a distance object}
 \item{nrow}{number of rows of matrix }
 \item{ncol}{number of columns of matrix }
+%\item{force64}{logical vector of length 1. If \code{TRUE}, a 64-bit
+%  spam matrix is returned in any case. If \code{FALSE}, a 32-bit
+%  matrix is returned when possible. }
 \item{eps}{A tolerance parameter:  elements of \code{x} such that
-  \code{abs(x) < eps} set to zero. Defaults to \code{eps = .Spam$eps} }
+  \code{abs(x) < eps} set to zero. Defaults to \code{eps =
+    getOption("spam.eps")} }
 }
 \details{
   The functions \code{spam} and \code{as.spam} act like \code{matrix}
@@ -66,6 +74,11 @@ is.spam(x)
   the values are added.
   
   \code{eps} should be at least as large as \code{.Machine$double.eps}.
+
+
+  If \code{getOption("spam.force64")} is \code{TRUE}, a 64-bit
+  spam matrix is returned in any case. If \code{FALSE}, a 32-bit
+  matrix is returned when possible. 
 }
 \note{The zero matrix has the element zero stored in (1,1).\cr
 
@@ -103,9 +116,8 @@ system.time(smat[cbind(is,js)] <- 1:nz)
 getClass("spam")
 
 
-spam.options(NAOK=TRUE)
-as.spam( c(1, NA))
-
+options(spam.NAOK=TRUE)
+as.spam(c(1, NA))
 }
 \author{Reinhard Furrer}
 \keyword{algebra}

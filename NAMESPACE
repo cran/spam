@@ -1,6 +1,7 @@
-useDynLib(spam)
+useDynLib(spam, .registration = TRUE)
 
 import(grid)
+import("dotCall64")
 
 
 importFrom("grDevices", "gray", "heat.colors")
@@ -38,23 +39,29 @@ S3method("solve","spam")
 S3method("subset","spam")
 S3method("summary","spam")
 S3method("summary","spam.chol.NgPeyton")
+S3method("print","summary.spam")
+S3method("print","summary.spam.chol.NgPeyton")
 S3method("t","spam")
 S3method("tail","spam")
 S3method("update","spam.chol.NgPeyton")
-  
+
+S3method("cbind","spam")
+S3method("rbind","spam")
 
 # Generic functions
 export(
        "todo",
        "spam.history",
-       "spam.options",
-       "spam.getOption",
        "is.spam",
 
        "spam.version",
        "spam.Version",
 	
-       "validspamobject",
+       "validate_spam",
+       "validspamobject",   # __DEPRECATED__
+
+       "spam.options",      # __DEPRECATED__
+       "spam.getOption",   # __DEPRECATED__
 
        "nearest.dist",
        "spam_rdist",
@@ -255,7 +262,6 @@ exportMethods(
               "determinant",
               "t",
               "diag",
-              "diag<-",
               "diag<-",
               "upper.tri",
               "lower.tri",

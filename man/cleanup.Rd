@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/cleanup.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{cleanup}
@@ -10,7 +13,7 @@
 \description{
   Eliminates an zeros in a sparse matrix.}
 \usage{
-cleanup(x, eps = .Spam$eps)
+cleanup(x, eps = getOption("spam.eps"))
 }
 \arguments{
 \item{x}{a sparse matrix of class \code{spam}.}

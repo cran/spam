@@ -67,7 +67,7 @@ par(ask=interactive() &&
 display(smat, main="'scatterplot'-type display, very efficient")
 
 
-spam.options("imagesize"=prod(smat@dimension)+1)
+options(spam.imagesize=prod(smat@dimension)+1)
 display(smat, main="'image'-type display, may be slow and heavy")
 
 par(opar)

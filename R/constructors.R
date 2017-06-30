@@ -1,7 +1,11 @@
-# This is file ../spam/R/constructors.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+# HEADER ####################################################
+# This is file  spam/R/constructors.R.                      #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
+
      
 
 "rowpointers<-" <- function(x, value) {
@@ -49,9 +53,9 @@
 "entries<-" <- function(x, value) {
     if (!identical( length(x@entries), length(value)))
         stop("wrong length in `entries<-`.", call.=FALSE)
-    if (!.Spam$NAOK) {
+    if (!getOption("spam.NAOK")) {
         if (any(!is.finite(value)))
-            stop("'NA/NaN/Inf' not allowed in `entries<-`.", call.=FALSE)
+            stop("\"NA/NaN/Inf\" not allowed in `entries<-`.", call.=FALSE)
     }
     if (!is.numeric( value))
         stop("numerical required in `entries<-`.", call.=FALSE)
@@ -61,7 +65,7 @@
 }    
 
 "dimension<-" <- function(x, value) {
-    stop("modification through `dim' or `pad`", call.=FALSE)
+    stop("modification through dim() or pad()", call.=FALSE)
 }
 
 

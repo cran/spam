@@ -36,7 +36,7 @@
       end
 
 
-      subroutine kronecker(xnrow,xent,xcol,xrow,
+      subroutine kroneckerf(xnrow,xent,xcol,xrow,
      &     ynrow,yncol,yent,ycol,yrow,
      &     ent1, ent2, col, row)
 

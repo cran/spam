@@ -1199,12 +1199,20 @@ c-
 c- Modified by P. T. Ng from sparsekit
 c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
-      subroutine aemub (nrow,ncol,a,ja,ia,amask,jmask,imask,
-     *                  c,jc,ic,iw,aw,nzmax,ierr)
+c      subroutine aemub (nrow,ncol,a,ja,ia,amask,jmask,imask,
+c     *                  c,jc,ic,iw,aw,nzmax,ierr)
+       subroutine aemub (nrow,ncol,a,ja,ia,amask,jmask,imask,
+     *                  c,jc,ic,nzmax,ierr)
 c---------------------------------------------------------------------
+      implicit none
+      integer nrow, ncol
       real(8) a(*),c(*),amask(*),aw(ncol)
-      integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*),imask(nrow+1)
+      integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*)
+      integer imask(nrow+1), nzmax, ierr
       logical iw(ncol)
+c-----------------------------------------------------------------------
+c further used variables
+      integer len, k, k1, k2, ii, j
 c-----------------------------------------------------------------------
 c Modified from amask by Pin T. Ng on 2/27/03 to perform 
 c element-wise multiplication
@@ -1295,6 +1303,8 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aemub1 (nrow,ncol,a,ja,ia,b,jb,ib,c,jc,ic,
      *     nzmax,ierr)
+      implicit none
+      integer nrow, ncol, nzmax, ierr
       real(8) a(*), b(*), c(*)
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1)
 c-----------------------------------------------------------------------
@@ -1340,6 +1350,7 @@ c Notes:
 c-------
 c     this will not work if any of the two input matrices is not sorted
 c-----------------------------------------------------------------------
+      integer i, ka, kb, kc, kamax, kbmax, j1, j2
       ierr = 0
       kc = 1
       ic(1) = kc 
@@ -1401,6 +1412,8 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aedib (nrow,ncol,job,a,ja,ia,b,jb,ib,
      *     c,jc,ic,nzmax,iw,aw,ierr)
+      implicit none
+      integer nrow, ncol, job, nzmax, ierr
       real(8) a(*), b(*), c(*), aw(ncol) 
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1),
      *     iw(ncol)
@@ -1449,6 +1462,7 @@ c         columns in A.
 c
 c-----------------------------------------------------------------------
       logical values
+      integer len, j, ii, ka, kb, k, jpos, jcol
       values = (job .ne. 0) 
       ierr = 0
       len = 0
@@ -1496,6 +1510,8 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
       subroutine aeexpb (nrow,ncol,job,a,ja,ia,b,jb,ib,
      *     c,jc,ic,nzmax,iw,aw,ierr)
+      implicit none
+      integer nrow, ncol, job, nzmax, ierr
       real(8) a(*), b(*), c(*), aw(ncol) 
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1),
      *     iw(ncol)
@@ -1544,6 +1560,7 @@ c         columns in A.
 c
 c-----------------------------------------------------------------------
       logical values
+      integer len, kb, ka, k, jpos, jcol, j, ii
       values = (job .ne. 0) 
       ierr = 0
       len = 0

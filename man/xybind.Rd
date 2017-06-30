@@ -1,23 +1,31 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/xybind.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{cbind}
 \alias{cbind.spam}
 \alias{rbind.spam}
+\alias{cbind}
+\alias{rbind}
 \alias{cbind,spam-method}
 \alias{rbind,spam-method}
 \title{Combine spam Matrices by Rows or Columns}
 \description{Take a sequence of vector, matrix or \code{spam} object arguments and
      combine by \emph{c}olumns or \emph{r}ows, respectively.}
 \usage{
-cbind.spam(\dots, deparse.level = 0)
-rbind.spam(\dots, deparse.level = 0)
+# cbind(\dots, force64 = getOption("spam.force64"), deparse.level = 0)
+# rbind(\dots, deparse.level = 0)
 }
 \arguments{
   \item{...}{vectors, matrices or \code{spam} objects. See \sQuote{Details} and \sQuote{Value}}
+  \item{force64}{logical vector of length 1. If \code{TRUE}, a 64-bit
+    spam matrix is returned in any case. If \code{FALSE}, a 32-bit
+    matrix is returned when possible. }
   \item{deparse.level}{for compatibility reason here. Only \code{0} is implemented.}
 }
 \value{a \code{spam} object combining the \code{\dots} arguments

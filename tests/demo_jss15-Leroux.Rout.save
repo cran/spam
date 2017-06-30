@@ -1,0 +1,57 @@
+
+R Under development (unstable) (2017-06-05 r72769) -- "Unsuffered Consequences"
+Copyright (C) 2017 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # This is file ../spam/tests/demo_jss15-Leroux.R
+> # This file is part of the spam package, 
+> #      http://www.math.uzh.ch/furrer/software/spam/
+> # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+>      
+> 
+> options( echo=FALSE)
+Loading required package: dotCall64
+Loading required package: grid
+Spam version 2.1-0 (2017-06-30) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+Loading required package: stats4
+
+Attaching package: 'stats4'
+
+The following object is masked from 'package:spam':
+
+    mle
+
+Loading required package: evd
+[1] 0.9890008 0.9836375 0.9836375 0.9941272 0.9941272 0.9941272
+[1] 13.60972 12.22357 14.06278 13.51154 13.66835 12.74985
+ [1]  0.115752190 -0.242792156  0.009907357 -0.144865999 -0.000139589
+ [6] -0.028916404 -0.032141235 -0.107868843  0.241070191  0.216479530
+[11]  0.215633918  0.121392169  0.132614808  0.087540970  0.009744541
+[16]  0.033720642  0.156237348  0.044155379  0.272346531  0.040463545
+[21]  0.079639678  0.103953125  0.252556753  0.021593753  0.167167125
+[26]  0.164189193  0.100494673 -0.213803862  0.117763888 -0.105802996
+[31]  0.105966646 -0.099242014 -0.273013722 -0.048069002 -0.043229426
+[36] -0.068403094 -0.213240808 -0.168754977 -0.087376979 -0.159318585
+[41] -0.066445680 -0.042490650 -0.225786751 -0.311643655 -0.070018302
+[46] -0.197298513 -0.172498476 -0.252130284  0.059552503  0.001103394
+[51]  0.221565313
+> 
+> proc.time()
+   user  system elapsed 
+  2.877   3.529   2.571 

@@ -1,8 +1,10 @@
-# This is file ../spam/R/covmat.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
+# HEADER ####################################################
+# This is file  spam/R/covmat.R.                            #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 # construct various precision matrices
@@ -29,7 +31,7 @@ covmat <- function(h, theta, ... , type="sph") {
 
 .par.check.cov <- function(theta,nr=2){
   if (any(theta<0)) {
-    warning('Parameters coerced to positive values')
+    warning("Parameters coerced to positive values")
     theta <- abs(theta)
   }
   nt <- length(theta)
@@ -40,7 +42,7 @@ covmat <- function(h, theta, ... , type="sph") {
 }
   
 
-cov.sph <- function(h, theta, ... , eps= .Spam$eps) {
+cov.sph <- function(h, theta, ... , eps= getOption("spam.eps")) {
   theta <- .par.check.cov(theta)
   
   if (is.spam(h)) {
@@ -56,7 +58,7 @@ cov.sph <- function(h, theta, ... , eps= .Spam$eps) {
   
     
 }
-cov.wend1 <- function(h, theta,  ... , eps= .Spam$eps) {
+cov.wend1 <- function(h, theta,  ... , eps= getOption("spam.eps")) {
   # is \phi_{3,1} in the 98 paper and \psi_{3,1} in the 95 paper
   theta <- .par.check.cov(theta)
   
@@ -75,7 +77,7 @@ cov.wend1 <- function(h, theta,  ... , eps= .Spam$eps) {
   }
 }
 
-cov.wend2 <- function(h, theta,  ... , eps= .Spam$eps) {
+cov.wend2 <- function(h, theta,  ... , eps= getOption("spam.eps")) {
   # is \phi_{3,2} in the 98 paper and \psi_{4,2} in the 95 paper
    theta <- .par.check.cov(theta)
   
@@ -93,7 +95,7 @@ cov.wend2 <- function(h, theta,  ... , eps= .Spam$eps) {
 
   }
 }
-cov.wu1 <- function(h, theta, ... ,  eps= .Spam$eps) {
+cov.wu1 <- function(h, theta, ... ,  eps= getOption("spam.eps")) {
    theta <- .par.check.cov(theta)
   
   if (is.spam(h)) {
@@ -110,7 +112,7 @@ cov.wu1 <- function(h, theta, ... ,  eps= .Spam$eps) {
 
   }
 }
-cov.wu2 <- function(h, theta,  ... , eps= .Spam$eps) {
+cov.wu2 <- function(h, theta,  ... , eps= getOption("spam.eps")) {
    theta <- .par.check.cov(theta)
   
   if (is.spam(h)) {
@@ -127,7 +129,7 @@ cov.wu2 <- function(h, theta,  ... , eps= .Spam$eps) {
 
   }
 }
-cov.wu3 <- function(h, theta,  ... , eps= .Spam$eps) {
+cov.wu3 <- function(h, theta,  ... , eps= getOption("spam.eps")) {
    theta <- .par.check.cov(theta)
   
   if (is.spam(h)) {
@@ -147,7 +149,7 @@ cov.wu3 <- function(h, theta,  ... , eps= .Spam$eps) {
 
 
 
-cov.mat <- function(h, theta,  ... ,  eps= .Spam$eps)
+cov.mat <- function(h, theta,  ... ,  eps= getOption("spam.eps"))
 {
   theta <- .par.check.cov(theta,3)
   if (is.spam(h)) {
@@ -167,7 +169,7 @@ cov.mat <- function(h, theta,  ... ,  eps= .Spam$eps)
 
 
 
-cov.exp <- function(h, theta,  ... ,  eps= .Spam$eps)
+cov.exp <- function(h, theta,  ... ,  eps= getOption("spam.eps"))
 {
   theta <- .par.check.cov(theta,2)
   if (is.spam(h)) {
@@ -182,7 +184,7 @@ cov.exp <- function(h, theta,  ... ,  eps= .Spam$eps)
   }
 }
 
-cov.nug <- function(h, theta,  ... , eps= .Spam$eps)
+cov.nug <- function(h, theta,  ... , eps= getOption("spam.eps"))
 {
   theta <- .par.check.cov(theta,0)
   if (is.spam(h)) {

@@ -28,7 +28,7 @@ invisible(readline(prompt = "Type  <Return>\t to continue : "))
 
 # SETUP:
 library("spam")
-spam.options(structurebased=TRUE)
+options(spam.structurebased=TRUE)
 library("truncdist")
 
 

@@ -1,8 +1,10 @@
-# This is file ../spam/R/helper.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
+# HEADER ####################################################
+# This is file  spam/R/helper.R.                            #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 
@@ -12,14 +14,31 @@
 
 
 bandwidth <- function(A) {
-  if (!is.spam(A)) {
-    warning("Matrix not 'spam' object. Coerced to one")
-    A <- as.spam(A)
-  }
-  ret <- .Fortran("getbwd",A@dimension[1], A@colindices,
-                  A@rowpointers,low=integer(1),upp=integer(1),
-                 NAOK = .Spam$NAOK, PACKAGE = "spam")
-  return(c(ret$low,ret$upp))
+    if (!is.spam(A)) {
+        warning("Matrix not 'spam' object. Coerced to one")
+        A <- as.spam(A)
+    }
+    if( getOption("spam.force64") )
+        SS <- .format64
+    else
+        SS <- .format.spam(A)
+    
+    ret <- .C64("getbwd",
+                SIGNATURE = c( SS$signature, SS$signature, SS$signature,
+                    SS$signature, SS$signature),
+                
+                A@dimension[1],
+                A@colindices,
+                A@rowpointers,
+                
+                low = vector_dc(SS$type, 1),
+                upp = vector_dc(SS$type, 1),
+
+                INTENT = c("r", "r", "r",
+                    "w", "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)
+    return(c(ret$low,ret$upp))
 }
                   
   
@@ -88,14 +107,14 @@ adjacency.landkreis <- function(loc)
 
 map.landkreis <- function(data, col=NULL, zlim=range(data), add=FALSE, legendpos=c( 0.88,0.9,0.05,0.4))
 # This is a stripped-down version of the function provided by the INLA package.
-# Added color argument, changed 'append' to 'add'.
+# Added color argument, changed "append" to "add".
 # Legend is tuned for a mai=rep(0,4) call 
 {
   npoly <- length(spam::germany)
   ymax <- ymin <- xmax <- xmin <- 1:npoly
 
   if (length(data)!=npoly)
-    stop('data has wrong length')
+    stop("data has wrong length")
   
   if (is.null(col)) {
       if (requireNamespace("fields", quietly = TRUE)) {
@@ -165,66 +184,66 @@ germany.plot <- function(vect,  col=NULL, zlim=range(vect), legend=TRUE,
 
 
 grid_zoom <- function(inputGrob = pointsGrob(runif(200),runif(200)),
-                      inputViewport = viewport(name='main'),
-                      x = 'topleft', y, just,
+                      inputViewport = viewport(name="main"),
+                      x = "topleft", y, just,
                       ratio = c(.3,.4), zoom_xlim, zoom_ylim,
-                      rect = TRUE, rect_lwd = 1, rect_fill = 'gray92',
-                      draw =TRUE, zoom_fill = 'white', zoom_frame_gp = gpar(lwd = 1),
+                      rect = TRUE, rect_lwd = 1, rect_fill = "gray92",
+                      draw =TRUE, zoom_fill = "white", zoom_frame_gp = gpar(lwd = 1),
                       zoom_gp = NULL, zoom_xaxis = xaxisGrob(main = FALSE), zoom_yaxis = NULL) {
 
-## inputGrob <- pointsGrob(runif(100), runif(100), pch='.', gp=gpar(cex=4),default.units='native',name='cc') 
-## inputViewort <- viewport(name='main')
-## x <- 'topleft'
-## ratio <- unit(c(.3,.3), 'npc')
+## inputGrob <- pointsGrob(runif(100), runif(100), pch=".", gp=gpar(cex=4),default.units="native",name="cc") 
+## inputViewort <- viewport(name="main")
+## x <- "topleft"
+## ratio <- unit(c(.3,.3), "npc")
 ## zoom_xlim <- c(0.1,.5)
 ## zoom_ylim <- c(0.1,.5)
 ## rect <- TRUE
 ## rect_lwd = 1
-## rect_fill = 'gray92'
-## zoom_fill = 'white'
+## rect_fill = "gray92"
+## zoom_fill = "white"
 ## zoom_frame_gp = gpar(lwd = 1)
 ## draw = TRUE
 ## zoom_gp = NULL
 
-#  cat('may not work if other units than \'native\' and if the inputGrob has a complex structure. \n')
+#  cat("may not work if other units than \"native\" and if the inputGrob has a complex structure. \n")
   
   if (!identical(length(ratio), 1)) 
     ratio <- c(ratio, ratio)
-  if(class(x) == 'character')
+  if(class(x) == "character")
     switch(x,
            topleft = {x = 0; y = 1; just = c(0, 1)},
            topright = {x = 1; y = 1 ; just = c(1, 1)},
            bottomright = {x = 1; y = 0; just = c(1, 0)},
            bottomleft = {x = 0; y = 0; just = c(0, 0)})
 
-  inputViewport$name <- 'main'
+  inputViewport$name <- "main"
   vp <- vpStack(inputViewport,
-                vpList(viewport(name='zoom', x = unit(x,'npc'), y = unit(y,'npc'), width=unit(ratio[1],'npc'), height=unit(ratio[2],'npc'), just = just, xscale=zoom_xlim, yscale=zoom_ylim, default.units='native', clip = 'on'),
-                       viewport(name='zoom_noClip', x = unit(x,'npc'), y = unit(y,'npc'), width=unit(ratio[1],'npc'), height=unit(ratio[2],'npc'), just = just, xscale=zoom_xlim, yscale=zoom_ylim, default.units='native', clip = 'off')))
+                vpList(viewport(name="zoom", x = unit(x,"npc"), y = unit(y,"npc"), width=unit(ratio[1],"npc"), height=unit(ratio[2],"npc"), just = just, xscale=zoom_xlim, yscale=zoom_ylim, default.units="native", clip = "on"),
+                       viewport(name="zoom_noClip", x = unit(x,"npc"), y = unit(y,"npc"), width=unit(ratio[1],"npc"), height=unit(ratio[2],"npc"), just = just, xscale=zoom_xlim, yscale=zoom_ylim, default.units="native", clip = "off")))
   
-  inputGrob <- editGrob(inputGrob, name='main', vp='main')
-  zoom_grob <- editGrob(inputGrob, name='zoom', vp='main::zoom')
+  inputGrob <- editGrob(inputGrob, name="main", vp="main")
+  zoom_grob <- editGrob(inputGrob, name="zoom", vp="main::zoom")
 
   if(!is.null(zoom_gp))
-    zoom_grob <- editGrob(inputGrob, name='zoom', vp='main::zoom', gp=zoom_gp)
+    zoom_grob <- editGrob(inputGrob, name="zoom", vp="main::zoom", gp=zoom_gp)
   
   if(!is.null(zoom_xaxis))
-    zoom_xaxis <- editGrob(zoom_xaxis, vp='main::zoom_noClip', name = 'xaxis')
+    zoom_xaxis <- editGrob(zoom_xaxis, vp="main::zoom_noClip", name = "xaxis")
 
   if(!is.null(zoom_yaxis))
-    zoom_yaxis <- editGrob(zoom_yaxis, vp='main::zoom_noClip', name = 'yaxis')
+    zoom_yaxis <- editGrob(zoom_yaxis, vp="main::zoom_noClip", name = "yaxis")
 
   
   rect <- rectGrob(x = zoom_xlim[1], y = zoom_ylim[1], just = c(0,0),
                     width = diff(zoom_xlim), height = diff(zoom_ylim),
-                    default.units = 'native', vp = 'main', gp = gpar(lwd = rect_lwd, fill=rect_fill))
+                    default.units = "native", vp = "main", gp = gpar(lwd = rect_lwd, fill=rect_fill))
 
   rect_frame <- rectGrob(x = zoom_xlim[1], y = zoom_ylim[1], just = c(0,0),
                     width = diff(zoom_xlim), height = diff(zoom_ylim),
-                    default.units = 'native', vp = 'main', gp = gpar(lwd = rect_lwd))
+                    default.units = "native", vp = "main", gp = gpar(lwd = rect_lwd))
   
   
-  gr <- gList(rect, inputGrob, rectGrob(vp='main::zoom', gp=gpar(fill=zoom_fill)), zoom_grob, rectGrob(vp='main::zoom_noClip', gp=zoom_frame_gp), zoom_xaxis, zoom_yaxis, rect_frame)
+  gr <- gList(rect, inputGrob, rectGrob(vp="main::zoom", gp=gpar(fill=zoom_fill)), zoom_grob, rectGrob(vp="main::zoom_noClip", gp=zoom_frame_gp), zoom_xaxis, zoom_yaxis, rect_frame)
 
   out <- gTree(children=gr, childrenvp = vp)
 

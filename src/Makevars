@@ -1,0 +1,8 @@
+# Fortran 77 flags:
+# PKG_FCFLAGS = -fopenmp
+# Fortran 9x flags:
+# PKG_FFLAGS = -fopenmp
+
+# C-Flags
+# PKG_CFLAGS = -fopenmp  
+# PKG_LIBS = -fopenmp

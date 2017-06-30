@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/lu.tri.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -33,7 +36,7 @@ upper.tri(x, diag = FALSE)
 \details{Often not only the structure of the matrix is required but the
   entries as well. For compatibility, the default is only a structure
   consisting of ones (representing \code{TRUE}s). Setting the flag
-  \code{spam.getOption( "trivalues")} to \code{TRUE},
+  \code{getOption( "spam.trivalues")} to \code{TRUE},
   the function returns the actual
   values.
   }
@@ -43,7 +46,7 @@ smat <- spam( c( 1,2,0,3,0,0,0,4,5),3)
 upper.tri( smat)
 upper.tri( smat, diag=TRUE)
 
-spam.options( trivalues=TRUE)
+options(spam.trivalues=TRUE)
 upper.tri( smat)
 
 }

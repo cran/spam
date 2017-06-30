@@ -1,6 +1,6 @@
 c     system("R CMD SHLIB ../src/xybind.f")
 
-      subroutine cbind(xncol,nrow, a,ia,ja, b,ib,jb,
+      subroutine cbindf(xncol,nrow, a,ia,ja, b,ib,jb,
      &     c,ic,jc) 
 
       implicit none

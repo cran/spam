@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/import.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -46,7 +49,7 @@ read.MM(file)
 
   MatrixMarket also defines an array format, in which case a (possibly)
   dense \code{spam} object is return (retaining only elements which are
-  larger than \code{spam.options('eps')}. A warning is issued. }
+  larger than \code{options('spam.eps')}. A warning is issued. }
 \note{
   The functions are based on \code{readHB} and \code{readMM} from
   the library \code{Matrix} to build the connection and read the raw

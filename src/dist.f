@@ -16,6 +16,7 @@ c     p power for minkowski
       double precision function euclid(x,y,p)
       implicit none
       double precision x,y,p
+      p=p ! to avoid: Warning: Unused dummy argument 'p' at (1)
       euclid=(x-y)**2
       return
       end

@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/pad.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -38,7 +41,7 @@ pad(x) <- value
   \sQuote{Examples}). Here, the elements are not simply rearranged but
   an entirely new matrix is constructed. If the new column dimension is
   smaller than the original, the matrix is also cleaned (with
-  \code{spam.option("eps")} as filter).
+  \code{option("spam.eps")} as filter).
 }
 %\references{}
 \seealso{\code{\link{dim.spam}}.

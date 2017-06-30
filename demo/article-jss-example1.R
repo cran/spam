@@ -5,5 +5,5 @@
      
 
 # This demo is depreciated. Please run
-demo('JSS10-example1')
+demo('jss10-example1')
 

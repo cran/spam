@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/chol.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{chol}
@@ -21,7 +24,8 @@ of class \code{spam}.}
 # chol(x, \dots)
 
 \S4method{chol}{spam}(x, pivot = "MMD", method = "NgPeyton", memory =
-                 list(), eps =  .Spam$eps, \dots)
+                 list(), eps =  getOption("spam.eps"),\dots)
+%force64 =  getOption("spam.force64"),\dots)
 
 # update.spam.chol.NgPeyton(object, x,...)
 \S4method{update}{spam.chol.NgPeyton}(object, x,...)
@@ -33,7 +37,11 @@ of class \code{spam}.}
   algorithm, see \sQuote{Details} below.}
 \item{method}{Currently, only \code{NgPeyton} is implemented.}
 \item{memory}{Parameters specific to the method, see \sQuote{Details} below.}
-\item{eps}{threshold to test symmetry. Defaults to \code{.Spam$eps}.}
+\item{eps}{threshold to test symmetry. Defaults to
+  \code{getOption("spam.eps")}.}
+%\item{force64}{logical vector of length 1. If \code{TRUE}, a 64-bit
+%    spam matrix is returned in any case. If \code{FALSE}, a 32-bit
+%    matrix is returned when possible. }
 \item{\dots}{further arguments passed to or from other methods.}
 \item{object}{an object from a previous call to \code{chol}.}
 }
@@ -108,11 +116,11 @@ diagonal entries are used. By default, the code does check for
 symmetry (contrarily to \code{base:::chol}). However,
 depending on the matrix size, this is a time consuming test.
 A test is ignored if
-\code{spam.options( "cholsymmetrycheck")} is set to \code{FALSE}. 
+\code{options("spam.cholsymmetrycheck")} is set to \code{FALSE}. 
 
 
 If a permutation is supplied with \code{pivot},
-\code{spam.options( "cholpivotcheck")} determines if the permutation is
+\code{options("spam.cholpivotcheck")} determines if the permutation is
 tested for validity (defaults to \code{TRUE}). 
 }
 \seealso{\code{\link{det.spam}}, \code{\link{solve.spam}}, 

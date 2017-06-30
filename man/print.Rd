@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/print.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{print}
@@ -38,7 +41,7 @@
   %
   A list containing the non-zero elements of the factor, the density and
   the fill-in for  \code{summary} for class \code{spam.chol.NgPeyton}.}
-\details{\code{spam.getOption('printsize')} determines  if the sparse matrix is
+\details{\code{getOption('spam.printsize')} determines  if the sparse matrix is
   coerced into a matrix and the printed as an array or if
   only the non-zero elements of the matrix are given.
 }
@@ -52,9 +55,9 @@ smat <- spam(0,ln,ln)
 smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
 
 par(mfcol=c(1,2),pty='s')
-spam.options( printsize=1000)
+options(spam.printsize=1000)
 print(smat)
-spam.options( printsize=10)
+options(spam.printsize=10)
 print(smat)
 summary(smat)
 (summary(smat))

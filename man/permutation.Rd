@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/permutation.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -34,7 +37,7 @@ permutation.spam(A, P=NULL, Q=NULL, ind=FALSE, check=TRUE)
   A row permutation is much faster than a colum permutation.
   For very large matrices, a double transpose might be faster.
 
-  The spam option \code{checkpivot} determines if the permutation
+  The spam option \code{spam.checkpivot} determines if the permutation
   is verified.
 }
 %\references{

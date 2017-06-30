@@ -1,12 +1,18 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/kronecker.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 \name{kronecker}
 \alias{kronecker.default}
 \alias{kronecker.spam}
+\alias{kronecker,spam,ANY-method}
+\alias{kronecker,ANY,spam-method}
+\alias{kronecker,spam,spam-method}
 \title{Kronecker Products on Sparse Matrices}
 \description{Computes the generalised kronecker product of two arrays, \code{X} and
      \code{Y}.}

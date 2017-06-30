@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/toeplitz.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -11,14 +14,14 @@
 \title{Create Toeplitz Matrices}
 \description{Creates symmetric and asymmetric Toeplitz matrices.}
 \usage{
-toeplitz.spam(x, y = NULL, eps = .Spam$eps)
+toeplitz.spam(x, y = NULL, eps = getOption("spam.eps"))
 }
 \arguments{
   \item{x}{the first row to form the Toeplitz matrix.}
   \item{y}{for asymmetric Toeplitz matrices, this contains the first
     column.}
   \item{eps}{A tolerance parameter:  elements of \code{x} such that \code{abs(x)
-    <= eps} set to zero. Defaults to \code{eps = .Spam$eps}.} 
+    <= eps} set to zero. Defaults to \code{eps = getOption("spam.eps")}.} 
 }
 \value{The Toeplitz matrix in \code{spam} format.}
 \details{The vector \code{y} has to be of the same length as \code{x}

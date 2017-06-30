@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/operations.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -147,7 +150,7 @@ form) and a sparse matrix, similarly to the operator \code{\%d+\%}.
 
 }
 \references{Some Fortran functions are based on 
-  \url{http://www-users.cs.umn.edu/~saad/software/SPARSKIT/}
+  \url{http://people.sc.fsu.edu/~jburkardt/f_src/sparsekit/sparsekit.html}
 }
 \seealso{
 \code{\link{spam}} for coercion and other class relations involving the

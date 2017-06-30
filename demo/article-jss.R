@@ -21,7 +21,7 @@
 # - Minor change due to evolved of 'spam'
 
 # SETUP:
-spam.options(structurebased=TRUE)  # just to be sure
+options(spam.structurebased=TRUE)  # just to be sure
 
 ######################################################################
 # Figure 1:
@@ -212,7 +212,7 @@ theta.1 <- seq(-.225, to=.515, len=len.1)
 theta.2 <- seq(-.09, to=.235, len=len.2)
 
 grid <- array(NA, c(len.1, len.2))
-spam.options("cholupdatesingular"="null")
+options(spam.cholupdatesingular="null")
 
 for (i in 1:len.1)
   for(j in 1:len.2) 
@@ -258,7 +258,7 @@ Rprof( NULL)
 table[2,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
 
 # Less checking:
-spam.options( safemode=c(FALSE, FALSE, FALSE))
+options(spam.safemode=c(FALSE, FALSE, FALSE))
 Rprof( memory.profiling=TRUE, interval = rPint)
 table[3,1] <- system.time(   for (i in 1:N) ch1 <- chol( gridmat)    )[stsel]
 Rprof( NULL)
@@ -267,10 +267,10 @@ Rprof( memory.profiling=TRUE, interval = rPint)
 table[3,3] <- system.time(   for (i in 1:N) ch2 <- chol( USmat)    )[stsel]
 Rprof( NULL)
 table[3,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
-spam.options( safemode=c(TRUE, TRUE, TRUE))
+options(spam.safemode=c(TRUE, TRUE, TRUE))
 
 # lesser checking
-spam.options( cholsymmetrycheck=FALSE)
+options(spam.cholsymmetrycheck=FALSE)
 Rprof( memory.profiling=TRUE, interval = rPint)
 table[4,1] <- system.time(   for (i in 1:N) ch1 <- chol( gridmat)    )[stsel]
 Rprof( NULL)
@@ -280,7 +280,7 @@ Rprof( memory.profiling=TRUE, interval = rPint)
 table[4,3] <- system.time(   for (i in 1:N) ch2 <- chol( USmat)    )[stsel]
 Rprof( NULL)
 table[4,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
-spam.options( cholsymmetrycheck=TRUE)
+options(spam.cholsymmetrycheck=TRUE)
 
 # Pass optimal memory parameters (from above)
 memory1 = summary(ch1)[1:2]
@@ -296,7 +296,7 @@ table[5,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
 
 
 # All of the above
-spam.options( cholsymmetrycheck=FALSE, safemode=c(FALSE,FALSE,FALSE))
+options(spam.cholsymmetrycheck=FALSE, safemode=c(FALSE,FALSE,FALSE))
 Rprof( memory.profiling=TRUE, interval = rPint)
 table[6,1] <- system.time(   for (i in 1:N) ch1 <- chol.spam(gridmat,memory=memory1)    )[stsel]
 Rprof( NULL)
@@ -321,7 +321,7 @@ Rprof( NULL)
 table[7,4] <- summaryRprof(memory="both")$by.total[rPsx,rPsy]
 
 # Do not check the permutation
-spam.options( cholpivotcheck=FALSE)
+options(spam.cholpivotcheck=FALSE)
 Rprof( memory.profiling=TRUE, interval = rPint)
 table[8,1] <- system.time(   for (i in 1:N) ch1 <- chol.spam(gridmat,pivot=pivot1,
                                                               memory=memory1)    )[stsel]

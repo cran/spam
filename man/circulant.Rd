@@ -1,7 +1,10 @@
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % This is file ../spam/man/circulant.Rd
 % This file is part of the spam package, 
 %      http://www.math.uzh.ch/furrer/software/spam/
 % by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
    
 
 
@@ -11,14 +14,14 @@
 \title{Create Circulant Matrices}
 \description{Creates a circulant matrix in \code{spam} format.}
 \usage{
-circulant.spam(x, n = NULL, eps = .Spam$eps)
+circulant.spam(x, n = NULL, eps = getOption("spam.eps"))
 }
 \arguments{
   \item{x}{the first row to form the circulant matrix or a list
     containing the indices and the nonzero values.}
   \item{n}{if \code{x} is a list, the dimension of the matrix.}
   \item{eps}{A tolerance parameter:  elements of \code{x} such that \code{abs(x)
-    <= eps} set to zero. Defaults to \code{eps = .Spam$eps}} 
+    <= eps} set to zero. Defaults to \code{eps = getOption("spam.eps")}} 
 }
 \value{The circulant matrix in \code{spam} format.}
 %\details{The vector \code{y} has to be of the same length as \code{x}

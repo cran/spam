@@ -1,44 +1,114 @@
-# This is file ../spam/R/rowcolstats.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
+# HEADER ####################################################
+# This is file  spam/R/rowcolstats.R.                       #
+# This file is part of the spam package,                    #
+#      http://www.math.uzh.ch/furrer/software/spam/         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+# HEADER END ################################################
 
 
 
 rowSums.spam <- function(x,...) {
-  return( .Fortran("rowsums",
-                   as.double(x@entries), as.integer(x@rowpointers),
-                   x@dimension[1],
-                   rs=vector("double",x@dimension[1]),
-                   NAOK=.Spam$NAOK, PACKAGE="spam")$rs)
-  
+    ## print("1")
+    if(  getOption("spam.force64") )
+        SS <- .format64
+    else
+        SS <- .format.spam(x)
+    
+    return(.C64("rowsums",
+                SIGNATURE=c("double", SS$signature, SS$signature,
+                    "double"),
+
+                x@entries,
+                x@rowpointers,
+                x@dimension[1],
+
+                rs = vector_dc("double", x@dimension[1]),
+
+                INTENT=c("r", "r", "r",
+                    "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)$rs )
 }
 
 colSums.spam <- function(x,...) {
-  return( .Fortran("colsums",
-                   as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
-                   x@dimension[1],
-                   cs=vector("double",x@dimension[2]),
-                   NAOK=.Spam$NAOK, PACKAGE="spam")$cs)
+    ## print("2")
+    if(  getOption("spam.force64") )
+        SS <- .format64
+    else
+        SS <- .format.spam(x)
+        
+    return(.C64("colsums",
+                SIGNATURE=c("double", SS$signature, SS$signature, SS$signature,
+                    "double"),
+
+                x@entries,
+                x@colindices,
+                x@rowpointers,
+                x@dimension[1],
+
+                cs = vector_dc("double", x@dimension[2]),
+
+                INTENT=c("r", "r", "r","r",
+                    "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)$cs )
 }
 
 rowMeans.spam <- function(x,...) {
-  return( .Fortran("rowmeans",
-                   as.double(x@entries), as.integer(x@rowpointers),
-                   x@dimension[1],x@dimension[2],
-                   as.logical(.Spam$structurebased),
-                   rm=vector("double",x@dimension[1]),
-                   NAOK=.Spam$NAOK, PACKAGE="spam")$rm)
+        ## print("3")
+    if(  getOption("spam.force64") )
+        SS <- .format64
+    else
+        SS <- .format.spam(x)
+
+    return(.C64("rowmeans",
+                SIGNATURE=c("double", SS$signature, SS$signature,
+                    SS$signature, SS$signature, 
+                    "double"),
+
+                x@entries,
+                x@rowpointers,
+                x@dimension[1],
+                x@dimension[2],
+                getOption("spam.structurebased"),
+
+                rm = vector_dc("double", x@dimension[1]),
+
+                INTENT=c("r", "r", "r",
+                    "r", "r",
+                    "rw"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)$rm )
 }
 
 colMeans.spam <- function(x,...) {
-   return( .Fortran("colmeans",
-                as.double(x@entries), as.integer(x@colindices), as.integer(x@rowpointers),
-                x@dimension[1],x@dimension[2],
-                as.logical(.Spam$structurebased),
-                cm=vector("double",x@dimension[2]),vector("integer",x@dimension[2]),
-                NAOK=.Spam$NAOK, PACKAGE="spam")$cm)
+            ## print("4")
+    if(  getOption("spam.force64") )
+        SS <- .format64
+    else
+        SS <- .format.spam(x)
+    
+    return(.C64("colmeans",
+                SIGNATURE=c("double", SS$signature, SS$signature,
+                    SS$signature, SS$signature, SS$signature, 
+                    "double", SS$signature),
+
+                x@entries,
+                x@colindices,
+                x@rowpointers,
+                x@dimension[1],
+                x@dimension[2],
+                getOption("spam.structurebased"),
+
+                cm = vector_dc("double", x@dimension[2]),
+                vector_dc(SS$type, x@dimension[2]),
+
+                INTENT=c("r", "r", "r",
+                    "r", "r", "r",
+                    "rw", "rw"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)$cm )
 }
 
 
