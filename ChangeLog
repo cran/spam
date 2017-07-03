@@ -1,3 +1,15 @@
+commit 635cd066b9ba322b258cc44a2faede3cca1ef80b
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Sun Jul 2 21:22:06 2017 +0200
+
+    ready for 2.1-1
+
+commit b80e813e8c39f65bfa00439f26fcb529bfa9ae8d
+Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Date:   Sun Jul 2 21:20:21 2017 +0200
+
+    add all Fortran authors
+
 commit 86764d592c51c60633ce244566eb63f5fab35cd9
 Author: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Date:   Fri Jun 30 18:23:25 2017 +0200

@@ -36,7 +36,7 @@ Type 'q()' to quit R.
 > library("spam")
 Loading required package: dotCall64
 Loading required package: grid
-Spam version 2.1-0 (2017-06-30) is loaded.
+Spam version 2.1-1 (2017-07-02) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -151,4 +151,4 @@ The following objects are masked from 'package:base':
 > 
 > proc.time()
    user  system elapsed 
-  1.337   0.289   1.331 
+  1.260   0.322   1.296 

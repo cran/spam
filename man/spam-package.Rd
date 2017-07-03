@@ -63,17 +63,19 @@ The packages \code{fields} and \code{spam} are closely linked.  \cr
 %  \code{\link[SparseM]{SparseM.ontology}}.
 }
 \examples{
-\dontrun{
 ## Citations:
 citation('spam')
 citation('spam',auto=TRUE)
 
 
 ## History of changes
+\dontrun{
 file.show(system.file("NEWS", package = "spam"))
 }
 }
 \author{Reinhard Furrer, with the help of Florian Gerber, Kaspar
-  Moesinger and many others.}
+  Moesinger and many others. \cr
+  Some Fortran routines were written by Youcef Saad, Esmond G. Ng, Barry W. Peyton, Joseph W.H. Liu, Alan D. George.
+}
 \keyword{documentation}
 \keyword{package}

@@ -14,6 +14,8 @@ SIGNIFICANT USER-VISIBLE CHANGES
 
     o   'validate_spam' superseeds 'validspamobject'.
 
+    o   Added the list of Fortran contributors.
+
 
 
 INTERNAL CHANGES
