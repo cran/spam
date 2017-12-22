@@ -247,15 +247,17 @@ c     in case nnz was too small, recall line to get a better estimate
 c     local variables
       logical equi
       integer jja, i,j, jfrom, jto
-      double precision etap, tmp, rad, tmp1, tmp2
+      double precision etap, tmp, tmp1, tmp2
+      double precision rad, thres
       double precision scy12(ny), ccy12(ny), sy2(ny)
       double precision scx12,     ccx12,     sx2
       
       parameter (rad = 0.01745329251994329)
+      parameter (thres = 0.99999999999)
 
 
-c     Great savings if we know that x=y. This can be done by
-c     multiplying diag by two.
+c     Great savings if we know that x=y.
+c     Changes for archaic d... to ... trigonometric fcn 
       if (p .lt. 0) then
          equi=.TRUE.
          p=-p
@@ -274,9 +276,9 @@ c     multiplying diag by two.
       DO j=1,ny
          tmp1=y(j,1)*rad
          tmp2=y(j,2)*rad
-         ccy12(j)=dcos(tmp1)*dcos(tmp2)
-         scy12(j)=dsin(tmp1)*dcos(tmp2)
-         sy2(j)=dsin(tmp2)
+         ccy12(j)=cos(tmp1)*cos(tmp2)
+         scy12(j)=sin(tmp1)*cos(tmp2)
+         sy2(j)=sin(tmp2)
       ENDDO
 
        
@@ -291,9 +293,9 @@ c     x2 is missing if equi=.TRUE. and we reuse the y stuff
          else
             tmp1=x(i,1)*rad
             tmp2=x(i,2)*rad
-            ccx12=dcos(tmp1)*dcos(tmp2)
-            scx12=dsin(tmp1)*dcos(tmp2)
-            sx2=dsin(tmp2)
+            ccx12=cos(tmp1)*cos(tmp2)
+            scx12=sin(tmp1)*cos(tmp2)
+            sx2=sin(tmp2)
          endif 
          
          if (part .lt. 0) then
@@ -314,10 +316,11 @@ c     Start calculating the distance
 c     Delta is not exceeded. 
 
 c     Due to numerical instabilities, we need the following... 0.15-2:
-            if  (tmp .ge. 1) then
+c     Patch suggested at code clinics.
+            if  (tmp .ge. thres) then
                tmp = 0.0
             else
-               tmp = dacos( tmp)
+               tmp = acos( tmp)
             endif
 
 c     (i,j) has a distance smaller than eta.

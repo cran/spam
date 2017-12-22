@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/definitions.R.                       #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/definitions.R.                        #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
 todo <- function() help( "todo.spam")
@@ -90,7 +101,7 @@ setClass(
                      )
 {
     if(is.null(rowpointers)) {
-        rowpointers <- c(1,rep_len_long(2,dimension[1]))
+        rowpointers <- c(1,rep_len64(2,dimension[1]))
     }
     
     if(force64 || length(colindices) > 2147483647 ||
@@ -156,7 +167,7 @@ setMethod("length","spam",function(x) length(x@entries) )
 
 setMethod("c","spam", function(x,...){
     if(getOption("spam.force64") || .format.spam(x)$package != "spam")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
 
@@ -222,7 +233,7 @@ spam_diag <- function(x=1, nrow, ncol)  diag.spam(x=1, nrow, ncol)
 
 "diag<-.spam" <-  function(x, value) {
     if(getOption("spam.force64") || .format.spam(x)$package != "spam")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -235,7 +246,7 @@ spam_diag <- function(x=1, nrow, ncol)  diag.spam(x=1, nrow, ncol)
     
                                         #!7#
     if(2147483647 < minrc + length(x@entries)) 
-        SS <- .format64
+        SS <- .format64()
 
     z <- .C64("setdiagmat",
               SIGNATURE=c(SS$signature, SS$signature, "double", SS$signature,
@@ -275,7 +286,7 @@ spam_diag <- function(x=1, nrow, ncol)  diag.spam(x=1, nrow, ncol)
 
 diag.of.spam <- function(x, nrow, ncol) {
     if(getOption("spam.force64") || .format.spam(x)$package != "spam")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
 
@@ -307,7 +318,7 @@ setMethod("diag<-","spam",get("diag<-.spam"))
 t.spam <- function(x){
 # TODO: Check if we need to switch to 64-bit (in case of too many rows/cols)
     if(getOption("spam.force64") || .format.spam(x)$package != "spam")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
 
@@ -361,7 +372,7 @@ as.spam.spam <- function(x, eps = getOption("spam.eps"))  {
      force64 <- getOption("spam.force64")
    
     if(force64)
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format.spam(x)
 
@@ -420,7 +431,7 @@ as.spam.matrix <- function(x, eps = getOption("spam.eps")) {
     
     # EXPLICIT-STORAGE-FORMAT: Depending on the length of x, use 32 or 64-bit:
     SS <- if( force64 || nz > 2147483647 || max(dimx) > 2147483647 ){
-              .format64
+              .format64()
           }else{
               .format32 
           }
@@ -468,7 +479,7 @@ as.spam.matrix <- function(x, eps = getOption("spam.eps")) {
     if (identical(nz,0)){
         return(
             .newSpam(
-                rowpointers = c(1,rep_len_long(2,lx)),
+                rowpointers = c(1,rep_len64(2,lx)),
                 dimension = c(lx,1),
                 force64 = force64
             )
@@ -478,7 +489,7 @@ as.spam.matrix <- function(x, eps = getOption("spam.eps")) {
     return(
         .newSpam(
             entries = as.double(x[poselements]),
-            colindices = rep_len_long(1, nz),
+            colindices = rep_len64(1, nz),
             rowpointers = cumsum(c(1, poselements)),
             dimension = c(lx,1),
             force64 = force64
@@ -496,7 +507,7 @@ as.spam.dist <- function(x, eps = getOption("spam.eps")) {
     size <- dimx*(dimx-1)/2
 
     if( getOption("spam.force64") || dimx^2 > 2147483647)
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -559,7 +570,7 @@ spam.numeric <- function(x, nrow = 1, ncol = 1, eps = getOption("spam.eps"))  {
         else if(prod(nrow,ncol)%%lenx!=0)
             warning("ncol*nrow indivisable by length(x)")
         
-        x <- rep_len_long(x, prod(nrow,ncol))
+        x <- rep_len64(x, prod(nrow,ncol))
     }
 
                             
@@ -579,7 +590,7 @@ spam.numeric <- function(x, nrow = 1, ncol = 1, eps = getOption("spam.eps"))  {
     
     # EXPLICIT-STORAGE-FORMAT: Depending on the length of x, use 32 or 64-bit:
     if(force64 || nz > 2147483647 || max(dimx) > 2147483647 )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32 
 
@@ -654,7 +665,7 @@ triplet <- function(x, tri=FALSE){
    
 as.matrix.spam <- function(x, ...) {
     if( getOption("spam.force64") || .format.spam(x)$package == "spam64")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
 
@@ -719,7 +730,7 @@ setMethod("as.vector","spam",as.vector.spam)
                                         # normal case, proceed to efficient function
     ## print("3")
     if( force64 || .format.spam(x)$package == "spam64" || nz > 2147483647 || nrow > 2147483646)
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
 
@@ -751,7 +762,7 @@ setMethod("as.vector","spam",as.vector.spam)
     ## slot(newx,"rowpointers",check=FALSE) <- z$rowpointers
     ## slot(newx,"dimension",check=FALSE) <- x@dimension 
     return(.newSpam(
-        entries = rep_len_long(1.0, nz),
+        entries = rep_len64(1.0, nz),
         colindices = z$colindices,
         rowpointers = z$rowpointers,
         dimension = x@dimension,
@@ -835,7 +846,7 @@ setMethod("[<-",signature(x="spam",i="spam",j="missing", value = "ANY"),
     ##               nzmax=as.integer(nzmax),
     ##               PACKAGE="spam")
     if(getOption("spam.force64") || .format.spam(x)$package != "spam" || .format.spam(i)$package != "spam")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -935,7 +946,7 @@ function (x, rw, cl,value)
     ##                 ir=as.integer(c(rw[,1],0)),
     ##                 PACKAGE="spam")$rowpointers
     if( getOption("spam.force64") || nrow+1 > 2147483647 )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -961,7 +972,7 @@ function (x, rw, cl,value)
     ##               nzmax=as.integer(nzmax),
     ##               NAOK=getOption("spam.NAOK"),PACKAGE="spam")
     if( getOption("spam.force64") ||  .format.spam(x)$package != "spam" || length( bia) >  2147483647 )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
  
@@ -1060,7 +1071,7 @@ function (x, rw, cl,value)
     ##               nzmax=as.integer(nzmax),
     ##               NAOK=getOption("spam.NAOK"),PACKAGE="spam")
      if( getOption("spam.force64") ||  .format.spam(x)$package != "spam" || length( bia) >  2147483647 )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     z <- .C64("subass",
@@ -1078,7 +1089,7 @@ function (x, rw, cl,value)
               x@rowpointers,
               
               b = value,
-              bj = rep_len_long(sort(as.integer(cl)),nrw*length(cl)),
+              bj = rep_len64(sort(as.integer(cl)),nrw*length(cl)),
               bi = bia,
               
               entries = vector_dc( "double", nzmax),
@@ -1119,7 +1130,7 @@ function (x, rw, cl,value)
     # EXPLICIT-STORAGE-FORMAT
     SS <- .format.spam(x)
     if( getOption("spam.force64")|| as.numeric(nrow)*as.numeric(ycol) > 2147483647)
-        SS <- .format64
+        SS <- .format64()
     
     if(yrow != ncol) stop("not conformable for multiplication")
     z <- .C64("amuxmat",
@@ -1161,7 +1172,7 @@ function (x, rw, cl,value)
   # EXPLICIT-STORAGE-FORMAT
   SS <- .format.spam(x, y)
   if( getOption("spam.force64") || as.numeric(xn)*as.numeric(yl) > 2147483647)
-        SS <- .format64
+        SS <- .format64()
 
   z <- .C64("amubdg",
             SIGNATURE = rep(SS$signature, 10),
@@ -1191,7 +1202,7 @@ function (x, rw, cl,value)
   # As we now know the number of entries, we can decide again if we need 64-bit
   SS <- .format.spam(x, y)
   if( getOption("spam.force64") || nzmax > 2147483647)
-        SS <- .format64
+        SS <- .format64()
   
   z <- .C64("amub",
             SIGNATURE=c(SS$signature, SS$signature, SS$signature, "double", 
@@ -1380,7 +1391,7 @@ upper.tri.spam <- function(x,diag=FALSE)
             ))
     }else{
         return(.newSpam(
-            entries = rep_len_long(1,nz),
+            entries = rep_len64(1,nz),
             colindices=z$colindices[1:nz],
             rowpointers=z$rowpointers,
             dimension=dimx
@@ -1448,7 +1459,7 @@ lower.tri.spam <- function(x,diag=FALSE)
             ))
     }else{
         return(.newSpam(
-            entries = rep_len_long(1,nz),
+            entries = rep_len64(1,nz),
             colindices=z$colindices[1:nz],
             rowpointers=z$rowpointers,
             dimension=dimx
@@ -1514,8 +1525,8 @@ setMethod("lower.tri","spam",lower.tri.spam)
               nrow = nrow,
               n = minrc,
               
-              a = c(y@entries, rep_len_long(0,minrc)),
-              ja = c(y@colindices, rep_len_long(0,minrc)),
+              a = c(y@entries, rep_len64(0,minrc)),
+              ja = c(y@colindices, rep_len64(0,minrc)),
               ia = y@rowpointers,
               
               diag = x,
@@ -1645,7 +1656,7 @@ setMethod("all.equal",signature(target="matrix",current="spam"),
      ##        dimx[1] + 1), eps = as.double(eps),
      ##              NAOK = getOption("spam.NAOK"), PACKAGE = "spam")
     if( getOption("spam.force64") || .format.spam(current)$package != "spam" || prod(dimx) > 2147483647)
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     z <- .C64("spamdnscsr",

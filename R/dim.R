@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/dim.R.                               #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/dim.R.                                #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
 
@@ -75,7 +86,7 @@
 #     subroutine reducedim(a,ja,ia,eps,bnrow,bncol,k,b,jb,ib)
 
       if( force64 || .format.spam(x)$package == "spam64")
-          SS <- .format64
+          SS <- .format64()
       else
           SS <- .format32
       
@@ -108,7 +119,7 @@
                 .newSpam(
                     entries=x@entries,
                     colindices=x@colindices,
-                    rowpointers=c(1,rep_len_long(2,value[1])), 
+                    rowpointers=c(1,rep_len64(2,value[1])), 
                     dimension=value,
                     force64=force64
                     )
@@ -130,7 +141,7 @@
               entries=x@entries,
               colindices=x@colindices,
               rowpointers= c( x@rowpointers,
-                  rep_len_long( x@rowpointers[length(x@rowpointers)],value[1]-dimx[1])),
+                  rep_len64( x@rowpointers[length(x@rowpointers)],value[1]-dimx[1])),
               dimension=value,
               force64=force64
               )

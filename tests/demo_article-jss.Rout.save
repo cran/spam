@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2017-06-05 r72769) -- "Unsuffered Consequences"
+R Under development (unstable) (2017-12-18 r73921) -- "Unsuffered Consequences"
 Copyright (C) 2017 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -15,17 +15,24 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> # This is file ../spam/tests/demo_article-jss.R
-> # This file is part of the spam package, 
-> #      http://www.math.uzh.ch/furrer/software/spam/
-> # by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
->      
-> 
-> 
-> 
-> 
-> 
-> 
+> # HEADER ####################################################
+> # This is file spam/tests/demo_article-jss.R.               #
+> # It is part of the R package spam,                         #
+> #  --> https://CRAN.R-project.org/package=spam              #
+> #  --> https://CRAN.R-project.org/package=spam64            #
+> #  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
+> # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+> #    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+> #    Youcef Saad [ctb] (SPARSEKIT),                         #
+> #    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+> #    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+> #    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+> #    Alan D. George [ctb] (Fortran Cholesky routines),      #
+> #    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+> #    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+> #    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+> #    Alan D. George [ctb] (Fortran Cholesky routines)       #
+> # HEADER END ################################################
 > 
 > 
 > # This demo contains the R code to construct the figures and the table of the
@@ -50,7 +57,7 @@ Type 'q()' to quit R.
 > options( echo=FALSE)
 Loading required package: dotCall64
 Loading required package: grid
-Spam version 2.1-1 (2017-07-02) is loaded.
+Spam version 2.1-2 (2017-12-19) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -102,4 +109,4 @@ NULL
 > 
 > proc.time()
    user  system elapsed 
-  4.412   0.335   4.466 
+  4.468   0.096   4.564 

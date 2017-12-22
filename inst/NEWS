@@ -1,7 +1,28 @@
-	CHANGES IN VERSION 2.0.x
+	CHANGES IN VERSION 2.1-2
 
 SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   In case 64bits are required, issues an error to load package
+    	'spam64' first.
+
+
+    o   Minor fixes in help files and other documentation.
+
+
+
+INTERNAL CHANGES
+
+    o   Improved registering of compiled functions 
+
+    o   Compatibility with new versions of package 'testthat'.
+    
   
+
+  
+	CHANGES IN VERSION 2.1-1
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
     o   With the addon of the package spam64, we have truly 64 bits 
     	available!
 
@@ -24,6 +45,8 @@ INTERNAL CHANGES
 
     o	Unit testing with testthat.
 
+    o	Change of archaic trig functions to standard.
+	Minor edits to great circle dist.
 
 
 

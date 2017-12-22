@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/spamlist.R.                          #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/spamlist.R.                           #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
 
@@ -37,7 +48,7 @@ spam.list <-  function(x, nrow, ncol, eps = getOption("spam.eps")) {
         jc <- as.integer(x[[indnr]][,2])
 
         if(force64 || length(x[[elenr]]) > 2147483646)
-            SS <- .format64
+            SS <- .format64()
         else
             SS <- .format32
         
@@ -56,14 +67,14 @@ spam.list <-  function(x, nrow, ncol, eps = getOption("spam.eps")) {
             stop("Number of indices does not match with number of elements")
 
         if(force64 || length(x[[elenr]]) > 2147483646)
-            SS <- .format64
+            SS <- .format64()
         else
             SS <- .format32
     }
     
     if (nz == 0)
         return(.newSpam(
-            rowpointers = c(1,rep_len_long(2, nrow)),
+            rowpointers = c(1,rep_len64(2, nrow)),
             dimension = c(nrow,ncol)))
     if (any( ir <= 0) || any( jc <= 0))
         stop("Indices need to be positive")
@@ -119,7 +130,7 @@ spam.list <-  function(x, nrow, ncol, eps = getOption("spam.eps")) {
     ## if (identical(z$nz, 0)){
         ## print("special case")
         return(.newSpam(
-            rowpointers = c(1, rep_len_long(2,nrow)),
+            rowpointers = c(1, rep_len64(2,nrow)),
             dimension = c(nrow, ncol)))
          ## return(new("spam",rowpointers=c(1L,rep.int(2L,nrow)), dimension=c(nrow,ncol)))
     }

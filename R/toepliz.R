@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/toepliz.R.                           #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/toepliz.R.                            #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
 
@@ -36,7 +47,7 @@
   len <- as.integer(length( ind)[1]) # see ?length@value
   if(identical(len,0))
     return(.newSpam(
-        rowpointers = c(1, rep_len_long(2, n)), 
+        rowpointers = c(1, rep_len64(2, n)), 
         dimension = c(n, n)))
 #      subroutine circulant(nrow,len, x,j, a,ja,ia)
   nz <- n*len
@@ -51,7 +62,7 @@
   ##               NAOK = getOption("spam.NAOK"),
   ##               PACKAGE = "spam")
   if( getOption("spam.force64") || nz > 2147483647 || n+1 > 2147483647)
-      SS <- .format64
+      SS <- .format64()
   else
       SS <- .format32
   z <- .C64("circulant",
@@ -110,7 +121,7 @@ toeplitz.spam <- function(x,y=NULL, eps = getOption("spam.eps"))
   if(identical(len,0L)){
       ## print("degenerate")
       return(.newSpam(
-          rowpointers =  c(1, rep_len_long(2, n)),
+          rowpointers =  c(1, rep_len64(2, n)),
           dimension = c(n, n)))
     ## return(new("spam", rowpointers = c(1L, rep.int(2L, n)), 
     ##            dimension = as.integer(c(n, n))))
@@ -128,7 +139,7 @@ toeplitz.spam <- function(x,y=NULL, eps = getOption("spam.eps"))
     ##             nnz=as.integer(1),
     ##             NAOK = getOption("spam.NAOK"), PACKAGE = "spam")
   if(getOption("spam.force64") || n+1 > 2147483647 || nz > 2147483647 )
-      SS <- .format64
+      SS <- .format64()
   else
       SS <- .format32
   

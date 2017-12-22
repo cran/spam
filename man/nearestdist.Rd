@@ -57,24 +57,33 @@ nearest.dist( x, y=NULL, method = "euclidean",
   degrees. Hence to restrict to distances smaller than \code{delta.km},
   one has to specify \code{delta=delta.km*360/(6378.388*2*pi)}.
 
-  The distance is
-  in single precision (I am still not sure where I lose the double precision in
-  the Fortran code) and if calculating the entire matrix
-  \code{upper=NULL} (instead of adding its transpose) it may not
-  pass the symmetry checks, for example.\cr 
+  The distances are calculated based on spherical law of cosines.
+  Care is needed for `zero' distances due to the final acosin:
+  \code{acos(1-1e-16)}, especially with an actual radius.
+  
+%  The distance is
+%  in single precision (I am still not sure where I lose the double precision in
+%  the Fortran code) and if calculating the entire matrix
+%  \code{upper=NULL} (instead of adding its transpose) it may not
+%  pass the symmetry checks, for example.\cr 
 
   Default value of Earth's radius is 3963.34miles (6378.388km).\cr
 
+  There are many other packages providing distance functions. Especially
+  for great circle distances there are considerable differences between
+  the implementations. For high precision results, \code{sp::spDists} is
+  a good candidate. \cr
+  
   The formerly depreciated arguments \code{eps} and \code{diag} are now
   eliminated. 
   
   \code{x} and \code{y} can be any object with an existing
   \code{as.matrix} method.\cr
 
-  A quick scan revealed distance functions in at least 7 packages
-  (around 2008). The argument names should be as general as possible and
-  be coherent with many (but not all) available distance functions.\cr
-  
+%  A quick scan revealed distance functions in at least 7 packages
+%  (around 2008). The argument names should be as general as possible and
+%  be coherent with many (but not all) available distance functions.\cr
+
   The Fortran code is based on a idea of Doug Nychka.
     }
 %\references{}

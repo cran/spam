@@ -1,13 +1,28 @@
-# This is file ../spam/tests/math.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
+# HEADER ####################################################
+# This is file spam/tests/testthat/test-math.R.             #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
+# HEADER END ################################################
+
 rm(list = ls())
 source("helper.R")
 
 ## library("testthat")
 ## library("spam64", lib.loc = LIB.LOC)
-## library("spam", lib.loc = "../../../lib/")
+## library("spam", lib.loc = LIB.LOC)
 
 
 context("test-math.R")
@@ -110,8 +125,8 @@ test_that("Math2", {
 
     options(spam.NAOK=TRUE) # test for equivalence!
     
-    expect_equal(c( gamma(tt)), c(gamma(ss)), rel = FALSE)  #
-    expect_equal(c(digamma(ss)), c(digamma(tt))) #
+    expect_equal(suppressWarnings(c(gamma(tt))), suppressWarnings(c(gamma(ss))), rel = FALSE)  #
+    expect_equal(c(suppressWarnings(digamma(ss))), suppressWarnings(c(digamma(tt)))) #
     expect_equal(c(trigamma(ss)), c(trigamma(tt)))
     spamtest_eq(exp(ss), exp(tt))
     spamtest_eq(expm1(ss), expm1(tt))

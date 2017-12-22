@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/spam_solve.R.                        #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/spam_solve.R.                         #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
      
@@ -108,7 +119,7 @@ setMethod("c","spam.chol.NgPeyton", function(x,...){
     ##                         NAOK = getOption("spam.NAOK"),
     ##                         PACKAGE = "spam")$xja
     if( getOption("spam.force64") || .format.spam(x)$package != "spam")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -151,7 +162,7 @@ setMethod("c","spam.chol.NgPeyton", function(x,...){
 
 as.spam.chol.NgPeyton <- function(x, eps = getOption("spam.eps")) {
     if( getOption("spam.force64") || .format.spam(x)$package != "spam")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -268,7 +279,7 @@ update.spam.chol.NgPeyton <- function(object,x,...){
   ##               ierr = 0L,         
     ##               NAOK = getOption("spam.NAOK"),PACKAGE="spam")
     if( getOption("spam.force64") || .format.spam(object)$package != "spam" || .format.spam(x)$package != "spam" )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -335,7 +346,7 @@ chol.spam <- function(x, pivot = "MMD",
     
     force64 <- getOption("spam.force64")
   if(force64 || prod(dim(x)) > 2147483647)
-      SS <- .format64
+      SS <- .format64()
   else
       SS <- .format32
   #!3# 
@@ -560,7 +571,7 @@ solve.spam <- function (a, b,  Rstruct = NULL, ...) {
     ##               NAOK = getOption("spam.NAOK"),
       ##               PACKAGE = "spam")$sol
       if( getOption("spam.force64") || .format.spam(a)$package != "spam" )
-          SS <- .format64
+          SS <- .format64()
       else
           SS <- .format32
       
@@ -611,7 +622,7 @@ chol2inv.spam <- function (x, ...) {
         ##               PACKAGE = "spam")$sol
     
         if( getOption("spam.force64") || .format.spam(x)$package !="spam" )
-            SS <- .format64
+            SS <- .format64()
         else
             SS <- .format32
    
@@ -654,7 +665,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
 # dimensions:  ( m x n) ( n x p) 
 
     if( getOption("spam.force64") || .format.spam(r)$package !="spam" )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
   
@@ -763,7 +774,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
 #  if (!any(is.null(c(upper.tri,k,transpose ))))
 #    warning("'k', 'upper.tri' and 'transpose' argument do not have any effect here")
     if( getOption("spam.force64") || .format.spam(l)$package !="spam" )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     
@@ -965,7 +976,7 @@ determinant.spam <- function(x, logarithm = TRUE, pivot = "MMD",method="NgPeyton
     ##               NAOK = getOption("spam.NAOK"), PACKAGE = "spam")
 
     if( getOption("spam.force64") || prod(dim(x)) > 2147483647)
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     cholstep.intent <- c("r", "r", "r", "r", 
@@ -1102,7 +1113,7 @@ setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
     ##                         xja=vector("integer",nnzR),
     ##                         NAOK = getOption("spam.NAOK"),PACKAGE = "spam")$xja
     if( getOption("spam.force64") || .format.spam(x)$package != "spam" )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
     

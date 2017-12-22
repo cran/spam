@@ -1,25 +1,46 @@
+# HEADER ####################################################
+# This is file spam/tests/testthat/helper.R.                #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
+# by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
+# HEADER END ################################################
+
+
+require('spam')
 # For efficient primary testing:
 #    require('spam',lib='lib') ; setwd( 'spam/tests/testthat/') ;require('testthat')
 #    for (i in rev(system('ls', intern=T) )) source(i)
 
 
-spamtest_eq <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE, ...){
+spamtest_eq <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE, label="", ...){
     cxtest <- c(xtest); cxtrue <- c(xtrue)
     if(relative)
         denom <- mean(abs(cxtrue), na.rm = TRUE)
     else
         denom <- 1
     test_value <- sum(abs(cxtest - cxtrue), na.rm = TRUE) / denom
-    expect_lt(test_value, tol, label = paste(  "[spamtest_eg failed]", testthat:::make_label(xtest)), ...)
+    expect_lt(test_value, tol, label = paste(  "[spamtest_eg failed]", label), ...)
 }
-spamtest_diff <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE, ...){
+spamtest_diff <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE, label="", ...){
     cxtest <- c(xtest); cxtrue <- c(xtrue)
     if(relative)
         denom <- mean(abs(cxtrue), na.rm = TRUE)
     else
         denom <- 1
     test_value <- sum(abs(cxtest - cxtrue), na.rm = TRUE) / denom
-    expect_gt(test_value, tol, label = paste( "[spamtest_diff failed]", testthat:::make_label(xtest)), ...)
+    expect_gt(test_value, tol, label = paste( "[spamtest_diff failed]", label), ...)
 }
 
 LIB.LOC <- "../../../lib"

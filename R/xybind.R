@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/xybind.R.                            #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/xybind.R.                             #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
 
@@ -186,7 +197,7 @@ cbind.spam <- function(..., deparse.level=0)
     
       XYlen <- as.numeric(args[[1]]@rowpointers[Xdim[1]+1])+as.numeric(args[[2]]@rowpointers[Xdim[1]+1])-2
       if(force64 || XYlen > 2147483647 || .format.spam(args[[1]])$package =="spam64" || .format.spam(args[[2]])$package =="spam64")
-          SS <- .format64
+          SS <- .format64()
       else
           SS <- .format32
       
@@ -224,7 +235,7 @@ cbind.spam <- function(..., deparse.level=0)
           entries=z$entries,
           colindices=z$colindices,
           rowpointers=z$rowpointers,
-          dimension=c(Xdim[1], Xdim[2] + Ydim[2]),
+          dimension=c(Xdim[1], as.numeric(Xdim[2]) + as.numeric(Ydim[2])),
           force64=force64))
     
   }

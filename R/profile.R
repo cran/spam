@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/profile.R.                           #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/profile.R.                            #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
 
@@ -19,6 +30,18 @@
     signature = "int64",
     package   = "spam64")
 
+
+.format64 <- function(){
+    if (!isNamespaceLoaded("spam64")) {
+        stop("Large (64-bit) sparse matrices detected. Please load the required package 'spam64' and see the help page '?large_matrix'.")
+    }
+    list(
+        name      = "64-bit",
+        type      = "numeric",
+        signature = "int64",
+        package   = "spam64")
+}
+
 .format.spam <- function(x, ... , validate = getOption("spam.validate") ) {
     objects <- c(list(x), list(...))
 
@@ -28,15 +51,16 @@
         ## If both pointer vectors are of the same type,
         ## use this type to determine the format
         if(identical(typeof(o@colindices), typeof(o@rowpointers))) {
-            if(identical(typeof(o@colindices), "double"))
-                return(.format64)
+            if(identical(typeof(o@colindices), "double")){
+                return(.format64())
+            }
             next
         }
         
         ## As fallback use the length of the entries vector and the dimension
         if(nrow(o) > 2147483647 || ncol(o) > 2147483647 || 
            length(o@entries) > 2147483647){
-            return(.format64)
+            return(.format64())
         }
     }   
     return(.format32)

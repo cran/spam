@@ -1,9 +1,20 @@
 # HEADER ####################################################
-# This is file  spam/R/math.R.                              #
-# This file is part of the spam package,                    #
-#      http://www.math.uzh.ch/furrer/software/spam/         #
+# This is file spam/R/math.R.                               #
+# It is part of the R package spam,                         #
+#  --> https://CRAN.R-project.org/package=spam              #
+#  --> https://CRAN.R-project.org/package=spam64            #
+#  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            #
+#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
+#    Youcef Saad [ctb] (SPARSEKIT),                         #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines),      #
+#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
+#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
+#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
+#    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
      
@@ -290,7 +301,7 @@ setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(
         stop("non-conformable matrices")
 
     if( getOption("spam.force64") || .format.spam(A)$package == "spam64" || .format.spam(B)$package == "spam64")
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format32
 
@@ -415,7 +426,7 @@ setMethod("-",signature(e1="spam",e2="spam"),  function(e1,e2){ spam_add(e1, e2,
                              e2@colindices+e2@dimension[2]*(rep(1:e2@dimension[1],diff(e2@rowpointers))-1)))+1
 
   if( getOption("spam.force64") || .format.spam(e1)$package == "spam64" || .format.spam(e2)$package == "spam64")
-      SS <- .format64
+      SS <- .format64()
   else
       SS <- .format32
 
@@ -503,7 +514,7 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
                                         #  }
     ## print("addsparsefull")
     if(  getOption("spam.force64") )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format.spam(A)
     
@@ -548,7 +559,7 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
                                         #  if (!is.double(B[1]))  B <- as.double(B)
     ## print("subfullsparse")
     if(  getOption("spam.force64") )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format.spam(A)
     
@@ -594,7 +605,7 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
 #  if (!is.double(B[1]))  B <- as.double(B)
   
     if(  getOption("spam.force64") )
-        SS <- .format64
+        SS <- .format64()
     else
         SS <- .format.spam(A)
 

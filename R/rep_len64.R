@@ -1,5 +1,5 @@
 # HEADER ####################################################
-# This is file spam/R/deprecated.R.                         #
+# This is file spam/R/rep_len64.R.                          #
 # It is part of the R package spam,                         #
 #  --> https://CRAN.R-project.org/package=spam              #
 #  --> https://CRAN.R-project.org/package=spam64            #
@@ -17,30 +17,22 @@
 #    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
-
-validspamobject <- function( ...) {
-#    .Deprecated('validate_spam()')
-    message("`validspamobject()` is deprecated. Use `validate_spam()` directly")
-    validate_spam( ...)
+rep_len64 <- function(x, length.out, NAOK = getOption("spam.NAOK")){
+    if(getOption("spam.force64") || length.out > 2147483647){
+        .format64()
+        return(.C64("rep_len64_c",
+                    SIGNATURE = c("double", "int64", "int64", "double"),
+                    
+                    x = x,
+                    lx = length(x),
+                    length = length.out,
+                    
+                    out = numeric_dc(length.out),
+                    
+                    INTENT = c("r","r","r","w"),
+                    NAOK = NAOK,
+                    PACKAGE = "spam64"
+                    )$out)
     }
-
-spam.getOption <- function(...) {
-#    .Deprecated(msg="`spam.getOption( arg)` is deprecated.\n Use `getOption( spam.arg)` directly")
-    message("`spam.getOption( arg)` is deprecated. Use `getOption( spam.arg)` directly")
-    getOption(...)
-    
+    return(rep_len(x = x, length.out = length.out))
 }
-spam.options <- function(...) {
-#    .Deprecated(msg="`spam.options( arg)` is deprecated.\n Use `options( spam.arg)` directly")
-    message("`spam.options( arg)` is deprecated. Use `options( spam.arg)` directly")
-
-    if (nargs() == 0) {
-        tmp <- names(options())
-        return(options()[ grep( "spam.", tmp)])
-    }
-
-    args <- list(...)
-    names(args) <- paste0("spam.", names(args))
-    do.call("options", args)
-}    
-
