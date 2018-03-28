@@ -106,6 +106,7 @@ export(
 
        "determinant.spam",
        "determinant.spam.chol.NgPeyton",
+       "det",# << "identical" as base - but with correct determinant()
        "chol.spam",
        "solve.spam",
        "forwardsolve.spam",

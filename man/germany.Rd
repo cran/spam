@@ -19,7 +19,7 @@
   over the administrative districts of Germany}
 \usage{
 germany.plot(vect,  col=NULL, zlim=range(vect), legend=TRUE, 
-             main=NULL, cex.axis=1, add=FALSE, ... )
+             main=NULL, cex.axis=1, cex.main=1.5, add=FALSE, ... )
 }
 \arguments{
 \item{vect}{vector of length 544}
@@ -28,7 +28,8 @@ germany.plot(vect,  col=NULL, zlim=range(vect), legend=TRUE,
   plotted, defaulting to the range of \code{data}.}
 \item{legend}{Should the legend be added, see \sQuote{Details}.}
 \item{main}{an overall title for the plot.}
-\item{cex.axis}{label size of legend.} 
+\item{cex.axis}{label size of legend.}
+\item{cex.main}{label size of overall plot title.} 
 \item{add}{logical, if true adds to current plot.}
 \item{\dots}{additional arguments passed to \code{polygon}.}
 }

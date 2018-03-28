@@ -100,8 +100,8 @@ static const R_FortranMethodDef FortranEntries[] = {
 
     {"subass",            (DL_FUNC) &F77_NAME(subass            ),12},
     {"amask",             (DL_FUNC) &F77_NAME(amask             ),12},
-
     {"kroneckermult",     (DL_FUNC) &F77_NAME(kroneckermult     ),12},
+
     {"getblock",          (DL_FUNC) &F77_NAME(getblock          ),11},
 
     {"getdia",            (DL_FUNC) &F77_NAME(getdia            ),10},

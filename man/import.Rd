@@ -59,7 +59,7 @@ read.MM(file)
 \references{
   \url{http://math.nist.gov/MatrixMarket}
   
-  \url{https://sparse.tamu.edu/}
+  \url{http://www.cise.ufl.edu/research/sparse/matrices}
 }
 \examples{
 

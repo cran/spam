@@ -1098,6 +1098,11 @@ determinant.spam.chol.NgPeyton <- function(x, logarithm = TRUE,...)
 setMethod("determinant","spam",               determinant.spam)
 setMethod("determinant","spam.chol.NgPeyton", determinant.spam.chol.NgPeyton)
 
+## The ``Right Thing'' to do :
+## base::det() calls [base::]determinant();
+## our det() should call our determinant() :
+det <- base::det
+environment(det) <- environment()## == asNamespace("Matrix")
 ######################################################################
 ########################################################################
 

@@ -1141,7 +1141,7 @@ function (x, rw, cl,value)
               yrow,
               ycol,
               y,
-              
+
               y = vector_dc("double",nrow*ycol),
               x@entries,
               x@colindices,
@@ -1285,7 +1285,7 @@ function (x, rw, cl,value)
     # --- CHANGED ---
     # Refactored the function .spam.matmul into the functions
     # .spam.matmul and .spam.matmul.vector
-    
+
     # if we have x*Y, we calculate t(t(Y)*x)
     # Use "is.spam(y)" instead of "is.vector(x)" because the later might be 
     # misleading in case that x has any attributes attached.
@@ -1297,26 +1297,26 @@ function (x, rw, cl,value)
         b <- y
     }
     SS <- .format.spam(A)
-    
+
     nrow <- A@dimension[1]
     ncol <- A@dimension[2]
     if(length(b) != ncol)  stop("not conformable for multiplication")
     z <- .C64("amux",
-
+              NAOK = getOption("spam.NAOK"),
               SIGNATURE=c(SS$signature, "double", "double", "double",
                           SS$signature, SS$signature),
-          
+
           nrow,
           b,
           y = vector_dc("double",nrow),
           A@entries,
-          
+
           A@colindices,
           A@rowpointers,
-          
+
           INTENT=c("r", "r", "w", "r", "r", "r"),
           PACKAGE = SS$package)$y
-          
+
     if(is.spam(y))
         dim(z) <- c(1,nrow)
     else

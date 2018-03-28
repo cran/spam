@@ -157,15 +157,15 @@ map.landkreis <- function(data, col=NULL, zlim=range(data), add=FALSE, legendpos
 
 
 
-germany.plot <- function(vect,  col=NULL, zlim=range(vect), legend=TRUE, 
-             main=NULL, cex.axis=1, add=FALSE, ... )
+germany.plot <- function(vect,  col=NULL, zlim=range(vect), legend=TRUE,
+             main=NULL, cex.axis=1, cex.main=1.5, add=FALSE, ... )
 {
-  if (length(vect) != spam::germany.info$n) 
+  if (length(vect) != spam::germany.info$n)
         stop("data has wrong length")
 
   if (!add) {
     par(mai=c(.1,.1,.1,.3))
-    plot(0,0, xlim=spam::germany.info$xlim, ylim=spam::germany.info$ylim,    
+    plot(0,0, xlim=spam::germany.info$xlim, ylim=spam::germany.info$ylim,
          type = "n", axes = F, xlab = "", ylab = "")
   }
   if (is.null(col)) {
@@ -173,22 +173,22 @@ germany.plot <- function(vect,  col=NULL, zlim=range(vect), legend=TRUE,
     col <- c("#F7FBFF", "#F4F9FE", "#F2F8FD", "#F0F7FD", "#EEF5FC", "#ECF4FB", "#EAF3FB", "#E8F1FA", "#E6F0F9", "#E4EFF9", "#E2EEF8", "#E0ECF7", "#DEEBF7", "#DCEAF6", "#DAE8F5", "#D8E7F5", "#D6E6F4", "#D5E5F4", "#D3E3F3", "#D1E2F2", "#CFE1F2", "#CDDFF1", "#CBDEF0", "#C9DDF0", "#C7DBEF", "#C5DAEE", "#C1D9ED", "#BED7EC", "#BBD6EB", "#B8D5EA", "#B5D3E9", "#B1D2E7", "#AED1E6", "#ABCFE5", "#A8CEE4", "#A4CCE3", "#A1CBE2", "#9ECAE1", "#9AC8E0", "#96C5DF", "#92C3DE", "#8EC1DD", "#89BEDC", "#85BCDB", "#81BADA", "#7DB8DA", "#79B5D9", "#75B3D8", "#71B1D7", "#6DAFD6", "#69ACD5", "#66AAD4", "#62A8D2", "#5FA6D1", "#5CA3D0", "#58A1CE", "#559FCD", "#529DCC", "#4E9ACB", "#4B98C9", "#4896C8", "#4493C7", "#4191C5", "#3E8EC4", "#3C8CC3", "#3989C1", "#3686C0", "#3484BE", "#3181BD", "#2E7EBC", "#2C7CBA", "#2979B9", "#2776B8", "#2474B6", "#2171B5", "#1F6FB3", "#1D6CB1", "#1B69AF", "#1967AD", "#1764AB", "#1562A9", "#135FA7", "#115CA5", "#0F5AA3", "#0D57A1", "#0B559F", "#09529D", "#084F9A", "#084D96", "#084A92", "#08478E", "#08458A", "#084286", "#083F82", "#083D7E", "#083A7A", "#083776", "#083572", "#08326E", "#08306B")
   }
   ncol <- length(col)
-  polycol <- (col)[round((((vect) - zlim[1])/diff(zlim) + 1e-06) * 
+  polycol <- (col)[round((((vect) - zlim[1])/diff(zlim) + 1e-06) *
                             (ncol - 1)) + 1]
-  
+ 
   polygon( spam::germany.poly[17965L:1L,],
-          col = (polycol[spam::germany.info$polyid])[599L:1L], ...) 
+          col = (polycol[spam::germany.info$polyid])[599L:1L], ...)
 
   if (legend&&requireNamespace("fields", quietly = TRUE)){
     legendpos <- c(0.845, 0.89, 0.05, 0.4)
-    fields::image.plot(as.matrix(vect), zlim = zlim, legend.only = TRUE, 
+    fields::image.plot(as.matrix(vect), zlim = zlim, legend.only = TRUE,
                smallplot = legendpos, axis.args=list(cex.axis=cex.axis,lwd=0, lwd.ticks=1.3),
                col = col)
   }
-  
+
   if(!is.null(main))
-    text( min(spam::germany.info$xlim), max(spam::germany.info$ylim), main, cex=1.5, adj=c(0,1))
-  
+    text( min(spam::germany.info$xlim), max(spam::germany.info$ylim), main, cex=cex.main, adj=c(0,1))
+
   invisible()
 }
 

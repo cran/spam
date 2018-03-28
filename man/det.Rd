@@ -11,6 +11,7 @@
 \alias{det,spam-method}
 \alias{det,spam.chol.NgPeyton-method}
 \alias{det.spam}
+\alias{det}
 \alias{determinant}
 %\alias{determinant,spam.chol.NgPeyton-method}
 \alias{determinant,spam-method}
@@ -25,7 +26,7 @@
 
 }
 \usage{
-# det(x, ...)
+det(x, ...)
 determinant(x, logarithm = TRUE, ...)
 }
 \arguments{

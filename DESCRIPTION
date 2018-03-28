@@ -1,8 +1,8 @@
 Package: spam
 Type: Package
 Title: SPArse Matrix
-Version: 2.1-2
-Date: 2017-12-21
+Version: 2.1-3
+Date: 2018-03-23
 Authors@R: c(person("Reinhard", "Furrer", role = c("aut", "cre"),
                     email = "reinhard.furrer@math.uzh.ch"),
              person("Florian", "Gerber", role = c("ctb"),
@@ -36,7 +36,7 @@ LazyData: Yes
 License: LGPL-2
 URL: https://git.math.uzh.ch/reinhard.furrer/spam
 NeedsCompilation: yes
-Packaged: 2017-12-22 13:59:46 UTC; ligges
+Packaged: 2018-03-23 09:55:15 UTC; roflur
 Author: Reinhard Furrer [aut, cre],
   Florian Gerber [ctb],
   Daniel Gerber [ctb],
@@ -49,4 +49,4 @@ Author: Reinhard Furrer [aut, cre],
   Alan D. George [ctb] (Fortran Cholesky routines)
 Maintainer: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Repository: CRAN
-Date/Publication: 2017-12-22 14:59:47
+Date/Publication: 2018-03-28 08:24:26 UTC
