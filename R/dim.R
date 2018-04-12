@@ -117,9 +117,9 @@
         ## print("2")
             return(
                 .newSpam(
-                    entries=x@entries,
-                    colindices=x@colindices,
-                    rowpointers=c(1,rep_len64(2,value[1])), 
+                    # entries=x@entries,
+                    # colindices=x@colindices,
+                    # rowpointers=c(1,rep_len64(2,value[1])), 
                     dimension=value,
                     force64=force64
                     )

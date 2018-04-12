@@ -74,8 +74,9 @@ spam.list <-  function(x, nrow, ncol, eps = getOption("spam.eps")) {
     
     if (nz == 0)
         return(.newSpam(
-            rowpointers = c(1,rep_len64(2, nrow)),
-            dimension = c(nrow,ncol)))
+            # rowpointers = c(1,rep_len64(2, nrow)),
+            dimension = c(nrow,ncol),
+            force64 = force64))
     if (any( ir <= 0) || any( jc <= 0))
         stop("Indices need to be positive")
     if (any(!is.finite(x[[elenr]]))) {
@@ -130,8 +131,9 @@ spam.list <-  function(x, nrow, ncol, eps = getOption("spam.eps")) {
     ## if (identical(z$nz, 0)){
         ## print("special case")
         return(.newSpam(
-            rowpointers = c(1, rep_len64(2,nrow)),
-            dimension = c(nrow, ncol)))
+            # rowpointers = c(1, rep_len64(2,nrow)),
+            dimension = c(nrow, ncol),
+            force64 = force64))
          ## return(new("spam",rowpointers=c(1L,rep.int(2L,nrow)), dimension=c(nrow,ncol)))
     }
    
@@ -145,7 +147,8 @@ spam.list <-  function(x, nrow, ncol, eps = getOption("spam.eps")) {
         entries = z$entries[1:z$nz],
         colindices = z$colindices[1:z$nz],
         rowpointers = z$rowpointers,
-        dimension = c(nrow,ncol)))
+        dimension = c(nrow,ncol),
+        force64 = force64))
 }
 
 setMethod("as.spam", "list", as.spam.list) #  { function(x,eps) spam.list(x,eps=eps)})

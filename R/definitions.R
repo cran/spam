@@ -369,7 +369,7 @@ setMethod("t","spam",t.spam)
     stop("argument 'x' should be of mode 'numeric' (or 'spam')")
 
 as.spam.spam <- function(x, eps = getOption("spam.eps"))  {
-     force64 <- getOption("spam.force64")
+    force64 <- getOption("spam.force64")
    
     if(force64)
         SS <- .format64()
@@ -396,7 +396,8 @@ as.spam.spam <- function(x, eps = getOption("spam.eps"))  {
     nz <- z$rowpointers[dimx[1]+1]-1
     if(nz==0) {
         return(.newSpam(
-            dimension=dimx
+            dimension=dimx,
+            force64 = force64
         ))
     }
     
@@ -466,7 +467,7 @@ as.spam.matrix <- function(x, eps = getOption("spam.eps")) {
 "as.spam.numeric" <- function(x, eps = getOption("spam.eps")) {
     if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
 
-    force64 = getOption("spam.force64")
+    force64 <- getOption("spam.force64")
     
     poselements <- (abs(x)>eps)
     if (any(!is.finite(x))) {
@@ -479,7 +480,7 @@ as.spam.matrix <- function(x, eps = getOption("spam.eps")) {
     if (identical(nz,0)){
         return(
             .newSpam(
-                rowpointers = c(1,rep_len64(2,lx)),
+                # rowpointers = c(1,rep_len64(2,lx)),
                 dimension = c(lx,1),
                 force64 = force64
             )
@@ -506,7 +507,9 @@ as.spam.dist <- function(x, eps = getOption("spam.eps")) {
     dimx <- attr(x,"Size")
     size <- dimx*(dimx-1)/2
 
-    if( getOption("spam.force64") || dimx^2 > 2147483647)
+    force64 <- getOption("spam.force64")
+
+    if(force64 || dimx^2 > 2147483647)
         SS <- .format64()
     else
         SS <- .format32
@@ -532,15 +535,18 @@ as.spam.dist <- function(x, eps = getOption("spam.eps")) {
               PACKAGE = SS$package
               )
     nz <- z$rowpointers[dimx+1]-1
-    if(nz==0) return( .newSpam( rowpointers = c( 1, rep( 2, dimx)),
-                              dimension = c( dimx, dimx)))
+    if(nz==0) return( .newSpam(
+                              # rowpointers = c( 1, rep( 2, dimx)),
+                              dimension = c( dimx, dimx),
+                              force64 = force64))
 
     
     return(.newSpam(
         entries=z$entries[1:nz],
         colindices=z$colindices[1:nz],
         rowpointers=z$rowpointers[1:(dimx+1)],
-        dimension=c(dimx,dimx)
+        dimension=c(dimx,dimx),
+        force64 = force64
     ))
 }
 
@@ -622,7 +628,8 @@ spam.numeric <- function(x, nrow = 1, ncol = 1, eps = getOption("spam.eps"))  {
     return( .newSpam( entries = entries,
                      colindices = colindices,
                      rowpointers = rowpointers,
-                     dimension = dimx))
+                     dimension = dimx,
+                     force64 = force64))
 }
 
 setOldClass(c("dist", "numeric"))
@@ -1241,44 +1248,39 @@ function (x, rw, cl,value)
   
       
   if(nz==0){#trap zero matrix
-    z$entries <- 0
-    z$colindices <- 1
-    z$rowpointers <- c(1,rep(2,xn))
-  }  else {
-     entries <- z$entries
-     colindices <- z$colindices
-     rowpointers <- z$rowpointers
-     z <- NULL
-     
-     length(entries) <- nz
-     length(colindices) <- nz
-  
-     z <- .C64("sortrows",
-               SIGNATURE=c(SS$signature, "double", SS$signature, SS$signature),
-
-               xn,
-               entries=entries,
-               colindices=colindices,
-               rowpointers=rowpointers,
-               
-               INTENT=c("r", "rw", "rw", "rw"),
-               NAOK = getOption("spam.NAOK"),
-               PACKAGE = SS$package)
+    return(.newSpam(
+      dimension=c(xn,yl)
+    ))
   }
-  
-  entries <- z$entries
-  colindices <- z$colindices
-  rowpointers <- z$rowpointers
-  z <- NULL
-  length(colindices) <- nz
-  
+
+   entries <- z$entries
+   colindices <- z$colindices
+   rowpointers <- z$rowpointers
+   z <- NULL
+
+   length(entries) <- nz
+   length(colindices) <- nz
+
+   z <- .C64("sortrows",
+             SIGNATURE=c(SS$signature, "double", SS$signature, SS$signature),
+
+             xn,
+             entries=entries,
+             colindices=colindices,
+             rowpointers=rowpointers,
+             
+             INTENT=c("r", "rw", "rw", "rw"),
+             NAOK = getOption("spam.NAOK"),
+             PACKAGE = SS$package)
+
   return(.newSpam(
-    entries=entries,
-    colindices=colindices,
-    rowpointers=rowpointers,
+    entries=z$entries,
+    colindices=z$colindices,
+    rowpointers=z$rowpointers,
     dimension=c(xn,yl)
   ))
 }
+
 
 .spam.matmul.vector <- function(x,y)
 {

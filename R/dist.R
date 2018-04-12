@@ -66,6 +66,8 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
 
   if (is.na(method))     stop("invalid distance method")
 
+  force64 <- getOption("spam.force64")
+
   if (method == 4) {
     if (is.null(R))
       p <- ifelse( miles,3963.34,6378.388)
@@ -115,7 +117,7 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   }
   
   # EXPLICIT-STORAGE-FORMAT     
-  if(max(n1,n2,nnz) > 2147483647 - 1 | getOption("spam.force64"))
+  if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
       SS <- .format64()
   else
       SS <- .format32
@@ -161,7 +163,7 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
       nnz <-  nnz*getOption("spam.nearestdistincreasefactor")*n1/(d$iflag-1)
         
       # EXPLICIT-STORAGE-FORMAT     
-      if(max(n1,n2,nnz) > 2147483647 - 1 | getOption("spam.force64"))
+      if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
         SS <- .format64()
       else
         SS <- .format32
@@ -180,11 +182,19 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   length(d$entries) <- d$nnz
   length(d$colindices) <- d$nnz
   
+  if(d$nnz == 0) {
+    return(.newSpam(
+      dimension=c(n1,n2),
+      force64 = force64
+    ))
+  }
+  
   return(.newSpam(
     entries=d$entries,
     colindices=d$colindices,
     rowpointers=d$rowpointers,
-    dimension=c(n1,n2)
+    dimension=c(n1,n2),
+    force64 = force64
   ))
 }
 
