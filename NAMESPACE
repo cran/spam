@@ -175,7 +175,8 @@ export(
        "bdiag.spam",
 
     "var.spam",
-    "eigen.spam",
+      "eigen.spam",
+      "eigen_approx",
 
        "bandwidth",
        

@@ -1,3 +1,28 @@
+	CHANGES IN VERSION 2.2-0
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+    o   Implementation of 'eigen.spam' and 'eigen_approx' to calculate
+    	eigenvalues and eigenvectors for sparse matrices.
+
+    o   'germany.plot' has new argument 'cex.main'.
+
+
+BUG FIXES
+
+    o   'NAOK=TRUE' did not properly dispatch in all matrix multiplications.
+
+    o	'.newSpam()' was not always properly called, causing possible errors
+    	when creating empty 'spam' objects.
+
+
+INTERNAL CHANGES
+
+    o   Code cleaning and coherence improvements.
+
+
+
+
 	CHANGES IN VERSION 2.1-2
 
 SIGNIFICANT USER-VISIBLE CHANGES

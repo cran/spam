@@ -24,7 +24,7 @@ require('spam')
 #    for (i in rev(system('ls', intern=T) )) source(i)
 
 
-spamtest_eq <- function( xtest, xtrue, tol= 1.0e-6, relative=TRUE, label="", ...){
+spamtest_eq <- function( xtest, xtrue, tol= 1.0e-1, relative=TRUE, label="", ...){
     cxtest <- c(xtest); cxtrue <- c(xtrue)
     if(relative)
         denom <- mean(abs(cxtrue), na.rm = TRUE)

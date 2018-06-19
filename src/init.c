@@ -1,6 +1,8 @@
 #include <R_ext/RS.h> 
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
+#include <R_ext/Lapack.h>
+
 
 /* to get all functions:
 
@@ -24,10 +26,12 @@ extern void F77_NAME(pivotforwardsolve)( void *, void *, void *, void *, void *,
 extern void F77_NAME(pivotbacksolve   )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(backsolves       )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(kroneckerf       )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void F77_NAME(dn_eigen_f       )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 // 12
 extern void F77_NAME(amask            )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(subass           )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(kroneckermult    )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void F77_NAME(ds_eigen_f       )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 // 11
 extern void F77_NAME(getblock         )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 // 10
@@ -97,10 +101,12 @@ static const R_FortranMethodDef FortranEntries[] = {
     {"submat",            (DL_FUNC) &F77_NAME(submat            ),13},
     {"aemub",             (DL_FUNC) &F77_NAME(aemub             ),13},
     {"kroneckerf",        (DL_FUNC) &F77_NAME(kroneckerf        ),13},
+    {"dn_eigen_f",        (DL_FUNC) &F77_NAME(dn_eigen_f        ),13},
 
     {"subass",            (DL_FUNC) &F77_NAME(subass            ),12},
     {"amask",             (DL_FUNC) &F77_NAME(amask             ),12},
     {"kroneckermult",     (DL_FUNC) &F77_NAME(kroneckermult     ),12},
+    {"ds_eigen_f",        (DL_FUNC) &F77_NAME(ds_eigen_f        ),12},
 
     {"getblock",          (DL_FUNC) &F77_NAME(getblock          ),11},
 

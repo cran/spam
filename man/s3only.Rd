@@ -9,17 +9,14 @@
 
 \name{s3only}
 \alias{var.spam}
-\alias{eigen.spam}
 \title{Wappers for Sparse Matrices}
 \description{
   These functions are convenient wrappers for  \code{spam} objects
   to classical matrix operations.}
 \usage{
 var.spam(x, \dots)
-eigen.spam(x, \dots)
 
 \S3method{var}{spam}(x, \dots)
-\S3method{eigen}{spam}(x, \dots)
 }
 \arguments{
 \item{x}{matrix of class \code{spam}.}
@@ -33,9 +30,6 @@ eigen.spam(x, \dots)
 %\references{}
 %\note{}
 \seealso{Option \code{"inefficiencywarning"} in \code{\link{spam.options}}.
-}
-\examples{
-eigen( diag.spam(3))
 }
 \author{Reinhard Furrer}
 \keyword{algebra}

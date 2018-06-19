@@ -17,13 +17,6 @@
 #    Alan D. George [ctb] (Fortran Cholesky routines)       #
 # HEADER END ################################################
 
-     
-
-eigen.spam <- function(x, ...) {
-    inefficiencywarning( "This 'eigen' operation may be inefficient", prod(dim(x)))
-    eigen(as.matrix(x), ...)
-}
-
 var.spam <- function(x, ...) {
     inefficiencywarning( "This 'var' operation may be inefficient", prod(dim(x)))
     var(as.matrix(x), ...)
