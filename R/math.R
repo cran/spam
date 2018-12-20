@@ -5,19 +5,11 @@
 #  --> https://CRAN.R-project.org/package=spam64            #
 #  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
-#    Youcef Saad [ctb] (SPARSEKIT),                         #
-#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
-#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
-#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
-#    Alan D. George [ctb] (Fortran Cholesky routines),      #
-#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
-#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
-#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
-#    Alan D. George [ctb] (Fortran Cholesky routines)       #
+#    Roman Flury [ctb], Daniel Gerber [ctb],                #
+#    Kaspar Moesinger [ctb]                                 #
 # HEADER END ################################################
 
-     
+
 
 # `"Ops"":
 #      `"+"", `"-"", `"*"", `"/"", `"^"", `"%%"", `"%/%""
@@ -48,13 +40,13 @@ setMethod("!",signature(x="spam"),    function(x){
         x
     } else {
         inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(x)))
-        spam(as.double( callGeneric(as.matrix(x))), nrow=nrow(x))
+        spam(as.double( callGeneric(as.matrix(x))), nrow=dim(x)[1])
     }
 })
-          
-setMethod("+",signature(e1="spam",e2="missing"), function(e1) e1 )                
-setMethod("-",signature(e1="spam",e2="missing"), function(e1) { e1@entries <- -e1@entries; e1} )                
-              
+
+setMethod("+",signature(e1="spam",e2="missing"), function(e1) e1 )
+setMethod("-",signature(e1="spam",e2="missing"), function(e1) { e1@entries <- -e1@entries; e1} )
+
 #     `Math2" :
 
 setMethod("Math2",signature(x = "spam", digits = "ANY"),
@@ -68,7 +60,7 @@ setMethod("Math","spam", function(x){
         x
     }else{
         x@entries <- callGeneric(x@entries)
-        as.spam.spam( x)  
+        as.spam.spam( x)
     }
 })
 
@@ -88,7 +80,7 @@ setMethod("exp","spam", spam_Math )
 setMethod("log10","spam", spam_Math )
 setMethod("log2","spam", spam_Math )
 # from ?log: Do not set S4 methods on `logb" itself.
-# special case to set base...          
+# special case to set base...
 setMethod("log","spam", function(x,...) {
     if(getOption("spam.structurebased")) {
         x@entries <- callGeneric(x@entries,...)
@@ -100,7 +92,7 @@ setMethod("log","spam", function(x,...) {
           )
 
 
-          
+
 setMethod("cos","spam", spam_Math )
 #setMethod("cospi","spam", spam_Math )
 setMethod("cosh","spam", spam_Math )
@@ -121,29 +113,29 @@ setMethod("cumsum","spam", spam_Math )
 #     `Summary" :
 setMethod("Summary","spam", function(x,...,na.rm=FALSE){
     if(getOption("spam.structurebased")) {
-        callGeneric(x@entries,...,na.rm=na.rm) 
+        callGeneric(x@entries,...,na.rm=na.rm)
     }else{
         if ( prod( x@dimension) == length( x@entries)) {
-            callGeneric(x@entries,...,na.rm=na.rm) 
+            callGeneric(x@entries,...,na.rm=na.rm)
         } else {
             callGeneric(c(0,x@entries),...,na.rm=na.rm)
         }
     }
 }
-          )          
+          )
 
 logical_Summary <- function( x,...,na.rm=FALSE){
     if(getOption("spam.structurebased")) {
-        callGeneric(as.logical(x@entries),...,na.rm=na.rm) 
+        callGeneric(as.logical(x@entries),...,na.rm=na.rm)
     }else{
         if ( prod( x@dimension) == length( x@entries)) {
-            callGeneric(as.logical(x@entries),...,na.rm=na.rm) 
+            callGeneric(as.logical(x@entries),...,na.rm=na.rm)
         } else {
             callGeneric(as.logical(c(0,x@entries)),...,na.rm=na.rm)
         }
     }
 }
-      
+
 
 setMethod("any","spam", logical_Summary)
 setMethod("all","spam", logical_Summary)
@@ -155,8 +147,8 @@ setMethod("all","spam", logical_Summary)
 
 
 #     `Logic" `"&"", `"|"".
-        
-                                       
+
+
 "spam_Logic_vectorspam" <- function(e1, e2) {
     if(getOption("spam.structurebased")) {
         if(identical(length(e1),1L) | identical(length(e1), length(e2@entries))) {
@@ -186,21 +178,21 @@ setMethod("all","spam", logical_Summary)
         return( as.spam( callGeneric(as.matrix(e1), e2)) )
     }
 }
-        
 
-setMethod("|",signature(e1="spam",e2="spam"), 
+
+setMethod("|",signature(e1="spam",e2="spam"),
           function(e1,e2){ z <- spam_add(e1,e2);z@entries <- rep(1,length(z@colindices));z})
 
-setMethod("&",signature(e1="spam",e2="spam"), 
+setMethod("&",signature(e1="spam",e2="spam"),
           function(e1,e2){ z <- spam_mult(e1,e2); z@entries <- rep(1,length(z@colindices));z})
 setMethod("Logic",signature(e1="spam",e2="vector"), spam_Logic_spamvector)
 setMethod("Logic",signature(e1="vector",e2="spam"), spam_Logic_vectorspam)
 
 ##################################################################################################
-#     `Compare" `"=="", `">"", `"<"", `"!="", `"<="", `">=""                                     
+#     `Compare" `"=="", `">"", `"<"", `"!="", `"<="", `">=""
 "spam_Compare" <- function(e1,e2) {
     inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)),  max(prod(dim(e1)), prod(dim(e2))))
-    as.spam( callGeneric( as.matrix(e1), as.matrix(e2))  )            
+    as.spam( callGeneric( as.matrix(e1), as.matrix(e2))  )
 }
 
 "spam_Compare_spamvector" <- function(e1, e2){
@@ -239,7 +231,7 @@ setMethod("Compare",signature(e1="vector",e2="spam"), spam_Compare_vectorspam )
 ##################################################################################################
 #     `Arith": `"+"", `"-"", `"*"", `"^"", `"%%"", `"%/%"", `"/""
 
-"spam_Arith_vectorspam" <- function(e1, e2){    
+"spam_Arith_vectorspam" <- function(e1, e2){
 #    cat("spam_Arith_vectorspam")
     if(getOption("spam.structurebased")) {
         if(identical(length(e1),1L) | identical(length(e1), length(e2@entries))) {
@@ -273,8 +265,8 @@ spam_Arith <- function(e1,e2) {
     inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)),  max(prod(dim(e1)), prod(dim(e2))))
     as.spam( callGeneric( as.matrix(e1), as.matrix(e2)))
 }
-        
- 
+
+
 
 setMethod("Arith",signature(e1="spam",e2="spam"),   spam_Arith )
 setMethod("Arith",signature(e1="spam",e2="vector"), spam_Arith_spamvector)
@@ -293,7 +285,7 @@ setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(
 #######################################################################
 "spam_add" <- function(A, B, s=1)
 {
-    
+
                                         # cat("spam_add")
     nrow <- A@dimension[1]
     ncol <- A@dimension[2]
@@ -306,19 +298,19 @@ setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(
         SS <- .format32
 
     nzmax <- .C64("aplbdg",
-                  ## subroutine aplbdg (nrow,ncol,ja,ia,jb,ib,ndegr,nnz,iw) 
+                  ## subroutine aplbdg (nrow,ncol,ja,ia,jb,ib,ndegr,nnz,iw)
                   SIGNATURE = c(SS$signature, SS$signature,
                       SS$signature, SS$signature, SS$signature, SS$signature,
                       SS$signature, SS$signature, SS$signature),
-                  
+
                   nrow,
                   ncol,
-                  
+
                   A@colindices,
                   A@rowpointers,
                   B@colindices,
                   B@rowpointers,
-                  
+
                   vector_dc(SS$type, nrow),
                   nnz = vector_dc(SS$type, 1),
                   vector_dc(SS$type, ncol),
@@ -337,24 +329,24 @@ setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(
                   "double", SS$signature, SS$signature,
                   "double", SS$signature, SS$signature,
                   SS$signature, SS$signature),
-              
+
               nrow,
               ncol,
-              
+
               A@entries,
               A@colindices,
               A@rowpointers,
-              
+
               s,
-              
+
               B@entries,
               B@colindices,
               B@rowpointers,
-              
+
               entries     = vector_dc("double", nzmax),
               colindices  = vector_dc(SS$type, nzmax),
               rowpointers = vector_dc(SS$type, nrow+1),
-              
+
               nzmax+1,
               ierr = vector_dc(SS$type, 1),
 
@@ -417,7 +409,7 @@ setMethod("-",signature(e1="spam",e2="spam"),  function(e1,e2){ spam_add(e1, e2,
 #    e2 <- as.spam(e2)
 #  if(!(is.spam(e1) && is.spam(e2)))
 #    stop("Arguments must be of class:  vector, matrix or spam")
-    
+
   e1row <- e1@dimension[1]
   e1col <- e1@dimension[2]
   if(e1col != e2@dimension[2] | e1row != e2@dimension[1])
@@ -438,18 +430,18 @@ setMethod("-",signature(e1="spam",e2="spam"),  function(e1,e2){ spam_add(e1, e2,
                 "double", SS$signature, SS$signature,
                 "double", SS$signature, SS$signature,
                 SS$signature, SS$signature),
-            
+
             e1row,
             e1col,
-            
+
             e1@entries, e1@colindices, e1@rowpointers,
-            
+
             e2@entries, e2@colindices, e2@rowpointers,
-            
+
             entries     = vector_dc("double", nnzmax),
             colindices  = vector_dc(SS$type, nnzmax),
             rowpointers = vector_dc(SS$type, e1row+1),
-            
+
             nnzmax,
             ierr = vector_dc(SS$type,1),
 
@@ -473,11 +465,11 @@ setMethod("-",signature(e1="spam",e2="spam"),  function(e1,e2){ spam_add(e1, e2,
   ##               as.integer(nnzmax),
   ##               ierr = vector("integer",1),
   ##               NAOK=getOption("spam.NAOK"),  PACKAGE = "spam")
-    
+
     if(z$ierr != 0)      stop("insufficient space for element-wise sparse matrix multiplication")
 
     nnz <- z$rowpointers[e1row+1]-1
-    
+
     if(identical(z$entries,0L)){#trap zero matrix
         z$colindices <- 1L
         z$rowpointers <- c(1L,rep(2L,e1row))
@@ -517,12 +509,12 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
         SS <- .format64()
     else
         SS <- .format.spam(A)
-    
+
     return(array(
         .C64("addsparsefull",
                  SIGNATURE = c(SS$signature, "double", SS$signature, SS$signature,
                                "double"),
-                 
+
                  nrow,
                  A@entries,
                  A@colindices,
@@ -562,20 +554,20 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
         SS <- .format64()
     else
         SS <- .format.spam(A)
-    
+
     return(array(
         .C64("subfullsparse",
              SIGNATURE = c( SS$signature, SS$signature,
                            "double", SS$signature, SS$signature,
                            "double"),
-             
+
              nrow,
              ncol,
-             
+
              A@entries,
              A@colindices,
              A@rowpointers,
-             
+
              b = c(B),
 
              INTENT = c("r", "r",
@@ -603,7 +595,7 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
 #    } else  B <- rep(B,pdim %/% length(B))
 #  }
 #  if (!is.double(B[1]))  B <- as.double(B)
-  
+
     if(  getOption("spam.force64") )
         SS <- .format64()
     else
@@ -613,12 +605,12 @@ setMethod("*",signature(e1="spam",e2="spam"), spam_mult)
         .C64("subsparsefull",
              SIGNATURE = c(SS$signature, "double", SS$signature, SS$signature,
                            "double"),
-             
+
              nrow,
              A@entries,
              A@colindices,
              A@rowpointers,
-             
+
              b = c(B),
 
              INTENT = c("r", "r", "r", "r",
@@ -633,7 +625,7 @@ setMethod("+",signature(e1="matrix",   e2="spam"), function(e1,e2){ matrix_add_s
 setMethod("-",signature(e1="matrix",   e2="spam"), function(e1,e2){ matrix_sub_matrixspam(e1,e2)})
 setMethod("-",signature(e1="spam",   e2="matrix"), function(e1,e2){ matrix_sub_spammatrix(e1,e2)})
 
-                                      
+
 #"spam_division" <- function(e1,e2) { # Element-wise matrix division of two spams
 #  if(is.numeric(e1) && length(e1) == 1)
 #  { e2@entries <- e1/e2@entries
@@ -671,9 +663,9 @@ setMethod("-",signature(e1="spam",   e2="matrix"), function(e1,e2){ matrix_sub_s
 #        return(new("spam",entries=z$entries[1:nz],colindices=z$colindices[1:nz],rowpointers=z$rowpointers,
 #                   dimension=c(nrow,ncol)))
 #    }
- 
 
-   
+
+
 ##"spam_exponent" <- function(e1, e2)
 #{
 #    nrow <- e1@dimension[1]

@@ -1,11 +1,14 @@
 % HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This is file ../spam/man/Oral.Rd
-% This file is part of the spam package, 
-%      http://www.math.uzh.ch/furrer/software/spam/
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% This is file spam/man/Oral.Rd.                            %
+% It is part of the R package spam,                         %
+%  --> https://CRAN.R-project.org/package=spam              %
+%  --> https://CRAN.R-project.org/package=spam64            %
+%  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
+% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
+%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+%    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -17,7 +20,7 @@
 \docType{data}
 \title{Oral Cavity Cancer}
 \description{Oral cavity cancer counts in 544 districts in Germany over 1986-1990.}
-\format{\code{Oral} is a dataframe with 3 columns. 
+\format{\code{Oral} is a dataframe with 3 columns.
 \describe{
   \item{Y}{observed counts}
   \item{E}{expected counts}
@@ -34,8 +37,7 @@ There is a similar dataset \code{data(Germany)}  with larynx cancer cases from t
   \pkg{INLA} as well, with an additional smoking covariate.
 }
 \source{The data is available from the package \pkg{INLA}
-  distributed from \url{www.r-inla.org} or from\cr
-  \url{http://www.math.ntnu.no/~hrue/GMRF-book/oral.txt}
+  distributed from \url{www.r-inla.org}.
 }
 \references{
 Knorr-Held, L. and Rasser, G. (2000) Bayesian Detection of Clusters and Discontinuities in Disease Maps,

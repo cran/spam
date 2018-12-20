@@ -1,11 +1,14 @@
 % HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This is file ../spam/man/cov.Rd
-% This file is part of the spam package, 
-%      http://www.math.uzh.ch/furrer/software/spam/
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% This is file spam/man/cov.Rd.                             %
+% It is part of the R package spam,                         %
+%  --> https://CRAN.R-project.org/package=spam              %
+%  --> https://CRAN.R-project.org/package=spam64            %
+%  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
+% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
+%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+%    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{covmat}
 \alias{covmat}
@@ -47,16 +50,16 @@ cov.mat(h, theta, ... , eps= getOption("spam.eps"))
   according to the argument \code{type}. The nomenclature is similar to
   \code{premat}
   \cr
-  The parametrization is (range, sill, [smoothness], nugget), where
-  only the range needs to be specified. Default values are (1,[1],0).
+  The parametrization is (range, partial- sill, [smoothness = 1], [nugget = 0]), where
+  only the range needs to be specified.
   In case of negative parameter values, a warning is issued and the
   absolute value is retained.
   Although more cryptic, having all arguments as a single vector
-  simplifies optimization with \code{optim}. 
+  simplifies optimization with \code{optim}.
   \cr
   Currently, the functions distinguish between a sparse \code{spam}
   object \code{h} and any other numeric type. In the future, this might
-  change and appropriate methods will be implemented. 
+  change and appropriate methods will be implemented.
 }
 \value{Covariance function evaluated on \code{h}.}
 %\note{There is intentionally no \acronym{S3} distinction between the classes
@@ -72,7 +75,7 @@ Sigma <- cov.sph(h, c(.3, 1, .1))
 h <- seq(0, to=1, length.out=100)
 plot( h, cov.exp(h, c(1/3,1)), type='l', ylim=c(0,1))
 type <- c("sph","wendland1","wendland2","wu1","wu2","wu3")
-for (i in 1:6) 
+for (i in 1:6)
   lines( h, covmat(h, 1, type=type[i]), col=i+1)
 legend('topright',legend=type, col=2:7, lty=1)
 

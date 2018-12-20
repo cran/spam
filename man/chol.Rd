@@ -1,11 +1,14 @@
 % HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This is file ../spam/man/chol.Rd
-% This file is part of the spam package, 
-%      http://www.math.uzh.ch/furrer/software/spam/
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% This is file spam/man/chol.Rd.                            %
+% It is part of the R package spam,                         %
+%  --> https://CRAN.R-project.org/package=spam              %
+%  --> https://CRAN.R-project.org/package=spam64            %
+%  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
+% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
+%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+%    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{chol}
 \alias{chol.spam}
@@ -18,7 +21,7 @@
 \title{Cholesky Factorization for Sparse Matrices}
 \description{
 \code{chol} performs a Cholesky
-decomposition of a symmetric positive definite sparse matrix \code{x} 
+decomposition of a symmetric positive definite sparse matrix \code{x}
 of class \code{spam}.}
 \usage{
 # chol(x, \dots)
@@ -47,7 +50,7 @@ of class \code{spam}.}
 }
 \value{The function returns the Cholesky factor in an object of class
   \code{spam.chol.}\emph{method}. Recall that the latter is the Cholesky
-  factor of a reordered matrix \code{x}, see also \code{\link{ordering}}. 
+  factor of a reordered matrix \code{x}, see also \code{\link{ordering}}.
 }
 
 \details{\code{chol} performs a Cholesky decomposition of a symmetric
@@ -91,7 +94,7 @@ The output of \code{chol} can be used with \code{forwardsolve} and
 
 Notice that the Cholesky factorization of the package \code{SparseM} is also
 based on the algorithm of Ng and Peyton (1993).  Whereas the Cholesky
-routine of the package \code{Matrix} are based on 
+routine of the package \code{Matrix} are based on
 \code{CHOLMOD} by Timothy A. Davis (\code{C} code).
 }
 \references{
@@ -116,14 +119,14 @@ diagonal entries are used. By default, the code does check for
 symmetry (contrarily to \code{base:::chol}). However,
 depending on the matrix size, this is a time consuming test.
 A test is ignored if
-\code{options("spam.cholsymmetrycheck")} is set to \code{FALSE}. 
+\code{options("spam.cholsymmetrycheck")} is set to \code{FALSE}.
 
 
 If a permutation is supplied with \code{pivot},
 \code{options("spam.cholpivotcheck")} determines if the permutation is
-tested for validity (defaults to \code{TRUE}). 
+tested for validity (defaults to \code{TRUE}).
 }
-\seealso{\code{\link{det.spam}}, \code{\link{solve.spam}}, 
+\seealso{\code{\link{det.spam}}, \code{\link{solve.spam}},
   \code{\link{forwardsolve.spam}}, \code{\link{backsolve.spam}} and \code{\link{ordering}}.
 }
 \examples{
@@ -134,14 +137,14 @@ N <- 1000  # sample size
 Sigma <- .25^abs(outer(1:n,1:n,"-"))
 Sigma <- as.spam( Sigma, eps=1e-4)
 
-cholS <- chol( Sigma)    
+cholS <- chol( Sigma)
 # cholS is the upper triangular part of the permutated matrix Sigma
 iord <- ordering(cholS, inv=TRUE)
 
 R <- as.spam(cholS)
 mvsample <- ( array(rnorm(N*n),c(N,n)) \%*\% R)[,iord]
 # It is often better to order the sample than the matrix
-# R itself. 
+# R itself.
 
 # 'mvsample' is of class 'spam'. We need to transform it to a
 # regular matrix, as there is no method 'var' for 'spam' (should there?).

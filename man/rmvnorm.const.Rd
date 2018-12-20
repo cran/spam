@@ -1,11 +1,14 @@
 % HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This is file ../spam/man/rmvnorm.const.Rd
-% This file is part of the spam package, 
-%      http://www.math.uzh.ch/furrer/software/spam/
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-%    Daniel Gerber [ctb], Kaspar Moesinger [ctb]            
+% This is file spam/man/rmvnorm.const.Rd.                   %
+% It is part of the R package spam,                         %
+%  --> https://CRAN.R-project.org/package=spam              %
+%  --> https://CRAN.R-project.org/package=spam64            %
+%  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
+% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
+%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+%    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{rmvnorm.const}
 \alias{rmvnorm.const}
@@ -16,12 +19,12 @@
   Fast ways to draw multivariate normals with linear constrains when the variance or precision matrix
   is sparse.}
 \usage{
-rmvnorm.const(n, mu = rep(0, nrow(Sigma)), Sigma, Rstruct = NULL, 
-              A = array(1, c(1,nrow(Sigma))), a=0, U=NULL,  ...) 
-rmvnorm.prec.const(n, mu = rep(0, nrow(Q)), Q, Rstruct = NULL, 
-              A = array(1, c(1,nrow(Q))), a=0, U=NULL,  ...) 
-rmvnorm.canonical.const(n, b, Q, Rstruct = NULL, 
-              A = array(1, c(1,nrow(Q))), a=0, U=NULL, ...) 
+rmvnorm.const(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, Rstruct = NULL,
+              A = array(1, c(1,dim(Sigma)[1])), a=0, U=NULL,  ...)
+rmvnorm.prec.const(n, mu = rep.int(0, dim(Q)[1]), Q, Rstruct = NULL,
+              A = array(1, c(1,dim(Q)[1])), a=0, U=NULL,  ...)
+rmvnorm.canonical.const(n, b, Q, Rstruct = NULL,
+              A = array(1, c(1,dim(Q)[1])), a=0, U=NULL, ...)
 }
 \arguments{
 \item{n}{number of observations.}
@@ -36,7 +39,7 @@ rmvnorm.canonical.const(n, b, Q, Rstruct = NULL,
 \item{\dots}{arguments passed to \code{chol}.}
 }
 \details{The functions \code{rmvnorm.prec} and \code{rmvnorm.canonical}
-  do not requrie sparse precision matrices. 
+  do not requrie sparse precision matrices.
   For \code{rmvnorm.spam}, the differences between regular and sparse
   covariance matrices are too significant to be implemented here.  \cr
   Often (e.g., in a Gibbs sampler setting), the sparsity structure of
@@ -47,7 +50,7 @@ rmvnorm.canonical.const(n, b, Q, Rstruct = NULL,
 }
 %\note{There is intentionally no \acronym{S3} distinction between the classes
 %  \code{spam} and \code{spam.chol.}\emph{method}.}
-\references{See references in \code{\link{chol}}. 
+\references{See references in \code{\link{chol}}.
 }
 \seealso{\code{\link{rmvnorm.spam}}.
 }

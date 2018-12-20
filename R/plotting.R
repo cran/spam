@@ -5,16 +5,8 @@
 #  --> https://CRAN.R-project.org/package=spam64            #
 #  --> https://git.math.uzh.ch/reinhard.furrer/spam         #
 # by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      #
-#    Daniel Gerber [ctb], Kaspar Moesinger [ctb],           #
-#    Youcef Saad [ctb] (SPARSEKIT),                         #
-#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
-#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
-#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
-#    Alan D. George [ctb] (Fortran Cholesky routines),      #
-#    Esmond G. Ng [ctb] (Fortran Cholesky routines),        #
-#    Barry W. Peyton [ctb] (Fortran Cholesky routines),     #
-#    Joseph W.H. Liu [ctb] (Fortran Cholesky routines),     #
-#    Alan D. George [ctb] (Fortran Cholesky routines)       #
+#    Roman Flury [ctb], Daniel Gerber [ctb],                #
+#    Kaspar Moesinger [ctb]                                 #
 # HEADER END ################################################
 
 
@@ -27,18 +19,18 @@ if(! exists(".bincode", envir = .BaseNamespaceEnv))
     .bincode <- function(v, breaks, ...) {
         .C("bincode", as.double(v), length(v), as.double(breaks),
            length(breaks), code = integer(length(v)), as.logical(TRUE),
-           as.logical(TRUE), nok = TRUE, NAOK = TRUE, 
+           as.logical(TRUE), nok = TRUE, NAOK = TRUE,
            PACKAGE = "base")$code
     }
 
 
-image.spam <- 
+image.spam <-
 function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
     z, zlim = range(z), xlim = range(x), ylim = range(y),
     col = heat.colors(12), add = FALSE, xaxs = "i", yaxs = "i",
     xlab, ylab, breaks, oldstyle = FALSE,cex=NULL, ...)
 {
-  
+
     if (missing(z)) {
       if (!missing(x)) {
         if (is.list(x)) {
@@ -49,7 +41,7 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
           if (is.null(dim(x)))
             stop("argument must be matrix-like")
           z <- x
-          x <- seq(0, 1, len = nrow(z))
+          x <- seq(0, 1, len = dim(z)[1])
         }
         if (missing(xlab))
           xlab <- ""
@@ -75,12 +67,12 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
           ""
         else deparse(substitute(y))
     }
-    
+
     if (any(!is.finite(x)) || any(!is.finite(y)))
       stop("'x' and 'y' values must be finite and non-missing")
     if (any(diff(x) <= 0) || any(diff(y) <= 0))
       stop("increasing 'x' and 'y' values expected")
-    
+
     spamversion <- (prod(z@dimension) > getOption("spam.imagesize"))
     if (!spamversion){
       image.default(x, y, as.matrix(z),...)
@@ -89,17 +81,17 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
       if (!is.spam(z))    stop("'z' must be a matrix")
       xx <- x
       yy <- y
-      if (length(x) > 1 && length(x) == nrow(z)) {
+      if (length(x) > 1 && length(x) == dim(z)[1]) {
         dx <- 0.5 * diff(x)
         x <- c(x[1] - dx[1], x[-length(x)] + dx, x[length(x)] +
                dx[length(x) - 1])
       }
-      if (length(y) > 1 && length(y) == ncol(z)) {
+      if (length(y) > 1 && length(y) == dim(z)[2]) {
         dy <- 0.5 * diff(y)
         y <- c(y[1] - dy[1], y[-length(y)] + dy, y[length(y)] +
                dy[length(y) - 1])
       }
-      
+
       zvals <- z@entries
       if (missing(breaks)) {
         nc <- length(col)
@@ -121,22 +113,22 @@ function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)),
           stop("breaks must all be finite")
         # Patch proposed by BR see email.
         zi <- .bincode(zvals, breaks, TRUE, TRUE) - 1
-        
+
       }
       if (!add)
         plot(NA, NA, xlim = xlim, ylim = ylim, type = "n", xaxs = xaxs,
              yaxs = yaxs, xlab = xlab, ylab = ylab, ...)
-      if (length(xx) != nrow(z) || length(yy) != ncol(z))
+      if (length(xx) != dim(z)[1] || length(yy) != dim(z)[2])
         stop("dimensions of z are not length(x) times length(y)")
       if (missing(cex)) {
         warning("default value for 'cex' in 'image' might be a bad choice", call.=FALSE)
         cex <- 1
       }
-      points( xx[rep.int((1:nrow(z)),diff(z@rowpointers))], yy[z@colindices],
+      points( xx[rep.int((1:dim(z)[1]),diff(z@rowpointers))], yy[z@colindices],
              pch=".", cex=cex*getOption("spam.cex")/sum(z@dimension),
              col=col[zi+1])
     }
-  
+
     box()
   }
 
@@ -145,15 +137,15 @@ display.spam <- function(x,col=c("gray","white"),xlab="column",ylab="row", cex=N
 {
   nrow <- x@dimension[1]
   ncol <- x@dimension[2]
-  
+
 # For small matrices, we transform them into regular ones and use the image.default
-# routine.  
+# routine.
   if (prod(nrow,ncol) < getOption("spam.imagesize")) {
     z <- vector("double", prod(nrow,ncol))
     dim(z) <- c(nrow,ncol)
     z[cbind(rep.int(nrow:1,diff(x@rowpointers)),x@colindices)] <- -1
     image.default(x=1:ncol,y=-(nrow:1),t(z),
-                  axes=FALSE, col=col, xlab=xlab, ylab=ylab, ...) 
+                  axes=FALSE, col=col, xlab=xlab, ylab=ylab, ...)
   } else {
     if (missing(cex)) {
       warning("default value for 'cex' in 'display' might not be the optimal choice", call.=FALSE)
@@ -176,7 +168,7 @@ plot.spam <- function(x,y,xlab=NULL,ylab=NULL,...)
   lab <- deparse(substitute(x))
   #only a few cases are considered
   # 1st case, a colum vector only
-  if (ncol(x)==1) {
+  if (dim(x)[2]==1) {
     x <- c(x)
     return( plot(x,...))
   }
@@ -187,7 +179,7 @@ plot.spam <- function(x,y,xlab=NULL,ylab=NULL,...)
        ylab=ifelse(missing(ylab),paste(lab,"[,2]",sep=""),ylab),...)
 }
 
-#setGeneric("image", function(x, ...) standardGeneric("image")) 
+#setGeneric("image", function(x, ...) standardGeneric("image"))
 setMethod("image","spam",function(x,cex=NULL,...){image.spam(x,cex=cex,...)})
 
 # the following is unfortunately not possible

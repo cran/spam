@@ -1,7 +1,13 @@
-% This is file ../spam/eigen.Rd
-% This file is part of the spam package, 
-%      http://www.math.uzh.ch/furrer/software/spam/
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb], Roman Flury [ctb]
+% HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This is file spam/man/eigen.Rd.                           %
+% It is part of the R package spam,                         %
+%  --> https://CRAN.R-project.org/package=spam              %
+%  --> https://CRAN.R-project.org/package=spam64            %
+%  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
+% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
+%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+%    Kaspar Moesinger [ctb]                                 %
+% HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \name{eigen}
