@@ -1,3 +1,10 @@
+# spam 2.2-2
+
+BUG FIXES
+
+* in testthat/test-constructors.R, which uses `base::sample()` (http://developer.r-project.org/blosxom.cgi/R-devel/2019/02/26#n2019-02-26).
+
+
 # spam 2.2-1
 
 SIGNIFICANT USER-VISIBLE CHANGES
