@@ -4,11 +4,11 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{spam}
 \alias{spam.creation}
@@ -63,8 +63,8 @@ is.spam(x)
 }
 \details{
   The functions \code{spam} and \code{as.spam} act like \code{matrix}
-  and \code{as.matrix} 
-  to coerce an object to a sparse matrix object of class \code{spam}.  
+  and \code{as.matrix}
+  to coerce an object to a sparse matrix object of class \code{spam}.
 
 
   If \code{x} is a list, it should contain either two or three elements.
@@ -75,13 +75,13 @@ is.spam(x)
   \code{j}) and the values. In both cases partial matching is done.
   In case there are several triplets with the same \code{i}, \code{j},
   the values are added.
-  
+
   \code{eps} should be at least as large as \code{.Machine$double.eps}.
 
 
   If \code{getOption("spam.force64")} is \code{TRUE}, a 64-bit
   spam matrix is returned in any case. If \code{FALSE}, a 32-bit
-  matrix is returned when possible. 
+  matrix is returned when possible.
 }
 \note{The zero matrix has the element zero stored in (1,1).\cr
 
@@ -90,9 +90,9 @@ is.spam(x)
   argument, which defaults to \code{FALSE} resulting in an error.
   Hence, the \code{NaN} do not always properly propagate through (i.e.
   \code{spam} is not IEEE-754 compliant).
-  
+
 }
-\references{Reinhard Furrer, Stephan R. Sain (2010). 
+\references{Reinhard Furrer, Stephan R. Sain (2010).
   "spam: A Sparse Matrix R Package with Emphasis on MCMC
   Methods for Gaussian Markov Random Fields.",
         \emph{Journal of Statistical Software}, 36(10), 1-25,
@@ -100,6 +100,8 @@ is.spam(x)
 }
 \seealso{
   \code{\link{SPAM}} for a general overview of the package;
+  \code{\link{spam_random}} to create matrices with a random sparsity pattern;
+  \code{\link{cleanup}} to purge a sparse matrix;
   \code{\link{spam.options}} for details about the \code{safemode} flag;
     \code{\link{read.MM}} and \code{\link{foreign}} to create \code{spam}
 	matrices from MatrixMarket

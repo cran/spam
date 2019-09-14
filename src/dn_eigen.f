@@ -46,7 +46,7 @@ c
       ndigit = -3
       logfil = 6
       mngets = 0
-      mnaitr = 0 
+      mnaitr = 0
       mnapps = 0
       mnaupd = vf
       mnaup2 = vf
@@ -63,7 +63,7 @@ c
       mode   = 1
 c
       iparam(1) = ishfts
-      iparam(3) = maxitr 
+      iparam(3) = maxitr
       iparam(7) = mode
 c
       if (iwhich .eq. 1) then
@@ -79,7 +79,7 @@ c
       else if (iwhich .eq. 6) then
             which = 'SI'
       else
-		call intpr(' Error: Invalid mode.', -1, 0, 0)
+           call intpr(' Error: Invalid mode.', -1, 0, 0)
 c
         goto 9000
       end if
@@ -129,7 +129,7 @@ c
          end if
 c
       endif
-c 
+c
  9000 continue
 c
       end

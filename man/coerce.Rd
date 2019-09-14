@@ -4,11 +4,11 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -23,7 +23,7 @@
 \title{Force a \code{spam} Object to Belong to a Class}
 \description{
   These functions manage the relations that allow coercing a \code{spam} object
-  to a given class. 
+  to a given class.
 }
 \section{Methods}{
 \describe{

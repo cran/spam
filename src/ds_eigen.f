@@ -82,7 +82,7 @@ c
       else if (iwhich .eq. 9) then
             which = 'BE'
       else
-		call intpr(' Error: Invalid mode.', -1, 0, 0)
+            call intpr(' Error: Invalid mode.', -1, 0, 0)
 c
         goto 9000
       end if
@@ -106,19 +106,19 @@ c     |      used to specify actions to be taken on return  |
 c     |      from DSAUPD. (See usage below.)                |
 c     |                                                     |
 c     |      It MUST initially be set to 0 before the first |
-c     |      call to DSAUPD.                                | 
+c     |      call to DSAUPD.                                |
 c     |                                                     |
 c     | INFO on entry specifies starting vector information |
 c     |      and on return indicates error codes            |
 c     |                                                     |
-c     |      Initially, setting INFO=0 indicates that a     | 
+c     |      Initially, setting INFO=0 indicates that a     |
 c     |      random starting vector is requested to         |
 c     |      start the ARNOLDI iteration.  Setting INFO to  |
 c     |      a nonzero value on the initial call is used    |
 c     |      if you want to specify your own starting       |
-c     |      vector (This vector must be placed in RESID.)  | 
+c     |      vector (This vector must be placed in RESID.)  |
 c     |                                                     |
-c     | The work array WORKL is used in DSAUPD as           | 
+c     | The work array WORKL is used in DSAUPD as           |
 c     | workspace.  Its dimension LWORKL is set as          |
 c     | illustrated below.                                  |
 c     |                                                     |
@@ -155,14 +155,14 @@ c
  10   continue
 c
 c        %---------------------------------------------%
-c        | Repeatedly call the routine DSAUPD and take | 
+c        | Repeatedly call the routine DSAUPD and take |
 c        | actions indicated by parameter IDO until    |
 c        | either convergence is indicated or maxitr   |
 c        | has been exceeded.                          |
 c        %---------------------------------------------%
 c
 c
-         call dsaupd ( ido, bmat, n, which, maxnev, tol, resid, 
+         call dsaupd ( ido, bmat, n, which, maxnev, tol, resid,
      &                 ncv, v, n, iparam, ipntr, workd, workl,
      &                 lworkl, info )
 c
@@ -205,16 +205,16 @@ c
 c
          goto 9000
 c
-      else 
+      else
 c
 c        %-------------------------------------------%
 c        | No fatal errors occurred.                 |
 c        | Post-Process using DSEUPD.                |
 c        |                                           |
-c        | Computed eigenvalues may be extracted.    |  
+c        | Computed eigenvalues may be extracted.    |
 c        |                                           |
 c        | Eigenvectors may be also computed now if  |
-c        | desired.  (indicated by rvec = .true.)    | 
+c        | desired.  (indicated by rvec = .true.)    |
 c        |                                           |
 c        | The routine DSEUPD now called to do this  |
 c        | post processing (Other modes may require  |
@@ -222,7 +222,7 @@ c        | more complicated post processing than     |
 c        | mode1.)                                   |
 c        |                                           |
 c        %-------------------------------------------%
-c 
+c
           rvec = .true.
 c
           call dseupd ( rvec, 'A', select, d, v, n, sigma,

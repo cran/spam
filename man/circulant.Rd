@@ -4,11 +4,10 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
 
 
 
@@ -24,11 +23,11 @@ circulant.spam(x, n = NULL, eps = getOption("spam.eps"))
     containing the indices and the nonzero values.}
   \item{n}{if \code{x} is a list, the dimension of the matrix.}
   \item{eps}{A tolerance parameter:  elements of \code{x} such that \code{abs(x)
-    <= eps} set to zero. Defaults to \code{eps = getOption("spam.eps")}} 
+    <= eps} set to zero. Defaults to \code{eps = getOption("spam.eps")}}
 }
 \value{The circulant matrix in \code{spam} format.}
 %\details{The vector \code{y} has to be of the same length as \code{x}
-%  and its first element is discarded. 
+%  and its first element is discarded.
 %    }
 %\references{}
 \seealso{\code{\link[magic]{circulant}} from package \pkg{magic}, \code{\link{toeplitz.spam}}}

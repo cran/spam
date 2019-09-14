@@ -58,7 +58,7 @@ setMethod("[",signature(x="spam",i="matrix",j="matrix", drop = "ANY"),
 	  function (x, i, j,..., drop) {subset.spam(x,rw=cbind(c(i),c(j)),drop=drop) })
 
 setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
-	  function (x, i, j,..., drop=getOption("spam.drop")) 
+	  function (x, i, j,..., drop=getOption("spam.drop"))
 {
                                         # drop is not implemented yet
     ## print("subset spam spam")
@@ -77,7 +77,7 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
   ##               imask=as.integer(c(i@rowpointers,rep(i@rowpointers[length(i@rowpointers)],nrow+1-length(i@rowpointers)))),
   ##               c=as.double(x@entries),
   ##               jc=as.integer(x@colindices),
-  ##               ic=as.integer(x@rowpointers),           
+  ##               ic=as.integer(x@rowpointers),
   ##               iw=logical(ncol),
   ##               nzmax=as.integer(length(i@colindices)),
   ##               ierr=0L,
@@ -86,7 +86,7 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
         SS <- .format64()
     else
         SS <- .format32
-    
+
     z <- .C64("amask",
              ##     subroutine amask (nrow,ncol,a,ja,ia,jmask,imask,
      ## *                  c,jc,ic,nzmax,ierr)
@@ -95,21 +95,21 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
                             SS$signature, SS$signature,
                             "double", SS$signature, SS$signature,
                              SS$signature, SS$signature),
-              
+
               nrow = nrow,
               ncol = ncol,
-              
+
               a = x@entries,
               colindices = x@colindices,
               rowpointers = x@rowpointers,
-              
+
               jmask = i@colindices,
               imask = c(i@rowpointers, rep_len64(i@rowpointers[length(i@rowpointers)], nrow+1-length(i@rowpointers))),
-              
+
               c = x@entries,
               jc = x@colindices,
               ic = x@rowpointers,
-              
+
               nzmax = length( i@colindices),
               ierr = 0,
 
@@ -120,7 +120,7 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
                          "r", "w" ),
               NAOK = getOption("spam.NAOK"),
               PACKAGE = SS$package) # some copying is required!!!!
-    
+
   nz <- z$ic[nrow+1]-1
     if (nz==0) {
         ## print("nz = 0")
@@ -129,7 +129,7 @@ setMethod("[",signature(x="spam",i="spam",j="missing", drop = "ANY"),
     if (drop) {
         ## print("drop")
     ic <- unique( z$ic[1:(z$nrow+1)])
-    dimx <- as.integer(c(length(ic)-1,max(z$jc[1:nz])))    
+    dimx <- as.integer(c(length(ic)-1,max(z$jc[1:nz])))
     } else {
         ## print("notdrop")
     ic <-z$ic[1:(z$nrow+1)]
@@ -147,7 +147,7 @@ setMethod("[", signature(x = "spam", i = "ANY", j = "ANY", drop = "ANY"),
 	  function(x,i,j, drop)
           stop("Invalid or not-yet-implemented 'spam' subsetting"))
 
-# the proper S3 subsetting causes problems... 
+# the proper S3 subsetting causes problems...
 #  "[.spam" <- function (x, rw, cl,drop=getOption("spam.drop")) {subset.spam(x,rw=rw,cl=cl,drop) }
 
 
@@ -168,7 +168,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
     stop("Negative and positive subscripts mixed")
 
   SS <- .format.spam(x)
-  
+
   if(nA==3) { # extract elements
     if (is.logical(i)) {
       inefficiencywarning( "Logical subsetting may be inefficient, is this really what you want?",
@@ -178,7 +178,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
                                 "double", SS$signature, SS$signature,
                                 "double"),
                   nrow,
-                  
+
                   entries = x@entries,
                   colindices = x@colindices,
                   rowpointers = x@rowpointers,
@@ -187,7 +187,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
  #                 INTENT = c("r","r","r","r","w"), # not checked   !!!
                   NAOK=getOption("spam.NAOK"),PACKAGE = SS$package)$res[i])
     }
-    
+
     if (mini<0) {
       inefficiencywarning( "Negative subsetting may be inefficient, is this really what you want?",
                           prod(dimx))
@@ -196,7 +196,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
                                 "double", SS$signature, SS$signature,
                                 "double"),
                   nrow,
-                  
+
                   entries=x@entries,
                   colindices=x@colindices,
                   rowpointers=x@rowpointers,
@@ -222,11 +222,11 @@ function (x, i, ..., drop=getOption("spam.drop"))
                    nir,
                    i,
                    j,
-                   
+
                    x@entries,
                    x@colindices,
                    x@rowpointers,
-                   
+
                    iadd = vector_dc(SS$type,nir),
                    allelem = vector_dc("double",nir),
 
@@ -238,22 +238,22 @@ function (x, i, ..., drop=getOption("spam.drop"))
     return(z)
   }
   if(nA==4) {
-  
+
     if (is.logical(i)) {  # logical
       if( length(i) > nrow)  stop("(subscript) logical subscript too long",call.=FALSE)
-      
+
       i <- seq_len( nrow)[i]
-    }  else {    
+    }  else {
 
       i <- i[i!=0]     # eliminate zero lines
-    
+
     if (maxi>x@dimension[1])
       stop("subscript out of bounds",call.=FALSE)
-      
+
       # negative values:
-      if ( maxi <= 0 )       i <- seq_len( nrow)[i] 
+      if ( maxi <= 0 )       i <- seq_len( nrow)[i]
     }
-      
+
 
     ni <- length(i)
     if (ni==0) return(numeric(0))   # zero elements...
@@ -299,12 +299,12 @@ function (x, i, ..., drop=getOption("spam.drop"))
                                 "double", SS$signature, SS$signature,
                                 "double"),
                   nrow=ni,
-                  
+
                   entries=z$entries,
                   colindices=z$colindices,
                   rowpointers=z$rowpointers,
 
-                  res=vector_dc("double",prod(ni,ncol)),  
+                  res=vector_dc("double",prod(ni,ncol)),
                   NAOK=getOption("spam.NAOK"),
                   PACKAGE = SS$package)$res)
     else {
@@ -315,17 +315,17 @@ function (x, i, ..., drop=getOption("spam.drop"))
             dimension=c(ni,ncol),
             force64=getOption("spam.force64")))
     }
-  
+
   }
   stop("incorrect number of dimensions")
 }
 
 ## subset_rows.spam <- function(x, i, drop){
-      
+
 ##   dimx <- x@dimension
 ##   nrow <- dimx[1]
 ##   ncol <- dimx[2]
-  
+
 ##     ni <- length(i)
 ##     if (ni==0) return(numeric(0))   # zero elements...
 
@@ -336,34 +336,34 @@ function (x, i, ..., drop=getOption("spam.drop"))
 
 ##     nz <- sum(x@rowpointers[i+1]-x@rowpointers[i])
 ##     if (nz==0) { #trap zero matrix
-##       if (drop==TRUE && (ni==1 || ncol==1)) 
+##       if (drop==TRUE && (ni==1 || ncol==1))
 ##         return( vector("double",max(ni,ncol)))
 ##       else
 ##         return(new("spam",rowpointers=c(1,rep(2L,ni )),
 ##                    dimension = c(ni,ncol)))
 ##     }
-    
+
 ##     SS <- .format.spam(x)
- 
+
 ##      z <- .C64("getlines",
 ##                SIGNATURE=c("double", SS$signature, SS$signature, SS$signature,
 ##                    SS$signature, SS$signature, "double", SS$signature,
 ##                    SS$signature),
-               
+
 ##                x@entries,
 ##                x@colindices,
 ##                x@rowpointers,
 ##                ni,
-               
+
 ##                i, #int64
 ##                newnz=nz,
 ##                entries=vector_dc("double",nz),
 ##                colindices=vector_dc(SS$type,nz),
-               
+
 ##                rowpointers=vector_dc(SS$type,ni+1),
-               
+
 ##                INTENT=c("r", "r", "r", "r",
-##                    "r", "rw", "w", "w", 
+##                    "r", "rw", "w", "w",
 ##                    "w"),
 ##                NAOK = getOption("spam.NAOK"),
 ##                PACKAGE=SS$package)
@@ -375,23 +375,23 @@ function (x, i, ..., drop=getOption("spam.drop"))
 ##                    colindices=z$colindices,
 ##                    rowpointers=z$rowpointers,
 ##                    dimension=c(ni,ncol))
-  
+
 ##     if (drop==TRUE && (ni==1 || ncol==1)) {
-    
+
 ##         x <- newx
 ##         SS <- .format.spam(x)
-        
+
 ##         dimx <- x@dimension
-    
+
 ##         result <- .C64("spamcsrdns",
 ##                        SIGNATURE=c(SS$signature, "double", SS$signature, SS$signature, "double"),
 ##                        nrow=dimx[1],
 ##                        entries=x@entries,
 ##                        colindices=x@colindices,
 ##                        rowpointers=x@rowpointers,
-##                        res=vector("double",prod(dimx)),  # TODO: Expects zeros, because it 
+##                        res=vector("double",prod(dimx)),  # TODO: Expects zeros, because it
 ##                                         # only overwrites the non-zero elements! (use RW)
-                       
+
 ##                        INTENT=c("r", "r", "r", "r", "rw"),
 ##                        NAOK = getOption("spam.NAOK"),
 ##                        PACKAGE = SS$package
@@ -400,7 +400,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
 ##     }else {
 ##       return(newx)
 ##     }
-  
+
 ##   stop("incorrect number of dimensions")
 ## }
 
@@ -421,7 +421,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
   ncol <- dimx[2]
 
   SS <- .format.spam(x)
-  
+
   if (is.matrix(rw)) {
     if (is.logical(rw)) {
       return( x[as.spam.matrix(rw)] )
@@ -443,7 +443,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
                 nir,
                 ir,
                 jr,
-                
+
                 x@entries, x@colindices, x@rowpointers,
 
                 vector_dc(SS$type, nir),
@@ -452,19 +452,19 @@ function (x, i, ..., drop=getOption("spam.drop"))
 
   }
   # negative values:
-  if ( max(rw)<0 )       rw <- seq_len( nrow)[rw] 
-  if ( max(cl)<0 )       cl <- seq_len( ncol)[cl] 
-  
+  if ( max(rw)<0 )       rw <- seq_len( nrow)[rw]
+  if ( max(cl)<0 )       cl <- seq_len( ncol)[cl]
+
   # logical
-  if (is.logical(rw))    rw <- seq_len( nrow)[rw] 
-  if (is.logical(cl))    cl <- seq_len( ncol)[cl] 
-  
+  if (is.logical(rw))    rw <- seq_len( nrow)[rw]
+  if (is.logical(cl))    cl <- seq_len( ncol)[cl]
+
   if (length(cl)==0) stop("You should subset at least one element for the columns",call.=FALSE)
   if (length(rw)==0) stop("You should subset at least one element for the rows",call.=FALSE)
 
   if ( (min(rw)<1)|(max(rw)>x@dimension[1])|(min(cl)<1)|(max(cl)>x@dimension[2]))
     stop("subscript out of bounds",call.=FALSE)
-  
+
   if (length(rw)==1 & length(cl)==1){
                                         # function to extract only one element
     return(.C64("getelem",
@@ -473,9 +473,9 @@ function (x, i, ..., drop=getOption("spam.drop"))
                               SS$signature, "double"),
                 rw,
                 cl,
-                
+
                 x@entries, x@colindices, x@rowpointers,
-                
+
                 iadd=vector(SS$type, 1),
                 elem=vector("double", 1),
                 PACKAGE=SS$package)$elem)
@@ -505,7 +505,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
 
                 nr=0,
                 nc=0,
-                
+
                 entries=vector_dc("double",nz),
                 colindices=vector_dc(SS$type,nz),
                 rowpointers=vector_dc(SS$type,nrw+1),
@@ -518,7 +518,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
                               SS$signature, SS$signature, SS$signature, SS$signature, SS$signature,
                               "double", SS$signature, SS$signature),
                 x@entries, x@colindices, x@rowpointers,
-                
+
                 nr=nrw,
                 rw,
                 nc=ncl,
@@ -536,8 +536,8 @@ function (x, i, ..., drop=getOption("spam.drop"))
       else
         return(new("spam",rowpointers=c(1L,rep.int(2L,z$nr )),
                    dimension = c(z$nr,z$nc)))
-    }  
-    
+    }
+
     if (drop==TRUE && (z$nr==1 || z$nc==1))
       # this is essentially a c() call
       return(.C64("spamcsrdns",
@@ -548,8 +548,8 @@ function (x, i, ..., drop=getOption("spam.drop"))
 
                   colindices=z$colindices[1:nz],
                   rowpointers=z$rowpointers[1:(z$nr+1)],
-                  
-                  res=vector_dc("double", prod(z$nr,z$nc)),  
+
+                  res=vector_dc("double", prod(z$nr,z$nc)),
                   NAOK=getOption("spam.NAOK"), PACKAGE = SS$package)$res)
     else {
         return(.newSpam(
@@ -559,7 +559,7 @@ function (x, i, ..., drop=getOption("spam.drop"))
             dimension=c(z$nr,z$nc),
             force64=getOption("spam.force64")))
     }
-  
+
   }
   stop("invalid or not-yet-implemented 'spam' subsetting")
 }
@@ -568,5 +568,5 @@ function (x, i, ..., drop=getOption("spam.drop"))
 
 #subset.rows.spam <- function(x, i, ..., drop=getOption("spam.drop")) {
 subset.rows.spam <- function(...) {
-    .Deprecated("spam:::subset_rows.spam", msg="'subset.rows.spam' is deprecated.\nUse 'spam:::subset_rows.spam' instead.\n")
+    .Defunct('spam:::subset_rows.spam', package = 'spam', msg = "'subset.rows.spam' is defunct. Use 'spam:::subset_rows.spam' instead.\n")
 }

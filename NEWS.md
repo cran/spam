@@ -1,3 +1,26 @@
+# spam 2.3-0
+
+NEW FEATURES
+
+* New function `spam_random()` to create a random spam matrix.
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* Deprecated functions `spam.options()`, `spam.getOption()` are removed.
+* Deprecated function `validspamobject()` is now defunct.
+* `todo()` and `spam.history()` are removed.
+* `summary.spam()` prints whether it is a 32 or 64-bit spam object.
+
+INTERNAL CHANGES
+
+* Fortran modification to address LTO issues.
+* Not exported depreceated function `subset.rows.spam()` is now defunct.
+
+BUG FIXES
+
+* Dataset `UScounties.ndorder` contained no-zeros on the diagonal. Now entire diagonal is zero.
+
+
 # spam 2.2-2
 
 BUG FIXES

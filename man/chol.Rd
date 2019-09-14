@@ -4,8 +4,8 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -26,8 +26,8 @@ of class \code{spam}.}
 \usage{
 # chol(x, \dots)
 
-\S4method{chol}{spam}(x, pivot = "MMD", method = "NgPeyton", memory =
-                 list(), eps =  getOption("spam.eps"),\dots)
+\S4method{chol}{spam}(x, pivot = "MMD", method = "NgPeyton",
+       memory = list(), eps = getOption("spam.eps"), Rstruct=NULL, \dots)
 %force64 =  getOption("spam.force64"),\dots)
 
 # update.spam.chol.NgPeyton(object, x,...)
@@ -40,13 +40,14 @@ of class \code{spam}.}
   algorithm, see \sQuote{Details} below.}
 \item{method}{Currently, only \code{NgPeyton} is implemented.}
 \item{memory}{Parameters specific to the method, see \sQuote{Details} below.}
-\item{eps}{threshold to test symmetry. Defaults to
-  \code{getOption("spam.eps")}.}
+\item{eps}{threshold to test symmetry. Defaults to \code{getOption("spam.eps")}.}
 %\item{force64}{logical vector of length 1. If \code{TRUE}, a 64-bit
 %    spam matrix is returned in any case. If \code{FALSE}, a 32-bit
 %    matrix is returned when possible. }
+\item{Rstruct}{sparsity structure  of the factor, see \sQuote{Details} below.}
 \item{\dots}{further arguments passed to or from other methods.}
-\item{object}{an object from a previous call to \code{chol}.}
+\item{object}{an object from a previous call to \code{chol}, i.e.,
+  sparsity structure of the factor.}
 }
 \value{The function returns the Cholesky factor in an object of class
   \code{spam.chol.}\emph{method}. Recall that the latter is the Cholesky
@@ -69,8 +70,8 @@ no permutation is done and for \code{TRUE} is equivalent to
 Often the sparsity structure is fixed and does not change, but the
 entries do. In those cases, we can update the Cholesky factor with
 \code{update.spam.chol.NgPeyton} by suppling a Cholesky factor and the
-updated matrix. Notice that the structure is effectively \code{object <-
-  update(object, x)}. The update feature without assignement has been disabled.
+updated matrix. For \code{U <- chol(A)},  \code{update(U,
+  Anew)} and \code{chol(Anew, Rstruct=U)} are equivalent. 
 
 The option \code{cholupdatesingular} determines how singular matrices
 are handled by \code{update}. The function hands back an error

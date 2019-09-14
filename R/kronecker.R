@@ -21,14 +21,14 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
         SS <- .format64()
     else
         SS <- .format32
-    
-  if (make.dimnames) 
+
+  if (make.dimnames)
     warning("dimnames not supported within sparse matrices")
   lenx <- length(X)
   leny <- length(Y)
   kronlen <- lenx*leny
-  
-  if(is.spam(X)){    
+
+  if(is.spam(X)){
     Xdim <- X@dimension
     Xentries <- X@entries
     Xcol <- X@colindices
@@ -66,39 +66,24 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
     Yrow <- seq.int(1, by=Ydim[2], length.out=Ydim[1]+1)
   }
   ## kronxy <- new("spam")
-    
+
     if (FUN=="*") {
-        ## print("1a")
-    ## z <- .Fortran("kroneckermult",
-    ##               as.integer(Xdim[1]),
-    ##               as.double(Xentries),
-    ##               as.integer(Xcol),
-    ##               as.integer(Xrow),
-    ##               as.integer(Ydim[1]),
-    ##               as.integer(Ydim[2]),
-    ##               as.double(Yentries),
-    ##               as.integer(Ycol),
-    ##               as.integer(Yrow),
-    ##               entries=vector( "double", kronlen),
-    ##               colindices=vector( "integer", kronlen),
-    ##               rowpointers=vector( "integer",Xdim[1]*Ydim[1]+1),
-      ##               NAOK=getOption("spam.NAOK"),PACKAGE = "spam")
       z <- .C64("kroneckermult",
                 SIGNATURE = c(SS$signature, "double", SS$signature, SS$signature,
                               SS$signature, SS$signature, "double", SS$signature, SS$signature,
                               "double", SS$signature, SS$signature),
-                
+
                 Xdim[1],
                 Xentries,
                 Xcol,
                 Xrow,
-                
+
                 Ydim[1],
                 Ydim[2],
                 Yentries,
                 Ycol,
                 Yrow,
-                
+
                 entries = vector_dc( "double", kronlen),
                 colindices = vector_dc( SS$type, kronlen),
                 rowpointers = vector_dc( SS$type, Xdim[1]*Ydim[1]+1),
@@ -111,40 +96,22 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
         kronxy <- .newSpam( entries = z$entries)
     ## slot(kronxy, "entries", check=FALSE) <-  z$entries
     }else {
-        ## print("1b")
-    ## z <- .Fortran("kronecker",
-    ##               as.integer(Xdim[1]),
-    ##               as.double(Xentries),
-    ##               as.integer(Xcol),
-    ##               as.integer(Xrow),
-    ##               as.integer(Ydim[1]),
-    ##               as.integer(Ydim[2]),
-    ##               as.double(Yentries),
-    ##               as.integer(Ycol),
-    ##               as.integer(Yrow),
-    ##               ent1=vector( "double",kronlen),ent2=vector( "double",kronlen),
-    ##               colindices=vector( "integer",kronlen),
-    ##               rowpointers=vector( "integer",Xdim[1]*Ydim[1]+1),
-       ##               NAOK=getOption("spam.NAOK"),PACKAGE = "spam")
         z <- .C64("kroneckerf",
-     ##              subroutine kronecker(xnrow,xent,xcol,xrow,
-     ## &     ynrow,yncol,yent,ycol,yrow,
-     ## &     ent1, ent2, col, row)
                  SIGNATURE = c(SS$signature, "double", SS$signature, SS$signature,
                                SS$signature, SS$signature, "double", SS$signature, SS$signature,
                                "double", "double", SS$signature, SS$signature),
-                 
+
                  Xdim[1],
                  Xentries,
                  Xcol,
                  Xrow,
-                 
+
                  Ydim[1],
                  Ydim[2],
                  Yentries,
                  Ycol,
                  Yrow,
-                 
+
                  ent1 = vector_dc( "double", kronlen),
                  ent2 = vector_dc( "double", kronlen),
                  colindices = vector_dc( SS$type, kronlen),
@@ -155,7 +122,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
                             "w", "w", "w", "w"),
                  NAOK=getOption("spam.NAOK"),
                  PACKAGE = SS$package)
-       
+
         FUN <- match.fun(FUN)
         kronxy <- .newSpam( entries = FUN(z$ent1,z$ent2,...) )
     ## slot(kronxy, "entries", check=FALSE) <-  FUN(z$ent1,z$ent2,...)

@@ -3469,7 +3469,14 @@ C                        --------------------------------------------
                              NODE = ADJNCY(I)
                              LINK = - NODE
                              IF  ( NODE .EQ. ENODE )  GO TO 1400
-                             IF  ( NODE )  1000, 2100, 1100
+C.ARITH.if                       IF  ( NODE )  1000, 2100, 1100
+                                 if ( NODE < 0 )  then
+                                    GO TO 1000
+                                 else if ( NODE == 0 ) then
+                                    GO TO 2100
+                                 else
+                                    GO TO 1100
+                                 end if
 C
  1100                        CONTINUE
                              IF  ( QSIZE(NODE) .EQ. 0 )  GO TO 1400

@@ -4,19 +4,10 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
-
-
-
-
-
-
-
-
 
 
 \name{UScounties}
@@ -25,13 +16,13 @@
 \alias{UScounties.ndorder}
 \docType{data}
 \title{
-Adjacency structure of the counties in the contiguous United States 
+Adjacency structure of the counties in the contiguous United States
 }
 \description{
   First and second order adjacency structure of the counties
   in the contiguous United States. We consider that two counties
   are neighbors if they share at
-  least one edge of their polygon description in \code{maps}. 
+  least one edge of their polygon description in \code{maps}.
 }
 
 \format{
@@ -44,7 +35,7 @@ Adjacency structure of the counties in the contiguous United States
 }
 \item{UScounties.ndorder}{
   Contains a one in the \code{i} and \code{j} element if  counties
-  \code{i} and \code{j} are a neighbors of county \code{k} and counties 
+  \code{i} and \code{j} are a neighbors of county \code{k} and counties
   \code{i} and \code{j}  are not  neighbors.
 }
 }
@@ -57,9 +48,9 @@ Adjacency structure of the counties in the contiguous United States
 n  <- nrow( UScounties.storder)
 
 \dontrun{
-# make a precision matrix 
+# make a precision matrix
 Q <- diag.spam( n) + .2 * UScounties.storder + .1 * UScounties.ndorder
 display( as.spam( chol( Q)))
 }
-} 
+}
 \keyword{datasets}

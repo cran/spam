@@ -4,14 +4,15 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 \name{options}
+\alias{spam.options}
 \alias{options.spam}
 \alias{getOption.spam}
 \title{Options Settings}
@@ -39,7 +40,7 @@
   a list with the previous values of the options changed (returned
   invisibly).
 }
-\section{Options used}{
+\section{Options used for the package \code{spam}}{
   A short description with the default values follows.
   \describe{
 \item{\code{spam.eps=.Machine$double.eps}:}{values smaller than this are
@@ -64,7 +65,7 @@
   Valid value is a postive integer or a logical. \code{TRUE} corresponds
   to 1 (always), \code{FALSE} to \code{Inf}.}
 
-\item{\code{spam.trivalues=FALSE}:}{a flag whether to return the structure 
+\item{\code{spam.trivalues=FALSE}:}{a flag whether to return the structure
   (\code{FALSE}) or the values themselves (\code{TRUE}) when returning the
   upper and lower triangular part of a matrix.}
 
@@ -72,15 +73,15 @@
   is suggestion by Paul Eilers (thanks). Any other specification uses a
   bubble sort algorithm which is only slightly faster for very sparse matrices. }
 
-\item{\code{spam.dopivoting=TRUE}:}{default parameter for "solve" routines. \code{FALSE}
+\item{\code{spam.dopivoting=TRUE}:}{default parameter for "\code{solve}" routines. \code{FALSE}
   would solve the system without using the permutation.}
-  
-\item{\code{spam.NAOK=FALSE}:}{logical determines if NA, NaN and Inf are
-  allowed to Fortan. Setting to TRUE allows to work with these but
+
+\item{\code{spam.NAOK=FALSE}:}{logical determines if \code{NA}, \code{NaN} and \code{Inf} are
+  allowed to Fortan. Setting to \code{TRUE} allows to work with these but
   full functionality has not been tested.}
 
 \item{\code{spam.safemodevalidity=TRUE}:}{logical determines if sanity check
-  is peformed when constructing sparse matrices.  
+  is peformed when constructing sparse matrices.
   Default is safer but somewhat slower.}
 
 \item{\code{spam.cholsymmetrycheck=TRUE}:}{for the Cholesky factorization,
@@ -111,19 +112,22 @@ smat
 options(spam.printsize=49)
 smat
 
+# List all spam options:
+options()[grep("spam",names(options()))]
+
 # Reset to default values:
 options(spam.eps=.Machine$double.eps,
-        spam.drop=FALSE,             
+        spam.drop=FALSE,
         spam.printsize=100,
         spam.imagesize=10000,
-        spam.cex=1200, 
+        spam.cex=1200,
         spam.structurebased=FALSE,
         spam.inefficiencywarning=1e6,
         spam.trivalues=FALSE,
-        spam.listmethod="PE", 
+        spam.listmethod="PE",
         spam.NAOK=FALSE,
         spam.safemodevalidity=TRUE,
-        spam.dopivoting=TRUE, 
+        spam.dopivoting=TRUE,
         spam.cholsymmetrycheck=TRUE,
         spam.cholpivotcheck=TRUE,
         spam.cholupdatesingular="warning",

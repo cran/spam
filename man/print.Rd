@@ -4,11 +4,11 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{print}
 \docType{methods}
@@ -24,7 +24,7 @@
 \alias{summary.spam.chol.NgPeyton}
 \title{Printing and summarizing sparse matrices}
 \description{Printing (non-zero elements) of sparse matrices
-  and summarizing the sparsity structure thereof. 
+  and summarizing the sparsity structure thereof.
 }
 \usage{
   \S4method{print}{spam}(x, ...)
@@ -49,21 +49,18 @@
   only the non-zero elements of the matrix are given.
 }
 %\references{}
-\seealso{\code{\link{spam.options}}}
+\seealso{\code{\link{display}} or \code{\link{image}} for a graphical visualization;
+   \code{\link{spam.options}}}
 \examples{
 set.seed(13)
-nz <- 8
-ln <- nz
-smat <- spam(0,ln,ln)
-smat[cbind(sample(ln,nz),sample(ln,nz))] <- 1:nz
-
+smat <- spam_random(8)
 par(mfcol=c(1,2),pty='s')
 options(spam.printsize=1000)
 print(smat)
 options(spam.printsize=10)
 print(smat)
 summary(smat)
-(summary(smat))
+summary(smat)$nnz
 }
 \author{Reinhard Furrer}
 \keyword{hplot}

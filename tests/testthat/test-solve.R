@@ -67,6 +67,8 @@ test_that("option 'chol.update'", {
     ss1 <- ss+diag.spam(dim(ss)[1])
     spamtest_eq( chol(ss), update.spam.chol.NgPeyton(css, ss))
     
+    spamtest_eq( chol(ss, Rstruct=css), update.spam.chol.NgPeyton(css, ss))
+    
     sel <- which(ss[1,,drop=TRUE]!=0)
     ss1[1,sel[-1]] <- 0
     ss2 <- ss

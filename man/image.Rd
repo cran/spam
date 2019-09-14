@@ -4,11 +4,11 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{image}
 \alias{image.spam}
@@ -44,25 +44,18 @@
 }
 \examples{
 set.seed(13)
-nz <- 8
-ln <- nz
-smat <- spam(0, ln, ln)
-smat[ cbind(sample(ln,nz), sample(ln,nz))] <- 1:nz
+
+smat <- spam_random(8)
 
 par(mfcol=c(1,2),pty='s')
 options(spam.imagesize=1000)
-image(smat) # better: col=tim.colors(nz))
+image(smat) # or use better color schemes
 options(spam.imagesize=10)
-image(smat) # better: col=tim.colors(nz))
+image(smat, cex=.25)
 
-
-nz <- 128
-ln <- nz^2
-smat <- spam(0,ln,ln)
-smat[cbind(sample(ln,nz), sample(ln,nz))] <- 1:nz
-
-par(mfcol=c(1,1), pty='s')
-image(smat,cex=100) # better:, col=tim.colors(nz))
+smat <- spam_random(2^14, distribution=rnorm, density=1e-5, verbose=TRUE)
+par(mfcol=c(1,1), mai=c(.4,.4,.1,.1), pty='s')
+image(smat)
 
 }
 \author{Reinhard Furrer}

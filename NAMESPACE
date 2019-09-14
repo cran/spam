@@ -9,7 +9,7 @@ importFrom("graphics",
            "axis", "box", "image.default", "par", "points", "polygon", "text")
 importFrom("methods",
            "callGeneric", "is", "new", "slot<-",  "validObject")
-importFrom("stats", "optim", "rnorm", "runif", "var")
+importFrom("stats", "optim", "rnorm", "runif", "rbinom", "var")
 importFrom("utils", "help")
 
 # Next two paragraphs are from Matrix....
@@ -50,18 +50,15 @@ S3method("rbind","spam")
 
 # Generic functions
 export(
-       "todo",
-       "spam.history",
+       "spam_random",
+       "validspamobject",   # __DEFUNCT__
+
        "is.spam",
 
        "spam.version",
        "spam.Version",
-	
-       "validate_spam",
-       "validspamobject",   # __DEPRECATED__
 
-       "spam.options",      # __DEPRECATED__
-       "spam.getOption",   # __DEPRECATED__
+       "validate_spam",
 
        "nearest.dist",
        "spam_rdist",
@@ -73,12 +70,12 @@ export(
        "as.spam.dist",
        "as.spam.chol.NgPeyton",
        "as.spam.list",
-    
+
        "as.vector.spam",
        "as.matrix.spam",
        "spam.list",
        "spam.numeric",
-       
+
        "diag.of.spam",
        "diag.spam",
        "spam_diag",
@@ -112,20 +109,20 @@ export(
        "forwardsolve.spam",
        "backsolve.spam",
        "update.spam.chol.NgPeyton",
-       
+
        "norm.spam",
 
        "plot.spam",
        "display.spam",
        "image.spam",
-       
+
        "print.spam",
        "summary.spam",
        "print.spam.chol.NgPeyton",
        "summary.spam.chol.NgPeyton",
 
        "apply.spam",
-       
+
        "rmvnorm.spam",
        "rmvnorm.canonical",
        "rmvnorm.prec",
@@ -153,8 +150,6 @@ export(
        "cov.wend2",
        "cov.mat",
 
-       
-       
        "rowSums.spam",
        "colSums.spam",
        "rowMeans.spam",
@@ -164,67 +159,65 @@ export(
        "tail.spam",
 
        "chol2inv.spam",
-       
+
        "mle.spam",
        "mle.nomean.spam",
        "neg2loglikelihood.spam",
        "mle",
        "mle.nomean",
        "neg2loglikelihood",
-       
+
        "bdiag.spam",
 
-    "var.spam",
-      "eigen.spam",
-      "eigen_approx",
+       "var.spam",
+       "eigen.spam",
+       "eigen_approx",
 
        "bandwidth",
-       
+
 #       ".spam.matmul.mat",
 #       ".spam.matmul",
 #       "solve.spam.mat",
 #       "solve.spam.dummy",
 
-       "subset.spam",
+        "subset.spam",
 #       "subset_rows.spam",
-       
-       "triplet",
-       "as.spam.matrix.csr",
+
+        "triplet",
+        "as.spam.matrix.csr",
 #       "as.matrix.csr.spam",
-       "as.dgRMatrix.spam",
-       "as.dgCMatrix.spam",
-       "as.spam.dgRMatrix",
-       "as.spam.dgCMatrix",
+        "as.dgRMatrix.spam",
+        "as.dgCMatrix.spam",
+        "as.spam.dgRMatrix",
+        "as.spam.dgCMatrix",
 
-       "read.MM",
-       "read.HB",
+        "read.MM",
+        "read.HB",
 
-       "powerboost",
+        "powerboost",
 
-       "permutation.spam",
-       
-    "crossprod.spam",
-    "tcrossprod.spam",
-           
-       "map.landkreis",
-       "adjacency.landkreis",
+        "permutation.spam",
 
-       "germany.plot",
-#"germany.info",	
+        "crossprod.spam",
+        "tcrossprod.spam",
 
-       "grid_trace2",
-       "grid_zoom",
+        "map.landkreis",
+        "adjacency.landkreis",
 
+        "germany.plot",
+#       "germany.info",
 
-    "rowpointers<-",
-    "entries<-",
-    "colindices<-",
-    "dimension<-",
-       
-    "cleanup"
+        "grid_trace2",
+        "grid_zoom",
+
+        "rowpointers<-",
+        "entries<-",
+        "colindices<-",
+        "dimension<-",
+
+        "cleanup"
 #       "backsolve"
-   
-       )
+)
 
 
 # export the two classes
@@ -246,7 +239,7 @@ exportMethods(
 
               "isSymmetric",
               "all.equal",
-              
+
               "summary",
               "length",
               "length<-",
@@ -254,7 +247,7 @@ exportMethods(
               "dim",
               "dim<-",
               "pad<-",
-  
+
               "rbind",
               "cbind",
               "as.spam",
@@ -267,7 +260,7 @@ exportMethods(
               "diag<-",
               "upper.tri",
               "lower.tri",
-              
+
               "norm",
               "rowSums",
               "rowMeans",
@@ -276,7 +269,7 @@ exportMethods(
 
               "head",
               "tail",
-              
+
               "chol",
               "ordering",
               "forwardsolve",
@@ -290,8 +283,8 @@ exportMethods(
 
               "crossprod",
               "tcrossprod",
-           
-              
+
+
               "[",
               "[<-",
 
@@ -303,4 +296,5 @@ exportMethods(
               "*",
               "/",
               "&",
-              "|")
+              "|"
+)

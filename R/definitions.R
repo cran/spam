@@ -9,9 +9,6 @@
 #    Kaspar Moesinger [ctb]                                 #
 # HEADER END ################################################
 
-todo <- function() help( "todo.spam")
-spam.history <- function() help("spam.history")
-
 # We check that
 # 1.  #colindices equals #entries
 # 2.	class(entries) is "numeric"

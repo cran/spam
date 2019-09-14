@@ -13,13 +13,8 @@
 summary.spam <- function(object,...) {
     nz <- length(object@entries)
     dens <- nz/prod(object@dimension)*100
-    
-#            cat("Matrix object of class 'spam' of dimension ",object@dimension[1],"x",
-#                object@dimension[2],",\n",sep="")
-#            cat("    with ",nz," (row-wise) nonzero elements.\n",sep="")
-#            cat("    Density of the matrix is ",signif(dens,3),"%.\n",sep="")
-#            cat("Class 'spam'\n")
-    ans <- list(nnz=nz, density=dens, dim=object@dimension)
+    SS <- .format.spam(object, validate = FALSE)
+    ans <- list(nnz=nz, density=dens, dim=object@dimension, format=SS)
     class(ans) <- "summary.spam"
     ans
 }
@@ -39,13 +34,12 @@ summary.spam.chol.NgPeyton <- function(object,...) {
 setMethod("summary","spam",summary.spam)
 setMethod("summary", "spam.chol.NgPeyton", summary.spam.chol.NgPeyton)
 
-
-print.summary.spam <- function(x, ...){
+print.summary.spam <- function(x, ...) {
     cat("Matrix object of class 'spam' of dimension ",x$dim[1],"x",
         x$dim[2],",\n",sep="")
     cat("    with ",x$nnz," (row-wise) nonzero elements.\n",sep="")
     cat("    Density of the matrix is ",signif(x$dens,3),"%.\n",sep="")
-    cat("Class 'spam'\n")
+    cat(paste0("Class 'spam' (", x$format$name, ")\n"))
     invisible(x)
 }
 
@@ -59,6 +53,3 @@ print.summary.spam.chol.NgPeyton <- function(x,...) {
   cat("Class 'spam.chol.NgPeyton'\n")
   invisible(x)
 }
-
-
-

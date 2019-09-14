@@ -1462,7 +1462,8 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dnaup2, second, dstatn
+c      external   dnaup2, second, dstatn
+      external   dnaup2,  dstatn
 c
 c     %--------------------%
 c     | External Functions |
@@ -1488,7 +1489,7 @@ c        | & message level for debugging |
 c        %-------------------------------%
 c
          call dstatn
-         call second (t0)
+c         call second (t0)
          msglvl = mnaupd
 c
 c        %----------------%
@@ -1639,8 +1640,9 @@ c
       if (info .lt. 0) go to 9000
       if (info .eq. 2) info = 3
 c
-      call second (t1)
-      tnaupd = t1 - t0
+c      call second (t1)
+cs      tnaupd = t1 - t0
+      tnaupd = 0.0
 c
       if (msglvl .gt. 0) then
 c
@@ -1939,7 +1941,8 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   dcopy , dgetv0, dnaitr, dnconv, dneigh, 
-     &           dngets, dnapps, second
+     &           dngets, dnapps
+c     &           dngets, dnapps, second
 c
 c     %--------------------%
 c     | External Functions |
@@ -1963,7 +1966,7 @@ c
 c
       if (ido .eq. 0) then
 c 
-         call second (t0)
+c         call second (t0)
 c 
          msglvl = mnaup2
 c 
@@ -2399,7 +2402,7 @@ c        | the first step of the next call to dnaitr.  |
 c        %---------------------------------------------%
 c
          cnorm = .true.
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             call dcopy (n, resid, 1, workd(n+1), 1)
@@ -2424,8 +2427,9 @@ c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c            call second (t3)
+cs            tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if
 c 
          if (bmat .eq. 'G') then         
@@ -2456,8 +2460,9 @@ c     %------------%
 c     | Error Exit |
 c     %------------%
 c
-      call second (t1)
-      tnaup2 = t1 - t0
+c      call second (t1)
+cs      tnaup2 = t1 - t0
+      tnaup2 = 0.0
 c     
  9000 continue
 c
@@ -2658,7 +2663,8 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dlacpy, dlarfg, dlarf,
-     &           dlaset, dlabad, second, dlartg
+     &           dlaset, dlabad, dlartg
+c     &           dlaset, dlabad, second, dlartg
 c
 c     %--------------------%
 c     | External Functions |
@@ -2706,7 +2712,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-      call second (t0)
+c      call second (t0)
       msglvl = mnapps
       kplusp = kev + np 
 c 
@@ -3066,8 +3072,9 @@ c
      &   call daxpy (n, h(kev+1,kev), v(1,kev+1), 1, resid, 1)
 c
  9000 continue
-      call second (t1)
-      tnapps = tnapps + (t1 - t0)
+c      call second (t1)
+cs      tnapps = tnapps + (t1 - t0)
+      tnapps = 0.0
 c 
       return
 c
@@ -3197,7 +3204,7 @@ c     |                                                             |
 c     | for some appropriate choice of norm.                        |
 c     %-------------------------------------------------------------%
 c
-      call second (t0)
+c      call second (t0)
 c
 c     %---------------------------------%
 c     | Get machine dependent constant. |
@@ -3212,8 +3219,9 @@ c
          if (bounds(i) .le. tol*temp)   nconv = nconv + 1
    20 continue
 c 
-      call second (t1)
-      tnconv = tnconv + (t1 - t0)
+c      call second (t1)
+cs      tnconv = tnconv + (t1 - t0)
+      tnconv = 0.0
 c 
       return
 c
@@ -3715,7 +3723,8 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dcopy, dlacpy, dlaqrb, dtrevc, second
+c      external   dcopy, dlacpy, dlaqrb, dtrevc, second
+      external   dcopy, dlacpy, dlaqrb, dtrevc
 c
 c     %--------------------%
 c     | External Functions |
@@ -3741,7 +3750,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-      call second (t0)
+c      call second (t0)
       msglvl = mneigh
       dneightrue = .true.
       dneighone = 1
@@ -3854,8 +3863,9 @@ c
    20 continue
 c
 c
-      call second (t1)
-      tneigh = tneigh + (t1 - t0)
+c      call second (t1)
+cs      tneigh = tneigh + (t1 - t0)
+      tneigh = 0.0
 c
  9000 continue
       return
@@ -4532,7 +4542,8 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dcopy, dsortc, second
+      external   dcopy, dsortc
+c      external   dcopy, dsortc, second
 c
 c     %----------------------%
 c     | Intrinsics Functions |
@@ -4549,7 +4560,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c 
-      call second (t0)
+c      call second (t0)
       msglvl = mngets
       dngetstrue = .true.
 c
@@ -4607,8 +4618,9 @@ c
          call dsortc ( 'SR', dngetstrue, np, bounds, ritzr, ritzi )
       end if
 c     
-      call second (t1)
-      tngets = tngets + (t1 - t0)
+c      call second (t1)
+cs      tngets = tngets + (t1 - t0)
+      tngets = 0.0
 c
       return
 c     
@@ -4889,8 +4901,8 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   daxpy, dcopy, dscal, dgemv, dgetv0, dlabad, 
-     &           second
+      external   daxpy, dcopy, dscal, dgemv, dgetv0, dlabad 
+c     &           second
 c
 c     %--------------------%
 c     | External Functions |
@@ -4945,7 +4957,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-         call second (t0)
+c         call second (t0)
          msglvl = mnaitr
 c 
 c        %------------------------------%
@@ -5043,8 +5055,9 @@ c              | which spans OP and exit.                       |
 c              %------------------------------------------------%
 c
                info = j - 1
-               call second (t1)
-               tnaitr = tnaitr + (t1 - t0)
+c               call second (t1)
+cs               tnaitr = tnaitr + (t1 - t0)
+               tnaitr = 0.0
                ido = 99
                go to 9000
             end if
@@ -5083,7 +5096,7 @@ c        %------------------------------------------------------%
 c
          step3 = .true.
          nopx  = nopx + 1
-         call second (t2)
+c         call second (t2)
          call dcopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
          ipntr(2) = irj
@@ -5103,8 +5116,9 @@ c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}   |
 c        | if step3 = .true.                |
 c        %----------------------------------%
 c
-         call second (t3)
-         tmvopx = tmvopx + (t3 - t2)
+c         call second (t3)
+cs         tmvopx = tmvopx + (t3 - t2)
+         tmvopx = 0.0
  
          step3 = .false.
 c
@@ -5119,7 +5133,7 @@ c        | STEP 4:  Finish extending the Arnoldi |
 c        |          factorization to length j.   |
 c        %---------------------------------------%
 c
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             step4 = .true.
@@ -5144,8 +5158,9 @@ c        | if step4 = .true.                |
 c        %----------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c            call second (t3)
+cs            tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if
 c 
          step4 = .false.
@@ -5189,11 +5204,11 @@ c
 c
          if (j .gt. 1) h(j,j-1) = betaj
 c
-         call second (t4)
+c         call second (t4)
 c 
          orth1 = .true.
 c
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
@@ -5217,8 +5232,9 @@ c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c            call second (t3)
+cs            tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if
 c 
          orth1 = .false.
@@ -5290,7 +5306,7 @@ c
          call daxpy (j, one, workd(irj), 1, h(1,j), 1)
 c 
          orth2 = .true.
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
@@ -5314,8 +5330,9 @@ c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c            call second (t3)
+cs            tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if
 c
 c        %-----------------------------------------------------%
@@ -5388,8 +5405,9 @@ c
          rstart = .false.
          orth2  = .false.
 c 
-         call second (t5)
-         titref = titref + (t5 - t4)
+c         call second (t5)
+cs         titref = titref + (t5 - t4)
+         titref = 0.0
 c 
 c        %------------------------------------%
 c        | STEP 6: Update  j = j+1;  Continue |
@@ -5397,8 +5415,9 @@ c        %------------------------------------%
 c
          j = j + 1
          if (j .gt. k+np) then
-            call second (t1)
-            tnaitr = tnaitr + (t1 - t0)
+c            call second (t1)
+cs            tnaitr = tnaitr + (t1 - t0)
+            tnaitr = 0.0
             ido = 99
             do 110 i = max(dnaitrone,k), k+np-1
 c     

@@ -35,7 +35,7 @@ apply.spam <- function(X, MARGIN=NULL, FUN, ...){
   if (MARGIN==1) {
     for (i in 1:d[1])
       ans[[i]] <- FUN(X[i,,drop=F]@entries,...)
-  } else   if (MARGIN==2) {  
+  } else   if (MARGIN==2) {
     for (i in 1:d[2])
       ans[[i]] <- FUN(X[,i,drop=F]@entries,...)
   } else stop("\"MARGIN\" must be 1, 2 or c(1,2)")
@@ -56,7 +56,7 @@ apply.spam <- function(X, MARGIN=NULL, FUN, ...){
       ans.names <- NULL
   }
   len.a <- if (ans.list)     d2   else length(ans <- unlist(ans, recursive = FALSE))
-  if (length(MARGIN) == 1 && len.a == d2) 
+  if (length(MARGIN) == 1 && len.a == d2)
     return(ans)
   if (len.a == d2)
     return(array(ans, d.ans))
@@ -68,7 +68,7 @@ apply.spam <- function(X, MARGIN=NULL, FUN, ...){
   }
   return(ans)
 
-    
+
 }
 
 

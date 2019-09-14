@@ -1185,7 +1185,8 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dswap, dcopy, dsortr, second
+c      external   dswap, dcopy, dsortr, second
+      external   dswap, dcopy, dsortr
 c
 c     %---------------------%
 c     | Intrinsic Functions |
@@ -1203,7 +1204,7 @@ c     | & message level for debugging |
 c     %-------------------------------%
 c
       dsgetstrue = .true.
-      call second (t0)
+c      call second (t0)
       msglvl = msgets
 c 
       if (which .eq. 'BE') then
@@ -1253,8 +1254,9 @@ c
          call dcopy (np, ritz, 1, shifts, 1)
       end if
 c 
-      call second (t1)
-      tsgets = tsgets + (t1 - t0)
+c      call second (t1)
+cs      tsgets = tsgets + (t1 - t0)
+      tsgets = 0.0
 c
 c
       return
@@ -1722,7 +1724,8 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dsaup2, second, dstats 
+      external   dsaup2, dstats 
+c      external   dsaup2, second, dstats 
 c
 c     %--------------------%
 c     | External Functions |
@@ -1744,7 +1747,7 @@ c        | & message level for debugging |
 c        %-------------------------------%
 c
          call dstats 
-         call second (t0)
+c         call second (t0)
          msglvl = msaupd
 c
          ierr   = 0
@@ -1892,8 +1895,9 @@ c
       if (info .lt. 0) go to 9000
       if (info .eq. 2) info = 3
 c
-      call second (t1)
-      tsaupd = t1 - t0
+c      call second (t1)
+cs      tsaupd = t1 - t0
+      tsaupd = 0.0      
 c 
       if (msglvl .gt. 0) then
 c
@@ -2191,7 +2195,8 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   dcopy, dgetv0, dsaitr, dscal, dsconv, dseigt, dsgets, 
-     &           dsapps, dsortr, second, dswap
+     &           dsapps, dsortr, dswap
+c     &           dsapps, dsortr, second, dswap
 c
 c     %--------------------%
 c     | External Functions |
@@ -2221,7 +2226,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-         call second (t0)
+c         call second (t0)
          msglvl = msaup2
 c
 c        %---------------------------------%
@@ -2683,7 +2688,7 @@ c        | the first step of the next call to dsaitr.  |
 c        %---------------------------------------------%
 c
          cnorm = .true.
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             call dcopy (n, resid, 1, workd(n+1), 1)
@@ -2708,8 +2713,9 @@ c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c            call second (t3)
+c            tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if
 c 
          if (bmat .eq. 'G') then         
@@ -2742,8 +2748,9 @@ c     %------------%
 c     | Error exit |
 c     %------------%
 c
-      call second (t1)
-      tsaup2 = t1 - t0
+c     call second (t1)
+cs    tsaup2 = t1 - t0
+      tsaup2 = 0.0
 c 
  9000 continue
       return
@@ -2861,7 +2868,7 @@ c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
 c
-      call second (t0)
+c      call second (t0)
 c
       eps23 = dlamch('Epsilon-Machine') 
       eps23 = eps23**(2.0D+0 / 3.0D+0)
@@ -2881,8 +2888,9 @@ c
 c
    10 continue
 c 
-      call second (t1)
-      tsconv = tsconv + (t1 - t0)
+c      call second (t1)
+cs      tsconv = tsconv + (t1 - t0)
+      tsconv = 0.0
 c 
       return
 c
@@ -3155,8 +3163,9 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dgemv, dgetv0,
-     &           dlascl, second
-c
+     &           dlascl
+c     &           dlascl, second
+c     
 c     %--------------------%
 c     | External Functions |
 c     %--------------------%
@@ -3193,7 +3202,7 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-         call second (t0)
+c         call second (t0)
          msglvl = msaitr
 c 
 c        %------------------------------%
@@ -3300,8 +3309,9 @@ c              | which spans OP and exit.                       |
 c              %------------------------------------------------%
 c
                info = j - 1
-               call second (t1)
-               tsaitr = tsaitr + (t1 - t0)
+c               call second (t1)
+cs               tsaitr = tsaitr + (t1 - t0)
+               tsaitr = 0.0
                ido = 99
                go to 9000
             end if
@@ -3340,7 +3350,7 @@ c        %------------------------------------------------------%
 c
          step3 = .true.
          nopx  = nopx + 1
-         call second (t2)
+c         call second (t2)
          call dcopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
          ipntr(2) = irj
@@ -3359,8 +3369,9 @@ c        | Back from reverse communication;  |
 c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}.   |
 c        %-----------------------------------%
 c
-         call second (t3)
-         tmvopx = tmvopx + (t3 - t2)
+c         call second (t3)
+cs         tmvopx = tmvopx + (t3 - t2)
+         tmvopx = 0.0
 c 
          step3 = .false.
 c
@@ -3380,7 +3391,7 @@ c        | assumed to have A*v_{j}.                  |
 c        %-------------------------------------------%
 c
          if (mode .eq. 2) go to 65
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             step4 = .true.
@@ -3404,8 +3415,9 @@ c        | WORKD(IPJ:IPJ+N-1) := B*OP*v_{j}. |
 c        %-----------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c            call second (t3)
+cs            tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if 
 c
          step4 = .false.
@@ -3472,12 +3484,12 @@ c
          else
             h(j,1) = rnorm
          end if
-         call second (t4)
+c         call second (t4)
 c 
          orth1 = .true.
          iter  = 0
 c 
-         call second (t2)
+c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
@@ -3501,8 +3513,9 @@ c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c            call second (t3)
+cs          tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if
 c 
          orth1 = .false.
@@ -3573,7 +3586,7 @@ c
          h(j,2) = h(j,2) + workd(irj + j - 1)
 c 
          orth2 = .true.
-         call second (t2)
+c        call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
@@ -3597,8 +3610,9 @@ c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 c
          if (bmat .eq. 'G') then
-            call second (t3)
-            tmvbx = tmvbx + (t3 - t2)
+c           call second (t3)
+cs          tmvbx = tmvbx + (t3 - t2)
+            tmvbx = 0.0
          end if
 c
 c        %-----------------------------------------------------%
@@ -3665,7 +3679,7 @@ c
          rstart = .false.
          orth2  = .false.
 c 
-         call second (t5)
+c        call second (t5)
          titref = titref + (t5 - t4)
 c 
 c        %----------------------------------------------------------%
@@ -3689,8 +3703,9 @@ c        %------------------------------------%
 c
          j = j + 1
          if (j .gt. k+np) then
-            call second (t1)
-            tsaitr = tsaitr + (t1 - t0)
+c           call second (t1)
+cs          tsaitr = tsaitr + (t1 - t0)
+            tsaitr = 0.0
             ido = 99
 c
             if (msglvl .gt. 1) then
@@ -3899,7 +3914,8 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dlacpy, dlartg, dlaset,
-     &           second, dgemv
+     &           dgemv
+c    &           second, dgemv
 c
 c     %--------------------%
 c     | External Functions |
@@ -3936,7 +3952,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-      call second (t0)
+c     call second (t0)
       msglvl = msapps
 c 
       kplusp = kev + np 
@@ -4200,8 +4216,9 @@ c
      &   call daxpy (n, h(kev+1,1), v(1,kev+1), 1, resid, 1)
 c
 c
-      call second (t1)
-      tsapps = tsapps + (t1 - t0)
+c     call second (t1)
+cs    tsapps = tsapps + (t1 - t0)
+      tsapps = 0.0
 c 
  9000 continue 
       return
@@ -4340,7 +4357,8 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dcopy, dstqrb, second
+c     external   dcopy, dstqrb, second
+      external   dcopy, dstqrb
 c
 c     %-----------------------%
 c     | Executable Statements |
@@ -4351,7 +4369,7 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------% 
 c
-      call second (t0)
+c     call second (t0)
       msglvl = mseigt
 c
 c
@@ -4369,8 +4387,9 @@ c
          bounds(k) = rnorm*abs(bounds(k))
    30 continue
 c 
-      call second (t1)
-      tseigt = tseigt + (t1 - t0)
+c     call second (t1)
+cs    tseigt = tseigt + (t1 - t0)
+      tseigt = 0.0
 c
  9000 continue
       return

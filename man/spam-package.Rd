@@ -4,21 +4,22 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 \name{. SPAM .}
 \alias{overview}
 \alias{SPAM}
 \alias{Spam}
+\alias{spam-package}
 \docType{package}
 \title{SPArse Matrix Package}
 \description{\code{spam} is a collection of functions for sparse matrix
-  algebra. 
+  algebra.
 }
 \section{Gereral overview}{What is spam and what is it not:\cr
 
@@ -48,9 +49,9 @@ operators, functions, etc. should eventually be implemented.
 
 
 The packages \code{fields} and \code{spam} are closely linked.  \cr
-  
+
 }
-\references{Reinhard Furrer, Stephan R. Sain (2010). 
+\references{Reinhard Furrer, Stephan R. Sain (2010).
   "spam: A Sparse Matrix R Package with Emphasis on MCMC
   Methods for Gaussian Markov Random Fields.",
         \emph{Journal of Statistical Software}, 36(10), 1-25,
@@ -68,8 +69,8 @@ F. Gerber, K. Moesinger, R. Furrer (2017),
 \seealso{See \code{\link{spam.class}} for a detailed class description,
   \code{\link{spam}} and \code{\link{spam.ops}} for creation,
   coercion and algebraic operations.%\cr%
-%  
-%\code{demo(package='spam')} lists available demos.\cr% 
+%
+%\code{demo(package='spam')} lists available demos.\cr%
 %Related packages are \code{\link[fields]{fields}},
 %  \code{\link[Matrix]{Matrix}} and
 %  \code{\link[SparseM]{SparseM.ontology}}.
@@ -77,12 +78,12 @@ F. Gerber, K. Moesinger, R. Furrer (2017),
 \examples{
 ## Citations:
 citation('spam')
-citation('spam',auto=TRUE)
+citation('spam', auto=TRUE)
 
 
 ## History of changes
 \dontrun{
-file.show(system.file("NEWS", package = "spam"))
+file.show(system.file("NEWS.md", package = "spam"))
 }
 }
 \author{Reinhard Furrer, with the help of Florian Gerber, Kaspar

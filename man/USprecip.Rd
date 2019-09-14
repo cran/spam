@@ -4,34 +4,25 @@
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
 %  --> https://git.math.uzh.ch/reinhard.furrer/spam         %
-% by Reinhard Furrer [aut, cre], Florian Gerber [ctb],      %
-%    Roman Flury [ctb], Daniel Gerber [ctb],                %
+% by Reinhard Furrer [aut, cre], Florian Gerber [aut],      %
+%    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
-
-
-
-
-
-
-
-
 
 
 \name{USprecip}
 \alias{USprecip}
 \docType{data}
 \title{
-Monthly total precipitation (mm) for April 1948 in the contiguous United States 
+Monthly total precipitation (mm) for April 1948 in the contiguous United States
 }
 \description{
-This is a useful spatial data set of moderate to large size consisting of 11918 
-locations. See \url{www.image.ucar.edu/GSP/Data/US.monthly.met/} for the source of these data. 
+This is a useful spatial data set of moderate to large size consisting of 11918
+locations. See \url{https://www.image.ucar.edu/GSP/Data/US.monthly.met/} for the source of these data.
 }
 
 \format{
-This data set is an array containing the following columns: 
+This data set is an array containing the following columns:
 
 \describe{
 \item{lon,lat}{
@@ -41,7 +32,7 @@ This data set is an array containing the following columns:
   Monthly total precipitation in millimeters for April 1948
 }
 \item{anomaly}{
-  Preipitation anomaly for April 1948. 
+  Preipitation anomaly for April 1948.
 }
 \item{infill}{
 Indicator, which station values were observed (5906 out of the 11918)
@@ -49,7 +40,7 @@ compared to which were estimated.
 }
 }
 }
-\source{\url{www.image.ucar.edu/GSP/Data/US.monthly.met/}}
+\source{\url{https://www.image.ucar.edu/GSP/Data/US.monthly.met/}}
 \seealso{\code{\link[fields]{RMprecip}}}
 \references{
 Johns, C., Nychka, D., Kittel, T., and Daly, C. (2003)
@@ -69,5 +60,5 @@ US( add=TRUE, col=2, lty=2)
 quilt.plot(USprecip[,1:2],USprecip[,4])
 US( add=TRUE, col=2, lty=2)
 }
-} 
+}
 \keyword{datasets}

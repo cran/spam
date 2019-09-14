@@ -1,5 +1,5 @@
 % HEADER %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This is file spam/man/validate_spam.Rd.                   %
+% This is file spam/man/defunct.Rd.                         %
 % It is part of the R package spam,                         %
 %  --> https://CRAN.R-project.org/package=spam              %
 %  --> https://CRAN.R-project.org/package=spam64            %
@@ -8,23 +8,23 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
 
 
-
-\name{validate_spam}
-\alias{validate_spam}
-\title{Validate a spam objects}
-\description{Checks if the spam object has the correct structure.}
+\name{spam-defunct}
+\alias{spam-defunct}
+\alias{validspamobject}
+\title{Defunct Objects in Package \pkg{spam}}
+\description{
+  The functions or variables listed here are defunct, i.e. thorw an error when used.
+}
 \usage{
-validate_spam(object)
+  validspamobject(...)
 }
 \arguments{
-  \item{object}{a spam matrix.}
+  \item{...}{some arguments}
 }
-\value{Returns \code{TRUE} if \code{object} is a valid spam objects. }
-
-\seealso{\code{\link{spam.creation}}}
-\examples{
-validate_spam(spam(1, 20))
+\seealso{
+  \code{\link{Deprecated}},
+  \code{\link{Defunct}}
 }
+\keyword{misc}

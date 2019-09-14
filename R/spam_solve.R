@@ -334,8 +334,10 @@ update.spam.chol.NgPeyton <- function(object,x,...){
 chol.spam <- function(x, pivot = "MMD",
                       method="NgPeyton",
                       memory=list(),
-                      eps = getOption("spam.eps"), ...){
+                      eps = getOption("spam.eps"), Rstruct=NULL, ...){
 
+  if (is(Rstruct,"spam.chol.NgPeyton")) invisible( update.spam.chol.NgPeyton(Rstruct,x,...))
+    
     force64 <- getOption("spam.force64")
   if(force64 || prod(dim(x)) > 2147483647)
       SS <- .format64()
