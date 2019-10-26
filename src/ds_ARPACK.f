@@ -1931,13 +1931,13 @@ c
      &            -1, mxiter, 1)
       call intpr('  Total number of reorthogonalization steps  = ',
      &            -1, nrorth, 1)
-      call intpr('  Total time in Arnoldi update routine       = ',
+      call dblepr('  Total time in Arnoldi update routine       = ',
      &            -1, tsaupd, 1)
-      call intpr('  Total time in saup2 routine                = ',
+      call dblepr('  Total time in saup2 routine                = ',
      &            -1, tsaitr, 1)
-      call intpr('  Total time in basic Arnoldi iteration loop = ',
+      call dblepr('  Total time in basic Arnoldi iteration loop = ',
      &            -1, titref, 1)
-      call intpr('  Total time in reorthogonalization phase    = ',
+      call dblepr('  Total time in reorthogonalization phase    = ',
      &            -1, tgetv0, 1)
 c
       call intpr(' ', -1, 0, 0)

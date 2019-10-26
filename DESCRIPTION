@@ -1,8 +1,8 @@
 Package: spam
 Type: Package
 Title: SPArse Matrix
-Version: 2.3-0
-Date: 2019-09-13
+Version: 2.3-0.1
+Date: 2019-10-26
 Authors@R: c(person("Reinhard", "Furrer", role = c("aut", "cre"),
                     email = "reinhard.furrer@math.uzh.ch"),
              person("Florian", "Gerber", role = c("aut"),
@@ -47,7 +47,7 @@ License: LGPL-2 | BSD_3_clause + file LICENSE
 URL: https://www.math.uzh.ch/pages/spam/
 BugReports: https://git.math.uzh.ch/reinhard.furrer/spam/issues
 NeedsCompilation: yes
-Packaged: 2019-09-13 12:28:00 UTC; furrer
+Packaged: 2019-10-26 06:32:57 UTC; ripley
 Author: Reinhard Furrer [aut, cre],
   Florian Gerber [aut],
   Roman Flury [aut],
@@ -63,6 +63,12 @@ Author: Reinhard Furrer [aut, cre],
   Maschhoff Kristi [ctb] (ARPACK),
   Sorensen C. Danny [ctb] (ARPACK),
   Yang Chao [ctb] (ARPACK)
-Maintainer: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
+Maintainer: ORPHANED
 Repository: CRAN
-Date/Publication: 2019-09-14 21:30:02 UTC
+Date/Publication: 2019-10-26 09:09:05 UTC
+X-CRAN-Original-Maintainer: Reinhard Furrer
+        <reinhard.furrer@math.uzh.ch>
+X-CRAN-Comment: Orphaned on 2019-10-26 as installation warnings were
+        not corrected in time.
+ .
+ Misuse of call intpr, detected by gfortran 10.
