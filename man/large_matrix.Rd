@@ -23,10 +23,10 @@
 \alias{long vectors}
 \alias{spam64}
 
-\title{Large 64-bit matrices require the R package \pkg{spam64}}
+\title{Large 64-bit matrices require the R package \samp{spam64}}
 \description{The R package \pkg{spam} can handle sparse matrices with up
   to 2^31-1 non-zero elements. For matrices with more non-zero elements
-  it is necessary to load the \pkg{spam64} package in addition. 
+  it is necessary to load the \samp{spam64} package in addition. 
 }
 \details{With the help of the R package \pkg{dotCall64} spam interfaces
   either the compiled code with 32-bit integers provided in
@@ -39,7 +39,8 @@ Extending R packages to support 64-bit compiled code: An illustration with spam6
 Computer & Geoscience 104, 109-119, https://doi.org/10.1016/j.cageo.2016.11.015.
 }
 \seealso{
- \code{\link[spam64]{spam64-package}},  \code{\link[dotCall64]{dotCall64}}. 
+%% \code{\link[spam64]{spam64-package}},
+ \code{\link[dotCall64]{dotCall64}}. 
 }
 \examples{
 \dontrun{

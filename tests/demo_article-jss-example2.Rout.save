@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2019-10-25 r77333) -- "Unsuffered Consequences"
+R Under development (unstable) (2019-10-26 r77334) -- "Unsuffered Consequences"
 Copyright (C) 2019 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -58,7 +58,7 @@ Loading required package: fields
 Loading required package: spam
 Loading required package: dotCall64
 Loading required package: grid
-Spam version 2.3-0.1 (2019-10-26) is loaded.
+Spam version 2.3-0.2 (2019-10-28) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -284,4 +284,4 @@ See https://github.com/NCAR/Fields for
 > 
 > proc.time()
    user  system elapsed 
-  2.228   0.138   2.371 
+  1.197   0.095   1.275 
