@@ -3,14 +3,14 @@ citHeader("To cite `spam` in publications use:")
 citEntry(entry = "Article",
   title        = "{spam}: A Sparse Matrix {R} Package with Emphasis on {MCMC} Methods for {G}aussian {M}arkov Random Fields",
   author       = personList(as.person("Reinhard Furrer"),
-      as.person("Stephan R. Sain")),
+                            as.person("Stephan R. Sain")),
   journal      = "Journal of Statistical Software",
   year         = "2010",
   volume       = "36",
   number       = "10",
   pages        = "1--25",
   url          = "http://www.jstatsoft.org/v36/i10/",
-
+  doi          = "10.18637/jss.v036.i10",
   textVersion  =
   paste("Reinhard Furrer, Stephan R. Sain (2010).",
         "spam: A Sparse Matrix R Package with Emphasis on MCMC Methods for Gaussian Markov Random Fields.",
@@ -28,7 +28,7 @@ citEntry(entry = "Article",
   number       = "1",
   pages        = "1--32",
   url          = "http://www.jstatsoft.org/v63/c01/",
-
+  doi          = "10.18637/jss.v063.c01",
   textVersion  =
   paste("Florian Gerber, Reinhard Furrer (2015).",
         "Pitfalls in the Implementation of Bayesian Hierarchical Modeling of Areal Count Data: An Illustration Using BYM and Leroux Models.",

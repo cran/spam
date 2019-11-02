@@ -1,3 +1,8 @@
+c     Changes Oct 2019: to address gcc-10 issues with Rank missmatch:
+c     in `call blksb[lf]`: b(1,j) -> b(:,j); newrhs -> newrhs(:)
+      
+
+
       subroutine backsolvef(m,nsuper,nrhs,lindx,xlindx,lnz,
      &                   xlnz,xsuper,b)
 c see below...
@@ -8,7 +13,7 @@ c see below...
       double precision lnz(*),b(m,nrhs)
       integer j
       do j = 1,nrhs
-         call blkslb(nsuper,xsuper,xlindx,lindx,xlnz,lnz,b(1,j))
+         call blkslb(nsuper,xsuper,xlindx,lindx,xlnz,lnz,b(:,j))
       enddo
       return
       end
@@ -39,7 +44,7 @@ c     b -- the solution
       integer j
 c
       do j = 1,nrhs
-         call blkslf(nsuper,xsuper,xlindx,lindx,xlnz,lnz,b(1,j))
+         call blkslf(nsuper,xsuper,xlindx,lindx,xlnz,lnz,b(:,j))
       enddo
       return
       end
@@ -97,7 +102,7 @@ c          X'a = (1-tau)X'e in the rq setting
          do i = 1,m
             newrhs(i) = b(perm(i),j)
          enddo
-         call blkslf(nsuper,xsuper,xlindx,lindx,xlnz,lnz,newrhs)
+         call blkslf(nsuper,xsuper,xlindx,lindx,xlnz,lnz,newrhs(:))
          do i = 1,m
             sol(i,j) = newrhs(invp(i))
          enddo
@@ -168,7 +173,7 @@ c          X'a = (1-tau)X'e in the rq setting
          do i = 1,m
             newrhs(i) = b(perm(i),j)
          enddo
-         call blkslv(nsuper,xsuper,xlindx,lindx,xlnz,lnz,newrhs)
+         call blkslv(nsuper,xsuper,xlindx,lindx,xlnz,lnz,newrhs(:))
          do i = 1,m
             sol(i,j) = newrhs(invp(i))
          enddo

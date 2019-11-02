@@ -21,7 +21,7 @@ test_that("check arguments", {
   expect_identical(spam::isSymmetric.spam(rspam1), TRUE)
 
   rspam2 <- spam::spam_random(7, digits = 2, distribution = NULL, sym = FALSE, spd = TRUE)
-  cholrspam2 <- chol(rspam1)
+  cholrspam2 <- chol(rspam2)
 
   expect_identical(spam::isSymmetric.spam(rspam2), TRUE)
   expect_equivalent(class(cholrspam2), "spam.chol.NgPeyton")

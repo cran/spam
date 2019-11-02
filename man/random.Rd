@@ -40,5 +40,5 @@ spam_random(nrow = 1L, ncol = nrow, density = 0.5, distribution = NULL, digits =
 \examples{
 spam_random(500, digits = 2, distribution = rnorm, sd = 2, mean = 10, density = .1)
 }
-\author{Florian Gerber}
+\author{Florian Gerber, Roman Flury, Reinhard Furrer}
 

@@ -132,13 +132,12 @@ eigen_approx <- function(x,
                          verbose      = FALSE,
                          f_routine){
 
-  devMode <- FALSE
   # check & parse arguments
   if (x@dimension[1] <= nev)
-    stop("nev: the number of eigenvalues to calculate must be smaller than the matrix dimensions", call. = devMode)
+    stop("nev: the number of eigenvalues to calculate must be smaller than the matrix dimensions", call. = TRUE)
 
   if (f_routine != "ds_eigen_f" && f_routine != "dn_eigen_f")
-    stop("non valid fortran routine is specified", call. = devMode)
+    stop("non valid fortran routine is specified", call. = TRUE)
 
   f_mode <- setMode(sMode = mode, symmetric = ifelse(identical(f_routine, "ds_eigen_f"), TRUE, FALSE))
 
@@ -155,7 +154,7 @@ eigen_approx <- function(x,
                             SIGNATURE = c(SS$signature, SS$signature, SS$signature, SS$signature,
                                           SS$signature, SS$signature, "double",
                                           SS$signature, SS$signature, "double",
-                                          "double", SS$signature, SS$signature),
+                                          "double", SS$signature),
                             maxnev    = nev,
                             ncv       = ncv,
                             maxitr    = nitr,
@@ -167,15 +166,14 @@ eigen_approx <- function(x,
                             ia        = x@rowpointers,
                             v         = vector_dc("double", x@dimension[1]*ncv),
                             d         = vector_dc("double", nev),
-                            vf        = ifelse(devMode, 1L, 0L),
                             iparam    = integer_dc(11),
                             INTENT    = c("r", "r", "r", "r", "r", "r", "r", "r", "r",
-                                           "rw", "rw", "r", "rw"),
+                                           "rw", "rw", "rw"),
                             NAOK      = getOption("spam.NAOK"),
                             PACKAGE   = SS$package)
 
     if (is.null(fortran_object)) {
-      stop("error while calling fortran routine, check (control) arguments", call. = devMode) }
+      stop("error while calling fortran routine, check (control) arguments", call. = TRUE) }
 
     result <-   list ("nEigenVal"     = nev,
                       "Mode"          = f_mode,
@@ -190,7 +188,7 @@ eigen_approx <- function(x,
                             SIGNATURE = c(SS$signature, SS$signature, SS$signature, SS$signature,
                                           SS$signature, SS$signature, "double",
                                           SS$signature, SS$signature, "double",
-                                          "double", "double", SS$signature,SS$signature),
+                                          "double", "double", SS$signature),
                             maxnev    = nev,
                             ncv       = ncv,
                             maxitr    = nitr,
@@ -203,15 +201,14 @@ eigen_approx <- function(x,
                             v         = vector_dc("double", x@dimension[1]*ncv),
                             dr        = vector_dc("double", nev),
                             di        = vector_dc("double", nev),
-                            vf        = ifelse(devMode, 1L, 0L),
                             iparam    = integer_dc(11),
                             INTENT    = c("r", "r", "r", "r", "r", "r", "r", "r", "r",
-                                          "rw", "rw", "rw", "r", "rw"),
+                                          "rw", "rw", "rw", "rw"),
                             NAOK      = getOption("spam.NAOK"),
                             PACKAGE   = SS$package)
 
     if (is.null(fortran_object)) {
-      stop("error while calling fortran routine, check (control) arguments", call. = devMode) }
+      stop("error while calling fortran routine, check (control) arguments", call. = TRUE) }
 
     result <-   list ("nEigenVal"     = nev,
                       "Mode"          = f_mode,
@@ -232,10 +229,10 @@ eigen_approx <- function(x,
   }
 
   if (nev != result$nconv)
-    warning(paste("\n only", result$nconv, "instead of", nev ,"eigenvalues converged, try to increase 'control = list(nitr = .., ncv = ..)'"), call. = devMode)
+    warning(paste("\n only", result$nconv, "instead of", nev ,"eigenvalues converged, try to increase 'control = list(nitr = .., ncv = ..)'"), call. = TRUE)
 
   if (is.null(result)) {
-    stop("unpredicted error, check control options of the eigen.spam function.", call. = devMode)
+    stop("unpredicted error, check control options of the eigen.spam function.", call. = TRUE)
   }
 
   return(result)
@@ -320,7 +317,7 @@ eigen.spam <- function (x, nev = 10, symmetric, only.values = FALSE, control = l
     tmpresEig    <-  getEigenval(values       = resContainer$Eigenvalues,
                                  mode         = setMode(con$mode, symmetric, silent = TRUE),
                                  dim          = x@dimension[1],
-                                 nEig         = resContainer$nconv,
+                                 nEig         = if (resContainer$nconv > nev) { nev } else { resContainer$nconv },
                                  symmetric    = symmetric)
     resEig <- tmpresEig$eigenvalues
 
@@ -329,7 +326,7 @@ eigen.spam <- function (x, nev = 10, symmetric, only.values = FALSE, control = l
       resVec     <-  getEigenvec(v            = resContainer$Eigenvectors,
                                  sym          = symmetric,
                                  dimen        = x@dimension[1],
-                                 nEig         = resContainer$nconv,
+                                 nEig         = if (resContainer$nconv > nev) { nev } else { resContainer$nconv },
                                  orderind     = tmpresEig$order,
                                  eigenvalues  = resEig,
                                  cmplxeps     = con$cmplxeps) }

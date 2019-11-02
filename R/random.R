@@ -14,21 +14,21 @@
 spam_random <- function(nrow = 1L, ncol = nrow, density = 0.5, distribution = NULL,
                         digits = NULL, sym = FALSE, spd = FALSE, verbose = FALSE, ...) {
 
-  if (!is.numeric(nrow) | length(nrow) != 1)
+  if (!is.numeric(nrow) || length(nrow) != 1)
     stop("nrow must be a single numeric value.")
-  if (!is.numeric(ncol) | length(ncol) != 1)
+  if (!is.numeric(ncol) || length(ncol) != 1)
     stop("ncol must be a single numeric value.")
-  if (!is.numeric(density) | length(density) != 1 | density < 0 | density > 1)
+  if (!is.numeric(density) || length(density) != 1 || density < 0 || density > 1)
     stop("density must be a single numeric value, equal or between 0 and 1.")
   if (!(is.null(distribution) || (is.function(distribution) && any(names(formals(distribution)) == "n"))))
     stop("distribution must be a function which generates random deviates and must have an argument \"n\".")
   if (!(is.null(digits) || (is.numeric(digits) && length(digits) == 1 && digits >= 0)))
     stop("digits must be a single numeric value larger or equal to 0.")
-  if (!is.logical(verbose) | length(verbose) != 1)
+  if (!is.logical(verbose) || length(verbose) != 1)
     stop("verbose must be a single locigal value.")
-  if (!is.logical(sym) | length(sym) != 1)
+  if (!is.logical(sym) || length(sym) != 1)
     stop("sym must be a single locigal value.")
-  if (!is.logical(spd) | length(spd) != 1)
+  if (!is.logical(spd) || length(spd) != 1)
     stop("spd must be a single locigal value.")
   if (spd && ((ncol != nrow) || density == 0))
     stop("if spd == TRUE, then it must hold that ncol == nrow and density > 0")
@@ -67,17 +67,17 @@ spam_random <- function(nrow = 1L, ncol = nrow, density = 0.5, distribution = NU
     entries <- distribution(n, ...)
   if (!is.null(digits))
     entries <- round(entries, digits)
-  rspam <- .newSpam(entries,
-                    colindices = coli,
-                    rowpointers = rowp,
-                    dimension = c(nrow, ncol),
-                    force64 = getOption("spam.force64"))
+    rspam <- .newSpam(entries,
+                      colindices = coli,
+                      rowpointers = rowp,
+                      dimension = c(nrow, ncol),
+                      force64 = getOption("spam.force64"))
 
-  if (spd)
+  if (spd) {
     sym <- TRUE
+    diag.spam(rspam) <- diag.spam(rspam) + 1 }
 
   if (sym) {
-    diag.spam(rspam) <- diag.spam(rspam) + 1
     s_t <- t.spam(rspam)
     rspam <- s_t[lower.tri(s_t, diag = TRUE)] + rspam[upper.tri(rspam, diag = TRUE)]
   }

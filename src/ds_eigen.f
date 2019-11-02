@@ -3,7 +3,7 @@ c
      &                       n, iwhich,
      &                       na, a, ja, ia,
      &                       v, d,
-     &                       vf, iparam)
+     &                       iparam)
 c
       implicit none
 c
@@ -12,7 +12,7 @@ c     | Input Declarations |
 c     %--------------------%
 c
       integer          maxnev, ncv, maxitr, n, na, ja(*), ia(na+1),
-     &                 vf, iparam(11), iwhich
+     &                 iparam(11), iwhich
 c
       Double precision
      &                 a(*),
@@ -40,6 +40,7 @@ c
      &                 zero
       parameter        (zero = 0.0D+0)
 c
+c
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
@@ -54,16 +55,16 @@ c     | time spent in the various stages of computation |
 c     | given by setting msaupd = 1.                    |
 c     %-------------------------------------------------%
 c
-      include 'debug.h'
-      ndigit = -3
-      logfil = 6
-      msgets = 0
-      msaitr = 0
-      msapps = 0
-      msaupd = vf
-      msaup2 = vf
-      mseigt = 0
-      mseupd = 0
+cm    include 'debug.h'
+cm    ndigit = -3
+cm    logfil = 6
+cm    msgets = 0
+cm    msaitr = 0
+cm    msapps = 0
+cm    msaupd = 0
+cm    msaup2 = 0
+cm    mseigt = 0
+cm    mseupd = 0
 c
 c     %-------------------------------------------------%
 c     | The following sets dimensions for this problem. |
@@ -82,7 +83,7 @@ c
       else if (iwhich .eq. 9) then
             which = 'BE'
       else
-            call intpr(' Error: Invalid mode.', -1, 0, 0)
+CcC            callintpr(' Error: Invalid mode.', -1, 0, 0)
 c
         goto 9000
       end if
@@ -201,7 +202,7 @@ c        | Error message. Check the |
 c        | documentation in DSAUPD. |
 c        %--------------------------%
 c
-         call errpr (info)
+c         call errpr (info)
 c
          goto 9000
 c
@@ -247,7 +248,7 @@ c            | Error condition:                   |
 c            | Check the documentation of DSEUPD. |
 c            %------------------------------------%
 c
-             call errpr (ierr)
+c             call errpr (ierr)
 c
              goto 9000
 c

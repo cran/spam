@@ -15,9 +15,9 @@ c dsortr.f
 c
 c\BeginDoc
 c
-c\Name: dseupd 
+c\Name: dseupd
 c
-c\Description: 
+c\Description:
 c
 c  This subroutine returns the converged approximations to eigenvalues
 c  of A*z = lambda*B*z and (optionally):
@@ -30,8 +30,8 @@ c
 c      (3) Both.
 c
 c  There is negligible additional cost to obtain eigenvectors.  An orthonormal
-c  (Lanczos) basis is always computed.  There is an additional storage cost 
-c  of n*nev if both are requested (in this case a separate array Z must be 
+c  (Lanczos) basis is always computed.  There is an additional storage cost
+c  of n*nev if both are requested (in this case a separate array Z must be
 c  supplied).
 c
 c  These quantities are obtained from the Lanczos factorization computed
@@ -39,11 +39,11 @@ c  by DSAUPD  for the linear operator OP prescribed by the MODE selection
 c  (see IPARAM(7) in DSAUPD  documentation.)  DSAUPD  must be called before
 c  this routine is called. These approximate eigenvalues and vectors are
 c  commonly called Ritz values and Ritz vectors respectively.  They are
-c  referred to as such in the comments that follow.   The computed orthonormal 
+c  referred to as such in the comments that follow.   The computed orthonormal
 c  basis for the invariant subspace corresponding to these Ritz values is
 c  referred to as a Lanczos basis.
 c
-c  See documentation in the header of the subroutine DSAUPD  for a definition 
+c  See documentation in the header of the subroutine DSAUPD  for a definition
 c  of OP as well as other terms and the relation of computed Ritz values
 c  and vectors of OP with respect to the given problem  A*z = lambda*B*z.
 c
@@ -54,19 +54,19 @@ c  There is also the option of computing a selected set of these vectors
 c  with a single call.
 c
 c\Usage:
-c  call dseupd  
+c  call dseupd
 c     ( RVEC, HOWMNY, SELECT, D, Z, LDZ, SIGMA, BMAT, N, WHICH, NEV, TOL,
 c       RESID, NCV, V, LDV, IPARAM, IPNTR, WORKD, WORKL, LWORKL, INFO )
 c
 c  RVEC    LOGICAL  (INPUT)
-c          Specifies whether Ritz vectors corresponding to the Ritz value 
+c          Specifies whether Ritz vectors corresponding to the Ritz value
 c          approximations to the eigenproblem A*z = lambda*B*z are computed.
 c
 c             RVEC = .FALSE.     Compute Ritz values only.
 c
 c             RVEC = .TRUE.      Compute Ritz vectors.
 c
-c  HOWMNY  Character*1  (INPUT) 
+c  HOWMNY  Character*1  (INPUT)
 c          Specifies how many Ritz vectors are wanted and the form of Z
 c          the matrix of Ritz vectors. See remark 1 below.
 c          = 'A': compute NEV Ritz vectors;
@@ -159,7 +159,7 @@ c          = -16: HOWMNY = 'S' not yet implemented
 c          = -17: DSEUPD  got a different count of the number of converged
 c                 Ritz values than DSAUPD  got.  This indicates the user
 c                 probably made an error in passing data from DSAUPD  to
-c                 DSEUPD  or that the data was modified before entering 
+c                 DSEUPD  or that the data was modified before entering
 c                 DSEUPD .
 c
 c\BeginLib
@@ -168,7 +168,7 @@ c\References:
 c  1. D.C. Sorensen, "Implicit Application of Polynomial Filters in
 c     a k-Step Arnoldi Method", SIAM J. Matr. Anal. Apps., 13 (1992),
 c     pp 357-385.
-c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly 
+c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly
 c     Restarted Arnoldi Iteration", Rice University Technical Report
 c     TR95-13, Department of Computational and Applied Mathematics.
 c  3. B.N. Parlett, "The Symmetric Eigenvalue Problem". Prentice-Hall,
@@ -178,19 +178,19 @@ c     Computer Physics Communications, 53 (1989), pp 169-179.
 c  5. B. Nour-Omid, B.N. Parlett, T. Ericson, P.S. Jensen, "How to
 c     Implement the Spectral Transformation", Math. Comp., 48 (1987),
 c     pp 663-673.
-c  6. R.G. Grimes, J.G. Lewis and H.D. Simon, "A Shifted Block Lanczos 
-c     Algorithm for Solving Sparse Symmetric Generalized Eigenproblems", 
+c  6. R.G. Grimes, J.G. Lewis and H.D. Simon, "A Shifted Block Lanczos
+c     Algorithm for Solving Sparse Symmetric Generalized Eigenproblems",
 c     SIAM J. Matr. Anal. Apps.,  January (1993).
 c  7. L. Reichel, W.B. Gragg, "Algorithm 686: FORTRAN Subroutines
 c     for Updating the QR decomposition", ACM TOMS, December 1990,
 c     Volume 16 Number 4, pp 369-377.
 c
 c\Remarks
-c  1. The converged Ritz values are always returned in increasing 
+c  1. The converged Ritz values are always returned in increasing
 c     (algebraic) order.
 c
 c  2. Currently only HOWMNY = 'A' is implemented. It is included at this
-c     stage for the user who wants to incorporate it. 
+c     stage for the user who wants to incorporate it.
 c
 c\Routines called:
 c     dsesrt   ARPACK routine that sorts an array X, and applies the
@@ -216,15 +216,15 @@ c\Authors
 c     Danny Sorensen               Phuong Vu
 c     Richard Lehoucq              CRPC / Rice University
 c     Chao Yang                    Houston, Texas
-c     Dept. of Computational & 
+c     Dept. of Computational &
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
-c 
+c     Rice University
+c     Houston, Texas
+c
 c\Revision history:
 c     12/15/93: Version ' 2.1'
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: seupd.F   SID: 2.11   DATE OF SID: 04/10/01   RELEASE: 2
 c
 c\EndLib
@@ -241,7 +241,7 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -251,7 +251,7 @@ c
       character  bmat, howmny, which*2
       logical    rvec
       integer    info, ldz, ldv, lworkl, n, ncv, nev
-      Double precision      
+      Double precision
      &           sigma, tol
 c
 c     %-----------------%
@@ -260,7 +260,7 @@ c     %-----------------%
 c
       integer    iparam(7), ipntr(11)
       logical    select(ncv)
-      Double precision 
+      Double precision
      &           d(nev)     , resid(n)  , v(ldv,ncv),
      &           z(ldz, nev), workd(2*n), workl(lworkl)
 c
@@ -268,9 +268,11 @@ c     %------------%
 c     | Parameters |
 c     %------------%
 c
-      Double precision 
+      Double precision
      &           one, zero
       parameter (one = 1.0D+0 , zero = 0.0D+0 )
+      Integer   ione
+      parameter (ione = 1)
 c
 c     %---------------%
 c     | Local Scalars |
@@ -279,27 +281,28 @@ c
       character  type*6
       integer    bounds , ierr   , ih    , ihb   , ihd   ,
      &           iq     , iw     , j     , k     , ldh   ,
-     &           ldq    , mode   , msglvl, nconv , next  ,
+cm     &           ldq    , mode   , msglvl, nconv , next  ,
+     &           ldq    , mode   , nconv , next  ,
      &           ritz   , irz    , ibd   , np    , ishift,
      &           leftptr, rghtptr, numcnv, jj
-      Double precision 
+      Double precision
      &           bnorm2 , rnorm, temp, temp1, eps23
-      logical    reord, dseupdtrue 
+      logical    reord, dseupdtrue
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dcopy  , dger   , dgeqr2 , dlacpy , dorm2r , dscal , 
-     &           dsesrt , dsteqr , dswap  , dsortr 
+      external   dcopy  , dger   , dgeqr2 , dlacpy , dorm2r , dscal ,
+     &           dsesrt , dsteqr , dswap  , dsortr
 c
 c     %--------------------%
 c     | External Functions |
 c     %--------------------%
 c
-      Double precision 
-     &           dnrm2 , dlamch 
-      external   dnrm2 , dlamch 
+      Double precision
+     &           dnrm2 , dlamch
+      external   dnrm2 , dlamch
 c
 c     %---------------------%
 c     | Intrinsic Functions |
@@ -310,12 +313,12 @@ c
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
-c 
+c
 c     %------------------------%
 c     | Set default parameters |
 c     %------------------------%
 c
-      msglvl = mseupd
+cm      msglvl = mseupd
       mode = iparam(7)
       nconv = iparam(5)
       info = 0
@@ -328,7 +331,7 @@ c
       if (nconv .eq. 0) go to 9000
       ierr = 0
 c
-      if (nconv .le. 0)                        ierr = -14 
+      if (nconv .le. 0)                        ierr = -14
       if (n .le. 0)                            ierr = -1
       if (nev .le. 0)                          ierr = -2
       if (ncv .le. nev .or.  ncv .gt. n)       ierr = -3
@@ -340,12 +343,12 @@ c
       if (bmat .ne. 'I' .and. bmat .ne. 'G')   ierr = -6
       if ( (howmny .ne. 'A' .and.
      &           howmny .ne. 'P' .and.
-     &           howmny .ne. 'S') .and. rvec ) 
+     &           howmny .ne. 'S') .and. rvec )
      &                                         ierr = -15
       if (rvec .and. howmny .eq. 'S')           ierr = -16
 c
       if (rvec .and. lworkl .lt. ncv**2+8*ncv) ierr = -7
-c     
+c
       if (mode .eq. 1 .or. mode .eq. 2) then
          type = 'REGULR'
       else if (mode .eq. 3 ) then
@@ -354,7 +357,7 @@ c
          type = 'BUCKLE'
       else if (mode .eq. 5 ) then
          type = 'CAYLEY'
-      else 
+      else
                                                ierr = -10
       end if
       if (mode .eq. 1 .and. bmat .eq. 'G')     ierr = -11
@@ -368,7 +371,7 @@ c
          info = ierr
          go to 9000
       end if
-c     
+c
 c     %-------------------------------------------------------%
 c     | Pointer into WORKL for address of H, RITZ, BOUNDS, Q  |
 c     | etc... and the remaining workspace.                   |
@@ -443,7 +446,7 @@ c     %---------------------------------%
 c     | Set machine dependent constant. |
 c     %---------------------------------%
 c
-      eps23 = dlamch ('Epsilon-Machine') 
+      eps23 = dlamch ('Epsilon-Machine')
       eps23 = eps23**(2.0D+0  / 3.0D+0 )
 c
 c     %---------------------------------------%
@@ -539,9 +542,9 @@ c
             go to 9000
          end if
 c
-         if (msglvl .gt. 1) then
-            call dcopy (ncv, workl(iq+ncv-1), ldq, workl(iw), 1)
-         end if
+cm         if (msglvl .gt. 1) then
+cm            call dcopy (ncv, workl(iq+ncv-1), ldq, workl(iw), 1)
+cm         end if
 c
          if (reord) then
 c
@@ -610,7 +613,8 @@ c        %----------------------------------------%
 c        | Load the converged Ritz values into D. |
 c        %----------------------------------------%
 c
-         call dcopy (nconv, workl(ihd), 1, d, 1)
+         call dcopy (nconv, workl(ihd), 1, d(1), 1)
+cx         call dcopy (nconv, workl(ihd), 1, d, 1)
 c
       else
 c
@@ -618,7 +622,8 @@ c        %-----------------------------------------------------%
 c        | Ritz vectors not required. Load Ritz values into D. |
 c        %-----------------------------------------------------%
 c
-         call dcopy (nconv, workl(ritz), 1, d, 1)
+cx         call dcopy (nconv, workl(ritz), 1, d, 1)
+         call dcopy (nconv, workl(ritz), 1, d(1), 1)
          call dcopy (ncv, workl(ritz), 1, workl(ihd), 1)
 c
       end if
@@ -642,8 +647,8 @@ c
             call dcopy (ncv, workl(bounds), 1, workl(ihb), 1)
          end if
 c
-      else 
-c 
+      else
+c
 c        %-------------------------------------------------------------%
 c        | *  Make a copy of all the Ritz values.                      |
 c        | *  Transform the Ritz values back to the original system.   |
@@ -660,13 +665,13 @@ c        |  They are only reordered.                                   |
 c        %-------------------------------------------------------------%
 c
          call dcopy  (ncv, workl(ihd), 1, workl(iw), 1)
-         if (type .eq. 'SHIFTI') then 
+         if (type .eq. 'SHIFTI') then
             do 40 k=1, ncv
                workl(ihd+k-1) = one / workl(ihd+k-1) + sigma
   40        continue
          else if (type .eq. 'BUCKLE') then
             do 50 k=1, ncv
-               workl(ihd+k-1) = sigma * workl(ihd+k-1) / 
+               workl(ihd+k-1) = sigma * workl(ihd+k-1) /
      &                          (workl(ihd+k-1) - one)
   50        continue
          else if (type .eq. 'CAYLEY') then
@@ -675,7 +680,7 @@ c
      &                          (workl(ihd+k-1) - one)
   60        continue
          end if
-c 
+c
 c        %-------------------------------------------------------------%
 c        | *  Store the wanted NCONV lambda values into D.             |
 c        | *  Sort the NCONV wanted lambda in WORKL(IHD:IHD+NCONV-1)   |
@@ -691,7 +696,8 @@ c        |  match the ordering of the lambda. We`ll use them again for |
 c        |  Ritz vector purification.                                  |
 c        %-------------------------------------------------------------%
 c
-         call dcopy (nconv, workl(ihd), 1, d, 1)
+         call dcopy (nconv, workl(ihd), 1, d(1), 1)
+cx         call dcopy (nconv, workl(ihd), 1, d, 1)
          call dsortr ('LA', dseupdtrue, nconv, workl(ihd), workl(iw))
          if (rvec) then
             call dsesrt ('LA', rvec , nconv, d, ncv, workl(iq), ldq)
@@ -701,8 +707,8 @@ c
             call dsortr ('LA', dseupdtrue, nconv, d, workl(ihb))
          end if
 c
-      end if 
-c 
+      end if
+c
 c     %------------------------------------------------%
 c     | Compute the Ritz vectors. Transform the wanted |
 c     | eigenvectors of the symmetric tridiagonal H by |
@@ -710,30 +716,31 @@ c     | the Lanczos basis matrix V.                    |
 c     %------------------------------------------------%
 c
       if (rvec .and. howmny .eq. 'A') then
-c    
+c
 c        %----------------------------------------------------------%
 c        | Compute the QR factorization of the matrix representing  |
 c        | the wanted invariant subspace located in the first NCONV |
 c        | columns of workl(iq,ldq).                                |
 c        %----------------------------------------------------------%
-c     
+c
          call dgeqr2 (ncv, nconv        , workl(iq) ,
      &                ldq, workl(iw+ncv), workl(ihb),
      &                ierr)
 c
 c        %--------------------------------------------------------%
-c        | * Postmultiply V by Q.                                 |   
+c        | * Postmultiply V by Q.                                 |
 c        | * Copy the first NCONV columns of VQ into Z.           |
 c        | The N by NCONV matrix Z is now a matrix representation |
 c        | of the approximate invariant subspace associated with  |
 c        | the Ritz values in workl(ihd).                         |
 c        %--------------------------------------------------------%
-c     
+c
          call dorm2r ('Right', 'Notranspose', n        ,
      &                ncv    , nconv        , workl(iq),
      &                ldq    , workl(iw+ncv), v        ,
      &                ldv    , workd(n+1)   , ierr)
-         call dlacpy ('All', n, nconv, v, ldv, z, ldz)
+         call dlacpy ('All', n, nconv, v(1,1), ldv, z, ldz)
+cx         call dlacpy ('All', n, nconv, v, ldv, z, ldz)
 c
 c        %-----------------------------------------------------%
 c        | In order to compute the Ritz estimates for the Ritz |
@@ -742,11 +749,12 @@ c        | eigenvector matrix. Remember, it`s in factored form |
 c        %-----------------------------------------------------%
 c
          do 65 j = 1, ncv-1
-            workl(ihb+j-1) = zero 
+            workl(ihb+j-1) = zero
   65     continue
          workl(ihb+ncv-1) = one
          call dorm2r ('Left', 'Transpose'  , ncv       ,
-     &                1     , nconv        , workl(iq) ,
+     &                ione  , nconv        , workl(iq) ,
+cv     &                1  , nconv        , workl(iq) ,
      &                ldq   , workl(iw+ncv), workl(ihb),
      &                ncv   , temp         , ierr)
 c
@@ -774,10 +782,10 @@ c        | *  Determine Ritz estimates of the lambda.      |
 c        %-------------------------------------------------%
 c
          call dscal  (ncv, bnorm2, workl(ihb), 1)
-         if (type .eq. 'SHIFTI') then 
+         if (type .eq. 'SHIFTI') then
 c
             do 80 k=1, ncv
-               workl(ihb+k-1) = abs( workl(ihb+k-1) ) 
+               workl(ihb+k-1) = abs( workl(ihb+k-1) )
      &                        / workl(iw+k-1)**2
  80         continue
 c
@@ -799,7 +807,7 @@ c
 c
       end if
 c
-c 
+c
 c     %-------------------------------------------------%
 c     | Ritz vector purification step. Formally perform |
 c     | one of inverse subspace iteration. Only used    |
@@ -820,7 +828,7 @@ c
      &                  / (workl(iw+k)-one)
  120     continue
 c
-      end if 
+      end if
 c
       if (type .ne. 'REGULR')
      &   call dger  (n, nconv, one, resid, 1, workl(iw), 1, z, ldz)
@@ -840,7 +848,7 @@ c
 c\Name: dsesrt
 c
 c\Description:
-c  Sort the array X in the order specified by WHICH and optionally 
+c  Sort the array X in the order specified by WHICH and optionally
 c  apply the permutation to the columns of the matrix A.
 c
 c\Usage:
@@ -868,7 +876,7 @@ c  NA      Integer.  (INPUT)
 c          Number of rows of the matrix A.
 c
 c  A      Double precision array of length NA by N.  (INPUT/OUTPUT)
-c         
+c
 c  LDA     Integer.  (INPUT)
 c          Leading dimension of A.
 c
@@ -883,18 +891,18 @@ c     dswap  Level 1 BLAS that swaps the contents of two vectors.
 c
 c\Authors
 c     Danny Sorensen               Phuong Vu
-c     Richard Lehoucq              CRPC / Rice University 
-c     Dept. of Computational &     Houston, Texas 
+c     Richard Lehoucq              CRPC / Rice University
+c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
+c     Rice University
+c     Houston, Texas
 c
 c\Revision history:
 c     12/15/93: Version ' 2.1'.
-c               Adapted from the sort routine in LANSO and 
+c               Adapted from the sort routine in LANSO and
 c               the ARPACK code dsortr
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: sesrt.F   SID: 2.3   DATE OF SID: 4/19/96   RELEASE: 2
 c
 c\EndLib
@@ -937,7 +945,7 @@ c     | Executable Statements |
 c     %-----------------------%
 c
       igap = n / 2
-c 
+c
       if (which .eq. 'SA') then
 c
 c        X is sorted into decreasing order of algebraic.
@@ -1001,7 +1009,7 @@ c
    80       continue
 c
             if (j.lt.0) go to 90
-c           
+c
             if (x(j).gt.x(j+igap)) then
                temp = x(j)
                x(j) = x(j+igap)
@@ -1015,7 +1023,7 @@ c
    90    continue
          igap = igap / 2
          go to 70
-c 
+c
       else if (which .eq. 'LM') then
 c
 c        X is sorted into increasing order of magnitude.
@@ -1056,13 +1064,13 @@ c\BeginDoc
 c
 c\Name: dsgets
 c
-c\Description: 
+c\Description:
 c  Given the eigenvalues of the symmetric tridiagonal matrix H,
-c  computes the NP shifts AMU that are zeros of the polynomial of 
-c  degree NP which filters out components of the unwanted eigenvectors 
+c  computes the NP shifts AMU that are zeros of the polynomial of
+c  degree NP which filters out components of the unwanted eigenvectors
 c  corresponding to the AMU's based on some given criteria.
 c
-c  NOTE: This is called even in the case of user specified shifts in 
+c  NOTE: This is called even in the case of user specified shifts in
 c  order to sort the eigenvalues, and error bounds of H for later use.
 c
 c\Usage:
@@ -1092,8 +1100,8 @@ c          Number of implicit shifts to be computed.
 c
 c  RITZ    Double precision array of length KEV+NP.  (INPUT/OUTPUT)
 c          On INPUT, RITZ contains the eigenvalues of H.
-c          On OUTPUT, RITZ are sorted so that the unwanted eigenvalues 
-c          are in the first NP locations and the wanted part is in 
+c          On OUTPUT, RITZ are sorted so that the unwanted eigenvalues
+c          are in the first NP locations and the wanted part is in
 c          the last KEV locations.  When exact shifts are selected, the
 c          unwanted part corresponds to the shifts to be applied.
 c
@@ -1102,7 +1110,7 @@ c          Error bounds corresponding to the ordering in RITZ.
 c
 c  SHIFTS  Double precision array of length NP.  (INPUT/OUTPUT)
 c          On INPUT:  contains the user specified shifts if ISHIFT = 0.
-c          On OUTPUT: contains the shifts sorted into decreasing order 
+c          On OUTPUT: contains the shifts sorted into decreasing order
 c          of magnitude with respect to the Ritz estimates contained in
 c          BOUNDS. If ISHIFT = 0, SHIFTS is not modified on exit.
 c
@@ -1128,13 +1136,13 @@ c     Danny Sorensen               Phuong Vu
 c     Richard Lehoucq              CRPC / Rice University
 c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
+c     Rice University
+c     Houston, Texas
 c
 c\Revision history:
 c     xx/xx/93: Version ' 2.1'
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: sgets.F   SID: 2.4   DATE OF SID: 4/19/96   RELEASE: 2
 c
 c\Remarks
@@ -1149,7 +1157,7 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -1166,19 +1174,20 @@ c
       Double precision
      &           bounds(kev+np), ritz(kev+np), shifts(np)
 c
-c     %------------%
-c     | Parameters |
-c     %------------%
-c
-      Double precision
-     &           one, zero
-      parameter (one = 1.0D+0, zero = 0.0D+0)
-c
+cua     %------------%
+cua     | Parameters |
+cua     %------------%
+cua
+cua      Double precision
+cua     &           one, zero
+cua      parameter (one = 1.0D+0, zero = 0.0D+0)
+cua
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-      integer    kevd2, msglvl
+cm      integer    kevd2, msglvl
+      integer    kevd2
       logical    dsgetstrue
 c
 c     %----------------------%
@@ -1197,7 +1206,7 @@ c
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
-c 
+c
 c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
@@ -1205,8 +1214,8 @@ c     %-------------------------------%
 c
       dsgetstrue = .true.
 c      call second (t0)
-      msglvl = msgets
-c 
+cm      msglvl = msgets
+c
       if (which .eq. 'BE') then
 c
 c        %-----------------------------------------------------%
@@ -1219,11 +1228,13 @@ c        | overlapping locations.                              |
 c        %-----------------------------------------------------%
 c
          call dsortr ('LA', dsgetstrue, kev+np, ritz, bounds)
-         kevd2 = kev / 2 
+         kevd2 = kev / 2
          if ( kev .gt. 1 ) then
-            call dswap ( min(kevd2,np), ritz, 1, 
+            call dswap ( min(kevd2,np), ritz(1), 1,
+cx            call dswap ( min(kevd2,np), ritz, 1,
      &                   ritz( max(kevd2,np)+1 ), 1)
-            call dswap ( min(kevd2,np), bounds, 1, 
+            call dswap ( min(kevd2,np), bounds(1), 1,
+cx            call dswap ( min(kevd2,np), bounds, 1,
      &                   bounds( max(kevd2,np)+1 ), 1)
          end if
 c
@@ -1241,7 +1252,7 @@ c
       end if
 c
       if (ishift .eq. 1 .and. np .gt. 0) then
-c     
+c
 c        %-------------------------------------------------------%
 c        | Sort the unwanted Ritz values used as shifts so that  |
 c        | the ones with largest Ritz estimates are first.       |
@@ -1249,11 +1260,12 @@ c        | This will tend to minimize the effects of the         |
 c        | forward instability of the iteration when the shifts  |
 c        | are applied in subroutine dsapps.                     |
 c        %-------------------------------------------------------%
-c     
+c
          call dsortr ('SM', dsgetstrue, np, bounds, ritz)
-         call dcopy (np, ritz, 1, shifts, 1)
+         call dcopy (np, ritz, 1, shifts(1), 1)
+cx         call dcopy (np, ritz, 1, shifts, 1)
       end if
-c 
+c
 c      call second (t1)
 cs      tsgets = tsgets + (t1 - t0)
       tsgets = 0.0
@@ -1269,33 +1281,33 @@ c
 c-----------------------------------------------------------------------
 c\BeginDoc
 c
-c\Name: dsaupd 
+c\Name: dsaupd
 c
-c\Description: 
+c\Description:
 c
-c  Reverse communication interface for the Implicitly Restarted Arnoldi 
-c  Iteration.  For symmetric problems this reduces to a variant of the Lanczos 
-c  method.  This method has been designed to compute approximations to a 
-c  few eigenpairs of a linear operator OP that is real and symmetric 
-c  with respect to a real positive semi-definite symmetric matrix B, 
+c  Reverse communication interface for the Implicitly Restarted Arnoldi
+c  Iteration.  For symmetric problems this reduces to a variant of the Lanczos
+c  method.  This method has been designed to compute approximations to a
+c  few eigenpairs of a linear operator OP that is real and symmetric
+c  with respect to a real positive semi-definite symmetric matrix B,
 c  i.e.
-c                   
-c       B*OP = (OP`)*B.  
 c
-c  Another way to express this condition is 
+c       B*OP = (OP`)*B.
+c
+c  Another way to express this condition is
 c
 c       < x,OPy > = < OPx,y >  where < z,w > = z`Bw  .
-c  
-c  In the standard eigenproblem B is the identity matrix.  
+c
+c  In the standard eigenproblem B is the identity matrix.
 c  ( A` denotes transpose of A)
 c
 c  The computed approximate eigenvalues are called Ritz values and
 c  the corresponding approximate eigenvectors are called Ritz vectors.
 c
-c  dsaupd  is usually called iteratively to solve one of the 
+c  dsaupd  is usually called iteratively to solve one of the
 c  following problems:
 c
-c  Mode 1:  A*x = lambda*x, A symmetric 
+c  Mode 1:  A*x = lambda*x, A symmetric
 c           ===> OP = A  and  B = I.
 c
 c  Mode 2:  A*x = lambda*M*x, A symmetric, M symmetric positive definite
@@ -1303,10 +1315,10 @@ c           ===> OP = inv[M]*A  and  B = M.
 c           ===> (If M can be factored see remark 3 below)
 c
 c  Mode 3:  K*x = lambda*M*x, K symmetric, M symmetric positive semi-definite
-c           ===> OP = (inv[K - sigma*M])*M  and  B = M. 
+c           ===> OP = (inv[K - sigma*M])*M  and  B = M.
 c           ===> Shift-and-Invert mode
 c
-c  Mode 4:  K*x = lambda*KG*x, K symmetric positive semi-definite, 
+c  Mode 4:  K*x = lambda*KG*x, K symmetric positive semi-definite,
 c           KG symmetric indefinite
 c           ===> OP = (inv[K - sigma*KG])*K  and  B = K.
 c           ===> Buckling mode
@@ -1328,13 +1340,13 @@ c        the accuracy requirements for the eigenvalue
 c        approximations.
 c
 c\Usage:
-c  call dsaupd  
+c  call dsaupd
 c     ( IDO, BMAT, N, WHICH, NEV, TOL, RESID, NCV, V, LDV, IPARAM,
 c       IPNTR, WORKD, WORKL, LWORKL, INFO )
 c
 c\Arguments
 c  IDO     Integer.  (INPUT/OUTPUT)
-c          Reverse communication flag.  IDO must be zero on the first 
+c          Reverse communication flag.  IDO must be zero on the first
 c          call to dsaupd .  IDO will be set internally to
 c          indicate the type of operation to be performed.  Control is
 c          then given back to the calling routine which has the
@@ -1363,7 +1375,7 @@ c                    IPNTR(11) is the pointer into WORKL for
 c                    placing the shifts. See remark 6 below.
 c          IDO = 99: done
 c          -------------------------------------------------------------
-c             
+c
 c  BMAT    Character*1.  (INPUT)
 c          BMAT specifies the type of the matrix B that defines the
 c          semi-inner product for the operator OP.
@@ -1379,7 +1391,7 @@ c
 c          'LA' - compute the NEV largest (algebraic) eigenvalues.
 c          'SA' - compute the NEV smallest (algebraic) eigenvalues.
 c          'LM' - compute the NEV largest (in magnitude) eigenvalues.
-c          'SM' - compute the NEV smallest (in magnitude) eigenvalues. 
+c          'SM' - compute the NEV smallest (in magnitude) eigenvalues.
 c          'BE' - compute NEV eigenvalues, half from each end of the
 c                 spectrum.  When NEV is odd, compute one more from the
 c                 high end than from the low end.
@@ -1389,27 +1401,27 @@ c  NEV     Integer.  (INPUT)
 c          Number of eigenvalues of OP to be computed. 0 < NEV < N.
 c
 c  TOL     Double precision  scalar.  (INPUT)
-c          Stopping criterion: the relative accuracy of the Ritz value 
+c          Stopping criterion: the relative accuracy of the Ritz value
 c          is considered acceptable if BOUNDS(I) .LE. TOL*ABS(RITZ(I)).
 c          If TOL .LE. 0. is passed a default is set:
 c          DEFAULT = DLAMCH ('EPS')  (machine precision as computed
 c                    by the LAPACK auxiliary subroutine DLAMCH ).
 c
 c  RESID   Double precision  array of length N.  (INPUT/OUTPUT)
-c          On INPUT: 
+c          On INPUT:
 c          If INFO .EQ. 0, a random initial residual vector is used.
 c          If INFO .NE. 0, RESID contains the initial residual vector,
 c                          possibly from a previous run.
 c          On OUTPUT:
-c          RESID contains the final residual vector. 
+c          RESID contains the final residual vector.
 c
 c  NCV     Integer.  (INPUT)
 c          Number of columns of the matrix V (less than or equal to N).
-c          This will indicate how many Lanczos vectors are generated 
-c          at each iteration.  After the startup phase in which NEV 
-c          Lanczos vectors are generated, the algorithm generates 
+c          This will indicate how many Lanczos vectors are generated
+c          at each iteration.  After the startup phase in which NEV
+c          Lanczos vectors are generated, the algorithm generates
 c          NCV-NEV Lanczos vectors at each subsequent update iteration.
-c          Most of the cost in generating each Lanczos vector is in the 
+c          Most of the cost in generating each Lanczos vector is in the
 c          matrix-vector product OP*x. (See remark 4 below).
 c
 c  V       Double precision  N by NCV array.  (OUTPUT)
@@ -1429,10 +1441,10 @@ c                      reverse communication.  The NCV eigenvalues of
 c                      the current tridiagonal matrix T are returned in
 c                      the part of WORKL array corresponding to RITZ.
 c                      See remark 6 below.
-c          ISHIFT = 1: exact shifts with respect to the reduced 
-c                      tridiagonal matrix T.  This is equivalent to 
-c                      restarting the iteration with a starting vector 
-c                      that is a linear combination of Ritz vectors 
+c          ISHIFT = 1: exact shifts with respect to the reduced
+c                      tridiagonal matrix T.  This is equivalent to
+c                      restarting the iteration with a starting vector
+c                      that is a linear combination of Ritz vectors
 c                      associated with the "wanted" Ritz values.
 c          -------------------------------------------------------------
 c
@@ -1440,8 +1452,8 @@ c          IPARAM(2) = LEVEC
 c          No longer referenced. See remark 2 below.
 c
 c          IPARAM(3) = MXITER
-c          On INPUT:  maximum number of Arnoldi update iterations allowed. 
-c          On OUTPUT: actual number of Arnoldi update iterations taken. 
+c          On INPUT:  maximum number of Arnoldi update iterations allowed.
+c          On OUTPUT: actual number of Arnoldi update iterations taken.
 c
 c          IPARAM(4) = NB: blocksize to be used in the recurrence.
 c          The code currently works only for NB = 1.
@@ -1451,11 +1463,11 @@ c          This represents the number of Ritz values that satisfy
 c          the convergence criterion.
 c
 c          IPARAM(6) = IUPD
-c          No longer referenced. Implicit restarting is ALWAYS used. 
+c          No longer referenced. Implicit restarting is ALWAYS used.
 c
 c          IPARAM(7) = MODE
 c          On INPUT determines what type of eigenproblem is being solved.
-c          Must be 1,2,3,4,5; See under \Description of dsaupd  for the 
+c          Must be 1,2,3,4,5; See under \Description of dsaupd  for the
 c          five modes available.
 c
 c          IPARAM(8) = NP
@@ -1467,7 +1479,7 @@ c
 c          IPARAM(9) = NUMOP, IPARAM(10) = NUMOPB, IPARAM(11) = NUMREO,
 c          OUTPUT: NUMOP  = total number of OP*x operations,
 c                  NUMOPB = total number of B*x operations if BMAT='G',
-c                  NUMREO = total number of steps of re-orthogonalization.        
+c                  NUMREO = total number of steps of re-orthogonalization.
 c
 c  IPNTR   Integer array of length 11.  (OUTPUT)
 c          Pointer to mark the starting locations in the WORKD and WORKL
@@ -1475,7 +1487,7 @@ c          arrays for matrices/vectors used by the Lanczos iteration.
 c          -------------------------------------------------------------
 c          IPNTR(1): pointer to the current operand vector X in WORKD.
 c          IPNTR(2): pointer to the current result vector Y in WORKD.
-c          IPNTR(3): pointer to the vector B * X in WORKD when used in 
+c          IPNTR(3): pointer to the vector B * X in WORKD when used in
 c                    the shift-and-invert mode.
 c          IPNTR(4): pointer to the next available location in WORKL
 c                    that is untouched by the program.
@@ -1492,14 +1504,14 @@ c          IPNTR(10): pointer to the NCV by NCV matrix of eigenvectors
 c                     of the tridiagonal matrix T. Only referenced by
 c                     dseupd  if RVEC = .TRUE. See Remarks.
 c          -------------------------------------------------------------
-c          
+c
 c  WORKD   Double precision  work array of length 3*N.  (REVERSE COMMUNICATION)
 c          Distributed array to be used in the basic Arnoldi iteration
-c          for reverse communication.  The user should not use WORKD 
+c          for reverse communication.  The user should not use WORKD
 c          as temporary workspace during the iteration. Upon termination
 c          WORKD(1:N) contains B*RESID(1:N). If the Ritz vectors are desired
 c          subroutine dseupd  uses this output.
-c          See Data Distribution Note below.  
+c          See Data Distribution Note below.
 c
 c  WORKL   Double precision  work array of length LWORKL.  (OUTPUT/WORKSPACE)
 c          Private (replicated) array on each PE or array allocated on
@@ -1515,13 +1527,13 @@ c                          possibly from a previous run.
 c          Error flag on output.
 c          =  0: Normal exit.
 c          =  1: Maximum number of iterations taken.
-c                All possible eigenvalues of OP has been found. IPARAM(5)  
+c                All possible eigenvalues of OP has been found. IPARAM(5)
 c                returns the number of wanted converged Ritz values.
 c          =  2: No longer an informational error. Deprecated starting
 c                with release 2 of ARPACK.
-c          =  3: No shifts could be applied during a cycle of the 
-c                Implicitly restarted Arnoldi iteration. One possibility 
-c                is to increase the size of NCV relative to NEV. 
+c          =  3: No shifts could be applied during a cycle of the
+c                Implicitly restarted Arnoldi iteration. One possibility
+c                is to increase the size of NCV relative to NEV.
 c                See remark 4 below.
 c          = -1: N must be positive.
 c          = -2: NEV must be positive.
@@ -1545,12 +1557,12 @@ c                   enough workspace and array storage has been allocated.
 c
 c
 c\Remarks
-c  1. The converged Ritz values are always returned in ascending 
+c  1. The converged Ritz values are always returned in ascending
 c     algebraic order.  The computed Ritz values are approximate
 c     eigenvalues of OP.  The selection of WHICH should be made
-c     with this in mind when Mode = 3,4,5.  After convergence, 
-c     approximate eigenvalues of the original problem may be obtained 
-c     with the ARPACK subroutine dseupd . 
+c     with this in mind when Mode = 3,4,5.  After convergence,
+c     approximate eigenvalues of the original problem may be obtained
+c     with the ARPACK subroutine dseupd .
 c
 c  2. If the Ritz vectors corresponding to the converged Ritz values
 c     are needed, the user must call dseupd  immediately following completion
@@ -1558,7 +1570,7 @@ c     of dsaupd . This is new starting with version 2.1 of ARPACK.
 c
 c  3. If M can be factored into a Cholesky factorization M = LL`
 c     then Mode = 2 should not be selected.  Instead one should use
-c     Mode = 1 with  OP = inv(L)*A*inv(L`).  Appropriate triangular 
+c     Mode = 1 with  OP = inv(L)*A*inv(L`).  Appropriate triangular
 c     linear systems should be solved with L and L` rather
 c     than computing inverses.  After convergence, an approximate
 c     eigenvector z of the original problem is recovered by solving
@@ -1568,7 +1580,7 @@ c  4. At present there is no a-priori analysis to guide the selection
 c     of NCV relative to NEV.  The only formal requrement is that NCV > NEV.
 c     However, it is recommended that NCV .ge. 2*NEV.  If many problems of
 c     the same type are to be solved, one should experiment with increasing
-c     NCV while keeping NEV fixed for a given test problem.  This will 
+c     NCV while keeping NEV fixed for a given test problem.  This will
 c     usually decrease the required number of OP*x operations but it
 c     also increases the work and storage required to maintain the orthogonal
 c     basis vectors.   The optimal "cross-over" with respect to CPU time
@@ -1580,16 +1592,16 @@ c     When IPARAM(7) = 2 OP = inv(B)*A. After computing A*X the user
 c     must overwrite X with A*X. Y is then the solution to the linear set
 c     of equations B*Y = A*X.
 c
-c  6. When IPARAM(1) = 0, and IDO = 3, the user needs to provide the 
-c     NP = IPARAM(8) shifts in locations: 
-c     1   WORKL(IPNTR(11))           
-c     2   WORKL(IPNTR(11)+1)         
-c                        .           
-c                        .           
-c                        .      
-c     NP  WORKL(IPNTR(11)+NP-1). 
+c  6. When IPARAM(1) = 0, and IDO = 3, the user needs to provide the
+c     NP = IPARAM(8) shifts in locations:
+c     1   WORKL(IPNTR(11))
+c     2   WORKL(IPNTR(11)+1)
+c                        .
+c                        .
+c                        .
+c     NP  WORKL(IPNTR(11)+NP-1).
 c
-c     The eigenvalues of the current tridiagonal matrix are located in 
+c     The eigenvalues of the current tridiagonal matrix are located in
 c     WORKL(IPNTR(6)) through WORKL(IPNTR(6)+NCV-1). They are in the
 c     order defined by WHICH. The associated Ritz estimates are located in
 c     WORKL(IPNTR(8)), WORKL(IPNTR(8)+1), ... , WORKL(IPNTR(8)+NCV-1).
@@ -1615,7 +1627,7 @@ c  ===============
 c  REAL       RESID(N), V(LDV,NCV), WORKD(N,3), WORKL(LWORKL)
 c  SHARED     RESID(BLOCK), V(BLOCK,:), WORKD(BLOCK,:)
 c  REPLICATED WORKL(LWORKL)
-c  
+c
 c
 c\BeginLib
 c
@@ -1623,7 +1635,7 @@ c\References:
 c  1. D.C. Sorensen, "Implicit Application of Polynomial Filters in
 c     a k-Step Arnoldi Method", SIAM J. Matr. Anal. Apps., 13 (1992),
 c     pp 357-385.
-c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly 
+c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly
 c     Restarted Arnoldi Iteration", Rice University Technical Report
 c     TR95-13, Department of Computational and Applied Mathematics.
 c  3. B.N. Parlett, "The Symmetric Eigenvalue Problem". Prentice-Hall,
@@ -1633,8 +1645,8 @@ c     Computer Physics Communications, 53 (1989), pp 169-179.
 c  5. B. Nour-Omid, B.N. Parlett, T. Ericson, P.S. Jensen, "How to
 c     Implement the Spectral Transformation", Math. Comp., 48 (1987),
 c     pp 663-673.
-c  6. R.G. Grimes, J.G. Lewis and H.D. Simon, "A Shifted Block Lanczos 
-c     Algorithm for Solving Sparse Symmetric Generalized Eigenproblems", 
+c  6. R.G. Grimes, J.G. Lewis and H.D. Simon, "A Shifted Block Lanczos
+c     Algorithm for Solving Sparse Symmetric Generalized Eigenproblems",
 c     SIAM J. Matr. Anal. Apps.,  January (1993).
 c  7. L. Reichel, W.B. Gragg, "Algorithm 686: FORTRAN Subroutines
 c     for Updating the QR decomposition", ACM TOMS, December 1990,
@@ -1657,14 +1669,14 @@ c     Danny Sorensen               Phuong Vu
 c     Richard Lehoucq              CRPC / Rice University
 c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
-c 
-c\Revision history:
-c     12/15/93: Version ' 2.4' 
+c     Rice University
+c     Houston, Texas
 c
-c\SCCS Information: @(#) 
-c FILE: saupd.F   SID: 2.8   DATE OF SID: 04/10/01   RELEASE: 2 
+c\Revision history:
+c     12/15/93: Version ' 2.4'
+c
+c\SCCS Information: @(#)
+c FILE: saupd.F   SID: 2.8   DATE OF SID: 04/10/01   RELEASE: 2
 c
 c\Remarks
 c     1. None
@@ -1673,15 +1685,15 @@ c\EndLib
 c
 c-----------------------------------------------------------------------
 c
-      subroutine dsaupd 
-     &   ( ido, bmat, n, which, nev, tol, resid, ncv, v, ldv, iparam, 
+      subroutine dsaupd
+     &   ( ido, bmat, n, which, nev, tol, resid, ncv, v, ldv, iparam,
      &     ipntr, workd, workl, lworkl, info )
 c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -1690,7 +1702,7 @@ c     %------------------%
 c
       character  bmat*1, which*2
       integer    ido, info, ldv, lworkl, n, ncv, nev
-      Double precision 
+      Double precision
      &           tol
 c
 c     %-----------------%
@@ -1698,47 +1710,52 @@ c     | Array Arguments |
 c     %-----------------%
 c
       integer    iparam(11), ipntr(11)
-      Double precision 
+      Double precision
      &           resid(n), v(ldv,ncv), workd(3*n), workl(lworkl)
 c
 c     %------------%
 c     | Parameters |
 c     %------------%
 c
-      Double precision 
-     &           one, zero
-      parameter (one = 1.0D+0 , zero = 0.0D+0 )
+      Double precision
+     &           zero
+      parameter (zero = 0.0D+0 )
+cua     &           one, zero
+cua      parameter (one = 1.0D+0 , zero = 0.0D+0 )
+
 c
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-      integer    bounds, ierr, ih, iq, ishift, iw, 
-     &           ldh, ldq, msglvl, mxiter, mode, nb,
+      integer    bounds, ierr, ih, iq, ishift, iw,
+     &           ldh, ldq, mxiter, mode, nb,
+cm     &           ldh, ldq, msglvl, mxiter, mode, nb,
      &           nev0, next, np, ritz, j
       save       bounds, ierr, ih, iq, ishift, iw,
-     &           ldh, ldq, msglvl, mxiter, mode, nb,
+cm     &     ldh, ldq, msglvl, mxiter, mode, nb,
+     &           ldh, ldq, mxiter, mode, nb,
      &           nev0, next, np, ritz
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dsaup2, dstats 
-c      external   dsaup2, second, dstats 
+      external   dsaup2, dstats
+c      external   dsaup2, second, dstats
 c
 c     %--------------------%
 c     | External Functions |
 c     %--------------------%
 c
-      Double precision 
-     &           dlamch 
-      external   dlamch 
+      Double precision
+     &           dlamch
+      external   dlamch
 c
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
-c 
+c
       if (ido .eq. 0) then
 c
 c        %-------------------------------%
@@ -1746,9 +1763,9 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-         call dstats 
+         call dstats
 c         call second (t0)
-         msglvl = msaupd
+cm         msglvl = msaupd
 c
          ierr   = 0
          ishift = iparam(1)
@@ -1780,7 +1797,7 @@ c        | extend the length NEV Lanczos factorization. |
 c        %----------------------------------------------%
 c
          np     = ncv - nev
-c 
+c
          if (mxiter .le. 0)                     ierr = -4
          if (which .ne. 'LM' .and.
      &       which .ne. 'SM' .and.
@@ -1799,7 +1816,7 @@ c
          else if (nev .eq. 1 .and. which .eq. 'BE') then
                                                 ierr = -13
          end if
-c 
+c
 c        %------------%
 c        | Error Exit |
 c        %------------%
@@ -1809,7 +1826,7 @@ c
             ido  = 99
             go to 9000
          end if
-c 
+c
 c        %------------------------%
 c        | Set default parameters |
 c        %------------------------%
@@ -1825,8 +1842,8 @@ c        | size of the invariant subspace desired.      |
 c        %----------------------------------------------%
 c
          np     = ncv - nev
-         nev0   = nev 
-c 
+         nev0   = nev
+c
 c        %-----------------------------%
 c        | Zero out internal workspace |
 c        %-----------------------------%
@@ -1834,7 +1851,7 @@ c
          do 10 j = 1, ncv**2 + 8*ncv
             workl(j) = zero
  10      continue
-c 
+c
 c        %-------------------------------------------------------%
 c        | Pointer into WORKL for address of H, RITZ, BOUNDS, Q  |
 c        | etc... and the remaining workspace.                   |
@@ -1867,7 +1884,7 @@ c     %-------------------------------------------------------%
 c     | Carry out the Implicitly restarted Lanczos Iteration. |
 c     %-------------------------------------------------------%
 c
-      call dsaup2  
+      call dsaup2
      &   ( ido, bmat, n, which, nev0, np, tol, resid, mode,
      &     ishift, mxiter, v, ldv, workl(ih), ldh, workl(ritz),
      &     workl(bounds), workl(iq), ldq, workl(iw), ipntr, workd,
@@ -1880,7 +1897,7 @@ c     %--------------------------------------------------%
 c
       if (ido .eq. 3) iparam(8) = np
       if (ido .ne. 99) go to 9000
-c 
+c
       iparam(3) = mxiter
       iparam(5) = np
       iparam(9) = nopx
@@ -1897,56 +1914,56 @@ c
 c
 c      call second (t1)
 cs      tsaupd = t1 - t0
-      tsaupd = 0.0      
-c 
-      if (msglvl .gt. 0) then
+ct      tsaupd = 0.0
+c
+cm      if (msglvl .gt. 0) then
 c
 c        %--------------------------------------------------------%
 c        | Version Number & Version Date are defined in version.h |
 c        %--------------------------------------------------------%
 c
 c
-      call intpr(' ', -1, 0, 0)
-      call intpr(' ', -1, 0, 0)
+CcC      callintpr(' ', -1, 0, 0)
+CcC      callintpr(' ', -1, 0, 0)
 c
-      call intpr('  ============================================',
-     &            -1, 0, 0)
-      call intpr('  = Symmetric implicit Arnoldi update code   =',
-     &            -1, 0, 0)
-      call intpr('  = Version Number: 2.4                      =',
-     &            -1, 0, 0)
-      call intpr('  = Version Date: 07/31/96                   =',
-     &            -1, 0, 0)
-      call intpr('  ============================================',
-     &            -1, 0, 0)
-      call intpr('  = Summary of timing statistics             =',
-     &            -1, 0, 0)
-      call intpr('  ============================================',
-     &            -1, 0, 0)
+CcC      callintpr('  ============================================',
+CcC     &            -1, 0, 0)
+CcC      callintpr('  = Symmetric implicit Arnoldi update code   =',
+CcC     &            -1, 0, 0)
+CcC      callintpr('  = Version Number: 2.4                      =',
+CcC     &            -1, 0, 0)
+CcC      callintpr('  = Version Date: 07/31/96                   =',
+CcC     &            -1, 0, 0)
+CcC      callintpr('  ============================================',
+CcC     &            -1, 0, 0)
+CcC      callintpr('  = Summary of timing statistics             =',
+CcC     &            -1, 0, 0)
+CcC      callintpr('  ============================================',
+CcC     &            -1, 0, 0)
 c
-      call intpr(' ', -1, 0, 0)
-      call intpr(' ', -1, 0, 0)
+CcC      callintpr(' ', -1, 0, 0)
+CcC      callintpr(' ', -1, 0, 0)
 c
-      call intpr('  Total number update iterations             = ',
-     &            -1, mxiter, 1)
-      call intpr('  Total number of reorthogonalization steps  = ',
-     &            -1, nrorth, 1)
-      call dblepr('  Total time in Arnoldi update routine       = ',
-     &            -1, tsaupd, 1)
-      call dblepr('  Total time in saup2 routine                = ',
-     &            -1, tsaitr, 1)
-      call dblepr('  Total time in basic Arnoldi iteration loop = ',
-     &            -1, titref, 1)
-      call dblepr('  Total time in reorthogonalization phase    = ',
-     &            -1, tgetv0, 1)
+CcC      callintpr('  Total number update iterations             = ',
+CcC     &            -1, mxiter, 1)
+CcC      callintpr('  Total number of reorthogonalization steps  = ',
+CcC     &            -1, nrorth, 1)
+CcC      callintpr('  Total time in Arnoldi update routine       = ',
+CcC     &            -1, tsaupd, 1)
+CcC      callintpr('  Total time in saup2 routine                = ',
+CcC     &            -1, tsaitr, 1)
+CcC      callintpr('  Total time in basic Arnoldi iteration loop = ',
+CcC     &            -1, titref, 1)
+CcC      callintpr('  Total time in reorthogonalization phase    = ',
+CcC     &            -1, tgetv0, 1)
 c
-      call intpr(' ', -1, 0, 0)
-      call intpr(' ', -1, 0, 0)
+CcC      callintpr(' ', -1, 0, 0)
+CcC      callintpr(' ', -1, 0, 0)
 c
-      end if
-c 
+cm      end if
+c
  9000 continue
-c 
+c
       return
 c
 c     %---------------%
@@ -1959,26 +1976,26 @@ c\BeginDoc
 c
 c\Name: dsaup2
 c
-c\Description: 
+c\Description:
 c  Intermediate level interface called by dsaupd.
 c
 c\Usage:
-c  call dsaup2 
+c  call dsaup2
 c     ( IDO, BMAT, N, WHICH, NEV, NP, TOL, RESID, MODE, IUPD,
-c       ISHIFT, MXITER, V, LDV, H, LDH, RITZ, BOUNDS, Q, LDQ, WORKL, 
+c       ISHIFT, MXITER, V, LDV, H, LDH, RITZ, BOUNDS, Q, LDQ, WORKL,
 c       IPNTR, WORKD, INFO )
 c
 c\Arguments
 c
 c  IDO, BMAT, N, WHICH, NEV, TOL, RESID: same as defined in dsaupd.
 c  MODE, ISHIFT, MXITER: see the definition of IPARAM in dsaupd.
-c  
+c
 c  NP      Integer.  (INPUT/OUTPUT)
-c          Contains the number of implicit shifts to apply during 
-c          each Arnoldi/Lanczos iteration.  
-c          If ISHIFT=1, NP is adjusted dynamically at each iteration 
+c          Contains the number of implicit shifts to apply during
+c          each Arnoldi/Lanczos iteration.
+c          If ISHIFT=1, NP is adjusted dynamically at each iteration
 c          to accelerate convergence and prevent stagnation.
-c          This is also roughly equal to the number of matrix-vector 
+c          This is also roughly equal to the number of matrix-vector
 c          products (involving the operator OP) per Arnoldi iteration.
 c          The logic for adjusting is contained within the current
 c          subroutine.
@@ -1987,7 +2004,7 @@ c          to provide via reverse comunication. 0 < NP < NCV-NEV.
 c          NP may be less than NCV-NEV since a leading block of the current
 c          upper Tridiagonal matrix has split off and contains "unwanted"
 c          Ritz values.
-c          Upon termination of the IRA iteration, NP contains the number 
+c          Upon termination of the IRA iteration, NP contains the number
 c          of "converged" wanted Ritz values.
 c
 c  IUPD    Integer.  (INPUT)
@@ -1999,18 +2016,18 @@ c  V       Double precision N by (NEV+NP) array.  (INPUT/OUTPUT)
 c          The Lanczos basis vectors.
 c
 c  LDV     Integer.  (INPUT)
-c          Leading dimension of V exactly as declared in the calling 
+c          Leading dimension of V exactly as declared in the calling
 c          program.
 c
 c  H       Double precision (NEV+NP) by 2 array.  (OUTPUT)
 c          H is used to store the generated symmetric tridiagonal matrix
-c          The subdiagonal is stored in the first column of H starting 
+c          The subdiagonal is stored in the first column of H starting
 c          at H(2,1).  The main diagonal is stored in the second column
-c          of H starting at H(1,2). If dsaup2 converges store the 
+c          of H starting at H(1,2). If dsaup2 converges store the
 c          B-norm of the final residual vector in H(1,1).
 c
 c  LDH     Integer.  (INPUT)
-c          Leading dimension of H exactly as declared in the calling 
+c          Leading dimension of H exactly as declared in the calling
 c          program.
 c
 c  RITZ    Double precision array of length NEV+NP.  (OUTPUT)
@@ -2020,33 +2037,33 @@ c  BOUNDS  Double precision array of length NEV+NP.  (OUTPUT)
 c          BOUNDS(1:NEV) contain the error bounds corresponding to RITZ.
 c
 c  Q       Double precision (NEV+NP) by (NEV+NP) array.  (WORKSPACE)
-c          Private (replicated) work array used to accumulate the 
+c          Private (replicated) work array used to accumulate the
 c          rotation in the shift application step.
 c
 c  LDQ     Integer.  (INPUT)
 c          Leading dimension of Q exactly as declared in the calling
 c          program.
-c          
+c
 c  WORKL   Double precision array of length at least 3*(NEV+NP).  (INPUT/WORKSPACE)
 c          Private (replicated) array on each PE or array allocated on
-c          the front end.  It is used in the computation of the 
+c          the front end.  It is used in the computation of the
 c          tridiagonal eigenvalue problem, the calculation and
 c          application of the shifts and convergence checking.
 c          If ISHIFT .EQ. O and IDO .EQ. 3, the first NP locations
-c          of WORKL are used in reverse communication to hold the user 
+c          of WORKL are used in reverse communication to hold the user
 c          supplied shifts.
 c
 c  IPNTR   Integer array of length 3.  (OUTPUT)
-c          Pointer to mark the starting locations in the WORKD for 
+c          Pointer to mark the starting locations in the WORKD for
 c          vectors used by the Lanczos iteration.
 c          -------------------------------------------------------------
 c          IPNTR(1): pointer to the current operand vector X.
 c          IPNTR(2): pointer to the current result vector Y.
-c          IPNTR(3): pointer to the vector B * X when used in one of  
+c          IPNTR(3): pointer to the vector B * X when used in one of
 c                    the spectral transformation modes.  X is the current
 c                    operand.
 c          -------------------------------------------------------------
-c          
+c
 c  WORKD   Double precision work array of length 3*N.  (REVERSE COMMUNICATION)
 c          Distributed array to be used in the basic Lanczos iteration
 c          for reverse communication.  The user should not use WORKD
@@ -2059,9 +2076,9 @@ c          If INFO .NE. 0, RESID contains the initial residual vector,
 c                          possibly from a previous run.
 c          Error flag on output.
 c          =     0: Normal return.
-c          =     1: All possible eigenvalues of OP has been found.  
+c          =     1: All possible eigenvalues of OP has been found.
 c                   NP returns the size of the invariant subspace
-c                   spanning the operator OP. 
+c                   spanning the operator OP.
 c          =     2: No shifts could be applied.
 c          =    -8: Error return from trid. eigenvalue calculation;
 c                   This should never happen.
@@ -2079,7 +2096,7 @@ c\References:
 c  1. D.C. Sorensen, "Implicit Application of Polynomial Filters in
 c     a k-Step Arnoldi Method", SIAM J. Matr. Anal. Apps., 13 (1992),
 c     pp 357-385.
-c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly 
+c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly
 c     Restarted Arnoldi Iteration", Rice University Technical Report
 c     TR95-13, Department of Computational and Applied Mathematics.
 c  3. B.N. Parlett, "The Symmetric Eigenvalue Problem". Prentice-Hall,
@@ -2089,15 +2106,15 @@ c     Computer Physics Communications, 53 (1989), pp 169-179.
 c  5. B. Nour-Omid, B.N. Parlett, T. Ericson, P.S. Jensen, "How to
 c     Implement the Spectral Transformation", Math. Comp., 48 (1987),
 c     pp 663-673.
-c  6. R.G. Grimes, J.G. Lewis and H.D. Simon, "A Shifted Block Lanczos 
-c     Algorithm for Solving Sparse Symmetric Generalized Eigenproblems", 
+c  6. R.G. Grimes, J.G. Lewis and H.D. Simon, "A Shifted Block Lanczos
+c     Algorithm for Solving Sparse Symmetric Generalized Eigenproblems",
 c     SIAM J. Matr. Anal. Apps.,  January (1993).
 c  7. L. Reichel, W.B. Gragg, "Algorithm 686: FORTRAN Subroutines
 c     for Updating the QR decomposition", ACM TOMS, December 1990,
 c     Volume 16 Number 4, pp 369-377.
 c
 c\Routines called:
-c     dgetv0  ARPACK initial vector generation routine. 
+c     dgetv0  ARPACK initial vector generation routine.
 c     dsaitr  ARPACK Lanczos factorization routine.
 c     dsapps  ARPACK application of implicit shifts routine.
 c     dsconv  ARPACK convergence of Ritz values routine.
@@ -2109,7 +2126,7 @@ c     second  ARPACK utility routine for timing.
 c     dvout   ARPACK utility routine that prints vectors.
 c     dlamch  LAPACK routine that determines machine constants.
 c     dcopy   Level 1 BLAS that copies one vector to another.
-c     ddot    Level 1 BLAS that computes the scalar product of two vectors. 
+c     ddot    Level 1 BLAS that computes the scalar product of two vectors.
 c     dnrm2   Level 1 BLAS that computes the norm of a vector.
 c     dscal   Level 1 BLAS that scales a vector.
 c     dswap   Level 1 BLAS that swaps two vectors.
@@ -2119,14 +2136,14 @@ c     Danny Sorensen               Phuong Vu
 c     Richard Lehoucq              CRPC / Rice University
 c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
-c 
+c     Rice University
+c     Houston, Texas
+c
 c\Revision history:
 c     12/15/93: Version ' 2.4'
 c     xx/xx/95: Version ' 2.4'.  (R.B. Lehoucq)
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: saup2.F   SID: 2.7   DATE OF SID: 5/19/98   RELEASE: 2
 c
 c\EndLib
@@ -2134,15 +2151,17 @@ c
 c-----------------------------------------------------------------------
 c
       subroutine dsaup2
-     &   ( ido, bmat, n, which, nev, np, tol, resid, mode, 
-     &     ishift, mxiter, v, ldv, h, ldh, ritz, bounds, 
+     &   ( ido, bmat, n, which, nev, np, tol, resid, mode,
+     &     ishift, mxiter, v, ldv, h, ldh, ritz, bounds,
      &     q, ldq, workl, ipntr, workd, info )
+
+      implicit none
 c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -2161,8 +2180,8 @@ c     %-----------------%
 c
       integer    ipntr(3)
       Double precision
-     &           bounds(nev+np), h(ldh,2), q(ldq,nev+np), resid(n), 
-     &           ritz(nev+np), v(ldv,nev+np), workd(3*n), 
+     &           bounds(nev+np), h(ldh,2), q(ldq,nev+np), resid(n),
+     &           ritz(nev+np), v(ldv,nev+np), workd(3*n),
      &           workl(3*(nev+np))
 c
 c     %------------%
@@ -2170,8 +2189,10 @@ c     | Parameters |
 c     %------------%
 c
       Double precision
-     &           one, zero
-      parameter (one = 1.0D+0, zero = 0.0D+0)
+     &           zero
+      parameter (zero = 0.0D+0)
+      integer   ione
+      parameter (ione=1)
       integer
      &           dsaupzero
       parameter (dsaupzero = 0)
@@ -2182,19 +2203,22 @@ c     %---------------%
 c
       character  wprime*2
       logical    cnorm, getv0, initv, update, ushift, dsaup2true
-      integer    ierr, iter, j, kplusp, msglvl, nconv, nevbef, nev0, 
-     &           np0, nptemp, nevd2, nevm2, kp(3), dsaup2zero 
+      integer    ierr, iter, j, kplusp,  nconv, nevbef, nev0,
+cm      integer    ierr, iter, j, kplusp, msglvl, nconv, nevbef, nev0,
+cm     &           np0, nptemp, nevd2, nevm2, kp(3), dsaup2zero
+     &           np0, nptemp, nevd2, nevm2, dsaup2zero
       Double precision
      &           rnorm, temp, eps23
       save       cnorm, getv0, initv, update, ushift,
-     &           iter, kplusp, msglvl, nconv, nev0, np0,
+cm     &           iter, kplusp, msglvl, nconv, nev0, np0,
+     &           iter, kplusp,  nconv, nev0, np0,
      &           rnorm, eps23
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dcopy, dgetv0, dsaitr, dscal, dsconv, dseigt, dsgets, 
+      external   dcopy, dgetv0, dsaitr, dscal, dsconv, dseigt, dsgets,
      &           dsapps, dsortr, dswap
 c     &           dsapps, dsortr, second, dswap
 c
@@ -2220,14 +2244,14 @@ c
       dsaup2zero = 0
 c
       if (ido .eq. 0) then
-c 
+c
 c        %-------------------------------%
 c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
 c         call second (t0)
-         msglvl = msaup2
+cm         msglvl = msaup2
 c
 c        %---------------------------------%
 c        | Set machine dependent constant. |
@@ -2256,7 +2280,7 @@ c
          kplusp = nev0 + np0
          nconv  = 0
          iter   = 0
-c 
+c
 c        %--------------------------------------------%
 c        | Set flags for computing the first NEV steps |
 c        | of the Lanczos factorization.              |
@@ -2279,7 +2303,7 @@ c
             initv = .false.
          end if
       end if
-c 
+c
 c     %---------------------------------------------%
 c     | Get a possibly random starting vector and   |
 c     | force it into the range of the operator OP. |
@@ -2288,7 +2312,8 @@ c
 c   10 continue
 c
       if (getv0) then
-         call dgetv0 (ido, bmat, initv, n, 1, v, ldv, resid, rnorm,
+cv         call dgetv0 (ido, bmat, initv, n, 1, v, ldv, resid, rnorm,
+         call dgetv0 (ido, bmat, initv, n, ione, v, ldv, resid, rnorm,
      &                ipntr, workd, info)
 c
          if (ido .ne. 99) go to 9000
@@ -2296,7 +2321,7 @@ c
          if (rnorm .eq. zero) then
 c
 c           %-----------------------------------------%
-c           | The initial vector is zero. Error exit. | 
+c           | The initial vector is zero. Error exit. |
 c           %-----------------------------------------%
 c
             info = -9
@@ -2305,7 +2330,7 @@ c
          getv0 = .false.
          ido  = 0
       end if
-c 
+c
 c     %------------------------------------------------------------%
 c     | Back from reverse communication: continue with update step |
 c     %------------------------------------------------------------%
@@ -2324,14 +2349,14 @@ c     | at the end of the current iteration |dsaup2true
 c     %-------------------------------------%
 c
       if (cnorm)  go to 100
-c 
+c
 c     %----------------------------------------------------------%
 c     | Compute the first NEV steps of the Lanczos factorization |
 c     %----------------------------------------------------------%
 c
       call dsaitr (ido, bmat, n, dsaupzero, nev0, mode, resid, rnorm,
      &             v, ldv, h, ldh, ipntr, workd, info)
-c 
+c
 c     %---------------------------------------------------%
 c     | ido .ne. 99 implies use of reverse communication  |
 c     | to compute operations involving OP and possibly B |
@@ -2352,7 +2377,7 @@ c
          info = -9999
          go to 1200
       end if
-c 
+c
 c     %--------------------------------------------------------------%
 c     |                                                              |
 c     |           M A I N  LANCZOS  I T E R A T I O N  L O O P       |
@@ -2360,7 +2385,7 @@ c     |           Each iteration implicitly restarts the Lanczos     |
 c     |           factorization in place.                            |
 c     |                                                              |
 c     %--------------------------------------------------------------%
-c 
+c
  1000 continue
 c
          iter = iter + 1
@@ -2374,9 +2399,9 @@ c
    20    continue
          update = .true.
 c
-         call dsaitr (ido, bmat, n, nev, np, mode, resid, rnorm, v, 
+         call dsaitr (ido, bmat, n, nev, np, mode, resid, rnorm, v,
      &                ldv, h, ldh, ipntr, workd, info)
-c 
+c
 c        %---------------------------------------------------%
 c        | ido .ne. 99 implies use of reverse communication  |
 c        | to compute operations involving OP and possibly B |
@@ -2388,7 +2413,7 @@ c
 c
 c           %-----------------------------------------------------%
 c           | dsaitr was unable to build an Lanczos factorization |
-c           | of length NEV0+NP0. INFO is returned with the size  |  
+c           | of length NEV0+NP0. INFO is returned with the size  |
 c           | of the factorization built. Exit main loop.         |
 c           %-----------------------------------------------------%
 c
@@ -2432,7 +2457,7 @@ c
          nev = nev0
          np = np0
          call dsgets (ishift, which, nev, np, ritz, bounds, workl)
-c 
+c
 c        %-------------------%
 c        | Convergence test. |
 c        %-------------------%
@@ -2440,11 +2465,11 @@ c
          call dcopy (nev, bounds(np+1), 1, workl(np+1), 1)
          call dsconv (nev, ritz(np+1), workl(np+1), tol, nconv)
 c
-         if (msglvl .gt. 2) then
-            kp(1) = nev
-            kp(2) = np
-            kp(3) = nconv
-         end if
+cm         if (msglvl .gt. 2) then
+cm            kp(1) = nev
+cm            kp(2) = np
+cm            kp(3) = nconv
+cm         end if
 c
 c        %---------------------------------------------------------%
 c        | Count the number of unwanted Ritz values that have zero |
@@ -2463,11 +2488,11 @@ c
                nev = nev + 1
             end if
  30      continue
-c 
-         if ( (nconv .ge. nev0) .or. 
+c
+         if ( (nconv .ge. nev0) .or.
      &        (iter .gt. mxiter) .or.
      &        (np .eq. 0) ) then
-c     
+c
 c           %------------------------------------------------%
 c           | Prepare to exit. Put the converged Ritz values |
 c           | and corresponding bounds in RITZ(1:NCONV) and  |
@@ -2490,7 +2515,7 @@ c
                wprime = 'SA'
                call dsortr (wprime, dsaup2true, kplusp, ritz, bounds)
                nevd2 = nev0 / 2
-               nevm2 = nev0 - nevd2 
+               nevm2 = nev0 - nevd2
                if ( nev .gt. 1 ) then
                   call dswap ( min(nevd2,np), ritz(nevm2+1), 1,
      &                 ritz( max(kplusp-nevd2+1,kplusp-np+1) ), 1)
@@ -2588,13 +2613,13 @@ c
 c
 c
 c           %------------------------------------%
-c           | Max iterations have been exceeded. | 
+c           | Max iterations have been exceeded. |
 c           %------------------------------------%
 c
             if (iter .gt. mxiter .and. nconv .lt. nev) info = 1
 c
 c           %---------------------%
-c           | No shifts to apply. | 
+c           | No shifts to apply. |
 c           %---------------------%
 c
             if (np .eq. 0 .and. nconv .lt. nev0) info = 2
@@ -2618,26 +2643,26 @@ c
                nev = 2
             end if
             np  = kplusp - nev
-c     
+c
 c           %---------------------------------------%
 c           | If the size of NEV was just increased |
 c           | resort the eigenvalues.               |
 c           %---------------------------------------%
-c     
-            if (nevbef .lt. nev) 
+c
+            if (nevbef .lt. nev)
      &         call dsgets (ishift, which, nev, np, ritz, bounds,
      &              workl)
 c
          end if
 c
-         if (msglvl .gt. 0) then
-            if (msglvl .gt. 1) then
-               kp(1) = nev
-               kp(2) = np
-            end if
-         end if
+cm         if (msglvl .gt. 0) then
+cm            if (msglvl .gt. 1) then
+cm               kp(1) = nev
+cm               kp(2) = np
+cm            end if
+cm         end if
 
-c 
+c
          if (ishift .eq. 0) then
 c
 c           %-----------------------------------------------------%
@@ -2660,15 +2685,16 @@ c        | in WORKL(1:*NP)                   |
 c        %------------------------------------%
 c
          ushift = .false.
-c 
-c 
+c
+c
 c        %---------------------------------------------------------%
 c        | Move the NP shifts to the first NP locations of RITZ to |
 c        | free up WORKL.  This is for the non-exact shift case;   |
 c        | in the exact shift case, dsgets already handles this.   |
 c        %---------------------------------------------------------%
 c
-         if (ishift .eq. 0) call dcopy (np, workl, 1, ritz, 1)
+         if (ishift .eq. 0) call dcopy (np, workl, 1, ritz(1), 1)
+cx         if (ishift .eq. 0) call dcopy (np, workl, 1, ritz, 1)
 c
 c        %---------------------------------------------------------%
 c        | Apply the NP0 implicit shifts by QR bulge chasing.      |
@@ -2695,30 +2721,31 @@ c         call second (t2)
             ipntr(1) = n + 1
             ipntr(2) = 1
             ido = 2
-c 
+c
 c           %----------------------------------%
 c           | Exit in order to compute B*RESID |
 c           %----------------------------------%
-c 
+c
             go to 9000
          else if (bmat .eq. 'I') then
-            call dcopy (n, resid, 1, workd, 1)
+            call dcopy (n, resid, 1, workd(1), 1)
+cx            call dcopy (n, resid, 1, workd, 1)
          end if
-c 
+c
   100    continue
-c 
+c
 c        %----------------------------------%
 c        | Back from reverse communication; |
 c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
 c
          if (bmat .eq. 'G') then
-c            call second (t3)
-c            tmvbx = tmvbx + (t3 - t2)
-            tmvbx = 0.0
+cs            call second (t3)
+cs            tmvbx = tmvbx + (t3 - t2)
+cs            tmvbx = 0.0
          end if
-c 
-         if (bmat .eq. 'G') then         
+c
+         if (bmat .eq. 'G') then
             rnorm = ddot (n, resid, 1, workd, 1)
             rnorm = sqrt(abs(rnorm))
          else if (bmat .eq. 'I') then
@@ -2727,7 +2754,7 @@ c
          cnorm = .false.
 c  130    continue
 c
-c 
+c
       go to 1000
 c
 c     %---------------------------------------------------------------%
@@ -2735,12 +2762,12 @@ c     |                                                               |
 c     |  E N D     O F     M A I N     I T E R A T I O N     L O O P  |
 c     |                                                               |
 c     %---------------------------------------------------------------%
-c 
+c
  1100 continue
 c
       mxiter = iter
       nev = nconv
-c 
+c
  1200 continue
       ido = 99
 c
@@ -2750,8 +2777,8 @@ c     %------------%
 c
 c     call second (t1)
 cs    tsaup2 = t1 - t0
-      tsaup2 = 0.0
-c 
+cs      tsaup2 = 0.0
+c
  9000 continue
       return
 c
@@ -2765,7 +2792,7 @@ c\BeginDoc
 c
 c\Name: dsconv
 c
-c\Description: 
+c\Description:
 c  Convergence testing for the symmetric Arnoldi eigenvalue routine.
 c
 c\Usage:
@@ -2797,22 +2824,22 @@ c\BeginLib
 c
 c\Routines called:
 c     second  ARPACK utility routine for timing.
-c     dlamch  LAPACK routine that determines machine constants. 
+c     dlamch  LAPACK routine that determines machine constants.
 c
 c\Author
 c     Danny Sorensen               Phuong Vu
-c     Richard Lehoucq              CRPC / Rice University 
-c     Dept. of Computational &     Houston, Texas 
+c     Richard Lehoucq              CRPC / Rice University
+c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
+c     Rice University
+c     Houston, Texas
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: sconv.F   SID: 2.4   DATE OF SID: 4/19/96   RELEASE: 2
 c
 c\Remarks
 c     1. Starting with version 2.4, this routine no longer uses the
-c        Parlett strategy using the gap conditions. 
+c        Parlett strategy using the gap conditions.
 c
 c\EndLib
 c
@@ -2824,7 +2851,7 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -2870,7 +2897,7 @@ c     %-----------------------%
 c
 c      call second (t0)
 c
-      eps23 = dlamch('Epsilon-Machine') 
+      eps23 = dlamch('Epsilon-Machine')
       eps23 = eps23**(2.0D+0 / 3.0D+0)
 c
       nconv  = 0
@@ -2887,11 +2914,11 @@ c
          end if
 c
    10 continue
-c 
+c
 c      call second (t1)
 cs      tsconv = tsconv + (t1 - t0)
       tsconv = 0.0
-c 
+c
       return
 c
 c     %---------------%
@@ -2904,8 +2931,8 @@ c\BeginDoc
 c
 c\Name: dsaitr
 c
-c\Description: 
-c  Reverse communication interface for applying NP additional steps to 
+c\Description:
+c  Reverse communication interface for applying NP additional steps to
 c  a K step symmetric Arnoldi factorization.
 c
 c  Input:  OP*V_{k}  -  V_{k}*H = r_{k}*e_{k}^T
@@ -2921,7 +2948,7 @@ c  computed and returned.
 c
 c\Usage:
 c  call dsaitr
-c     ( IDO, BMAT, N, K, NP, MODE, RESID, RNORM, V, LDV, H, LDH, 
+c     ( IDO, BMAT, N, K, NP, MODE, RESID, RNORM, V, LDV, H, LDH,
 c       IPNTR, WORKD, INFO )
 c
 c\Arguments
@@ -2977,13 +3004,13 @@ c          On INPUT the B-norm of r_{k}.
 c          On OUTPUT the B-norm of the updated residual r_{k+p}.
 c
 c  V       Double precision N by K+NP array.  (INPUT/OUTPUT)
-c          On INPUT:  V contains the Arnoldi vectors in the first K 
+c          On INPUT:  V contains the Arnoldi vectors in the first K
 c          columns.
 c          On OUTPUT: V contains the new NP Arnoldi vectors in the next
 c          NP columns.  The first K columns are unchanged.
 c
 c  LDV     Integer.  (INPUT)
-c          Leading dimension of V exactly as declared in the calling 
+c          Leading dimension of V exactly as declared in the calling
 c          program.
 c
 c  H       Double precision (K+NP) by 2 array.  (INPUT/OUTPUT)
@@ -2992,26 +3019,26 @@ c          with the subdiagonal in the first column starting at H(2,1)
 c          and the main diagonal in the second column.
 c
 c  LDH     Integer.  (INPUT)
-c          Leading dimension of H exactly as declared in the calling 
+c          Leading dimension of H exactly as declared in the calling
 c          program.
 c
 c  IPNTR   Integer array of length 3.  (OUTPUT)
-c          Pointer to mark the starting locations in the WORK for 
+c          Pointer to mark the starting locations in the WORK for
 c          vectors used by the Arnoldi iteration.
 c          -------------------------------------------------------------
 c          IPNTR(1): pointer to the current operand vector X.
 c          IPNTR(2): pointer to the current result vector Y.
-c          IPNTR(3): pointer to the vector B * X when used in the 
+c          IPNTR(3): pointer to the vector B * X when used in the
 c                    shift-and-invert mode.  X is the current operand.
 c          -------------------------------------------------------------
-c          
+c
 c  WORKD   Double precision work array of length 3*N.  (REVERSE COMMUNICATION)
 c          Distributed array to be used in the basic Arnoldi iteration
-c          for reverse communication.  The calling program should not 
+c          for reverse communication.  The calling program should not
 c          use WORKD as temporary workspace during the iteration !!!!!!
 c          On INPUT, WORKD(1:N) = B*RESID where RESID is associated
-c          with the K step Arnoldi factorization. Used to save some 
-c          computation at the first step. 
+c          with the K step Arnoldi factorization. Used to save some
+c          computation at the first step.
 c          On OUTPUT, WORKD(1:N) = B*RESID where RESID is associated
 c          with the K+NP step Arnoldi factorization.
 c
@@ -3040,7 +3067,7 @@ c     dgemv   Level 2 BLAS routine for matrix vector multiplication.
 c     daxpy   Level 1 BLAS that computes a vector triad.
 c     dscal   Level 1 BLAS that scales a vector.
 c     dcopy   Level 1 BLAS that copies one vector to another .
-c     ddot    Level 1 BLAS that computes the scalar product of two vectors. 
+c     ddot    Level 1 BLAS that computes the scalar product of two vectors.
 c     dnrm2   Level 1 BLAS that computes the norm of a vector.
 c
 c\Author
@@ -3048,29 +3075,29 @@ c     Danny Sorensen               Phuong Vu
 c     Richard Lehoucq              CRPC / Rice University
 c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
-c 
+c     Rice University
+c     Houston, Texas
+c
 c\Revision history:
 c     xx/xx/93: Version ' 2.4'
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: saitr.F   SID: 2.6   DATE OF SID: 8/28/96   RELEASE: 2
 c
 c\Remarks
 c  The algorithm implemented is:
-c  
+c
 c  restart = .false.
-c  Given V_{k} = [v_{1}, ..., v_{k}], r_{k}; 
+c  Given V_{k} = [v_{1}, ..., v_{k}], r_{k};
 c  r_{k} contains the initial residual vector even for k = 0;
-c  Also assume that rnorm = || B*r_{k} || and B*r_{k} are already 
+c  Also assume that rnorm = || B*r_{k} || and B*r_{k} are already
 c  computed by the calling program.
 c
 c  betaj = rnorm ; p_{k+1} = B*r_{k} ;
 c  For  j = k+1, ..., k+np  Do
 c     1) if ( betaj < tol ) stop or restart depending on j.
 c        if ( restart ) generate a new starting vector.
-c     2) v_{j} = r(j-1)/betaj;  V_{j} = [V_{j-1}, v_{j}];  
+c     2) v_{j} = r(j-1)/betaj;  V_{j} = [V_{j-1}, v_{j}];
 c        p_{j} = p_{j}/betaj
 c     3) r_{j} = OP*v_{j} where OP is defined as in dsaupd
 c        For shift-invert mode p_{j} = B*v_{j} is already available.
@@ -3085,7 +3112,7 @@ c        If (rnorm > 0.717*wnorm) accept step and go back to 1)
 c     5) Re-orthogonalization step:
 c        s = V_{j}'*B*r_{j}
 c        r_{j} = r_{j} - V_{j}*s;  rnorm1 = || r_{j} ||
-c        alphaj = alphaj + s_{j};   
+c        alphaj = alphaj + s_{j};
 c     6) Iterative refinement step:
 c        If (rnorm1 > 0.717*rnorm) then
 c           rnorm = rnorm1
@@ -3095,7 +3122,7 @@ c           rnorm = rnorm1
 c           If this is the first time in step 6), go to 5)
 c           Else r_{j} lies in the span of V_{j} numerically.
 c              Set r_{j} = 0 and rnorm = 0; go to 1)
-c        EndIf 
+c        EndIf
 c  End Do
 c
 c\EndLib
@@ -3103,14 +3130,17 @@ c
 c-----------------------------------------------------------------------
 c
       subroutine dsaitr
-     &   (ido, bmat, n, k, np, mode, resid, rnorm, v, ldv, h, ldh, 
-     &    ipntr, workd, info)
+     &   (ido, bmat, n, k, np, mode, resid, rnorm, v, ldv, h, ldh,
+     &     ipntr, workd, info)
+
+
+      implicit none
 c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -3137,26 +3167,30 @@ c
       Double precision
      &           one, zero
       parameter (one = 1.0D+0, zero = 0.0D+0)
+      logical fls
+      parameter (fls = .false.)
 c
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
       logical    first, orth1, orth2, rstart, step3, step4
-      integer    i, ierr, ipj, irj, ivj, iter, j, msglvl, 
+cm      integer    i, ierr, ipj, irj, ivj, iter, j, msglvl,
+      integer    i, ierr, ipj, irj, ivj, iter, itry, j,
      &           infol, jj
       Double precision
      &           rnorm1, wnorm, safmin, temp1
       save       orth1, orth2, rstart, step3, step4,
-     &           ierr, ipj, irj, ivj, iter, itry, j, msglvl,
+     &           ierr, ipj, irj, ivj, iter, itry, j,
+cm     &           ierr, ipj, irj, ivj, iter, itry, j, msglvl,
      &           rnorm1, safmin, wnorm
 c
 c     %-----------------------%
-c     | Local Array Arguments | 
+c     | Local Array Arguments |
 c     %-----------------------%
 c
-      Double precision
-     &           xtemp(2)
+cs      Double precision
+cs     &           xtemp(2)
 c
 c     %----------------------%
 c     | External Subroutines |
@@ -3165,7 +3199,7 @@ c
       external   daxpy, dcopy, dscal, dgemv, dgetv0,
      &           dlascl
 c     &           dlascl, second
-c     
+c
 c     %--------------------%
 c     | External Functions |
 c     %--------------------%
@@ -3196,15 +3230,15 @@ c
       end if
 c
       if (ido .eq. 0) then
-c 
+c
 c        %-------------------------------%
 c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
 c         call second (t0)
-         msglvl = msaitr
-c 
+cm         msglvl = msaitr
+c
 c        %------------------------------%
 c        | Initial call to this routine |
 c        %------------------------------%
@@ -3215,14 +3249,14 @@ c
          rstart = .false.
          orth1  = .false.
          orth2  = .false.
-c 
+c
 c        %--------------------------------%
 c        | Pointer to the current step of |
 c        | the factorization to build     |
 c        %--------------------------------%
 c
          j      = k + 1
-c 
+c
 c        %------------------------------------------%
 c        | Pointers used for reverse communication  |
 c        | when using WORKD.                        |
@@ -3232,7 +3266,7 @@ c
          irj    = ipj   + n
          ivj    = irj   + n
       end if
-c 
+c
 c     %-------------------------------------------------%
 c     | When in reverse communication mode one of:      |
 c     | STEP3, STEP4, ORTH1, ORTH2, RSTART              |
@@ -3255,7 +3289,7 @@ c
 c     %------------------------------%
 c     | Else this is the first step. |
 c     %------------------------------%
-c 
+c
 c     %--------------------------------------------------------------%
 c     |                                                              |
 c     |        A R N O L D I     I T E R A T I O N     L O O P       |
@@ -3284,7 +3318,8 @@ c           | maximum amount of times that a restart is   |
 c           | attempted. NRSTRT is used by stat.h         |
 c           %---------------------------------------------%
 c
-            nrstrt = nrstrt + 1
+            itry   = 1
+cp            nrstrt = nrstrt + 1
    20       continue
             rstart = .true.
             ido    = 0
@@ -3295,7 +3330,7 @@ c           | If in reverse communication mode and |
 c           | RSTART = .true. flow returns here.   |
 c           %--------------------------------------%
 c
-            call dgetv0 (ido, bmat, .false., n, j, v, ldv, 
+            call dgetv0 (ido, bmat, fls, n, j, v, ldv,
      &                   resid, rnorm, ipntr, workd, ierr)
             if (ido .ne. 99) go to 9000
             if (ierr .lt. 0) then
@@ -3311,11 +3346,11 @@ c
                info = j - 1
 c               call second (t1)
 cs               tsaitr = tsaitr + (t1 - t0)
-               tsaitr = 0.0
+cs               tsaitr = 0.0
                ido = 99
                go to 9000
             end if
-c 
+c
    40    continue
 c
 c        %---------------------------------------------------------%
@@ -3337,12 +3372,12 @@ c            | To scale both v_{j} and p_{j} carefully |
 c            | use LAPACK routine SLASCL               |
 c            %-----------------------------------------%
 c
-             call dlascl ('General', i, i, rnorm, one, n, 1, 
+             call dlascl ('General', i, i, rnorm, one, n, 1,
      &                    v(1,j), n, infol)
-             call dlascl ('General', i, i, rnorm, one, n, 1, 
+             call dlascl ('General', i, i, rnorm, one, n, 1,
      &                    workd(ipj), n, infol)
          end if
-c 
+c
 c        %------------------------------------------------------%
 c        | STEP 3:  r_{j} = OP*v_{j}; Note that p_{j} = B*v_{j} |
 c        | Note that this is not quite yet r_{j}. See STEP 4    |
@@ -3356,14 +3391,14 @@ c         call second (t2)
          ipntr(2) = irj
          ipntr(3) = ipj
          ido = 1
-c 
+c
 c        %-----------------------------------%
 c        | Exit in order to compute OP*v_{j} |
 c        %-----------------------------------%
-c 
+c
          go to 9000
    50    continue
-c 
+c
 c        %-----------------------------------%
 c        | Back from reverse communication;  |
 c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}.   |
@@ -3371,16 +3406,17 @@ c        %-----------------------------------%
 c
 c         call second (t3)
 cs         tmvopx = tmvopx + (t3 - t2)
-         tmvopx = 0.0
-c 
+cs         tmvopx = 0.0
+c
          step3 = .false.
 c
 c        %------------------------------------------%
 c        | Put another copy of OP*v_{j} into RESID. |
 c        %------------------------------------------%
 c
-         call dcopy (n, workd(irj), 1, resid, 1)
-c 
+         call dcopy (n, workd(irj), 1, resid(1), 1)
+cx         call dcopy (n, workd(irj), 1, resid, 1)
+c
 c        %-------------------------------------------%
 c        | STEP 4:  Finish extending the symmetric   |
 c        |          Arnoldi to length j. If MODE = 2 |
@@ -3398,27 +3434,27 @@ c         call second (t2)
             ipntr(1) = irj
             ipntr(2) = ipj
             ido = 2
-c 
+c
 c           %-------------------------------------%
 c           | Exit in order to compute B*OP*v_{j} |
 c           %-------------------------------------%
-c 
+c
             go to 9000
          else if (bmat .eq. 'I') then
               call dcopy(n, resid, 1 , workd(ipj), 1)
          end if
    60    continue
-c 
+c
 c        %-----------------------------------%
 c        | Back from reverse communication;  |
 c        | WORKD(IPJ:IPJ+N-1) := B*OP*v_{j}. |
 c        %-----------------------------------%
 c
-         if (bmat .eq. 'G') then
-c            call second (t3)
+cs         if (bmat .eq. 'G') then
+cs            call second (t3)
 cs            tmvbx = tmvbx + (t3 - t2)
-            tmvbx = 0.0
-         end if 
+cs            tmvbx = 0.0
+cs         end if
 c
          step4 = .false.
 c
@@ -3437,7 +3473,7 @@ c           %----------------------------------%
 c
             wnorm = ddot (n, resid, 1, workd(ivj), 1)
             wnorm = sqrt(abs(wnorm))
-         else if (bmat .eq. 'G') then         
+         else if (bmat .eq. 'G') then
             wnorm = ddot (n, resid, 1, workd(ipj), 1)
             wnorm = sqrt(abs(wnorm))
          else if (bmat .eq. 'I') then
@@ -3459,20 +3495,21 @@ c        | WORKD(IPJ:IPJ+N-1) contains B*OP*v_{j}.  |
 c        %------------------------------------------%
 c
          if (mode .ne. 2 ) then
-            call dgemv('T', n, j, one, v, ldv, workd(ipj), 1, zero, 
+            call dgemv('T', n, j, one, v, ldv, workd(ipj), 1, zero,
      &                  workd(irj), 1)
          else if (mode .eq. 2) then
-            call dgemv('T', n, j, one, v, ldv, workd(ivj), 1, zero, 
+            call dgemv('T', n, j, one, v, ldv, workd(ivj), 1, zero,
      &                  workd(irj), 1)
          end if
 c
 c        %--------------------------------------%
 c        | Orthgonalize r_{j} against V_{j}.    |
-c        | RESID contains OP*v_{j}. See STEP 3. | 
+c        | RESID contains OP*v_{j}. See STEP 3. |
 c        %--------------------------------------%
 c
-         call dgemv('N', n, j, -one, v, ldv, workd(irj), 1, one, 
-     &               resid, 1)
+         call dgemv('N', n, j, -one, v, ldv, workd(irj), 1, one,
+     &               resid(1), 1)
+cx     &               resid, 1)
 c
 c        %--------------------------------------%
 c        | Extend H to have j rows and columns. |
@@ -3485,10 +3522,10 @@ c
             h(j,1) = rnorm
          end if
 c         call second (t4)
-c 
+c
          orth1 = .true.
          iter  = 0
-c 
+c
 c         call second (t2)
          if (bmat .eq. 'G') then
             nbx = nbx + 1
@@ -3496,17 +3533,17 @@ c         call second (t2)
             ipntr(1) = irj
             ipntr(2) = ipj
             ido = 2
-c 
+c
 c           %----------------------------------%
 c           | Exit in order to compute B*r_{j} |
 c           %----------------------------------%
-c 
+c
             go to 9000
          else if (bmat .eq. 'I') then
             call dcopy (n, resid, 1, workd(ipj), 1)
          end if
    70    continue
-c 
+c
 c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH1 = .true. |
 c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
@@ -3515,16 +3552,16 @@ c
          if (bmat .eq. 'G') then
 c            call second (t3)
 cs          tmvbx = tmvbx + (t3 - t2)
-            tmvbx = 0.0
+cs            tmvbx = 0.0
          end if
-c 
+c
          orth1 = .false.
 c
 c        %------------------------------%
 c        | Compute the B-norm of r_{j}. |
 c        %------------------------------%
 c
-         if (bmat .eq. 'G') then         
+         if (bmat .eq. 'G') then
             rnorm = ddot (n, resid, 1, workd(ipj), 1)
             rnorm = sqrt(abs(rnorm))
          else if (bmat .eq. 'I') then
@@ -3548,7 +3585,7 @@ c        %-----------------------------------------------------------%
 c
          if (rnorm .gt. 0.717*wnorm) go to 100
          nrorth = nrorth + 1
-c 
+c
 c        %---------------------------------------------------%
 c        | Enter the Iterative refinement phase. If further  |
 c        | refinement is necessary, loop back here. The loop |
@@ -3558,17 +3595,17 @@ c        %---------------------------------------------------%
 c
    80    continue
 c
-         if (msglvl .gt. 2) then
-            xtemp(1) = wnorm
-            xtemp(2) = rnorm
-         end if
+cm         if (msglvl .gt. 2) then
+cm            xtemp(1) = wnorm
+cm            xtemp(2) = rnorm
+cm         end if
 c
 c        %----------------------------------------------------%
 c        | Compute V_{j}^T * B * r_{j}.                       |
 c        | WORKD(IRJ:IRJ+J-1) = v(:,1:J)'*WORKD(IPJ:IPJ+N-1). |
 c        %----------------------------------------------------%
 c
-         call dgemv ('T', n, j, one, v, ldv, workd(ipj), 1, 
+         call dgemv ('T', n, j, one, v, ldv, workd(ipj), 1,
      &               zero, workd(irj), 1)
 c
 c        %----------------------------------------------%
@@ -3579,12 +3616,13 @@ c        | v(:,1:J)*WORKD(IRJ:IRJ+J-1)*e'_j, but only   |
 c        | H(j,j) is updated.                           |
 c        %----------------------------------------------%
 c
-         call dgemv ('N', n, j, -one, v, ldv, workd(irj), 1, 
-     &               one, resid, 1)
+         call dgemv ('N', n, j, -one, v, ldv, workd(irj), 1,
+     &               one, resid(1), 1)
+cx     &               one, resid, 1)
 c
          if (j .eq. 1  .or.  rstart) h(j,1) = zero
          h(j,2) = h(j,2) + workd(irj + j - 1)
-c 
+c
          orth2 = .true.
 c        call second (t2)
          if (bmat .eq. 'G') then
@@ -3593,12 +3631,12 @@ c        call second (t2)
             ipntr(1) = irj
             ipntr(2) = ipj
             ido = 2
-c 
+c
 c           %-----------------------------------%
 c           | Exit in order to compute B*r_{j}. |
 c           | r_{j} is the corrected residual.  |
 c           %-----------------------------------%
-c 
+c
             go to 9000
          else if (bmat .eq. 'I') then
             call dcopy (n, resid, 1, workd(ipj), 1)
@@ -3609,30 +3647,30 @@ c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 c
-         if (bmat .eq. 'G') then
-c           call second (t3)
+cs         if (bmat .eq. 'G') then
+cs           call second (t3)
 cs          tmvbx = tmvbx + (t3 - t2)
-            tmvbx = 0.0
-         end if
+cs            tmvbx = 0.0
+cs         end if
 c
 c        %-----------------------------------------------------%
 c        | Compute the B-norm of the corrected residual r_{j}. |
 c        %-----------------------------------------------------%
-c 
-         if (bmat .eq. 'G') then         
+c
+         if (bmat .eq. 'G') then
              rnorm1 = ddot (n, resid, 1, workd(ipj), 1)
              rnorm1 = sqrt(abs(rnorm1))
          else if (bmat .eq. 'I') then
              rnorm1 = dnrm2(n, resid, 1)
          end if
 c
-         if (msglvl .gt. 0 .and. iter .gt. 0) then
-            if (msglvl .gt. 2) then
-                xtemp(1) = rnorm
-                xtemp(2) = rnorm1
-            end if
-         end if
-c 
+cm         if (msglvl .gt. 0 .and. iter .gt. 0) then
+cm            if (msglvl .gt. 2) then
+cm                xtemp(1) = rnorm
+cm                xtemp(2) = rnorm1
+cm            end if
+cm         end if
+c
 c        %-----------------------------------------%
 c        | Determine if we need to perform another |
 c        | step of re-orthogonalization.           |
@@ -3645,7 +3683,7 @@ c           | No need for further refinement |
 c           %--------------------------------%
 c
             rnorm = rnorm1
-c 
+c
          else
 c
 c           %-------------------------------------------%
@@ -3653,7 +3691,7 @@ c           | Another step of iterative refinement step |
 c           | is required. NITREF is used by stat.h     |
 c           %-------------------------------------------%
 c
-            nitref = nitref + 1
+cp            nitref = nitref + 1
             rnorm  = rnorm1
             iter   = iter + 1
             if (iter .le. 1) go to 80
@@ -3667,7 +3705,7 @@ c
   95        continue
             rnorm = zero
          end if
-c 
+c
 c        %----------------------------------------------%
 c        | Branch here directly if iterative refinement |
 c        | wasn't necessary or after at most NITER_REF  |
@@ -3675,13 +3713,14 @@ c        | steps of iterative refinement.               |
 c        %----------------------------------------------%
 c
   100    continue
-c 
+c
          rstart = .false.
          orth2  = .false.
-c 
+c
 c        call second (t5)
-         titref = titref + (t5 - t4)
-c 
+cs         titref = itref
+cCC         titref = itref + (t5 - t4)
+c
 c        %----------------------------------------------------------%
 c        | Make sure the last off-diagonal element is non negative  |
 c        | If not perform a similarity transformation on H(1:j,1:j) |
@@ -3690,13 +3729,14 @@ c        %----------------------------------------------------------%
 c
          if (h(j,1) .lt. zero) then
             h(j,1) = -h(j,1)
-            if ( j .lt. k+np) then 
+            if ( j .lt. k+np) then
                call dscal(n, -one, v(1,j+1), 1)
             else
-               call dscal(n, -one, resid, 1)
+               call dscal(n, -one, resid(1), 1)
+cx               call dscal(n, -one, resid, 1)
             end if
          end if
-c 
+c
 c        %------------------------------------%
 c        | STEP 6: Update  j = j+1;  Continue |
 c        %------------------------------------%
@@ -3705,13 +3745,13 @@ c
          if (j .gt. k+np) then
 c           call second (t1)
 cs          tsaitr = tsaitr + (t1 - t0)
-            tsaitr = 0.0
+cs            tsaitr = 0.0
             ido = 99
 c
-            if (msglvl .gt. 1) then
-               if (k+np .gt. 1) then
-               end if
-            end if
+cs            if (msglvl .gt. 1) then
+cs               if (k+np .gt. 1) then
+cs               end if
+cs            end if
 c
             go to 9000
          end if
@@ -3721,7 +3761,7 @@ c        | Loop back to extend the factorization by another step. |
 c        %--------------------------------------------------------%
 c
       go to 1000
-c 
+c
 c     %---------------------------------------------------------------%
 c     |                                                               |
 c     |  E N D     O F     M A I N     I T E R A T I O N     L O O P  |
@@ -3750,8 +3790,8 @@ c  apply NP shifts implicitly resulting in
 c
 c     A*(V_{k}*Q) - (V_{k}*Q)*(Q^T* H_{k}*Q) = r_{k+p}*e_{k+p}^T * Q
 c
-c  where Q is an orthogonal matrix of order KEV+NP. Q is the product of 
-c  rotations resulting from the NP bulge chasing sweeps.  The updated Arnoldi 
+c  where Q is an orthogonal matrix of order KEV+NP. Q is the product of
+c  rotations resulting from the NP bulge chasing sweeps.  The updated Arnoldi
 c  factorization becomes:
 c
 c     A*VNEW_{k} - VNEW_{k}*HNEW_{k} = rnew_{k}*e_{k}^T.
@@ -3787,7 +3827,7 @@ c  H       Double precision (KEV+NP) by 2 array.  (INPUT/OUTPUT)
 c          INPUT: H contains the symmetric tridiagonal matrix of the
 c          Arnoldi factorization with the subdiagonal in the 1st column
 c          starting at H(2,1) and the main diagonal in the 2nd column.
-c          OUTPUT: H contains the updated tridiagonal matrix in the 
+c          OUTPUT: H contains the updated tridiagonal matrix in the
 c          KEV leading submatrix.
 c
 c  LDH     Integer.  (INPUT)
@@ -3823,12 +3863,12 @@ c\References:
 c  1. D.C. Sorensen, "Implicit Application of Polynomial Filters in
 c     a k-Step Arnoldi Method", SIAM J. Matr. Anal. Apps., 13 (1992),
 c     pp 357-385.
-c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly 
+c  2. R.B. Lehoucq, "Analysis and Implementation of an Implicitly
 c     Restarted Arnoldi Iteration", Rice University Technical Report
 c     TR95-13, Department of Computational and Applied Mathematics.
 c
 c\Routines called:
-c     ivout   ARPACK utility routine that prints integers. 
+c     ivout   ARPACK utility routine that prints integers.
 c     second  ARPACK utility routine for timing.
 c     dvout   ARPACK utility routine that prints vectors.
 c     dlamch  LAPACK routine that determines machine constants.
@@ -3845,19 +3885,19 @@ c     Danny Sorensen               Phuong Vu
 c     Richard Lehoucq              CRPC / Rice University
 c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
+c     Rice University
+c     Houston, Texas
 c
 c\Revision history:
 c     12/16/93: Version ' 2.4'
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: sapps.F   SID: 2.6   DATE OF SID: 3/28/97   RELEASE: 2
 c
 c\Remarks
 c  1. In this version, each shift is applied to all the subblocks of
-c     the tridiagonal matrix H and not just to the submatrix that it 
-c     comes from. This routine assumes that the subdiagonal elements 
+c     the tridiagonal matrix H and not just to the submatrix that it
+c     comes from. This routine assumes that the subdiagonal elements
 c     of H that are stored in h(1:kev+np,1) are nonegative upon input
 c     and enforce this condition upon output. This version incorporates
 c     deflation. See code for documentation.
@@ -3873,7 +3913,7 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -3887,7 +3927,7 @@ c     | Array Arguments |
 c     %-----------------%
 c
       Double precision
-     &           h(ldh,2), q(ldq,kev+np), resid(n), shift(np), 
+     &           h(ldh,2), q(ldq,kev+np), resid(n), shift(np),
      &           v(ldv,kev+np), workd(2*n)
 c
 c     %------------%
@@ -3902,7 +3942,8 @@ c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-      integer    i, iend, istart, itop, j, jj, kplusp, msglvl
+      integer    i, iend, istart, itop, j, jj, kplusp
+cm      integer    i, iend, istart, itop, j, jj, kplusp, msglvl
       logical    first
       Double precision
      &           a1, a2, a3, a4, big, c, epsmch, f, g, r, s
@@ -3953,10 +3994,10 @@ c     | & message level for debugging |
 c     %-------------------------------%
 c
 c     call second (t0)
-      msglvl = msapps
-c 
-      kplusp = kev + np 
-c 
+cm      msglvl = msapps
+c
+      kplusp = kev + np
+c
 c     %----------------------------------------------%
 c     | Initialize Q to the identity matrix of order |
 c     | kplusp used to accumulate the rotations.     |
@@ -3969,7 +4010,7 @@ c     | Quick return if there are no shifts to apply |
 c     %----------------------------------------------%
 c
       if (np .eq. 0) go to 9000
-c 
+c
 c     %----------------------------------------------------------%
 c     | Apply the np shifts implicitly. Apply each shift to the  |
 c     | whole matrix and not just to the submatrix from which it |
@@ -3977,7 +4018,7 @@ c     | comes.                                                   |
 c     %----------------------------------------------------------%
 c
       do 90 jj = 1, np
-c 
+c
          istart = itop
 c
 c        %----------------------------------------------------------%
@@ -4008,7 +4049,7 @@ c
    40    continue
 c
          if (istart .lt. iend) then
-c 
+c
 c           %--------------------------------------------------------%
 c           | Construct the plane rotation G'(istart,istart+1,theta) |
 c           | that attempts to drive h(istart+1,1) to zero.          |
@@ -4017,7 +4058,7 @@ c
              f = h(istart,2) - shift(jj)
              g = h(istart+1,1)
              call dlartg (f, g, c, s, r)
-c 
+c
 c            %-------------------------------------------------------%
 c            | Apply rotation to the left and right of H;            |
 c            | H <- G' * H * G,  where G = G(istart,istart+1,theta). |
@@ -4027,11 +4068,11 @@ c
              a1 = c*h(istart,2)   + s*h(istart+1,1)
              a2 = c*h(istart+1,1) + s*h(istart+1,2)
              a4 = c*h(istart+1,2) - s*h(istart+1,1)
-             a3 = c*h(istart+1,1) - s*h(istart,2) 
+             a3 = c*h(istart+1,1) - s*h(istart,2)
              h(istart,2)   = c*a1 + s*a2
              h(istart+1,2) = c*a4 - s*a3
              h(istart+1,1) = c*a3 + s*a4
-c 
+c
 c            %----------------------------------------------------%
 c            | Accumulate the rotation in the matrix Q;  Q <- Q*G |
 c            %----------------------------------------------------%
@@ -4054,7 +4095,7 @@ c            | zero.                                        |
 c            %----------------------------------------------%
 c
              do 70 i = istart+1, iend-1
-c 
+c
 c               %----------------------------------------------%
 c               | Construct the plane rotation G'(i,i+1,theta) |
 c               | that zeros the i-th bulge that was created   |
@@ -4082,23 +4123,23 @@ c
                    c = -c
                    s = -s
                 end if
-c 
+c
 c               %--------------------------------------------%
 c               | Apply rotation to the left and right of H; |
 c               | H <- G * H * G',  where G = G(i,i+1,theta) |
 c               %--------------------------------------------%
 c
                 h(i,1) = r
-c 
+c
                 a1 = c*h(i,2)   + s*h(i+1,1)
                 a2 = c*h(i+1,1) + s*h(i+1,2)
                 a3 = c*h(i+1,1) - s*h(i,2)
                 a4 = c*h(i+1,2) - s*h(i+1,1)
-c 
+c
                 h(i,2)   = c*a1 + s*a2
                 h(i+1,2) = c*a4 - s*a3
                 h(i+1,1) = c*a3 + s*a4
-c 
+c
 c               %----------------------------------------------------%
 c               | Accumulate the rotation in the matrix Q;  Q <- Q*G |
 c               %----------------------------------------------------%
@@ -4156,7 +4197,7 @@ c
 c     %------------------------------------------%
 c     | All shifts have been applied. Check for  |
 c     | more possible deflation that might occur |
-c     | after the last shift is applied.         |                               
+c     | after the last shift is applied.         |
 c     %------------------------------------------%
 c
       do 100 i = itop, kplusp-1
@@ -4172,20 +4213,21 @@ c     | temporarily store the result in WORKD(N+1:2*N). |
 c     | This is not necessary if h(kev+1,1) = 0.         |
 c     %-------------------------------------------------%
 c
-      if ( h(kev+1,1) .gt. zero ) 
+      if ( h(kev+1,1) .gt. zero )
      &   call dgemv ('N', n, kplusp, one, v, ldv,
      &                q(1,kev+1), 1, zero, workd(n+1), 1)
-c 
+c
 c     %-------------------------------------------------------%
 c     | Compute column 1 to kev of (V*Q) in backward order    |
-c     | taking advantage that Q is an upper triangular matrix |    
+c     | taking advantage that Q is an upper triangular matrix |
 c     | with lower bandwidth np.                              |
 c     | Place results in v(:,kplusp-kev:kplusp) temporarily.  |
 c     %-------------------------------------------------------%
 c
       do 130 i = 1, kev
          call dgemv ('N', n, kplusp-i+1, one, v, ldv,
-     &               q(1,kev-i+1), 1, zero, workd, 1)
+     &               q(1,kev-i+1), 1, zero, workd(1), 1)
+cx     &               q(1,kev-i+1), 1, zero, workd, 1)
          call dcopy (n, workd, 1, v(1,kplusp-i+1), 1)
   130 continue
 c
@@ -4194,15 +4236,15 @@ c     |  Move v(:,kplusp-kev+1:kplusp) into v(:,1:kev). |
 c     %-------------------------------------------------%
 c
       call dlacpy ('All', n, kev, v(1,np+1), ldv, v, ldv)
-c 
+c
 c     %--------------------------------------------%
 c     | Copy the (kev+1)-st column of (V*Q) in the |
 c     | appropriate place if h(kev+1,1) .ne. zero. |
 c     %--------------------------------------------%
 c
-      if ( h(kev+1,1) .gt. zero ) 
+      if ( h(kev+1,1) .gt. zero )
      &     call dcopy (n, workd(n+1), 1, v(1,kev+1), 1)
-c 
+c
 c     %-------------------------------------%
 c     | Update the residual vector:         |
 c     |    r <- sigmak*r + betak*v(:,kev+1) |
@@ -4211,16 +4253,17 @@ c     |    sigmak = (e_{kev+p}'*Q)*e_{kev}  |
 c     |    betak = e_{kev+1}'*H*e_{kev}     |
 c     %-------------------------------------%
 c
-      call dscal (n, q(kplusp,kev), resid, 1)
-      if (h(kev+1,1) .gt. zero) 
+      call dscal (n, q(kplusp,kev), resid(1), 1)
+cx      call dscal (n, q(kplusp,kev), resid, 1)
+      if (h(kev+1,1) .gt. zero)
      &   call daxpy (n, h(kev+1,1), v(1,kev+1), 1, resid, 1)
 c
 c
 c     call second (t1)
 cs    tsapps = tsapps + (t1 - t0)
       tsapps = 0.0
-c 
- 9000 continue 
+c
+ 9000 continue
       return
 c
 c     %---------------%
@@ -4233,7 +4276,7 @@ c\BeginDoc
 c
 c\Name: dseigt
 c
-c\Description: 
+c\Description:
 c  Compute the eigenvalues of the current symmetric tridiagonal matrix
 c  and the corresponding error bounds given the current residual norm.
 c
@@ -4250,16 +4293,16 @@ c  N       Integer.  (INPUT)
 c          Size of the symmetric tridiagonal matrix H.
 c
 c  H       Double precision N by 2 array.  (INPUT)
-c          H contains the symmetric tridiagonal matrix with the 
-c          subdiagonal in the first column starting at H(2,1) and the 
+c          H contains the symmetric tridiagonal matrix with the
+c          subdiagonal in the first column starting at H(2,1) and the
 c          main diagonal in second column.
 c
 c  LDH     Integer.  (INPUT)
-c          Leading dimension of H exactly as declared in the calling 
+c          Leading dimension of H exactly as declared in the calling
 c          program.
 c
 c  EIG     Double precision array of length N.  (OUTPUT)
-c          On output, EIG contains the N eigenvalues of H possibly 
+c          On output, EIG contains the N eigenvalues of H possibly
 c          unsorted.  The BOUNDS arrays are returned in the
 c          same sorted order as EIG.
 c
@@ -4295,16 +4338,16 @@ c     dcopy   Level 1 BLAS that copies one vector to another.
 c
 c\Author
 c     Danny Sorensen               Phuong Vu
-c     Richard Lehoucq              CRPC / Rice University 
-c     Dept. of Computational &     Houston, Texas 
+c     Richard Lehoucq              CRPC / Rice University
+c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
+c     Rice University
+c     Houston, Texas
 c
 c\Revision history:
 c     xx/xx/92: Version ' 2.4'
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: seigt.F   SID: 2.4   DATE OF SID: 8/27/96   RELEASE: 2
 c
 c\Remarks
@@ -4314,14 +4357,14 @@ c\EndLib
 c
 c-----------------------------------------------------------------------
 c
-      subroutine dseigt 
+      subroutine dseigt
      &   ( rnorm, n, h, ldh, eig, bounds, workl, ierr )
 c
 c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-      include   'debug.h'
+cm      include   'debug.h'
       include   'stat.h'
 c
 c     %------------------%
@@ -4343,15 +4386,16 @@ c     %------------%
 c     | Parameters |
 c     %------------%
 c
-      Double precision
-     &           zero
-      parameter (zero = 0.0D+0)
+cua      Double precision
+cua     &           zero
+cua      parameter (zero = 0.0D+0)
 c
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-      integer    k, msglvl
+      integer    k
+cm      integer    k, msglvl
 c
 c     %----------------------%
 c     | External Subroutines |
@@ -4367,14 +4411,16 @@ c
 c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
-c     %-------------------------------% 
+c     %-------------------------------%
 c
 c     call second (t0)
-      msglvl = mseigt
+cm      msglvl = mseigt
 c
 c
-      call dcopy  (n, h(1,2), 1, eig, 1)
-      call dcopy  (n-1, h(2,1), 1, workl, 1)
+      call dcopy  (n, h(1,2), 1, eig(1), 1)
+      call dcopy  (n-1, h(2,1), 1, workl(1), 1)
+cx      call dcopy  (n, h(1,2), 1, eig, 1)
+cx      call dcopy  (n-1, h(2,1), 1, workl, 1)
       call dstqrb (n, eig, workl, bounds, workl(n+1), ierr)
       if (ierr .ne. 0) go to 9000
 c
@@ -4386,7 +4432,7 @@ c
       do 30 k = 1, n
          bounds(k) = rnorm*abs(bounds(k))
    30 continue
-c 
+c
 c     call second (t1)
 cs    tseigt = tseigt + (t1 - t0)
       tseigt = 0.0
@@ -4433,13 +4479,13 @@ c          tridiagonal matrix in positions 1 through N-1.
 c          On exit, E has been destroyed.
 c
 c  Z       Double precision array, dimension (N).  (OUTPUT)
-c          On exit, Z contains the last row of the orthonormal 
-c          eigenvector matrix of the symmetric tridiagonal matrix.  
+c          On exit, Z contains the last row of the orthonormal
+c          eigenvector matrix of the symmetric tridiagonal matrix.
 c          If an error exit is made, Z contains the last row of the
 c          eigenvector matrix associated with the stored eigenvalues.
 c
 c  WORK    Double precision array, dimension (max(1,2*N-2)).  (WORKSPACE)
-c          Workspace used in accumulating the transformation for 
+c          Workspace used in accumulating the transformation for
 c          computing the last components of the eigenvectors.
 c
 c  INFO    Integer.  (OUTPUT)
@@ -4463,9 +4509,9 @@ c     daxpy   Level 1 BLAS that computes a vector triad.
 c     dcopy   Level 1 BLAS that copies one vector to another.
 c     dswap   Level 1 BLAS that swaps the contents of two vectors.
 c     lsame   LAPACK character comparison routine.
-c     dlae2   LAPACK routine that computes the eigenvalues of a 2-by-2 
+c     dlae2   LAPACK routine that computes the eigenvalues of a 2-by-2
 c             symmetric matrix.
-c     dlaev2  LAPACK routine that eigendecomposition of a 2-by-2 symmetric 
+c     dlaev2  LAPACK routine that eigendecomposition of a 2-by-2 symmetric
 c             matrix.
 c     dlamch  LAPACK routine that determines machine constants.
 c     dlanst  LAPACK routine that computes the norm of a matrix.
@@ -4473,7 +4519,7 @@ c     dlapy2  LAPACK routine to compute sqrt(x**2+y**2) carefully.
 c     dlartg  LAPACK Givens rotation construction routine.
 c     dlascl  LAPACK routine for careful scaling of a matrix.
 c     dlaset  LAPACK matrix initialization routine.
-c     dlasr   LAPACK routine that applies an orthogonal transformation to 
+c     dlasr   LAPACK routine that applies an orthogonal transformation to
 c             a matrix.
 c     dlasrt  LAPACK sorting routine.
 c     dsteqr  LAPACK routine that computes eigenvalues and eigenvectors
@@ -4485,10 +4531,10 @@ c     Danny Sorensen               Phuong Vu
 c     Richard Lehoucq              CRPC / Rice University
 c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
+c     Rice University
+c     Houston, Texas
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: stqrb.F   SID: 2.5   DATE OF SID: 8/27/96   RELEASE: 2
 c
 c\Remarks
@@ -4497,7 +4543,7 @@ c        of LAPACK version 2.0 subroutine SSTEQR. No lines are deleted,
 c        only commeted out and new lines inserted.
 c        All lines commented out have "c$$$" at the beginning.
 c        Note that the LAPACK version 1.0 subroutine SSTEQR contained
-c        bugs. 
+c        bugs.
 c
 c\EndLib
 c
@@ -4519,18 +4565,20 @@ c
      &           d( n ), e( n-1 ), z( n ), work( 2*n-2 )
 c
 c     .. parameters ..
-      Double precision               
+      Double precision
      &                   zero, one, two, three
-      parameter          ( zero = 0.0D+0, one = 1.0D+0, 
+      parameter          ( zero = 0.0D+0, one = 1.0D+0,
      &                     two = 2.0D+0, three = 3.0D+0 )
+      integer            izero
+      parameter          (izero=0 )
       integer            maxit
       parameter          ( maxit = 30 )
 c     ..
 c     .. local scalars ..
-      integer            i, icompz, ii, iscale, j, jtot, k, l, l1, lend,
+      integer            i, icompz, ii, iscale, j, jtot, k, l, l1,
      &                   lendm1, lendp1, lendsv, lm1, lsv, m, mm, mm1,
-     &                   nm1, nmaxit
-      Double precision               
+     &                   nm1, nmaxit, lend
+      Double precision
      &                   anorm, b, c, eps, eps2, f, g, p, r, rt1, rt2,
      &                   s, safmax, safmin, ssfmax, ssfmin, tst
 c     ..
@@ -4661,16 +4709,24 @@ c
      $   go to 10
       if( anorm.gt.ssfmax ) then
          iscale = 1
-         call dlascl( 'g', 0, 0, anorm, ssfmax, lend-l+1, 1, d( l ), n,
-     $                info )
-         call dlascl( 'g', 0, 0, anorm, ssfmax, lend-l, 1, e( l ), n,
-     $                info )
+         call dlascl( 'g', izero, izero, anorm, ssfmax, lend-l+1, 1,
+     $                d( l ), n, info )
+         call dlascl( 'g', izero, izero, anorm, ssfmax, lend-l, 1,
+     $                 e( l ), n, info )
+cv         call dlascl( 'g', 0, 0, anorm, ssfmax, lend-l+1, 1, d( l ), n,
+cv     $                info )
+cv         call dlascl( 'g', 0, 0, anorm, ssfmax, lend-l, 1, e( l ), n,
+cv     $                info )
       else if( anorm.lt.ssfmin ) then
          iscale = 2
-         call dlascl( 'g', 0, 0, anorm, ssfmin, lend-l+1, 1, d( l ), n,
-     $                info )
-         call dlascl( 'g', 0, 0, anorm, ssfmin, lend-l, 1, e( l ), n,
-     $                info )
+         call dlascl( 'g', izero, izero, anorm, ssfmin, lend-l+1, 1,
+     $                d( l ), n, info )
+         call dlascl( 'g', izero, izero, anorm, ssfmin, lend-l, 1,
+     $                 e( l ), n, info )
+cv         call dlascl( 'g', 0, 0, anorm, ssfmin, lend-l+1, 1, d( l ), n,
+cv     $                info )
+cv         call dlascl( 'g', 0, 0, anorm, ssfmin, lend-l, 1, e( l ), n,
+cv     $                info )
       end if
 c
 c     choose between ql and qr iteration
@@ -4781,9 +4837,9 @@ c$$$     $                  z( 1, l ), ldz )
 c
 c             *** New starting with version 2.5 ***
 c
-              call dlasr( 'r', 'v', 'b', 1, mm, work( l ), 
+              call dlasr( 'r', 'v', 'b', 1, mm, work( l ),
      &                    work( n-1+l ), z( l ), 1 )
-c             *************************************                             
+c             *************************************
          end if
 c
          d( l ) = d( l ) - p
@@ -4841,7 +4897,7 @@ c
                 tst      = z(l)
                 z(l)   = c*tst - s*z(l-1)
                 z(l-1) = s*tst + c*z(l-1)
-c               ************************************* 
+c               *************************************
             else
                call dlae2( d( l-1 ), e( l-1 ), d( l ), rt1, rt2 )
             end if
@@ -4903,7 +4959,7 @@ c           *** New starting with version 2.5 ***
 c
             call dlasr( 'r', 'v', 'f', 1, mm, work( m ), work( n-1+m ),
      &                  z( m ), 1 )
-c           *************************************                             
+c           *************************************
          end if
 c
          d( l ) = d( l ) - p
@@ -4926,15 +4982,23 @@ c     undo scaling if necessary
 c
   140 continue
       if( iscale.eq.1 ) then
-         call dlascl( 'g', 0, 0, ssfmax, anorm, lendsv-lsv+1, 1,
-     $                d( lsv ), n, info )
-         call dlascl( 'g', 0, 0, ssfmax, anorm, lendsv-lsv, 1, e( lsv ),
-     $                n, info )
+         call dlascl( 'g', izero, izero, ssfmax, anorm, lendsv-lsv+1,
+     $                 1, d( lsv ), n, info )
+         call dlascl( 'g', izero, izero, ssfmax, anorm, lendsv-lsv,
+     $                 1, e( lsv ), n, info )
+cv         call dlascl( 'g', 0, 0, ssfmax, anorm, lendsv-lsv+1, 1,
+cv     $                d( lsv ), n, info )
+cv         call dlascl( 'g', 0, 0, ssfmax, anorm, lendsv-lsv, 1, e( lsv ),
+cv     $                n, info )
       else if( iscale.eq.2 ) then
-         call dlascl( 'g', 0, 0, ssfmin, anorm, lendsv-lsv+1, 1,
-     $                d( lsv ), n, info )
-         call dlascl( 'g', 0, 0, ssfmin, anorm, lendsv-lsv, 1, e( lsv ),
-     $                n, info )
+         call dlascl( 'g', izero, izero, ssfmin, anorm, lendsv-lsv+1,
+     $                 1, d( lsv ), n, info )
+         call dlascl( 'g', izero, izero, ssfmin, anorm, lendsv-lsv,
+     $                 1, e( lsv ), n, info )
+cv         call dlascl( 'g', 0, 0, ssfmin, anorm, lendsv-lsv+1, 1,
+cv     $                d( lsv ), n, info )
+cv         call dlascl( 'g', 0, 0, ssfmin, anorm, lendsv-lsv, 1, e( lsv ),
+cv     $                n, info )
       end if
 c
 c     check for no convergence to an eigenvalue after a total
@@ -4994,20 +5058,20 @@ c     %---------------%
 c
       end
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: stats.F   SID: 2.1   DATE OF SID: 4/19/96   RELEASE: 2
 c     %---------------------------------------------%
 c     | Initialize statistic and timing information |
 c     | for symmetric Arnoldi code.                 |
 c     %---------------------------------------------%
- 
+
       subroutine dstats
 
 c     %--------------------------------%
 c     | See stat.doc for documentation |
 c     %--------------------------------%
       include   'stat.h'
- 
+
 c     %-----------------------%
 c     | Executable Statements |
 c     %-----------------------%
@@ -5015,26 +5079,26 @@ c     %-----------------------%
       nopx   = 0
       nbx    = 0
       nrorth = 0
-      nitref = 0
-      nrstrt = 0
- 
-      tsaupd = 0.0D+0
-      tsaup2 = 0.0D+0
-      tsaitr = 0.0D+0
-      tseigt = 0.0D+0
-      tsgets = 0.0D+0
-      tsapps = 0.0D+0
-      tsconv = 0.0D+0
-      titref = 0.0D+0
-      tgetv0 = 0.0D+0
-      trvec  = 0.0D+0
- 
+cp      nitref = 0
+cp      nrstrt = 0
+
+ct      tsaupd = 0.0D+0
+ct      tsaup2 = 0.0D+0
+ct      tsaitr = 0.0D+0
+ct      tseigt = 0.0D+0
+ct      tsgets = 0.0D+0
+ct      tsapps = 0.0D+0
+ct      tsconv = 0.0D+0
+ct      titref = 0.0D+0
+ct      tgetv0 = 0.0D+0
+ct      trvec  = 0.0D+0
+
 c     %----------------------------------------------------%
 c     | User time including reverse communication overhead |
 c     %----------------------------------------------------%
-      tmvopx = 0.0D+0
-      tmvbx  = 0.0D+0
- 
+ct      tmvopx = 0.0D+0
+ct      tmvbx  = 0.0D+0
+
       return
 c
 c     End of dstats
@@ -5046,7 +5110,7 @@ c
 c\Name: dsortr
 c
 c\Description:
-c  Sort the array X1 in the order specified by WHICH and optionally 
+c  Sort the array X1 in the order specified by WHICH and optionally
 c  applies the permutation to the array X2.
 c
 c\Usage:
@@ -5081,17 +5145,17 @@ c\BeginLib
 c
 c\Author
 c     Danny Sorensen               Phuong Vu
-c     Richard Lehoucq              CRPC / Rice University 
-c     Dept. of Computational &     Houston, Texas 
+c     Richard Lehoucq              CRPC / Rice University
+c     Dept. of Computational &     Houston, Texas
 c     Applied Mathematics
-c     Rice University           
-c     Houston, Texas            
+c     Rice University
+c     Houston, Texas
 c
 c\Revision history:
 c     12/16/93: Version ' 2.1'.
 c               Adapted from the sort routine in LANSO.
 c
-c\SCCS Information: @(#) 
+c\SCCS Information: @(#)
 c FILE: sortr.F   SID: 2.3   DATE OF SID: 4/19/96   RELEASE: 2
 c
 c\EndLib
@@ -5128,7 +5192,7 @@ c     | Executable Statements |
 c     %-----------------------%
 c
       igap = n / 2
-c 
+c
       if (which .eq. 'SA') then
 c
 c        X1 is sorted into decreasing order of algebraic.
@@ -5200,7 +5264,7 @@ c
    80       continue
 c
             if (j.lt.0) go to 90
-c           
+c
             if (x1(j).gt.x1(j+igap)) then
                temp = x1(j)
                x1(j) = x1(j+igap)
@@ -5218,7 +5282,7 @@ c
    90    continue
          igap = igap / 2
          go to 70
-c 
+c
       else if (which .eq. 'LM') then
 c
 c        X1 is sorted into increasing order of magnitude.

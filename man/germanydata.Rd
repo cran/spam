@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -25,7 +25,7 @@
 \title{Meta-data about administrative districts of Germany}
 \description{Data for the display of  data
   over the administrative districts of Germany}
-\format{\code{germany.info} is a list with elements 
+\format{\code{germany.info} is a list with elements
   \describe{
     \item{n}{544 (number of districts around 1990).}
     \item{xrep,yrep}{representative coordinates of the districts (vectors
@@ -42,7 +42,7 @@
   files from the   package \pkg{INLA}, see \code{demo(Bym)}.\cr
 
   See also \url{http://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl\%C3\%BCssel}
-and \url{http://de.wikipedia.org/wiki/Liste_der_Landkreise_in_Deutschland}}
+and \url{https://en.wikipedia.org/wiki/Districts_of_Germany}}
 \details{The representative coordinates are calculated based on the mean
   value of the polygon coordinates. This creates sometimes strange
   values, e.g., district Leer.}

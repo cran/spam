@@ -2,11 +2,11 @@ c
       subroutine dn_eigen_f(maxnev, ncv, maxitr,
      &                      n, iwhich,
      &                      na, a, ja, ia,
-     &                      v, dr, di, vf , iparam)
+     &                      v, dr, di, iparam)
 c
       implicit none
 c
-      integer           maxnev, ncv, n, na, vf,
+      integer           maxnev, ncv, n, na,
      &                  iwhich, maxitr
 c     %--------------%
 c     | Local Arrays |
@@ -42,15 +42,15 @@ c
      &                  zero
       parameter         (zero = 0.0D+0)
 c
-      include 'debug.h'
-      ndigit = -3
-      logfil = 6
-      mngets = 0
-      mnaitr = 0
-      mnapps = 0
-      mnaupd = vf
-      mnaup2 = vf
-      mneupd = 0
+cm    include 'debug.h'
+cm    ndigit = -3
+cm    logfil = 6
+cm    mngets = 0
+cm    mnaitr = 0
+cm    mnapps = 0
+cm    mnaupd = 0
+cm    mnaup2 = 0
+cm    mneupd = 0
 c
       bmat   = 'I'
 c
@@ -79,7 +79,7 @@ c
       else if (iwhich .eq. 6) then
             which = 'SI'
       else
-           call intpr(' Error: Invalid mode.', -1, 0, 0)
+CcC           callintpr(' Error: Invalid mode.', -1, 0, 0)
 c
         goto 9000
       end if
@@ -109,7 +109,7 @@ c
 c
       if ( info .lt. 0 ) then
 c
-         call errpr (info)
+c         call errpr (info)
 c
          goto 9000
 c
@@ -122,7 +122,7 @@ c
 c
          if ( ierr .lt. 0 ) then
 c
-            call errpr (ierr)
+c            call errpr (ierr)
 c
             goto 9000
 c

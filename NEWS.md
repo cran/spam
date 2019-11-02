@@ -1,3 +1,10 @@
+# spam 2.3-1
+
+BUG FIXES
+
+* cleaning and consolidation of init.c with spam64.
+
+
 # spam 2.3-0
 
 NEW FEATURES
