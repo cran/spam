@@ -34,11 +34,13 @@ spam_random(nrow = 1L, ncol = nrow, density = 0.5, distribution = NULL, digits =
   \item{verbose}{logical value to specify verbose statments of the function.}
 }
 \value{A random matrix in \code{spam} format.}
-%\details{}
+\details{To create a random spam64 matrix, set \code{options(spam.force64 = TRUE)}.}
 %\references{}
-\seealso{\code{\link{spam}}}
+\seealso{\code{\link{spam}} and \code{\link{display.spam}}}
 \examples{
-spam_random(500, digits = 2, distribution = rnorm, sd = 2, mean = 10, density = .1)
+set.seed(42)
+rspam <- spam_random(500, digits = 2, distribution = rnorm, sd = 2, mean = 10, density = .01)
+display.spam(rspam, cex = 2)
 }
 \author{Florian Gerber, Roman Flury, Reinhard Furrer}
 

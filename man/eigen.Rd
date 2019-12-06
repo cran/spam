@@ -21,7 +21,6 @@
   \code{eigen.spam} is a wrapper function of \code{eigen_approx} and transforms its output to \code{base::eigen} like.
 }
 \note{
-For non symmetric matrices it can not be guaranteed, that the Fortran code is stable.
 The user is advised to choose the \code{control} options carefully, see \sQuote{Details} for more information.
 }
 \usage{
@@ -84,12 +83,27 @@ eigen_approx(x, nev, ncv, nitr, mode, only.values = FALSE, verbose = FALSE, f_ro
 
 
 \references{Lehoucq, R. B. and Sorensen, D. C. and Yang, C. (1997) \emph{ARPACK Users Guide: Solution of Large Scale Eigenvalue Problems by Implicitly Restarted Arnoldi Methods}.}
-\seealso{Option \code{"inefficiencywarning"} in \code{\link{spam.options}}.
+\seealso{Option \code{"inefficiencywarning"} in \code{\link{spam.options}} and \code{\link{spam_random}}.
 }
 \examples{
-gmrf <- precmat.GMRFreglat(50, 50, c(.4,.3,.2,.1),'m2p4')
-eigen.spam(gmrf, nev = 50, control = list(mode = "LM"))
+set.seed(81)
+rspam <- spam_random(50^2, density = .0001, spd = TRUE)
+SPD <- eigen.spam(rspam, nev = 20, control = list(mode = "SM"),
+                  only.values = TRUE)
+
+tail(SPD$values, 20)
+isSymmetric(rspam)
+# hence the matrix is symmetric positiv definit
+
+rspam2 <- spam_random(50^2, density = .0001, spd = FALSE, sym = TRUE,
+                      distribution = rpois, lambda = 2)
+SNPDF <- eigen.spam(rspam2, nev = 20, control = list(mode = "SM"),
+                    only.values = TRUE)
+
+tail(SNPDF$values, 20)
+isSymmetric(rspam2)
+# hence the matrix is symmetric but not positiv definit
 }
-\author{Roman Flury}
+\author{Roman Flury, Reinhard Furrer}
 \keyword{algebra}
 

@@ -3,7 +3,7 @@ C
 C
 C     We have four distances implemented:
 C       c("euclidean", "maximum", "minkowski", "greatcircle")
-C     
+C
 c     In case we need the distance matrix between x and x, then the
 c     following parameters are used as well:
 c     if part=-1, lower tri, part=0 the entire matrix
@@ -29,24 +29,24 @@ c     p power for minkowski
       minkowski=abs(x-y)**p
       return
       end
-      
+
 
 
       subroutine closestdist( ncol, x,nrowx, y, nrowy,
-     &    part, p, method, 
+     &    part, p, method,
      &    eta, colindices, rowpointers, entries, nnz, iflag)
 
       implicit none
-      
-      
+
+
       double precision euclid, minkowski
       external euclid, minkowski
 
       integer ncol,nrowx, nrowy, nnz, method,  part,  iflag
       integer colindices(nnz), rowpointers(nrowx+1)
-      double precision p, x(nrowx,ncol),y(nrowy,ncol) 
+      double precision p, x(nrowx,ncol),y(nrowy,ncol)
       double precision eta, entries(nnz)
-      
+
 
 
 
@@ -59,7 +59,7 @@ c     p power for minkowski
       if (method.eq.2) then
          p=1.0
          call closestMAXdistXY( ncol, x,nrowx, y, nrowy,
-     &        part, 
+     &        part,
      &        eta, colindices, rowpointers, entries, nnz, iflag)
       endif
       if (method.eq.3) then
@@ -76,13 +76,15 @@ c     p power for minkowski
       end
 
 
-      
+
       subroutine closestEdistXY( ncol, x,xnrow, y, ynrow,
      &    part, p, distfcn,
      &    eta, colindices, rowpointers, entries, nnz, iflag)
 
       implicit none
-      
+
+      logical,  external :: eqREAL
+
       double precision distfcn
       external distfcn
 
@@ -90,160 +92,160 @@ c     p power for minkowski
       integer colindices(nnz),rowpointers(xnrow+1)
       double precision p,x(xnrow,ncol), y(ynrow,ncol)
       double precision eta, entries(nnz)
-      
+
 c     local variables
       integer jja, i,j,k, jfrom, jto
       double precision etap, tmp,pinv
-      
+
 
       etap=eta**p
       pinv=1/p
-      
+
       jja=1
-       
+
       rowpointers(1)=1
       jfrom = 1
       jto = ynrow
-      
-      
-c cycle over all rows of x (independent of part)       
-      
+
+
+c cycle over all rows of x (independent of part)
+
       do i= 1,xnrow
-         
+
          if (part .lt. 0) then
             jto = i
          endif
          if (part .gt. 0) then
             jfrom = i
          endif
-         
+
          do 10 j = jfrom,jto
-            
-c Start calculating the distance (until delta is exceeded)            
+
+c Start calculating the distance (until delta is exceeded)
             tmp = 0.0
             do  k = 1, ncol
                tmp = tmp + distfcn(x(i,k),y(j,k),p)
                if( tmp.gt.etap) goto 10
             enddo
-c Delta is not exceeded. 
-            
+c Delta is not exceeded.
+
 c     in case nnz was too small, recall line to get a better estimate
             if( jja .gt. nnz) then
-               iflag = i 
+               iflag = i
                goto 20
             endif
-               
+
             colindices(jja) = j
-            if (p.eq.2) then
+            if (eqREAL(p,2)) then
                entries(jja) = sqrt(tmp)
             else
-               if (p.eq.1) then
+               if (eqREAL(p,1)) then
                   entries(jja) = tmp
                else
                   entries(jja) = tmp**pinv
                endif
             endif
             jja = jja + 1
-            
-            
+
+
  10      continue
          rowpointers(i+1)=jja
       enddo
-      
-      
+
+
       if (part.gt.0) then
          rowpointers(xnrow+1)=jja
       endif
       nnz=jja-1
  20   continue
-      
+
       return
       end
-      
+
       subroutine closestMAXdistXY( ncol, x,xnrow, y, ynrow,
-     &    part, 
+     &    part,
      &    eta, colindices, rowpointers, entries, nnz, iflag)
 
       implicit none
-      
+
       integer ncol,xnrow, ynrow, nnz,  part,iflag
       integer colindices(nnz),rowpointers(xnrow+1)
       double precision x(xnrow,ncol), y(ynrow,ncol)
       double precision eta, entries(nnz)
-      
+
 c     local variables
       integer jja, i,j,k, jfrom, jto
       double precision  tmp
-      
 
-      
+
+
       jja=1
-       
+
       rowpointers(1)=1
       jfrom = 1
       jto = ynrow
-      
-      
+
+
       do i= 1,xnrow
-         
+
          if (part .lt. 0) then
             jto = i
          endif
          if (part .gt. 0) then
             jfrom = i
          endif
-       
+
          do 10 j = jfrom,jto
-            
-c Start calculating the distance 
+
+c Start calculating the distance
             tmp = 0.0
             do  k = 1, ncol
-               tmp = max(tmp, abs(x(i,k)-y(j,k))) 
+               tmp = max(tmp, abs(x(i,k)-y(j,k)))
                if( tmp.gt.eta) goto 10
             enddo
 
-c Delta is not exceeded. 
+c Delta is not exceeded.
 c     (i,j) has a distance smaller than eta.
-      
-                    
-            
+
+
+
 c     in case nnz was too small, recall line to get a better estimate
             if( jja .gt. nnz) then
-               iflag = i 
+               iflag = i
                goto 20
             endif
-               
+
             colindices(jja) = j
             entries(jja) = tmp
             jja = jja + 1
-            
-            
+
+
  10      continue
          rowpointers(i+1)=jja
       enddo
-      
-      
+
+
       if (part.gt.0) then
          rowpointers(xnrow+1)=jja
       endif
       nnz=jja-1
  20   continue
-      
+
       return
       end
-      
+
 
 
       subroutine closestGCdistXY( x,nx, y, ny,
-     &    part,p, 
+     &    part,p,
      &    eta, colindices, rowpointers, entries, nnz, iflag)
 
       implicit none
-      
+
       integer nx, ny, nnz, colindices(nnz),rowpointers(nx+1)
       integer part, iflag
       double precision x(nx,2), y(ny,2), p, eta, entries(nnz)
-      
+
 c     local variables
       logical equi
       integer jja, i,j, jfrom, jto
@@ -251,27 +253,27 @@ c     local variables
       double precision rad, thres
       double precision scy12(ny), ccy12(ny), sy2(ny)
       double precision scx12,     ccx12,     sx2
-      
+
       parameter (rad = 0.01745329251994329)
       parameter (thres = 0.99999999999)
 
 
 c     Great savings if we know that x=y.
-c     Changes for archaic d... to ... trigonometric fcn 
+c     Changes for archaic d... to ... trigonometric fcn
       if (p .lt. 0) then
          equi=.TRUE.
          p=-p
-      else 
-         equi= .FALSE. 
+      else
+         equi= .FALSE.
       endif
-      
+
       jja=1
-       
+
       etap=cos(eta*rad)
       rowpointers(1)=1
       jfrom = 1
       jto = ny
-      
+
 
       DO j=1,ny
          tmp1=y(j,1)*rad
@@ -281,12 +283,12 @@ c     Changes for archaic d... to ... trigonometric fcn
          sy2(j)=sin(tmp2)
       ENDDO
 
-       
-      
+
+
       do i= 1,nx
-         
-c     x2 is missing if equi=.TRUE. and we reuse the y stuff 
-         if (equi .eqv. .TRUE.) then 
+
+c     x2 is missing if equi=.TRUE. and we reuse the y stuff
+         if (equi .eqv. .TRUE.) then
             ccx12=ccy12(i)
             scx12=scy12(i)
             sx2=sy2(i)
@@ -296,24 +298,24 @@ c     x2 is missing if equi=.TRUE. and we reuse the y stuff
             ccx12=cos(tmp1)*cos(tmp2)
             scx12=sin(tmp1)*cos(tmp2)
             sx2=sin(tmp2)
-         endif 
-         
+         endif
+
          if (part .lt. 0) then
             jto = i
          endif
          if (part .gt. 0) then
             jfrom = i
          endif
-         
+
          do 10 j = jfrom,jto
-            
-            
-c     Start calculating the distance 
+
+
+c     Start calculating the distance
             tmp = ccx12 * ccy12(j) + scx12 * scy12(j)  + sx2*sy2(j)
 
-            
+
             if (tmp .lt. etap) goto 10
-c     Delta is not exceeded. 
+c     Delta is not exceeded.
 
 c     Due to numerical instabilities, we need the following... 0.15-2:
 c     Patch suggested at code clinics.
@@ -324,32 +326,32 @@ c     Patch suggested at code clinics.
             endif
 
 c     (i,j) has a distance smaller than eta.
-            
+
 c     In case nnz was too small, recall line to get a better estimate
             if( jja .gt. nnz) then
-               iflag = i 
+               iflag = i
                goto 20
             endif
-               
+
             colindices(jja) = j
             entries(jja) = tmp*p
             jja = jja + 1
-            
-            
+
+
  10      continue
          rowpointers(i+1)=jja
       enddo
-      
-      
+
+
       if (part.gt.0) then
          rowpointers(nx+1)=jja
       endif
       nnz=jja-1
  20   continue
-      
+
       return
       end
-      
 
 
- 
+
+

@@ -13,8 +13,8 @@ header-includes:
    - \usepackage{bm}
    - \usepackage{setspace}\onehalfspacing
    - \usepackage[labelfont=bf]{caption}
+   - \usepackage{natbib}
    - \usepackage{hyperref}
-   - \setcitestyle{round}
 bibliography: spam.bib
 vignette: >
   \usepackage[utf8]{inputenc}

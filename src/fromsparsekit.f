@@ -6,7 +6,7 @@ c---------------------------------------------------------------------
       real(8) a(*),c(*)
       integer nrow, ncol
       integer ia(nrow+1),ja(*),jc(*),ic(nrow+1),jmask(*)
-      integer imask(nrow+1), nzmax, ierr 
+      integer imask(nrow+1), nzmax, ierr
       logical iw(ncol)
 c-----------------------------------------------------------------------
 c futher used variables
@@ -880,33 +880,4 @@ c------------end-of-getdia----------------------------------------------
 c-----------------------------------------------------------------------
       end
 c
-c-----------------------------------------------------------------------
-c
-      subroutine d_ope ( n, x, y, a, ja, ia )
-c
-c ope computes A * x for a sparse matrix A.
-c
-      implicit none
-c
-      integer n
-c
-      real ( kind = 8 ) a(*)
-      integer i
-      integer ia(n+1)
-      integer ja(*)
-      integer k1
-      integer k2
-      real ( kind = 8 ) x(*)
-      real ( kind = 8 ) y(*)
-c
-c spasrse matrix * vector multiplication
-c
-      do i=1,n
-         k1 = ia(i)
-         k2 = ia(i+1) -1
-         y(i) = dot_product ( a(k1:k2), x(ja(k1:k2)) )
-      end do
-c
-      return
-      end
-c
+

@@ -1,6 +1,6 @@
 c     Changes Oct 2019: to address gcc-10 issues with Rank missmatch:
 c     in `call blksb[lf]`: b(1,j) -> b(:,j); newrhs -> newrhs(:)
-      
+
 
 
       subroutine backsolvef(m,nsuper,nrhs,lindx,xlindx,lnz,
@@ -23,7 +23,7 @@ c see below...
      &  lnz,xlnz,xsuper,b)
 c INPUT:
 c     m -- the number of column in the matrix
-c     lindx -- an nsub-vector of interger which contains, in 
+c     lindx -- an nsub-vector of interger which contains, in
 c           column major oder, the row subscripts of the nonzero
 c           entries in L in a compressed storage format
 c     xlindx -- an nsuper-vector of integer of pointers for lindx
@@ -35,7 +35,7 @@ c               partitioning
 c     b -- the rhs of the equality constraint
 c OUTPUT:
 c     b -- the solution
-      
+
       implicit none
 
       integer m,nsuper,nrhs,lindx(*),xlindx(m+1),
@@ -54,7 +54,7 @@ C
 C   Version:        0.4
 C   Last modified:  December 27, 1994
 C   Authors:        Esmond G. Ng and Barry W. Peyton
-C                   Slight modification by Reinhard Furrer 
+C                   Slight modification by Reinhard Furrer
 C
 C   Mathematical Sciences Section, Oak Ridge National Laboratory
 C
@@ -64,12 +64,12 @@ C
 C***********************************************************************
       subroutine pivotforwardsolve(m,nsuper,nrhs,lindx,xlindx,lnz,
      &                   xlnz,invp,perm,xsuper,newrhs,sol,b)
-c Sparse least squares solver via Ng-Peyton's sparse Cholesky 
+c Sparse least squares solver via Ng-Peyton's sparse Cholesky
 c    factorization for sparse symmetric positive definite
 c INPUT:
 c     m -- the number of column in the design matrix X
 c     nsubmax -- upper bound of the dimension of lindx
-c     lindx -- an nsub-vector of interger which contains, in 
+c     lindx -- an nsub-vector of interger which contains, in
 c           column major oder, the row subscripts of the nonzero
 c           entries in L in a compressed storage format
 c     xlindx -- an nsuper-vector of integer of pointers for lindx
@@ -133,12 +133,12 @@ c     see above
 C***********************************************************************
       subroutine backsolves(m,nsuper,nrhs,lindx,xlindx,lnz,
      &                   xlnz,invp,perm,xsuper,newrhs,sol,b)
-c Sparse least squares solver via Ng-Peyton's sparse Cholesky 
+c Sparse least squares solver via Ng-Peyton's sparse Cholesky
 c    factorization for sparse symmetric positive definite
 c INPUT:
 c     m -- the number of column in the design matrix X
 c     nsubmax -- upper bound of the dimension of lindx
-c     lindx -- an nsub-vector of interger which contains, in 
+c     lindx -- an nsub-vector of interger which contains, in
 c           column major oder, the row subscripts of the nonzero
 c           entries in L in a compressed storage format
 c     xlindx -- an nsuper-vector of integer of pointers for lindx

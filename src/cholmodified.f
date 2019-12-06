@@ -1,5 +1,5 @@
       subroutine updatefactor( m,nnzd,
-     &     d,jd,id, invp,perm, 
+     &     d,jd,id, invp,perm,
      &                lindx,xlindx, nsuper,lnz,xlnz,
      &                snode, xsuper,
      &                cachesize,ierr)
@@ -45,7 +45,7 @@ c Numerical factorization
       end
 
 
-      
+
 
       subroutine cholstepwise(m,nnzd,
      &     d,jd,id,    doperm,invp,perm,
@@ -53,10 +53,10 @@ c Numerical factorization
      &                lindx,xlindx,nsuper,nnzlmax,lnz,xlnz,
      &                snode,xsuper,
      &                cachsz,ierr)
-c     Modified chol routine  
+c     Modified chol routine
 c
 c
-c Sparse least squares solver via Ng-Peyton's sparse Cholesky 
+c Sparse least squares solver via Ng-Peyton's sparse Cholesky
 c    factorization for sparse symmetric positive definite
 c INPUT:
 c     m -- the number of column in the matrix A
@@ -65,7 +65,7 @@ c     jd -- an nnzd-vector of indices in d
 c     id -- an (m+1)-vector of pointers to the begining of each
 c           row in d and jd
 c     nsubmax -- upper bound of the dimension of lindx
-c     lindx -- an nsub-vector of integer which contains, in 
+c     lindx -- an nsub-vector of integer which contains, in
 c           column major oder, the row subscripts of the nonzero
 c           entries in L in a compressed storage format
 c     xlindx -- an nsuper-vector of integer of pointers for lindx
@@ -136,7 +136,7 @@ c iwsiz is used temporalily
 
 c Create the adjacency matrix: eliminate the diagonal elements from
 c    (d,id,jd) and make two copies: (*,xlindx,lindx),(*,adj,adjncy)
-c    Also to lindx and xlindx, because the matrix structure is destroyed 
+c    Also to lindx and xlindx, because the matrix structure is destroyed
 c    by the minimum degree ordering routine.
 
       nsub = 0
@@ -154,8 +154,8 @@ c now cycle over all rows
          do j=id(i),id(i+1)-1
             jtmp=jd(j)
             if (jtmp.ne.i) then
-               lindx(k) = jtmp               
-               adjncy(k) = jtmp               
+               lindx(k) = jtmp
+               adjncy(k) = jtmp
                k=k+1
             else
                if ( d(j) .le. 0) then
@@ -176,7 +176,7 @@ c check if we actually had m elements on the diagonal...
          return
       endif
 
-c initialize iwsiz to the later used value...        
+c initialize iwsiz to the later used value...
       iwsiz=7*m+3
 
 c
@@ -209,11 +209,11 @@ c                set to 32767 below
             invp(perm(i))=i
          enddo
       endif
-         
+
 c
 c Call sfinit: Symbolic factorization initialization
 c   to compute supernode partition and storage requirements
-c   for symbolic factorization. New ordering is a postordering 
+c   for symbolic factorization. New ordering is a postordering
 c   of the nodal elimination tree
 c
       call sfinit(m,nnzadj,adj(1),adjncy(1),perm,
@@ -290,7 +290,7 @@ C
       INTEGER             NSUPER
       INTEGER             XSUPER(*), XLNZ(*)
       DOUBLE PRECISION    LNZ(*)
-C     
+C
       INTEGER             II, J, JSUPER
 C
       DO  500  JSUPER = 1, NSUPER
@@ -299,7 +299,7 @@ C
                LNZ(II) = 0.0
  200        CONTINUE
  400     CONTINUE
-C     
+C
  500  CONTINUE
       RETURN
       END
@@ -347,6 +347,7 @@ C
      &                      LNZ   , LDA                             )
 C
 C***********************************************************************
+      implicit none
 C
 C       -----------
 C       PARAMETERS.
@@ -423,6 +424,8 @@ C
 C
 C***********************************************************************
 C
+      implicit none
+
         INTEGER           BROTHR(*)     , FSON(*)       ,
      &                      PARENT(*)
 C
@@ -501,10 +504,11 @@ C                           INTO CACHE.
 C
 C***********************************************************************
 C
-      SUBROUTINE  BFINIT  ( NEQNS , NSUPER, XSUPER, SNODE , XLINDX, 
+      SUBROUTINE  BFINIT  ( NEQNS , NSUPER, XSUPER, SNODE , XLINDX,
      &                      LINDX , CACHSZ, TMPSIZ, SPLIT           )
 C
 C***********************************************************************
+      implicit none
 C
         INTEGER     CACHSZ, NEQNS , NSUPER, TMPSIZ
         INTEGER     XLINDX(*)       , XSUPER(*)
@@ -566,22 +570,22 @@ C       IFLAG           -   ERROR FLAG.
 C                               0: SUCCESSFUL FACTORIZATION.
 C                              -1: NONPOSITIVE DIAGONAL ENCOUNTERED,
 C                                  MATRIX IS NOT POSITIVE DEFINITE.
-C                              -2: INSUFFICIENT WORKING STORAGE 
+C                              -2: INSUFFICIENT WORKING STORAGE
 C                                  [TEMP(*)].
 C
 C   WORKING PARAMETERS:
 C       LINK            -   LINKS TOGETHER THE SUPERNODES IN A SUPERNODE
 C                           ROW.
-C       LENGTH          -   LENGTH OF THE ACTIVE PORTION OF EACH 
+C       LENGTH          -   LENGTH OF THE ACTIVE PORTION OF EACH
 C                           SUPERNODE.
 C       INDMAP          -   VECTOR OF SIZE NEQNS INTO WHICH THE GLOBAL
 C                           INDICES ARE SCATTERED.
-C       RELIND          -   MAPS LOCATIONS IN THE UPDATING COLUMNS TO 
-C                           THE CORRESPONDING LOCATIONS IN THE UPDATED 
+C       RELIND          -   MAPS LOCATIONS IN THE UPDATING COLUMNS TO
+C                           THE CORRESPONDING LOCATIONS IN THE UPDATED
 C                           COLUMNS.  (RELIND IS GATHERED FROM INDMAP).
 C       TEMP            -   REAL VECTOR FOR ACCUMULATING UPDATES.  MUST
-C                           ACCOMODATE ALL COLUMNS OF A SUPERNODE. 
-C       
+C                           ACCOMODATE ALL COLUMNS OF A SUPERNODE.
+C
 C***********************************************************************
 C
       SUBROUTINE  BLKFC2 (  NSUPER, XSUPER, SNODE , SPLIT , XLINDX,
@@ -589,6 +593,7 @@ C
      &                      INDMAP, RELIND, TMPSIZ, IFLAG )
 C
 C*********************************************************************
+      implicit none
 C
 C       -----------
 C       PARAMETERS.
@@ -611,7 +616,7 @@ C
      &                      KFIRST, KLAST , KLEN  , KLPNT , KSUP  ,
      &                      KXPNT , LJCOL , NCOLUP, NJCOLS, NKCOLS,
      &                      NXKSUP, NXTCOL, NXTSUP, STORE
-        DOUBLE PRECISION    TEMP(TMPSIZ) 
+        DOUBLE PRECISION    TEMP(TMPSIZ)
 C     RF: put TEMP(*) into a local variable
 
         DOUBLE PRECISION MXDIAG
@@ -658,15 +663,15 @@ C           ------------------------------------------------
             JLEN   = XLNZ(FJCOL+1) - XLNZ(FJCOL)
             JXPNT  = XLINDX(JSUP)
 
-C            print *, 'Super Node: ', JSUP, ' first: ', FJCOL, 
+C            print *, 'Super Node: ', JSUP, ' first: ', FJCOL,
 C     .           ' last: ', LJCOL
 
-            
+
 C
 C
 C           -----------------------------------------------------
 C           SET UP INDMAP(*) TO MAP THE ENTRIES IN UPDATE COLUMNS
-C           TO THEIR CORRESPONDING POSITIONS IN UPDATED COLUMNS, 
+C           TO THEIR CORRESPONDING POSITIONS IN UPDATED COLUMNS,
 C           RELATIVE THE THE BOTTOM OF EACH UPDATED COLUMN.
 C           -----------------------------------------------------
             CALL  LDINDX ( JLEN, LINDX(JXPNT), INDMAP )
@@ -762,7 +767,7 @@ C                           GENERAL SPARSE CMOD(JSUP,KSUP).
 C                           COMPUTE CMOD(JSUP,KSUP) UPDATE
 C                           IN WORK STORAGE.
 C                           -------------------------------
-                            STORE = KLEN * NCOLUP - NCOLUP * 
+                            STORE = KLEN * NCOLUP - NCOLUP *
      &                              (NCOLUP-1) / 2
                             IF  ( STORE .GT. TMPSIZ )  THEN
                                 IFLAG = -2
@@ -905,6 +910,7 @@ C
      &                      LNZ   , RHS                             )
 C
 C***********************************************************************
+      implicit none
 C
         INTEGER             NSUPER
         INTEGER             LINDX(*)      , XSUPER(*)
@@ -935,11 +941,11 @@ C       -------------------------
 CDIR$           IVDEP
                 DO  400  IX = IXSTRT+1, IXSTOP
                    I = LINDX(IPNT)
-                   IF(RHS(I) .NE. 0.D0) T = T - LNZ(IX)*RHS(I)
+                   IF (abs(RHS(I)) .GT. 0.D0) T = T - LNZ(IX)*RHS(I)
                    IPNT = IPNT + 1
  400            CONTINUE
 
-                IF(T .NE. 0.D0) THEN
+                IF(abs(T) .GT. 0.D0) THEN
                    RHS(JCOL) = T/LNZ(IXSTRT)
                 ELSE
                    RHS(JCOL) = 0.D0
@@ -993,6 +999,8 @@ C
 C
 C***********************************************************************
 C
+      implicit none
+
         INTEGER             NSUPER
         INTEGER             LINDX(*)      , XSUPER(*)
         INTEGER             XLINDX(*)     , XLNZ(*)
@@ -1019,7 +1027,7 @@ C       ------------------------
             DO  200  JCOL = FJCOL, LJCOL
                 IXSTOP    = XLNZ(JCOL+1) - 1
 
-                IF(RHS(JCOL) .NE. 0.D0) THEN
+                IF (abs(RHS(JCOL)) .GT. 0.D0) THEN
                    T         = RHS(JCOL)/LNZ(IXSTRT)
                    RHS(JCOL) = T
                    IPNT      = JPNT + 1
@@ -1081,6 +1089,8 @@ C
 C
 C***********************************************************************
 C
+      implicit none
+
         INTEGER             NSUPER
         INTEGER             LINDX(*)      , XSUPER(*)
         INTEGER             XLINDX(*)     , XLNZ(*)
@@ -1107,7 +1117,7 @@ C       ------------------------
             DO  200  JCOL = FJCOL, LJCOL
                 IXSTOP    = XLNZ(JCOL+1) - 1
 
-                IF(RHS(JCOL) .NE. 0.D0) THEN
+                IF (abs(RHS(JCOL)) .GT. 0.D0) THEN
                    T         = RHS(JCOL)/LNZ(IXSTRT)
                    RHS(JCOL) = T
                    IPNT      = JPNT + 1
@@ -1118,7 +1128,7 @@ CDIR$           IVDEP
                       IPNT   = IPNT + 1
  100               CONTINUE
                 ENDIF
-                
+
                 IXSTRT = IXSTOP + 1
                 JPNT   = JPNT + 1
   200       CONTINUE
@@ -1140,11 +1150,11 @@ C       -------------------------
 CDIR$           IVDEP
                 DO  400  IX = IXSTRT+1, IXSTOP
                     I    = LINDX(IPNT)
-                    IF(RHS(I) .NE. 0.D0) T = T - LNZ(IX)*RHS(I)
+                    IF(abs(RHS(I)) .GT. 0.D0) T = T - LNZ(IX)*RHS(I)
                     IPNT = IPNT + 1
   400           CONTINUE
 
-                IF(T .NE. 0.D0) THEN
+                IF (abs(T) .GT. 0.D0) THEN
                    RHS(JCOL) = T/LNZ(IXSTRT)
                 ELSE
                    RHS(JCOL) = 0.D0
@@ -1179,12 +1189,12 @@ C***********************************************************************
 C***********************************************************************
 C
 C   PURPOSE:
-C       TO DETERMINE A BINARY TREE REPRESENTATION OF THE ELIMINATION 
+C       TO DETERMINE A BINARY TREE REPRESENTATION OF THE ELIMINATION
 C       TREE, FOR WHICH EVERY "LAST CHILD" HAS THE MAXIMUM POSSIBLE
-C       COLUMN NONZERO COUNT IN THE FACTOR.  THE RETURNED REPRESENTATION 
-C       WILL BE GIVEN BY THE FIRST-SON AND BROTHER VECTORS.  THE ROOT OF 
+C       COLUMN NONZERO COUNT IN THE FACTOR.  THE RETURNED REPRESENTATION
+C       WILL BE GIVEN BY THE FIRST-SON AND BROTHER VECTORS.  THE ROOT OF
 C       THE BINARY TREE IS ALWAYS NEQNS.
-C 
+C
 C   INPUT PARAMETERS:
 C       NEQNS           -   NUMBER OF EQUATIONS.
 C       PARENT          -   THE PARENT VECTOR OF THE ELIMINATION TREE.
@@ -1204,6 +1214,7 @@ C
       SUBROUTINE  BTREE2 (  NEQNS , PARENT, COLCNT, FSON  , BROTHR,
      &                      LSON    )
 C
+      implicit none
 C***********************************************************************
 C
         INTEGER             BROTHR(*)     , COLCNT(*)     ,
@@ -1268,7 +1279,7 @@ C
 C   Version:        0.3
 C   Last modified:  December 27, 1994
 C   Authors:        Esmond G. Ng and Barry W. Peyton
-C                   
+C
 C   Modified by RF:   Eliminated the  MMPYN, SMXPY as arguments
 C
 C   Mathematical Sciences Section, Oak Ridge National Laboratoy
@@ -1300,7 +1311,7 @@ C        X(*)   - ON OUTPUT, CONTAINS THE FACTORED COLUMNS OF
 C                 THE SUPERNODE.
 C        IFLAG  - UNCHANGED IF THERE IS NO ERROR.
 C                 =1 IF NONPOSITIVE DIAGONAL ENTRY IS ENCOUNTERED.
-c              RF: removed! 
+c              RF: removed!
 C
 C***********************************************************************
 C
@@ -1309,6 +1320,7 @@ c     &                      IFLAG )
 C
 C***********************************************************************
 C
+      implicit none
 C     -----------
 C     PARAMETERS.
 C     -----------
@@ -1381,9 +1393,9 @@ C***********************************************************************
 C***********************************************************************
 C
 C   PURPOSE:
-C       REARRANGE THE CHILDREN OF EACH VERTEX SO THAT THE LAST ONE 
-C       MAXIMIZES (AMONG THE CHILDREN) THE NUMBER OF NONZEROS IN THE 
-C       CORRESPONDING COLUMN OF L.  ALSO DETERMINE AN NEW POSTORDERING 
+C       REARRANGE THE CHILDREN OF EACH VERTEX SO THAT THE LAST ONE
+C       MAXIMIZES (AMONG THE CHILDREN) THE NUMBER OF NONZEROS IN THE
+C       CORRESPONDING COLUMN OF L.  ALSO DETERMINE AN NEW POSTORDERING
 C       BASED ON THE STRUCTURE OF THE MODIFIED ELIMINATION TREE.
 C
 C   INPUT PARAMETERS:
@@ -1418,8 +1430,8 @@ C
 C***********************************************************************
 C
         INTEGER             BROTHR(*)     ,
-     &                      COLCNT(*)     , FSON(*)       , 
-     &                      INVP(*)       , INVPOS(*)     , 
+     &                      COLCNT(*)     , FSON(*)       ,
+     &                      INVP(*)       , INVPOS(*)     ,
      &                      PARENT(*)     , PERM(*)
 C
         INTEGER             NEQNS
@@ -1427,19 +1439,19 @@ C
 C***********************************************************************
 C
 C       ----------------------------------------------------------
-C       COMPUTE A BINARY REPRESENTATION OF THE ELIMINATION TREE, 
-C       SO THAT EACH "LAST CHILD" MAXIMIZES AMONG ITS SIBLINGS THE 
+C       COMPUTE A BINARY REPRESENTATION OF THE ELIMINATION TREE,
+C       SO THAT EACH "LAST CHILD" MAXIMIZES AMONG ITS SIBLINGS THE
 C       NUMBER OF NONZEROS IN THE CORRESPONDING COLUMNS OF L.
 C       ----------------------------------------------------------
-        CALL  BTREE2  ( NEQNS , PARENT, COLCNT, FSON  , BROTHR, 
+        CALL  BTREE2  ( NEQNS , PARENT, COLCNT, FSON  , BROTHR,
      &                  INVPOS                                  )
 C
 C       ----------------------------------------------------
-C       POSTORDER THE ELIMINATION TREE (USING THE NEW BINARY  
-C       REPRESENTATION.  
+C       POSTORDER THE ELIMINATION TREE (USING THE NEW BINARY
+C       REPRESENTATION.
 C       ----------------------------------------------------
-        CALL  EPOST2  ( NEQNS , FSON  , BROTHR, INVPOS, PARENT, 
-     &                  COLCNT, PERM                            ) 
+        CALL  EPOST2  ( NEQNS , FSON  , BROTHR, INVPOS, PARENT,
+     &                  COLCNT, PERM                            )
 C
 C       --------------------------------------------------------
 C       COMPOSE THE ORIGINAL ORDERING WITH THE NEW POSTORDERING.
@@ -1471,7 +1483,7 @@ C        N - LENGTH OF THE VECTOR X.
 C        A - SCALAR MULIPLIER.
 C        X - VECTOR TO BE SCALED.
 C
-C     OUTPUT PARAMETERS - 
+C     OUTPUT PARAMETERS -
 C        X - REPLACED BY THE SCALED VECTOR, AX.
 C
 C***********************************************************************
@@ -1514,9 +1526,9 @@ C***********************************************************************
 C***********************************************************************
 C
 C   PURPOSE:
-C       BASED ON THE BINARY REPRESENTATION (FIRST-SON,BROTHER) OF THE 
+C       BASED ON THE BINARY REPRESENTATION (FIRST-SON,BROTHER) OF THE
 C       ELIMINATION TREE, A POSTORDERING IS DETERMINED. THE
-C       CORRESPONDING PARENT AND COLCNT VECTORS ARE ALSO MODIFIED TO 
+C       CORRESPONDING PARENT AND COLCNT VECTORS ARE ALSO MODIFIED TO
 C       REFLECT THE REORDERING.
 C
 C   INPUT PARAMETERS:
@@ -1543,8 +1555,8 @@ C
 C
 C***********************************************************************
 C
-        INTEGER           BROTHR(*)     , COLCNT(*)     , 
-     &                      FSON(*)       , INVPOS(*)     , 
+        INTEGER           BROTHR(*)     , COLCNT(*)     ,
+     &                      FSON(*)       , INVPOS(*)     ,
      &                      PARENT(*)     , STACK(*)
 C
         INTEGER           ROOT
@@ -1987,9 +1999,9 @@ C
 C       ----------------
 C       LOCAL VARIABLES.
 C       ----------------
-        INTEGER             HINBR , IFDESC, J     , JSTOP , JSTRT , 
-     &                      K     , LAST1 , LAST2 , LCA   , LFLAG , 
-     &                      LOWNBR, OLDNBR, PARENT, PLEAF , TEMP  , 
+        INTEGER             HINBR , IFDESC, J     , JSTOP , JSTRT ,
+     &                      K     , LAST1 , LAST2 , LCA   , LFLAG ,
+     &                      LOWNBR, OLDNBR, PARENT, PLEAF , TEMP  ,
      &                      XSUP
 C
 C***********************************************************************
@@ -2045,20 +2057,20 @@ C                       -------------------------
                         WEIGHT(LOWNBR) = WEIGHT(LOWNBR) + 1
                         PLEAF = PRVLF(HINBR)
 C                       -----------------------------------------
-C                       IF HINBR HAS NO PREVIOUS ``LOW NEIGHBOR'' 
+C                       IF HINBR HAS NO PREVIOUS ``LOW NEIGHBOR''
 C                       THEN ...
 C                       -----------------------------------------
                         IF  ( PLEAF .EQ. 0 )  THEN
 C                           -----------------------------------------
-C                           ... ACCUMULATE LOWNBR-->HINBR PATH LENGTH 
+C                           ... ACCUMULATE LOWNBR-->HINBR PATH LENGTH
 C                               IN ROWCNT(HINBR).
 C                           -----------------------------------------
                             ROWCNT(HINBR) = ROWCNT(HINBR) +
      &                                  LEVEL(LOWNBR) - LEVEL(HINBR)
                         ELSE
 C                           -----------------------------------------
-C                           ... OTHERWISE, LCA <-- FIND(PLEAF), WHICH 
-C                               IS THE LEAST COMMON ANCESTOR OF PLEAF 
+C                           ... OTHERWISE, LCA <-- FIND(PLEAF), WHICH
+C                               IS THE LEAST COMMON ANCESTOR OF PLEAF
 C                               AND LOWNBR.
 C                               (PATH HALVING.)
 C                           -----------------------------------------
@@ -2074,7 +2086,7 @@ C                           -----------------------------------------
                                     GO TO 300
                                 ENDIF
 C                           -------------------------------------
-C                           ACCUMULATE PLEAF-->LCA PATH LENGTH IN 
+C                           ACCUMULATE PLEAF-->LCA PATH LENGTH IN
 C                           ROWCNT(HINBR).
 C                           DECREMENT WEIGHT(LCA).
 C                           -------------------------------------
@@ -2141,7 +2153,7 @@ C   PURPOSE:
 C       THIS SUBROUTINE DETERMINES A FINE PARTITIONING OF SUPERNODES
 C       WHEN THERE IS A CACHE AVAILABLE ON THE MACHINE.  THE FINE
 C       PARTITIONING IS CHOSEN SO THAT DATA RE-USE IS MAXIMIZED.
-C       
+C
 C   INPUT PARAMETERS:
 C       NEQNS           -   NUMBER OF EQUATIONS.
 C       NSUPER          -   NUMBER OF SUPERNODES.
@@ -2173,8 +2185,8 @@ C
 C       ----------------
 C       LOCAL VARIABLES.
 C       ----------------
-        INTEGER         CACHE , CURCOL, FSTCOL, HEIGHT, KCOL  , 
-     1                  KSUP  , LSTCOL, NCOLS , NXTBLK, USED  , 
+        INTEGER         CACHE , CURCOL, FSTCOL, HEIGHT, KCOL  ,
+     1                  KSUP  , LSTCOL, NCOLS , NXTBLK, USED  ,
      1                  WIDTH
 C
 C *******************************************************************
@@ -2208,7 +2220,7 @@ C           -----------------------
             WIDTH = LSTCOL - FSTCOL + 1
             NXTBLK = FSTCOL
 C           --------------------------------------
-C           ... UNTIL ALL COLUMNS OF THE SUPERNODE 
+C           ... UNTIL ALL COLUMNS OF THE SUPERNODE
 C               HAVE BEEN PROCESSED ...
 C           --------------------------------------
             CURCOL = FSTCOL - 1
@@ -2230,7 +2242,7 @@ C               -------------------------------------------
 C
 C               --------------------------------------
 C               ... WHILE THE CACHE IS NOT FILLED AND
-C                   THERE ARE COLUMNS OF THE SUPERNODE 
+C                   THERE ARE COLUMNS OF THE SUPERNODE
 C                   REMAINING TO BE PROCESSED ...
 C               --------------------------------------
   300           CONTINUE
@@ -2246,7 +2258,7 @@ C                   --------------------------------
                     GO TO 300
                 ENDIF
 C               -------------------------------------
-C               ... RECORD THE NUMBER OF COLUMNS THAT 
+C               ... RECORD THE NUMBER OF COLUMNS THAT
 C                   FILLED THE CACHE.
 C               -------------------------------------
                 SPLIT(NXTBLK) = NCOLS
@@ -2290,7 +2302,7 @@ C       TMPSIZ          -   SIZE OF WORKING STORAGE REQUIRED BY BLKFCT.
 C
 C***********************************************************************
 C
-        SUBROUTINE  FNTSIZ ( NSUPER, XSUPER, SNODE , XLINDX, 
+        SUBROUTINE  FNTSIZ ( NSUPER, XSUPER, SNODE , XLINDX,
      &                       LINDX , TMPSIZ  )
 C
 C***********************************************************************
@@ -2299,8 +2311,8 @@ C
         INTEGER     XLINDX(*)       , XSUPER(*)
         INTEGER     LINDX (*)       , SNODE (*)
 C
-        INTEGER     BOUND , CLEN  , CURSUP, I     , IBEGIN, IEND  , 
-     &              KSUP  , LENGTH, NCOLS , NXTSUP, 
+        INTEGER     BOUND , CLEN  , CURSUP, I     , IBEGIN, IEND  ,
+     &              KSUP  , LENGTH, NCOLS , NXTSUP,
      &              TSIZE , WIDTH
 C
 C***********************************************************************
@@ -2330,14 +2342,14 @@ C       ----------------------------------------
                         WIDTH = WIDTH + 1
                         IF  ( I .EQ. IEND )  THEN
                             IF  ( CLEN .GT. LENGTH )  THEN
-                                TSIZE = LENGTH * WIDTH - 
+                                TSIZE = LENGTH * WIDTH -
      &                                  (WIDTH - 1) * WIDTH / 2
                                 TMPSIZ = MAX ( TSIZE , TMPSIZ )
                             ENDIF
                         ENDIF
                     ELSE
                         IF  ( CLEN .GT. LENGTH )  THEN
-                            TSIZE = LENGTH * WIDTH - 
+                            TSIZE = LENGTH * WIDTH -
      &                              (WIDTH - 1) * WIDTH / 2
                             TMPSIZ = MAX ( TSIZE , TMPSIZ )
                         ENDIF
@@ -2372,13 +2384,13 @@ C
 C   PURPOSE:
 C       THIS SUBROUTINE IS THE FIRST OF TWO ROUTINES FOR FINDING A
 C       MAXIMAL SUPERNODE PARTITION.  IT RETURNS ONLY THE NUMBER OF
-C       SUPERNODES NSUPER AND THE SUPERNODE MEMBERSHIP VECTOR SNODE(*), 
-C       WHICH IS OF LENGTH NEQNS.  THE VECTORS OF LENGTH NSUPER ARE 
+C       SUPERNODES NSUPER AND THE SUPERNODE MEMBERSHIP VECTOR SNODE(*),
+C       WHICH IS OF LENGTH NEQNS.  THE VECTORS OF LENGTH NSUPER ARE
 C       COMPUTED SUBSEQUENTLY BY THE COMPANION ROUTINE FSUP2.
 C
 C   METHOD AND ASSUMPTIONS:
-C       THIS ROUTINE USES THE ELIMINATION TREE AND THE FACTOR COLUMN 
-C       COUNTS TO COMPUTE THE SUPERNODE PARTITION; IT ALSO ASSUMES A 
+C       THIS ROUTINE USES THE ELIMINATION TREE AND THE FACTOR COLUMN
+C       COUNTS TO COMPUTE THE SUPERNODE PARTITION; IT ALSO ASSUMES A
 C       POSTORDERING OF THE ELIMINATION TREE.
 C
 C   INPUT PARAMETERS:
@@ -2386,7 +2398,7 @@ C       (I) NEQNS       -   NUMBER OF EQUATIONS.
 C       (I) ETPAR(*)    -   ARRAY OF LENGTH NEQNS, CONTAINING THE
 C                           ELIMINATION TREE OF THE POSTORDERED MATRIX.
 C       (I) COLCNT(*)   -   ARRAY OF LENGTH NEQNS, CONTAINING THE
-C                           FACTOR COLUMN COUNTS: I.E., THE NUMBER OF 
+C                           FACTOR COLUMN COUNTS: I.E., THE NUMBER OF
 C                           NONZERO ENTRIES IN EACH COLUMN OF L
 C                           (INCLUDING THE DIAGONAL ENTRY).
 C
@@ -2457,9 +2469,9 @@ C***********************************************************************
 C
 C   PURPOSE:
 C       THIS SUBROUTINE IS THE SECOND OF TWO ROUTINES FOR FINDING A
-C       MAXIMAL SUPERNODE PARTITION.  IT'S SOLE PURPOSE IS TO 
+C       MAXIMAL SUPERNODE PARTITION.  IT'S SOLE PURPOSE IS TO
 C       CONSTRUCT THE NEEDED VECTOR OF LENGTH NSUPER: XSUPER(*).  THE
-C       FIRST ROUTINE FSUP1 COMPUTES THE NUMBER OF SUPERNODES AND THE 
+C       FIRST ROUTINE FSUP1 COMPUTES THE NUMBER OF SUPERNODES AND THE
 C       SUPERNODE MEMBERSHIP VECTOR SNODE(*), WHICH IS OF LENGTH NEQNS.
 C
 C
@@ -2490,7 +2502,7 @@ C       -----------
 C       PARAMETERS.
 C       -----------
         INTEGER             NEQNS , NSUPER
-        INTEGER             SNODE(*)      , 
+        INTEGER             SNODE(*)      ,
      &                      XSUPER(*)
 C
 C       ----------------
@@ -2710,7 +2722,7 @@ C        LINDX  - LIST OF GLOBAL INDICES.
 C        INDMAP - INDEXED BY GLOBAL INDICES, IT CONTAINS THE
 C                 REQUIRED RELATIVE INDICES.
 C
-C     OUTPUT PARAMETERS - 
+C     OUTPUT PARAMETERS -
 C        RELIND - LIST RELATIVE INDICES.
 C
 C***********************************************************************
@@ -2722,7 +2734,7 @@ C
 C     -----------
 C     PARAMETERS.
 C     -----------
-      INTEGER             KLEN  
+      INTEGER             KLEN
       INTEGER             INDMAP(*), LINDX (*), RELIND(*)
 C
 C     ----------------
@@ -2733,7 +2745,7 @@ C
 C***********************************************************************
 C
 CDIR$ IVDEP
-      DO  100  I = 1, KLEN  
+      DO  100  I = 1, KLEN
           RELIND(I) = INDMAP(LINDX(I))
   100 CONTINUE
       RETURN
@@ -2894,21 +2906,21 @@ C***********************************************************************
 C
 C     PURPOSE - THIS ROUTINE COMPUTES THE SECOND INDEX VECTOR
 C               USED TO IMPLEMENT THE DOUBLY-INDIRECT SAXPY-LIKE
-C               LOOPS THAT ALLOW US TO ACCUMULATE UPDATE 
+C               LOOPS THAT ALLOW US TO ACCUMULATE UPDATE
 C               COLUMNS DIRECTLY INTO FACTOR STORAGE.
 C
 C     INPUT PARAMETERS -
 C        JLEN   - LENGTH OF THE FIRST COLUMN OF THE SUPERNODE,
 C                 INCLUDING THE DIAGONAL ENTRY.
-C        LINDX  - THE OFF-DIAGONAL ROW INDICES OF THE SUPERNODE, 
+C        LINDX  - THE OFF-DIAGONAL ROW INDICES OF THE SUPERNODE,
 C                 I.E., THE ROW INDICES OF THE NONZERO ENTRIES
 C                 LYING BELOW THE DIAGONAL ENTRY OF THE FIRST
 C                 COLUMN OF THE SUPERNODE.
 C
-C     OUTPUT PARAMETERS - 
+C     OUTPUT PARAMETERS -
 C        INDMAP - THIS INDEX VECTOR MAPS EVERY GLOBAL ROW INDEX
-C                 OF NONZERO ENTRIES IN THE FIRST COLUMN OF THE 
-C                 SUPERNODE TO ITS POSITION IN THE INDEX LIST 
+C                 OF NONZERO ENTRIES IN THE FIRST COLUMN OF THE
+C                 SUPERNODE TO ITS POSITION IN THE INDEX LIST
 C                 RELATIVE TO THE LAST INDEX IN THE LIST.  MORE
 C                 PRECISELY, IT GIVES THE DISTANCE OF EACH INDEX
 C                 FROM THE LAST INDEX IN THE LIST.
@@ -3046,7 +3058,7 @@ C            -----------------------------------------------------
                          else
                             GO TO 500
                          end if
-                         
+
   500                    CONTINUE
                          IF  ( MARKER(NODE) .GE. TAG  .OR.
      1                         DFORW(NODE) .LT. 0 )  GO TO 800
@@ -3088,7 +3100,7 @@ C        --------------------------------------------------------
                  else
                      GO TO 1200
                  end if
-                 
+
  1200            CONTINUE
 C                --------------------------------------------
 C                IF RNODE IS IN THE DEGREE LIST STRUCTURE ...
@@ -3405,7 +3417,7 @@ C            ---------------------------------------------
                  DO  700  I = ISTRT, ISTOP
                      ENODE = ADJNCY(I)
                      LINK = - ENODE
-                     
+
                      if ( ENODE < 0 )  then
                            GO TO 400
                         else if ( ENODE == 0 ) then
@@ -3550,7 +3562,7 @@ C                                    -------------------------------
                                      DO  1900  J = JSTRT, JSTOP
                                          NODE = ADJNCY(J)
                                          LINK = - NODE
-C                                       
+C
                                          if ( NODE < 0 )  then
                                             GO TO 1700
                                          else if ( NODE == 0 ) then
@@ -3729,7 +3741,7 @@ C
         INTEGER               I     , J     , K     , QQ
         INTEGER               I1    , I2    , I3    , I4    , I5    ,
      &                        I6    , I7    , I8
-        INTEGER               IYBEG , IYBEG1, IYBEG2, LENY  , MM    
+        INTEGER               IYBEG , IYBEG1, IYBEG2, LENY  , MM
         DOUBLE PRECISION      A1    , A2    , A3    , A4    , A5    ,
      &                        A6    , A7    , A8    , A9    , A10   ,
      &                        A11   , A12   , A13   , A14   , A15   ,
@@ -3758,9 +3770,9 @@ CDIR$   IVDEP
            LENY = LENY - 2
            MM = MM - 2
         end do
-C       
+C
 C       -------------------------------------------------------
-C       UPDATE TWO COLUMNS OF Y AT A TIME,  EXCEPT THE DIAGONAL 
+C       UPDATE TWO COLUMNS OF Y AT A TIME,  EXCEPT THE DIAGONAL
 C       ELEMENT.
 C       NOTE: THE DIAGONAL ELEMENT OF THE ODD COLUMN HAS
 C             BEEN COMPUTED, SO WE COMPUTE THE SAME NUMBER OF
@@ -3769,11 +3781,11 @@ C       -------------------------------------------------------
 C
         MM = M
         IYBEG = 1
-        LENY = LDY - 1 
-C         
+        LENY = LDY - 1
+C
         do  J = 1, QQ-1, 2
 C
-            IYBEG1 = IYBEG 
+            IYBEG1 = IYBEG
             IYBEG2 = IYBEG + LENY
 C
             do  K = 1, N-7, 8
@@ -3808,11 +3820,11 @@ C
                 A16 = X(I8+1)
 C
                 Y(IYBEG1+1) =  Y(IYBEG1+1) -
-     &              A1*A9 - A2*A10 - A3*A11 - A4*A12 - A5*A13 - 
+     &              A1*A9 - A2*A10 - A3*A11 - A4*A12 - A5*A13 -
      &              A6*A14 - A7*A15 - A8*A16
 C
                 Y(IYBEG2+1) =  Y(IYBEG2+1) -
-     &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 - 
+     &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 -
      &              A14*A14 - A15*A15 - A16*A16
 C
                 do  I = 2, MM-1
@@ -3840,14 +3852,14 @@ C
                    Y1 = Y1 - B7 * A7
                    B8 = X(I8+I)
                    Y2 = Y2 - B7 * A15
-                   Y1 = Y1 - B8 * A8       
+                   Y1 = Y1 - B8 * A8
                    Y(IYBEG1+I) = Y1
                    Y2 =  Y2 - B8 * A16
-                   Y(IYBEG2+I) = Y2               
+                   Y(IYBEG2+I) = Y2
                 end do
 C
              end do
-C     
+C
 C           -----------------------------
 C           BOUNDARY CODE FOR THE K LOOP.
 C           -----------------------------
@@ -3871,7 +3883,7 @@ C
             GO TO 500
          CASE DEFAULT
             GO TO 2000
-         END SELECT           
+         END SELECT
 C
   500       CONTINUE
 C
@@ -3886,14 +3898,14 @@ C
                 I5 = XPNT(K+5) - MM
                 I6 = XPNT(K+6) - MM
                 I7 = XPNT(K+7) - MM
-                A1 = X(I1) 
-                A2 = X(I2) 
-                A3 = X(I3) 
-                A4 = X(I4) 
-                A5 = X(I5) 
-                A6 = X(I6) 
-                A7 = X(I7) 
-                A9  = X(I1+1) 
+                A1 = X(I1)
+                A2 = X(I2)
+                A3 = X(I3)
+                A4 = X(I4)
+                A5 = X(I5)
+                A6 = X(I6)
+                A7 = X(I7)
+                A9  = X(I1+1)
                 A10 = X(I2+1)
                 A11 = X(I3+1)
                 A12 = X(I4+1)
@@ -3902,11 +3914,11 @@ C
                 A15 = X(I7+1)
 C
                 Y(IYBEG1+1) =  Y(IYBEG1+1) -
-     &              A1*A9 - A2*A10 - A3*A11 - A4*A12 - A5*A13 - 
+     &              A1*A9 - A2*A10 - A3*A11 - A4*A12 - A5*A13 -
      &              A6*A14 - A7*A15
 C
                 Y(IYBEG2+1) =  Y(IYBEG2+1) -
-     &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 - 
+     &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 -
      &              A14*A14 - A15*A15
 C
                 do  I = 2, MM-1
@@ -3934,7 +3946,7 @@ C
                    Y1 = Y1 - B7 * A7
                    Y(IYBEG1+I) = Y1
                    Y2 = Y2 - B7 * A15
-                   Y(IYBEG2+I) = Y2               
+                   Y(IYBEG2+I) = Y2
                 end do
 C
                 GO TO 2000
@@ -3965,11 +3977,11 @@ C
                 A14 = X(I6+1)
 C
                 Y(IYBEG1+1) =  Y(IYBEG1+1) -
-     &              A1*A9 - A2*A10 - A3*A11 - A4*A12 - A5*A13 - 
+     &              A1*A9 - A2*A10 - A3*A11 - A4*A12 - A5*A13 -
      &              A6*A14
 C
                 Y(IYBEG2+1) =  Y(IYBEG2+1) -
-     &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 - 
+     &              A9*A9 - A10*A10 - A11*A11 - A12*A12 - A13*A13 -
      &              A14*A14
 C
                 do  I = 2, MM-1
@@ -3994,7 +4006,7 @@ C
                    Y1 =  Y1 - B6 * A6
                    Y(IYBEG1+I) = Y1
                    Y2 =  Y2 - B6 * A14
-                   Y(IYBEG2+I) = Y2               
+                   Y(IYBEG2+I) = Y2
                 end do
 C
                 GO TO 2000
@@ -4046,7 +4058,7 @@ C
                     Y1 =  Y1 - B5 * A5
                     Y(IYBEG1+I) = Y1
                     Y2 =  Y2 - B5 * A13
-                    Y(IYBEG2+I) = Y2               
+                    Y(IYBEG2+I) = Y2
  1000           CONTINUE
 C
                 GO TO 2000
@@ -4092,7 +4104,7 @@ C
                     Y1 =  Y1 - B4 * A4
                     Y(IYBEG1+I) = Y1
                     Y2 =  Y2 - B4 * A12
-                    Y(IYBEG2+I) = Y2               
+                    Y(IYBEG2+I) = Y2
  1200           CONTINUE
 C
                 GO TO 2000
@@ -4132,30 +4144,30 @@ C
                     Y1 =  Y1 - B3 * A3
                     Y(IYBEG1+I) = Y1
                     Y2 =  Y2 - B3 * A11
-                    Y(IYBEG2+I) = Y2               
+                    Y(IYBEG2+I) = Y2
  1400           CONTINUE
 C
                 GO TO 2000
 C
  1500           CONTINUE
-C     
+C
 C     ---------------------------------
 C     TWO COLUMNS UPDATING TWO COLUMNS.
 C     ---------------------------------
-C     
+C
                 I1 = XPNT(K+1) - MM
                 I2 = XPNT(K+2) - MM
                 A1 = X(I1)
                 A2 = X(I2)
                 A9  = X(I1+1)
                 A10 = X(I2+1)
-C     
+C
                 Y(IYBEG1+1) =  Y(IYBEG1+1) -
      &               A1*A9 - A2*A10
-C     
+C
                 Y(IYBEG2+1) =  Y(IYBEG2+1) -
      &               A9*A9 - A10*A10
-C     
+C
                 do  I = 2, MM-1
                    Y1 = Y(IYBEG1+I)
                    B1 = X(I1+I)
@@ -4166,7 +4178,7 @@ C
                    Y1 =  Y1 - B2 * A2
                    Y(IYBEG1+I) = Y1
                    Y2 =  Y2 - B2 * A10
-                   Y(IYBEG2+I) = Y2               
+                   Y(IYBEG2+I) = Y2
                 end do
 C
                 GO TO 2000
@@ -4176,17 +4188,17 @@ C
 C               --------------------------------
 C               ONE COLUMN UPDATING TWO COLUMNS.
 C               --------------------------------
-C     
+C
             I1 = XPNT(K+1) - MM
             A1 = X(I1)
             A9  = X(I1+1)
-C     
+C
             Y(IYBEG1+1) =  Y(IYBEG1+1) -
      &           A1*A9
-C     
+C
             Y(IYBEG2+1) =  Y(IYBEG2+1) -
      &           A9*A9
-C     
+C
             do  I = 2, MM-1
                Y1 = Y(IYBEG1+I)
                B1 = X(I1+I)
@@ -4194,7 +4206,7 @@ C
                Y2 = Y(IYBEG2+I)
                Y(IYBEG1+I) = Y1
                Y2 =  Y2 - B1 * A9
-               Y(IYBEG2+I) = Y2               
+               Y(IYBEG2+I) = Y2
             end do
 C
             GO TO 2000
@@ -4321,7 +4333,7 @@ C        XPNT   - XPNT(J+1) POINTS ONE LOCATION BEYOND THE END
 C                 OF THE J-TH COLUMN OF THE SUPERNODE.
 C        X(*)   - CONTAINS THE COLUMNS OF OF THE SUPERNODE TO
 C                 BE FACTORED.
-C     
+C
 C     EXTERNAL ROUTINE:
 C        SMXPY8 -  MATRIX-VECTOR MULTIPLY WITH 8 LOOP UNROLLING.
 C
@@ -4416,7 +4428,7 @@ C***********************************************************************
 C***********************************************************************
 C
 C   PURPOSE:
-C       THIS SUBROUTINE COMPUTES THE STORAGE REQUIREMENTS AND SETS UP 
+C       THIS SUBROUTINE COMPUTES THE STORAGE REQUIREMENTS AND SETS UP
 C       PRELIMINARY DATA STRUCTURES FOR THE SYMBOLIC FACTORIZATION.
 C
 C   NOTE:
@@ -4465,14 +4477,14 @@ C
      &                      INVP  , COLCNT, NNZL  , NSUB  , NSUPER,
      &                      SNODE , XSUPER, IWSIZ , IWORK , IFLAG   )
 C
-C       ----------- 
-C       PARAMETERS.  
 C       -----------
-        INTEGER             IFLAG , IWSIZ , NNZA  , NEQNS , NNZL  , 
+C       PARAMETERS.
+C       -----------
+        INTEGER             IFLAG , IWSIZ , NNZA  , NEQNS , NNZL  ,
      &                      NSUB  , NSUPER
         INTEGER             ADJNCY(NNZA)    , COLCNT(NEQNS)   ,
      &                      INVP(NEQNS)     , IWORK(7*NEQNS+3),
-     &                      PERM(NEQNS)     , SNODE(NEQNS)    , 
+     &                      PERM(NEQNS)     , SNODE(NEQNS)    ,
      &                      XADJ(NEQNS+1)   , XSUPER(NEQNS+1)
 C
 C***********************************************************************
@@ -4493,13 +4505,13 @@ C       ------------------------------------------
      &                  IWORK(1)              ,
      &                  IWORK(NEQNS+1)        ,
      &                  IWORK(2*NEQNS+1)      ,
-     &                  IWORK(3*NEQNS+1)        ) 
+     &                  IWORK(3*NEQNS+1)        )
 C
 C       ---------------------------------------------
 C       COMPUTE ROW AND COLUMN FACTOR NONZERO COUNTS.
 C       ---------------------------------------------
-        CALL  FCNTHN (  NEQNS , NNZA  , XADJ  , ADJNCY, PERM  , 
-     &                  INVP  , IWORK(1)      , SNODE , COLCNT, 
+        CALL  FCNTHN (  NEQNS , NNZA  , XADJ  , ADJNCY, PERM  ,
+     &                  INVP  , IWORK(1)      , SNODE , COLCNT,
      &                  NNZL  ,
      &                  IWORK(NEQNS+1)        ,
      &                  IWORK(2*NEQNS+1)      ,
@@ -4510,11 +4522,11 @@ C       ---------------------------------------------
      &                  IWORK(6*NEQNS+4)        )
 C
 C       ---------------------------------------------------------
-C       REARRANGE CHILDREN SO THAT THE LAST CHILD HAS THE MAXIMUM 
+C       REARRANGE CHILDREN SO THAT THE LAST CHILD HAS THE MAXIMUM
 C       NUMBER OF NONZEROS IN ITS COLUMN OF L.
 C       ---------------------------------------------------------
         CALL  CHORDR (  NEQNS , PERM  , INVP  ,
-     &                  COLCNT, 
+     &                  COLCNT,
      &                  IWORK(1)              ,
      &                  IWORK(NEQNS+1)        ,
      &                  IWORK(2*NEQNS+1)      ,
@@ -4523,7 +4535,7 @@ C
 C       ----------------
 C       FIND SUPERNODES.
 C       ----------------
-        CALL  FSUP1  (  NEQNS , IWORK(1)      , COLCNT, NSUB  , 
+        CALL  FSUP1  (  NEQNS , IWORK(1)      , COLCNT, NSUB  ,
      &                  NSUPER, SNODE                           )
         CALL  FSUP2  (  NEQNS , NSUPER,  SNODE,     XSUPER      )
 C
@@ -4546,7 +4558,7 @@ C***********************************************************************
 C
 C     PURPOSE - THIS ROUTINE PERFORMS A MATRIX-VECTOR MULTIPLY,
 C               Y = Y + AX, ASSUMING DATA STRUCTURES USED IN
-C               RECENTLY DEVELOPED SPARSE CHOLESKY CODES.  THE 
+C               RECENTLY DEVELOPED SPARSE CHOLESKY CODES.  THE
 C               '8' SIGNIFIES LEVEL 8 LOOP UNROLLING.
 C
 C     INPUT PARAMETERS -
@@ -4607,7 +4619,7 @@ C
          GO TO 700
       CASE DEFAULT
          GO TO 2000
-      END SELECT    
+      END SELECT
 C
   100 CONTINUE
       I1 = APNT(1+1) - M
@@ -4802,9 +4814,9 @@ C*************     SYMFC2 ..... SYMBOLIC FACTORIZATION    **************
 C***********************************************************************
 C***********************************************************************
 C
-C   PURPOSE: 
-C       THIS ROUTINE PERFORMS SUPERNODAL SYMBOLIC FACTORIZATION ON A 
-C       REORDERED LINEAR SYSTEM.  IT ASSUMES ACCESS TO THE COLUMNS 
+C   PURPOSE:
+C       THIS ROUTINE PERFORMS SUPERNODAL SYMBOLIC FACTORIZATION ON A
+C       REORDERED LINEAR SYSTEM.  IT ASSUMES ACCESS TO THE COLUMNS
 C       COUNTS, SUPERNODE PARTITION, AND SUPERNODAL ELIMINATION TREE
 C       ASSOCIATED WITH THE FACTOR MATRIX L.
 C
@@ -4831,7 +4843,7 @@ C       (I) NOFSUB      -   NUMBER OF SUBSCRIPTS TO BE STORED IN
 C                           LINDX(*).
 C
 C   OUTPUT PARAMETERS:
-C       (I) XLINDX      -   ARRAY OF LENGTH NEQNS+1, CONTAINING POINTERS 
+C       (I) XLINDX      -   ARRAY OF LENGTH NEQNS+1, CONTAINING POINTERS
 C                           INTO THE SUBSCRIPT VECTOR.
 C       (I) LINDX       -   ARRAY OF LENGTH MAXSUB, CONTAINING THE
 C                           COMPRESSED SUBSCRIPTS.
@@ -4839,12 +4851,12 @@ C       (I) XLNZ        -   COLUMN POINTERS FOR L.
 C       (I) FLAG        -   ERROR FLAG:
 C                               0 - NO ERROR.
 C                               1 - INCONSISTANCY IN THE INPUT.
-C       
+C
 C   WORKING PARAMETERS:
-C       (I) MRGLNK      -   ARRAY OF LENGTH NSUPER, CONTAINING THE 
+C       (I) MRGLNK      -   ARRAY OF LENGTH NSUPER, CONTAINING THE
 C                           CHILDREN OF EACH SUPERNODE AS A LINKED LIST.
-C       (I) RCHLNK      -   ARRAY OF LENGTH NEQNS+1, CONTAINING THE 
-C                           CURRENT LINKED LIST OF MERGED INDICES (THE 
+C       (I) RCHLNK      -   ARRAY OF LENGTH NEQNS+1, CONTAINING THE
+C                           CURRENT LINKED LIST OF MERGED INDICES (THE
 C                           "REACH" SET).
 C       (I) MARKER      -   ARRAY OF LENGTH NEQNS USED TO MARK INDICES
 C                           AS THEY ARE INTRODUCED INTO EACH SUPERNODE'S
@@ -4852,7 +4864,7 @@ C                           INDEX SET.
 C
 C***********************************************************************
 C
-      SUBROUTINE  SYMFC2 (  NEQNS , ADJLEN, XADJ  , ADJNCY, PERM  , 
+      SUBROUTINE  SYMFC2 (  NEQNS , ADJLEN, XADJ  , ADJNCY, PERM  ,
      &                      INVP  , COLCNT, NSUPER, XSUPER, SNODE ,
      &                      NOFSUB, XLINDX, LINDX , XLNZ  , MRGLNK,
      &                      RCHLNK, MARKER, FLAG    )
@@ -4865,8 +4877,8 @@ C       -----------
         INTEGER             ADJLEN, FLAG  , NEQNS , NOFSUB, NSUPER
         INTEGER             ADJNCY(ADJLEN), COLCNT(NEQNS) ,
      &                      INVP(NEQNS)   , MARKER(NEQNS) ,
-     &                      MRGLNK(NSUPER), LINDX(NOFSUB) , 
-     &                      PERM(NEQNS)   , RCHLNK(0:NEQNS), 
+     &                      MRGLNK(NSUPER), LINDX(NOFSUB) ,
+     &                      PERM(NEQNS)   , RCHLNK(0:NEQNS),
      &                      SNODE(NEQNS)  , XSUPER(NSUPER+1)
         INTEGER             XADJ(NEQNS+1) , XLINDX(NSUPER+1),
      &                      XLNZ(NEQNS+1)
@@ -4888,7 +4900,7 @@ C
 C       ---------------------------------------------------
 C       INITIALIZATIONS ...
 C           NZEND  : POINTS TO THE LAST USED SLOT IN LINDX.
-C           TAIL   : END OF LIST INDICATOR 
+C           TAIL   : END OF LIST INDICATOR
 C                    (IN RCHLNK(*), NOT MRGLNK(*)).
 C           MRGLNK : CREATE EMPTY LISTS.
 C           MARKER : "UNMARK" THE INDICES.
@@ -4913,7 +4925,7 @@ C       ---------------------------------------------------
         XLINDX(NSUPER+1) = POINT
 C
 C       ---------------------------
-C       FOR EACH SUPERNODE KSUP ... 
+C       FOR EACH SUPERNODE KSUP ...
 C       ---------------------------
         DO  1000  KSUP = 1, NSUPER
 C
@@ -4937,8 +4949,8 @@ C           IF KSUP HAS CHILDREN IN THE SUPERNODAL E-TREE ...
 C           -------------------------------------------------
             IF  ( JSUP .GT. 0 )  THEN
 C               ---------------------------------------------
-C               COPY THE INDICES OF THE FIRST CHILD JSUP INTO 
-C               THE LINKED LIST, AND MARK EACH WITH THE VALUE 
+C               COPY THE INDICES OF THE FIRST CHILD JSUP INTO
+C               THE LINKED LIST, AND MARK EACH WITH THE VALUE
 C               KSUP.
 C               ---------------------------------------------
                 JWIDTH = XSUPER(JSUP+1) - XSUPER(JSUP)
@@ -4984,7 +4996,7 @@ C                   ----------------------------------------
                 ENDIF
             ENDIF
 C           ---------------------------------------------------
-C           STRUCTURE OF A(*,FSTCOL) HAS NOT BEEN EXAMINED YET.  
+C           STRUCTURE OF A(*,FSTCOL) HAS NOT BEEN EXAMINED YET.
 C           "SORT" ITS STRUCTURE INTO THE LINKED LIST,
 C           INSERTING ONLY THOSE INDICES NOT ALREADY IN THE
 C           LIST.
@@ -5036,7 +5048,7 @@ C           --------------------------------------------
   800       CONTINUE
 C
 C           ---------------------------------------------------
-C           IF KSUP HAS A PARENT, INSERT KSUP INTO ITS PARENT'S 
+C           IF KSUP HAS A PARENT, INSERT KSUP INTO ITS PARENT'S
 C           "MERGE" LIST.
 C           ---------------------------------------------------
             IF  ( LENGTH .GT. WIDTH )  THEN
@@ -5114,7 +5126,7 @@ C
 !  Local Parameters:
 !
 !    Local, integer LEVEL_ROW(NODE_NUM+1), the index vector for a level
-!    structure.  The level structure is stored in the currently unused 
+!    structure.  The level structure is stored in the currently unused
 !    spaces in the permutation vector PERM.
 !
 !    Local, integer MASK(NODE_NUM), marks variables that have been numbered.
@@ -5133,13 +5145,13 @@ C
       integer num
       integer perm(node_num)
       integer root
-      
+
 
       do i=1,node_num
          mask(i) = 1
       enddo
       num = 1
-      
+
       do i = 1, node_num
 !
 !  For each masked connected component...
@@ -5148,18 +5160,18 @@ C
 
             root = i
 
-!     
+!
 !  Find a pseudo-peripheral node ROOT.  The level structure found by
 !  ROOT_FIND is stored starting at PERM(NUM).
 !
-            call root_find ( root, adj_num, adj_row, adj, mask,  
+            call root_find ( root, adj_num, adj_row, adj, mask,
      &       level_num,    level_row, perm(num), node_num )
-!     
+!
 !  RCM orders the component using ROOT as the starting node.
-!     
-            call rcm ( root, adj_num, adj_row, adj, mask, perm(num), 
+!
+            call rcm ( root, adj_num, adj_row, adj, mask, perm(num),
      &        iccsze,    node_num )
-            
+
             num = num + iccsze
 !
 !  We can stop once every node is in one of the connected components.
@@ -5167,7 +5179,7 @@ C
             if ( node_num .lt. num ) then
                return
             endif
-            
+
          endif
 
       enddo
@@ -5175,7 +5187,7 @@ C
       return
       end
 
-      subroutine rcm ( root, adj_num, adj_row, adj, mask, perm, iccsze, 
+      subroutine rcm ( root, adj_num, adj_row, adj, mask, perm, iccsze,
      &   node_num )
 
 !*****************************************************************************80
@@ -5225,9 +5237,9 @@ C
 !    Input, integer ADJ(ADJ_NUM), the adjacency structure.
 !    For each row, it contains the column indices of the nonzero entries.
 !
-!    Input/output, integer MASK(NODE_NUM), a mask for the nodes.  Only 
-!    those nodes with nonzero input mask values are considered by the 
-!    routine.  The nodes numbered by RCM will have their mask values 
+!    Input/output, integer MASK(NODE_NUM), a mask for the nodes.  Only
+!    those nodes with nonzero input mask values are considered by the
+!    routine.  The nodes numbered by RCM will have their mask values
 !    set to zero.
 !
 !    Output, integer PERM(NODE_NUM), the RCM ordering.
@@ -5239,14 +5251,14 @@ C
 !
 !  Local Parameters:
 !
-!    Workspace, integer DEG(NODE_NUM), a temporary vector used to hold 
+!    Workspace, integer DEG(NODE_NUM), a temporary vector used to hold
 !    the degree of the nodes in the section graph specified by mask and root.
 !
       implicit none
-      
+
       integer adj_num
       integer node_num
-      
+
       integer adj(adj_num)
       integer adj_row(node_num+1)
       integer deg(node_num)
@@ -5267,10 +5279,10 @@ C
       integer node
       integer perm(node_num)
       integer root
-!     
+!
 !  Find the degrees of the nodes in the component specified by MASK and ROOT.
 !
-      call degree ( root, adj_num, adj_row, adj, mask, deg, iccsze, 
+      call degree ( root, adj_num, adj_row, adj, mask, deg, iccsze,
      &     perm, node_num )
 
       mask(root) = 0
@@ -5281,7 +5293,7 @@ C
 
       lvlend = 0
       lnbr = 1
-!     
+!
 !  LBEGIN and LVLEND point to the beginning and
 !  the end of the current level respectively.
 !
@@ -5289,7 +5301,7 @@ C
 
          lbegin = lvlend + 1
          lvlend = lnbr
-         
+
          do i = lbegin, lvlend
 !
 !  For each node in the current level...
@@ -5297,7 +5309,7 @@ C
             node = perm(i)
             jstrt = adj_row(node)
             jstop = adj_row(node+1) - 1
-!     
+!
 !  Find the unnumbered neighbors of NODE.
 !
 !  FNBR and LNBR point to the first and last neighbors
@@ -5316,7 +5328,7 @@ C
                end if
 
             end do
-!     
+!
 !  If no neighbors, skip to next node in this level.
 !
 cc            if ( lnbr .le. fnbr ) then
@@ -5334,7 +5346,7 @@ cc            end if
                   l = k
                   k = k + 1
                   nbr = perm(k)
-                  
+
                   do while ( fnbr .lt. l )
 
                      lperm = perm(l)
@@ -5345,16 +5357,16 @@ cc            end if
 
                      perm(l+1) = lperm
                      l = l - 1
-                  
+
                   end do
-                  
+
                   perm(l+1) = nbr
 
                end do
             end if
-            
+
          end do
-         
+
       end do
 !
 !  We now have the Cuthill-McKee ordering.  Reverse it.
@@ -5370,7 +5382,7 @@ cc            end if
 
       return
       end
-      subroutine root_find ( root, adj_num, adj_row, adj, mask, 
+      subroutine root_find ( root, adj_num, adj_row, adj, mask,
      & level_num,   level_row, level, node_num )
 
 !*****************************************************************************80
@@ -5443,13 +5455,13 @@ cc            end if
 !    Input, integer ADJ(ADJ_NUM), the adjacency structure.
 !    For each row, it contains the column indices of the nonzero entries.
 !
-!    Input, integer MASK(NODE_NUM), specifies a section subgraph.  Nodes 
+!    Input, integer MASK(NODE_NUM), specifies a section subgraph.  Nodes
 !    for which MASK is zero are ignored by FNROOT.
 !
 !    Output, integer LEVEL_NUM, is the number of levels in the level structure
 !    rooted at the node ROOT.
 !
-!    Output, integer LEVEL_ROW(NODE_NUM+1), LEVEL(NODE_NUM), the 
+!    Output, integer LEVEL_ROW(NODE_NUM+1), LEVEL(NODE_NUM), the
 !    level structure array pair containing the level structure found.
 !
 !    Input, integer NODE_NUM, the number of nodes.
@@ -5458,7 +5470,7 @@ cc            end if
 
       integer adj_num
       integer node_num
-      
+
       integer adj(adj_num)
       integer adj_row(node_num+1)
       integer iccsze
@@ -5480,7 +5492,7 @@ cc            end if
 !
 !  Determine the level structure rooted at ROOT.
 !
-      call level_set ( root, adj_num, adj_row, adj, mask, level_num, 
+      call level_set ( root, adj_num, adj_row, adj, mask, level_num,
      &     level_row, level, node_num )
 !
 !  Count the number of nodes in this level structure.
@@ -5494,7 +5506,7 @@ cc            end if
       if ( level_num .eq. 1 ) then
          return
       end if
-!     
+!
 !  Extreme case:
 !    A "line graph" 0--0--0--0--0 has every node in its only level.
 !    By chance, we've stumbled on the ideal root.
@@ -5509,7 +5521,7 @@ cc            end if
       do
 
          mindeg = iccsze
-         
+
          jstrt = level_row(level_num)
          root = level(jstrt)
 
@@ -5521,7 +5533,7 @@ cc            end if
                ndeg = 0
                kstrt = adj_row(node)
                kstop = adj_row(node+1) - 1
-               
+
                do k = kstrt, kstop
                   nabor = adj(k)
                   if ( 0 .lt. mask(nabor) ) then
@@ -5535,12 +5547,12 @@ cc            end if
                end if
 
             end do
-            
+
          end if
 !
 !  Generate the rooted level structure associated with this node.
 !
-         call level_set ( root, adj_num, adj_row, adj, mask, 
+         call level_set ( root, adj_num, adj_row, adj, mask,
      &        level_num2,   level_row, level, node_num )
 !
 !  If the number of levels did not increase, accept the new ROOT.
@@ -5557,13 +5569,13 @@ cc            end if
         if ( iccsze .le. level_num ) then
            exit
         end if
-        
+
       end do
-      
+
       return
       end
 
-      subroutine level_set ( root, adj_num, adj_row, adj, mask, 
+      subroutine level_set ( root, adj_num, adj_row, adj, mask,
      & level_num,   level_row, level, node_num )
 
 !*****************************************************************************80
@@ -5616,7 +5628,7 @@ cc            end if
 !    structure.  ROOT is in level 1.  The neighbors of ROOT
 !    are in level 2, and so on.
 !
-!    Output, integer LEVEL_ROW(NODE_NUM+1), LEVEL(NODE_NUM), the rooted 
+!    Output, integer LEVEL_ROW(NODE_NUM+1), LEVEL(NODE_NUM), the rooted
 !    level structure.
 !
 !    Input, integer NODE_NUM, the number of nodes.
@@ -5625,7 +5637,7 @@ cc            end if
 
       integer adj_num
       integer node_num
-      
+
       integer adj(adj_num)
       integer adj_row(node_num+1)
       integer i
@@ -5643,7 +5655,7 @@ cc            end if
       integer nbr
       integer node
       integer root
-      
+
       mask(root) = 0
       level(1) = root
       level_num = 0
@@ -5659,7 +5671,7 @@ cc            end if
          lvlend = iccsze
          level_num = level_num + 1
          level_row(level_num) = lbegin
-!     
+!
 !  Generate the next level by finding all the masked neighbors of nodes
 !  in the current level.
 !
@@ -5668,7 +5680,7 @@ cc            end if
             node = level(i)
             jstrt = adj_row(node)
             jstop = adj_row(node+1) - 1
-            
+
             do j = jstrt, jstop
 
                nbr = adj(j)
@@ -5678,9 +5690,9 @@ cc            end if
                   level(iccsze) = nbr
                   mask(nbr) = 0
                end if
-               
+
             end do
-            
+
          end do
 !
 !  Compute the current level width (the number of nodes encountered.)
@@ -5691,9 +5703,9 @@ cc            end if
          if ( lvsize .le. 0 ) then
             exit
          end if
-         
+
       end do
-      
+
       level_row(level_num+1) = lvlend + 1
 !
 !  Reset MASK to 1 for the nodes in the level structure.
@@ -5705,7 +5717,7 @@ cc            end if
       end
 
 
-      subroutine degree ( root, adj_num, adj_row, adj, mask, deg, 
+      subroutine degree ( root, adj_num, adj_row, adj, mask, deg,
      & iccsze, ls,  node_num )
 
 !*****************************************************************************80
@@ -5753,13 +5765,13 @@ cc            end if
 !    Output, integer ICCSIZE, the number of nodes in the connected component.
 !
 !    Output, integer LS(NODE_NUM), stores in entries 1 through ICCSIZE the nodes
-!    in the connected component, starting with ROOT, and proceeding 
+!    in the connected component, starting with ROOT, and proceeding
 !    by levels.
 !
 !    Input, integer NODE_NUM, the number of nodes.
 !
       implicit none
-      
+
       integer adj_num
       integer node_num
 
@@ -5780,7 +5792,7 @@ cc            end if
       integer nbr
       integer node
       integer root
-!     
+!
 !  The sign of ADJ_ROW(I) is used to indicate if node I has been considered.
       ls(1) = root
       adj_row(root) = -adj_row(root)
@@ -5816,16 +5828,16 @@ cc            end if
                      iccsze = iccsze + 1
                      ls(iccsze) = nbr
                   end if
-                  
+
                end if
 
             end do
 
             deg(node) = ideg
-            
+
          end do
 !
-!  Compute the current level width.    
+!  Compute the current level width.
          lvsize = iccsze - lvlend
 !
 !  If the current level width is nonzero, generate another level.
@@ -5840,6 +5852,6 @@ cc            end if
          node = ls(i)
          adj_row(node) = -adj_row(node)
       end do
-      
+
       return
       end

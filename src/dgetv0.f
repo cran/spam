@@ -125,9 +125,6 @@ c     %----------------------------------------------------%
 
       implicit none
 c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -160,18 +157,15 @@ c     %------------------------%
 c
       logical    first, inits, orth
       integer    idist, iseed(4), iter,  jj
-cm      integer    idist, iseed(4), iter, msglvl, jj
-      Double precision
+      Double     precision
      &           rnorm0
       save       first, iseed, inits, iter, orth, rnorm0
-cm      save       first, iseed, inits, iter, msglvl, orth, rnorm0
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
       external   dlarnv, dcopy, dgemv
-c      external   dlarnv, dcopy, dgemv, second
 c
 c     %--------------------%
 c     | External Functions |
@@ -218,9 +212,6 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-c         call second (t0)
-cm         msglvl = mgetv0
-c
          ierr   = 0
          iter   = 0
          first  = .FALSE.
@@ -245,9 +236,7 @@ c        | Force the starting vector into the range of OP to handle |
 c        | the generalized problem when B is possibly (singular).   |
 c        %----------------------------------------------------------%
 c
-c         call second (t2)
          if (bmat .eq. 'G') then
-            nopx = nopx + 1
             ipntr(1) = 1
             ipntr(2) = n + 1
             call dcopy (n, resid, 1, workd, 1)
@@ -268,21 +257,13 @@ c     %-----------------------------------------------%
 c
       if (orth)  go to 40
 c
-      if (bmat .eq. 'G') then
-c         call second (t3)
-cs         tmvopx = tmvopx + (t3 - t2)
-ct         tmvopx = 0.0
-      end if
-c
 c     %------------------------------------------------------%
 c     | Starting vector is now in the range of OP; r = OP*r; |
 c     | Compute B-norm of starting vector.                   |
 c     %------------------------------------------------------%
 c
-c      call second (t2)
       first = .TRUE.
       if (bmat .eq. 'G') then
-         nbx = nbx + 1
          call dcopy (n, workd(n+1), 1, resid, 1)
          ipntr(1) = n + 1
          ipntr(2) = 1
@@ -293,12 +274,6 @@ c      call second (t2)
       end if
 c
    20 continue
-c
-      if (bmat .eq. 'G') then
-c         call second (t3)
-cs         tmvbx = tmvbx + (t3 - t2)
-ct         tmvbx = 0.0
-      end if
 c
       first = .FALSE.
       if (bmat .eq. 'G') then
@@ -339,9 +314,7 @@ c     %----------------------------------------------------------%
 c     | Compute the B-norm of the orthogonalized starting vector |
 c     %----------------------------------------------------------%
 c
-c      call second (t2)
       if (bmat .eq. 'G') then
-         nbx = nbx + 1
          call dcopy (n, resid, 1, workd(n+1), 1)
          ipntr(1) = n + 1
          ipntr(2) = 1
@@ -354,12 +327,6 @@ c
    40 continue
 c
       if (bmat .eq. 'G') then
-c         call second (t3)
-c         tmvbx = tmvbx + (t3 - t2)
-ct         tmvbx = 0.0
-      end if
-c
-      if (bmat .eq. 'G') then
          rnorm = ddot (n, resid, 1, workd, 1)
          rnorm = sqrt(abs(rnorm))
       else if (bmat .eq. 'I') then
@@ -369,13 +336,6 @@ c
 c     %--------------------------------------%
 c     | Check for further orthogonalization. |
 c     %--------------------------------------%
-c
-c      if (msglvl .gt. 2) then
-c          call dvout (logfil, 1, rnorm0, ndigit,
-c     &                '_getv0: re-orthonalization ; rnorm0 is')
-c          call dvout (logfil, 1, rnorm, ndigit,
-c     &                '_getv0: re-orthonalization ; rnorm is')
-c      end if
 c
       if (rnorm .gt. 0.717*rnorm0) go to 50
 c
@@ -403,19 +363,7 @@ c
 c
    50 continue
 c
-c      if (msglvl .gt. 0) then
-c         call dvout (logfil, 1, rnorm, ndigit,
-c     &        '_getv0: B-norm of initial / restarted starting vector')
-c      end if
-c      if (msglvl .gt. 3) then
-c         call dvout (logfil, n, resid, ndigit,
-c     &        '_getv0: initial / restarted starting vector')
-c      end if
       ido = 99
-c
-c      call second (t1)
-cs      tgetv0 = tgetv0 + (t1 - t0)
-ct      tgetv0 = 0.0
 c
  9000 continue
       return

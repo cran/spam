@@ -3,8 +3,8 @@
       integer n, m, p, ja(*), ia(*)
       double precision  x(m,p), y(n,p), a(*)
 c-----------------------------------------------------------------------
-c Multiplies a sparse matrix by a full matrix using consecutive dot 
-c products, cf. subroutine amux from sparse kit. 
+c Multiplies a sparse matrix by a full matrix using consecutive dot
+c products, cf. subroutine amux from sparse kit.
 c Matrix A is stored in compressed sparse row storage.
 c
 c on entry:
@@ -45,9 +45,9 @@ c---------end-of-amuxmat------------------------------------------------
 c-----------------------------------------------------------------------
       end
 c
- 
+
       subroutine notzero (ja,ia,nrow,ncol,nnz,nz,jao,iao)
-c Return the structure of the zero entries in ra,ja,ia, in 
+c Return the structure of the zero entries in ra,ja,ia, in
 c  compressed sparse row format via rao, jao, iao.
 c INPUT:
 c     ja, ia -- sparse structure of the matrix A
@@ -87,10 +87,10 @@ c     colmn -- logical vector of length ncol
       end
 
 
-      subroutine setdiagmat (nrow, n, a, ja, ia, diag, iw) 
+      subroutine setdiagmat (nrow, n, a, ja, ia, diag, iw)
       implicit none
       integer nrow, n
-      double precision a(*),  diag(n) 
+      double precision a(*),  diag(n)
       integer ja(*), ia(nrow+1), iw(nrow)
 c-----------------------------------------------------------------------
 c Sets the diagonal entries of a sparse matrix
@@ -107,19 +107,19 @@ c
 c on return:
 c----------
 c updated matrix A
-c iw    = iw contains the positions of the diagonal entries in the 
+c iw    = iw contains the positions of the diagonal entries in the
 c         output matrix. (i.e., a(iw(k)), ja(iw(k)), k=1,...n,
-c         are the values/column indices of the diagonal elements 
-c         of the output matrix. ). 
+c         are the values/column indices of the diagonal elements
+c         of the output matrix. ).
 c
 c Reinhard Furrer
 c-----------------------------------------------------------------
       logical insert
       integer i,j, k, k1, k2, icount
-     
+
 c
 c     get positions of diagonal elements in data structure.
-c     
+c
       do  11 i=1,n
          do 21 j= ia(i),ia(i+1)-1
             if (ja(j) .ge. i) then
@@ -130,35 +130,35 @@ c
             endif
  21      continue
  11   continue
-c     
+c
 c     count number of holes in diagonal and add diag(*) elements to
 c     valid diagonal entries.
-c     
+c
       icount = 0
       do 31 i=1, n
          if (iw(i) .eq. 0) then
             icount = icount+1
          else
-            a(iw(i)) = diag(i) 
+            a(iw(i)) = diag(i)
          endif
  31      continue
-c     
+c
 c     if no diagonal elements to insert return
-c     
+c
       if (icount .eq. 0) return
-c     
-c     shift the nonzero elements if needed, to allow for created 
-c     diagonal elements. 
-c     
-c     
+c
+c     shift the nonzero elements if needed, to allow for created
+c     diagonal elements.
+c
+c
 c     copy rows backward
-c     
-      do 5 i=nrow, 1, -1 
-c     
+c
+      do 5 i=nrow, 1, -1
+c
 c     go through  row ii
-c     
+c
          k1 = ia(i)
-         k2 = ia(i+1)-1 
+         k2 = ia(i+1)-1
 
          ia(i+1) = ia(i+1)+icount
 
@@ -167,10 +167,10 @@ c     iw(ii) equal to 0, means no diagonal element in a, we need to insert it
 c     test is thus true.
 
 c     no fill-in, only copying
-            do 4 k = k2,k1,-1 
+            do 4 k = k2,k1,-1
                ja(k+icount)=ja(k)
                a(k+icount)=a(k)
- 4          continue  
+ 4          continue
             iw(i)=-i
          else
             insert=.TRUE.
@@ -199,7 +199,7 @@ c     no fill-in, only copying
                      a(k+icount)=a(k)
                   endif
  6             continue
-c     in case there is only one element, larger than i, we still need to 
+c     in case there is only one element, larger than i, we still need to
 c     add the diagonal element
                if  (insert) then
                    ja(k+icount)=i
@@ -210,19 +210,19 @@ c     add the diagonal element
                    if (icount .eq. 0) return
                 endif
             endif
-         endif 
+         endif
  5    continue
       return
 c-----------------------------------------------------------------------
 c------------end-of-diagaddmat------------------------------------------
       end
-      subroutine diagaddmat (nrow, n, a, ja, ia, diag, iw) 
+      subroutine diagaddmat (nrow, n, a, ja, ia, diag, iw)
       implicit none
       integer nrow, n
-      double precision a(*),  diag(n) 
+      double precision a(*),  diag(n)
       integer ja(*), ia(nrow+1), iw(nrow)
 c-----------------------------------------------------------------------
-c Adds a diagonal matrix to a sparse matrix:  A = Diag + A 
+c Adds a diagonal matrix to a sparse matrix:  A = Diag + A
 c-----------------------------------------------------------------------
 c on entry:
 c ---------
@@ -236,19 +236,19 @@ c
 c on return:
 c----------
 c updated matrix A
-c iw    = iw contains the positions of the diagonal entries in the 
+c iw    = iw contains the positions of the diagonal entries in the
 c         output matrix. (i.e., a(iw(k)), ja(iw(k)), k=1,...n,
-c         are the values/column indices of the diagonal elements 
-c         of the output matrix. ). 
+c         are the values/column indices of the diagonal elements
+c         of the output matrix. ).
 c
 c Reinhard Furrer
 c-----------------------------------------------------------------
       logical insert
       integer i,j, k, k1, k2, icount
-     
+
 c
 c     get positions of diagonal elements in data structure.
-c     
+c
       do  11 i=1,n
          do 21 j= ia(i),ia(i+1)-1
             if (ja(j) .ge. i) then
@@ -259,35 +259,35 @@ c
             endif
  21      continue
  11   continue
-c     
+c
 c     count number of holes in diagonal and add diag(*) elements to
 c     valid diagonal entries.
-c     
+c
       icount = 0
       do 31 i=1, n
          if (iw(i) .eq. 0) then
             icount = icount+1
          else
-            a(iw(i)) = a(iw(i)) + diag(i) 
+            a(iw(i)) = a(iw(i)) + diag(i)
          endif
  31      continue
-c     
+c
 c     if no diagonal elements to insert return
-c     
+c
       if (icount .eq. 0) return
-c     
-c     shift the nonzero elements if needed, to allow for created 
-c     diagonal elements. 
-c     
-c     
+c
+c     shift the nonzero elements if needed, to allow for created
+c     diagonal elements.
+c
+c
 c     copy rows backward
-c     
-      do 5 i=nrow, 1, -1 
-c     
+c
+      do 5 i=nrow, 1, -1
+c
 c     go through  row ii
-c     
+c
          k1 = ia(i)
-         k2 = ia(i+1)-1 
+         k2 = ia(i+1)-1
 
          ia(i+1) = ia(i+1)+icount
 
@@ -296,10 +296,10 @@ c     iw(ii) equal to 0, means no diagonal element in a, we need to insert it
 c     test is thus true.
 
 c     no fill-in, only copying
-            do 4 k = k2,k1,-1 
+            do 4 k = k2,k1,-1
                ja(k+icount)=ja(k)
                a(k+icount)=a(k)
- 4          continue  
+ 4          continue
             iw(i)=-i
          else
             insert=.TRUE.
@@ -328,7 +328,7 @@ c     no fill-in, only copying
                      a(k+icount)=a(k)
                   endif
  6             continue
-c     in case there is only one element, larger than i, we still need to 
+c     in case there is only one element, larger than i, we still need to
 c     add the diagonal element
                if  (insert) then
                    ja(k+icount)=i
@@ -339,7 +339,7 @@ c     add the diagonal element
                    if (icount .eq. 0) return
                 endif
             endif
-         endif 
+         endif
  5    continue
       return
 c-----------------------------------------------------------------------
@@ -351,46 +351,46 @@ c-----------------------------------------------------------------------
       integer          nrow, ia(nrow+1)
       double precision a(*),  diag(nrow), scal
 c-----------------------------------------------------------------------
-c performs the matrix by matrix product A = Diag * A  (in place) 
+c performs the matrix by matrix product A = Diag * A  (in place)
 c (diamua from sparsekit provides more functionality)
 c-----------------------------------------------------------------------
 c on entry:
 c ---------
 c nrow	= integer. The row dimension of A
 c a, ia   = Matrix A in compressed sparse row format.
-c           (ja is not needed) 
-c 
+c           (ja is not needed)
+c
 c diag = diagonal matrix stored as a vector diag(1:n)
 c
 c on return:
 c----------
 c a, 	= resulting matrix A in compressed sparse row sparse format.
-c 
-c Notes: 
+c
+c Notes:
 c-------
 c     Reinhard Furrer 2007-06-21
-c	    
+c
 c-----------------------------------------------------------------
 c     local variables
       integer          ii, k, k1, k2
 
       do 1 ii=1,nrow
-c     
-c     normalize each row 
-c     
+c
+c     normalize each row
+c
          k1 = ia(ii)
          k2 = ia(ii+1)-1
-         scal = diag(ii) 
+         scal = diag(ii)
          do 2 k=k1, k2
             a(k) = a(k)*scal
  2       continue
  1    continue
-c     
+c
       return
 c----------end-of-diagmua------------------------------------------------
 c-----------------------------------------------------------------------
-      end 
-c----------------------------------------------------------------------- 
+      end
+c-----------------------------------------------------------------------
 
 c-----------------------------------------------------------------------
       subroutine getdiag (a,ja,ia,len,diag)
@@ -401,32 +401,32 @@ c-----------------------------------------------------------------------
 c-----------------------------------------------------------------------
 c This subroutine extracts the main diagonal.
 c (getdia from sparsekit provides more functionality)
-c----------------------------------------------------------------------- 
-c 
+c-----------------------------------------------------------------------
+c
 c on entry:
-c---------- 
+c----------
 c
 c len= min(nrow, ncol) = min dimension of the matrix a.
 c a,ja,ia = matrix stored in sorted compressed sparse row a,ja,ia,format
 c diag  = array of zeros.
 c
 c on return:
-c----------- 
+c-----------
 c diag  = array of length containing the wanted diagonal.
 c
-c Notes: 
+c Notes:
 c-------
 c     Reinhard Furrer 2006-11-02
 c----------------------------------------------------------------------c
 c     local variables
       integer i, k
-c     
+c
 c     extract  diagonal elements
-c     
+c
       do 1 i=1, len
          do k= ia(i),ia(i+1) -1
             if (ja(k) .ge. i) then
-c     we are at or beyond the diagonal. 
+c     we are at or beyond the diagonal.
                if (ja(k) .eq. i) then
                   diag(i)= a(k)
                endif
@@ -450,7 +450,7 @@ c     subtracts a sparse matrix from a full one
 c     algorithm is in-place, i.e. b is changed
 c
 c
-c Notes: 
+c Notes:
 c-------
 c     Reinhard Furrer 2006-09-21
 c-----------------------------------------------------------------------
@@ -476,7 +476,7 @@ c     subtracts a full matrix from a sparse one
 c     algorithm is in-place, i.e. b is changed
 c
 c
-c Notes: 
+c Notes:
 c-------
 c     Reinhard Furrer 2006-09-21
 c-----------------------------------------------------------------------
@@ -505,7 +505,7 @@ c     adds a sparse matrix to a full one
 c     algorithm is in-place, i.e. b is changed
 c
 c
-c Notes: 
+c Notes:
 c-------
 c     Reinhard Furrer 2006-09-21
 c-----------------------------------------------------------------------
@@ -526,9 +526,9 @@ c-----------------------------------------------------------------------
       end
 
       subroutine constructia(nrow,nir,ia,ir)
-c     
+c
 c     constructs from a regular row index vector a sparse ia vector.
-c     note that a regular column index vector corresponds to the 
+c     note that a regular column index vector corresponds to the
 c     sparse ja vector. for example:
 c         A[ir,jc] =>  A@ja = jc, A@ia = constructia(nrow,nir,ia,ir)$ia
 c
@@ -536,7 +536,7 @@ c     nrow: row dimension of A
 c     nir:  length of ir
 c     ir:   array of length nir+1!!!
 c
-c Notes: 
+c Notes:
 c-------
 c     _*Row indices have to be ordered!*_
 c
@@ -561,26 +561,26 @@ c-----------------------------------------------------------------------
       enddo
 
       ia(nrow+1)=nir+1
-      
+
       return
-      end   
+      end
 
 
- 
+
 
 
       subroutine disttospam(nrow,x,a,ja,ia,eps)
-      
+
       implicit none
       integer nrow, ia(nrow+1), ja(*)
       double precision x(*), a(*), eps
 c
-c     Convertion of an R dist object (removes zero entries as well). 
+c     Convertion of an R dist object (removes zero entries as well).
 c
 c On entry:
 c----------
 c     nrow    -- row dimension of the matrix
-c     x       -- elements of the dist object (is lower diagonal) 
+c     x       -- elements of the dist object (is lower diagonal)
 c                        n*(i-1) - i*(i-1)/2 + j-i  for i < j
 c
 c     a,ja,ia -- input matrix in CSR format
@@ -589,7 +589,7 @@ c On return:
 c-----------
 c     a,ja,ia -- cleaned matrix
 c
-c Notes: 
+c Notes:
 c-------
 c     Reinhard Furrer 2008-08-13
 c-----------------------------------------------------------------------
@@ -597,19 +597,19 @@ c
 c     Local
       integer i,j,k, tmp
 
-      
-      ia(1) = 1 
+
+      ia(1) = 1
       k = 1
       do i = 2, nrow
          ia(i) = k
-         do j=1 , i-1 
+         do j=1 , i-1
             tmp = nrow*(j-1)-j*(j-1)/2+i-j
             if (.not.(dabs(x(tmp)) .le. eps)) then
                ja(k) = j
                a(k) = x(tmp)
                k = k + 1
             endif
-            
+
          enddo
       enddo
 
@@ -642,7 +642,7 @@ c On return:
 c-----------
 c     c,jc,ic -- matrix with modified diag in CSR format
 c
-c Notes: 
+c Notes:
 c-------
 c     Reinhard Furrer 2006-10-30
 c-----------------------------------------------------------------------
@@ -651,7 +651,7 @@ c     Local
       double precision b(nrow)
       integer i,k, len, ib(nrow+1), jb(nrow)
 
-c     
+c
       len=0
       ib(1)=1
       do i=1,nrow
@@ -680,14 +680,14 @@ c
             endif
  15      continue
  10   continue
-      
+
       if (len .eq. 0) return
-c     
+c
 c     set nonexisiting elements.
-c     
+c
 
       call subass(nrow,ncol,a,ja,ia,b,jb,ib,c,jc,ic,cmax)
- 
+
       return
 c------------end of setdia----------------------------------------------
 c-----------------------------------------------------------------------
@@ -701,11 +701,11 @@ c-----------------------------------------------------------------------
       implicit none
       integer nrow,ncol,nzmax
       integer ja(*),jb(*),jc(*),ia(*),ib(*),ic(*)
-      double precision a(*), b(*), c(*) 
+      double precision a(*), b(*), c(*)
 
 c-----------------------------------------------------------------------
-c replaces the elements of A with those of B for matrices in sorted CSR 
-c format. we assume that each row is sorted with increasing column 
+c replaces the elements of A with those of B for matrices in sorted CSR
+c format. we assume that each row is sorted with increasing column
 c indices.
 c-----------------------------------------------------------------------
 c on entry:
@@ -715,16 +715,16 @@ c ncol  = integer. The column dimension of A and B.
 c
 c a,ja,ia,
 c b,jb,ib = Matrices A and B in compressed sparse row format with column
-c           entries sorted ascendly in each row   
+c           entries sorted ascendly in each row
 c
 c nzmax	= integer. The max length of the arrays c and jc.
-c 
+c
 c on return:
 c----------
 c c,jc,ic = resulting matrix C in compressed sparse row sparse format
-c           with entries sorted ascendly in each row. 
-c	    
-c Notes: 
+c           with entries sorted ascendly in each row.
+c
+c Notes:
 c-------
 c     Reinhard Furrer 2006-09-13, based on sparsekit2 subroutine aplb1
 c-----------------------------------------------------------------------
@@ -733,21 +733,21 @@ c     local variables
       integer i,j1,j2,ka,kb,kc,kamax,kbmax
 
       kc = 1
-      ic(1) = kc 
+      ic(1) = kc
 c
 c     looping over the rows:
       do 6 i=1, nrow
          ka = ia(i)
          kb = ib(i)
          kamax = ia(i+1)-1
-         kbmax = ib(i+1)-1 
- 5       continue 
+         kbmax = ib(i+1)-1
+ 5       continue
 
 c     If we have one or more entries then ka <= kamax
 c     If we do not have any entries in both A and B
-c     we will not enter the if clause. In which case 
+c     we will not enter the if clause. In which case
 c     we repeatedly copy ic(i+1) <- ic(i).
-         if (ka .le. kamax .or. kb .le. kbmax) then 
+         if (ka .le. kamax .or. kb .le. kbmax) then
 
 c     j1 and j2 are left hand pointers of the first entry
 c     of A and B. If no entry, they are set to ncol+1
@@ -756,17 +756,17 @@ c     of A and B. If no entry, they are set to ncol+1
             else
                j1 = ncol+1
             endif
-            if (kb .le. kbmax) then 
-               j2 = jb(kb)         
-            else 
+            if (kb .le. kbmax) then
+               j2 = jb(kb)
+            else
                j2 = ncol+1
             endif
-c     
+c
 c     Three cases:
 c       j1=j2: copy element of b in c, incr. all three pointers
 c       j1<j2: copy element of a in c, incr. a and c pointers
 c       j1>j2: copy element of b in c, incr. b and c pointers
-            if (j1 .eq. j2) then 
+            if (j1 .eq. j2) then
                c(kc) = b(kb)
                jc(kc) = j1
                ka = ka+1
@@ -792,11 +792,11 @@ c     & ka,kb,kc,j1,j2,kamax,kbmax,ncol,jb(kb)
             endif
             goto 5
          endif
-         
+
          ic(i+1) = kc
  6    continue
       return
-c------------end-of-subass---------------------------------------------- 
+c------------end-of-subass----------------------------------------------
 c-----------------------------------------------------------------------
       end
 
@@ -829,8 +829,8 @@ c dns   = the sparse matrix a, ja, ia has been stored in dns(nrow,*)
 c
 c changes:
 c---------
-c eliminated the ierr 
-c eliminated the filling of zeros: all done with 
+c eliminated the ierr
+c eliminated the filling of zeros: all done with
 c-----------------------------------------------------------------------
       do i=1,nrow
          do  k=ia(i),ia(i+1)-1
@@ -871,14 +871,14 @@ c a, ja, ia = value, column, pointer  arrays for output matrix
 c
 c changes:
 c---------
-c eliminated the ierr 
+c eliminated the ierr
 c introduced epsilon
 c-----------------------------------------------------------------------
       next = 1
       ia(1) = 1
       do  i=1,nrow
          do  j=1, ncol
-            if (.not.(dabs(dns(i,j)) .le. eps)) then 
+            if (.not.(dabs(dns(i,j)) .le. eps)) then
                ja(next) = j
                a(next) = dns(i,j)
                next = next+1
@@ -891,32 +891,32 @@ c---- end of dnscsr ----------------------------------------------------
 c-----------------------------------------------------------------------
       end
 
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
       subroutine getmask(nrow,nnz,ir,jc,jao,iao)
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
       implicit none
       integer nrow,nnz,ir(*),jc(*),jao(*),iao(*)
       integer k,k0,j,i,iad
 c-----------------------------------------------------------------------
 c  Gets Compressed Sparse Row indices from Coordinate ones
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
 c  Loosely based on coocsr from Sparsekit.
 c
 c on entry:
-c--------- 
-c nrow	= dimension of the matrix 
+c---------
+c nrow	= dimension of the matrix
 c nnz	= number of nonzero elements in matrix
-c ir, 
+c ir,
 c jc    = matrix in coordinate format. ir(k), jc(k) store the nnz
-c         nonzero index. The order of the elements is arbitrary. 
+c         nonzero index. The order of the elements is arbitrary.
 c iao   = vector of 0 of size nrow+1
 c
 c on return:
-c----------- 
+c-----------
 c ir 	is destroyed
 c
-c jao, iao = matrix index in general sparse matrix format with 
-c       jao containing the column indices, 
+c jao, iao = matrix index in general sparse matrix format with
+c       jao containing the column indices,
 c	and iao being the pointer to the beginning of the row
 c
 c------------------------------------------------------------------------
@@ -946,33 +946,33 @@ c shift back iao
  5    continue
       iao(1) = 1
       return
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
       end
 
 
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
       subroutine getblock(a,ja,ia, nrw, rw, ncl, cl, bnz, b,jb,ib)
 c-----------------------------------------------------------------------
 c     purpose:
-c     -------- 
-c     this function returns the elements a(rw,cl) of a matrix a, 
-c     for any index vector rw and cl. the matrix is assumed to be stored 
-c     in compressed sparse row (csr) format. 
+c     --------
+c     this function returns the elements a(rw,cl) of a matrix a,
+c     for any index vector rw and cl. the matrix is assumed to be stored
+c     in compressed sparse row (csr) format.
 c
 c
 c     Reinhard Furrer 2006-09-12
 c-----------------------------------------------------------------------
 c     parameters:
-c     ----------- 
-c on entry: 
-c---------- 
+c     -----------
+c on entry:
+c----------
 c     a,ja,ia = the matrix a in compressed sparse row format (input).
 c     nrw,rw
 c     ncl,cl  = length of and the vector containing the rows and columns
 c               to extract
 c
 c on return:
-c----------- 
+c-----------
 c     bnz     = nonzero elements of b
 c     b,jb,ib = the matrix a(rw,cl) in compressed sparse row format.
 c
@@ -1008,39 +1008,39 @@ c     we've found one...
             enddo
          enddo
          ib(irw+1) = bnz
-c     end irw, we've cycled over all lines 
-      enddo 
+c     end irw, we've cycled over all lines
+      enddo
       bnz = bnz - 1
 c      write(*,*) cl(1),cl(2)
 
       return
 c--------end-of-getblock------------------------------------------------
 c-----------------------------------------------------------------------
-      end 
+      end
 
 
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
       subroutine getlines(a,ja,ia, nrw, rw, bnz, b,jb,ib)
 c-----------------------------------------------------------------------
 c     purpose:
-c     -------- 
-c     this function returns the lines rw of a matrix a. 
-c     the matrix is assumed to be stored 
-c     in compressed sparse row (csr) format. 
+c     --------
+c     this function returns the lines rw of a matrix a.
+c     the matrix is assumed to be stored
+c     in compressed sparse row (csr) format.
 c
 c
 c     Reinhard Furrer 2012-04-04
 c-----------------------------------------------------------------------
 c     parameters:
-c     ----------- 
-c on entry: 
-c---------- 
+c     -----------
+c on entry:
+c----------
 c     a,ja,ia = the matrix a in compressed sparse row format (input).
 c     nrw,rw  = length of and the vector containing the rows and columns
 c               to extract
 c
 c on return:
-c----------- 
+c-----------
 c     bnz     = nonzero elements of b
 c     b,jb,ib = the matrix a(rw,cl) in compressed sparse row format.
 c
@@ -1069,51 +1069,51 @@ c
             bnz = bnz + 1
          enddo
          ib(irw+1) = bnz
-c     end irw, we've cycled over all lines 
-      enddo 
+c     end irw, we've cycled over all lines
+      enddo
       bnz = bnz - 1
 
       return
 c--------end-of-getlines------------------------------------------------
 c-----------------------------------------------------------------------
-      end 
+      end
 
 
 
-c----------------------------------------------------------------------- 
-      subroutine getelem(i,j,a,ja,ia,iadd,elem) 
+c-----------------------------------------------------------------------
+      subroutine getelem(i,j,a,ja,ia,iadd,elem)
 c-----------------------------------------------------------------------
 c     purpose:
-c     -------- 
-c     this function returns the element a(i,j) of a matrix a, 
-c     for any pair (i,j).  the matrix is assumed to be stored 
+c     --------
+c     this function returns the element a(i,j) of a matrix a,
+c     for any pair (i,j).  the matrix is assumed to be stored
 c     in compressed sparse row (csr) format. getelem performs a
-c     binary search. 
-c     also returns (in iadd) the address of the element a(i,j) in 
+c     binary search.
+c     also returns (in iadd) the address of the element a(i,j) in
 c     arrays a and ja when the search is successsful (zero if not).
 c-----------------------------------------------------------------------
 c     parameters:
-c     ----------- 
-c on entry: 
-c---------- 
+c     -----------
+c on entry:
+c----------
 c     i      = the row index of the element sought (input).
 c     j      = the column index of the element sought (input).
 c     a      = the matrix a in compressed sparse row format (input).
 c     ja     = the array of column indices (input).
 c     ia     = the array of pointers to the rows' data (input).
 c on return:
-c----------- 
-c     elem = value of a(i,j). 
+c-----------
+c     elem = value of a(i,j).
 c     iadd   = address of element a(i,j) in arrays a, ja if found,
-c              zero if not found. (output) 
+c              zero if not found. (output)
 c
-c     note: the inputs i and j are not checked for validity. 
+c     note: the inputs i and j are not checked for validity.
 c-----------------------------------------------------------------------
 c     noel m. nachtigal october 28, 1990 -- youcef saad jan 20, 1991.
 c
 c     Reinhard Furrer: converted to subroutine and eliminated sorted
 c         many manipulations... last for 0.31; Sept 13
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
       implicit none
 
       integer i, ia(*), iadd, j, ja(*)
@@ -1123,63 +1123,63 @@ c     local variables.
 c
       integer ibeg, iend, imid
 c
-c     initialization 
+c     initialization
 c
-      iadd = 0 
+      iadd = 0
       ibeg = ia(i)
       iend = ia(i+1)-1
 
 c     empty line! test at beginning
  10   if (iend .lt. ibeg) return
 
-c     
-c     begin binary search: 
+c
+c     begin binary search:
 c     test of bounds
       if (ja(ibeg).gt.j) return
       if (ja(iend).lt.j) return
 
       if (ja(ibeg).eq.j) then
-         iadd = ibeg 
+         iadd = ibeg
          goto 20
       endif
       if (ja(iend).eq.j) then
-         iadd = iend 
+         iadd = iend
          goto 20
       endif
-     
+
 c     compute the middle index and test if found
       imid = ( ibeg + iend ) / 2
       if (ja(imid).eq.j) then
-         iadd = imid 
+         iadd = imid
          goto 20
       endif
 
-c     update the interval bounds. 
+c     update the interval bounds.
       if (ja(imid).gt.j) then
          iend = imid -1
-      else 
+      else
          ibeg = imid +1
       endif
 
-      goto 10  
-c     
+      goto 10
+c
 c     set iadd and elem before returning
- 20   elem = a(iadd) 
+ 20   elem = a(iadd)
       return
 c--------end-of-getelem-------------------------------------------------
 c-----------------------------------------------------------------------
-      end 
+      end
 
       subroutine getallelem(nir,ir,jr,a,ja,ia,alliadd,allelem)
 c-----------------------------------------------------------------------
 c     purpose:
-c     -------- 
+c     --------
 c     wrapper to getelem to retrieve several elements.
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
 c     Reinhard Furrer 2006-09-12
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
       implicit none
-      
+
       integer nir,ir(nir),jr(nir),ja(*),ia(*),alliadd(nir)
       double precision a(*),allelem(nir)
 c     local vars
@@ -1214,7 +1214,7 @@ c-----------------------------------------------------------------------
 c further used variables
       integer len, k, k1, k2, ii, j
 c-----------------------------------------------------------------------
-c Modified from amask by Pin T. Ng on 2/27/03 to perform 
+c Modified from amask by Pin T. Ng on 2/27/03 to perform
 c element-wise multiplication
 c-----------------------------------------------------------------------
 c On entry:
@@ -1309,11 +1309,11 @@ c-----------------------------------------------------------------------
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1)
 c-----------------------------------------------------------------------
 c A modification of aplsb by Pin Ng on 6/12/02 to
-c perform the element-wise operation C = A*B for matrices in 
+c perform the element-wise operation C = A*B for matrices in
 c sorted CSR format.
 c the difference with aplsb is that the resulting matrix is such that
 c the elements of each row are sorted with increasing column indices in
-c each row, provided the original matrices are sorted in the same way. 
+c each row, provided the original matrices are sorted in the same way.
 c-----------------------------------------------------------------------
 c on entry:
 c ---------
@@ -1324,67 +1324,67 @@ c a,
 c ja,
 c ia   = Matrix A in compressed sparse row format with entries sorted
 c
-c b, 
-c jb, 
+c b,
+c jb,
 c ib	=  Matrix B in compressed sparse row format with entries sorted
-c        ascendly in each row   
+c        ascendly in each row
 c
 c nzmax	= integer. The  length of the arrays c and jc.
-c         amub will stop if the result matrix C  has a number 
+c         amub will stop if the result matrix C  has a number
 c         of elements that exceeds exceeds nzmax. See ierr.
-c 
+c
 c on return:
 c----------
-c c, 
-c jc, 
+c c,
+c jc,
 c ic	= resulting matrix C in compressed sparse row sparse format
-c         with entries sorted ascendly in each row. 
-c	    
-c ierr	= integer. serving as error message. 
+c         with entries sorted ascendly in each row.
+c
+c ierr	= integer. serving as error message.
 c         ierr = 0 means normal return,
 c         ierr .gt. 0 means that amub stopped while computing the
-c         i-th row  of C with i=ierr, because the number 
+c         i-th row  of C with i=ierr, because the number
 c         of elements in C exceeds nzmax.
 c
-c Notes: 
+c Notes:
 c-------
 c     this will not work if any of the two input matrices is not sorted
 c-----------------------------------------------------------------------
       integer i, ka, kb, kc, kamax, kbmax, j1, j2
       ierr = 0
       kc = 1
-      ic(1) = kc 
+      ic(1) = kc
 c
-c     the following loop does a merge of two sparse rows and 
+c     the following loop does a merge of two sparse rows and
 c     multiplies  them.
-c 
+c
       do 6 i=1, nrow
          ka = ia(i)
          kb = ib(i)
          kamax = ia(i+1)-1
-         kbmax = ib(i+1)-1 
- 5       continue 
+         kbmax = ib(i+1)-1
+ 5       continue
 c
-c     this is a while  -- do loop -- 
-c 
-         if (ka .le. kamax .or. kb .le. kbmax) then 
-c     
+c     this is a while  -- do loop --
+c
+         if (ka .le. kamax .or. kb .le. kbmax) then
+c
             if (ka .le. kamax) then
                j1 = ja(ka)
             else
 c     take j1 large enough  that always j2 .lt. j1
                j1 = ncol+1
             endif
-            if (kb .le. kbmax) then 
-               j2 = jb(kb)         
-            else 
-c     similarly take j2 large enough  that always j1 .lt. j2 
+            if (kb .le. kbmax) then
+               j2 = jb(kb)
+            else
+c     similarly take j2 large enough  that always j1 .lt. j2
                j2 = ncol+1
             endif
-c     
+c
 c     three cases
-c     
-            if (j1 .eq. j2) then 
+c
+            if (j1 .eq. j2) then
                c(kc) = a(ka)*b(kb)
                jc(kc) = j1
                ka = ka+1
@@ -1404,9 +1404,9 @@ c
          ic(i+1) = kc
  6    continue
       return
- 999  ierr = i 
+ 999  ierr = i
       return
-c------------end-of-aemub1 --------------------------------------------- 
+c------------end-of-aemub1 ---------------------------------------------
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
@@ -1414,11 +1414,11 @@ c-----------------------------------------------------------------------
      *     c,jc,ic,nzmax,iw,aw,ierr)
       implicit none
       integer nrow, ncol, job, nzmax, ierr
-      real(8) a(*), b(*), c(*), aw(ncol) 
+      real(8) a(*), b(*), c(*), aw(ncol)
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1),
      *     iw(ncol)
 c-----------------------------------------------------------------------
-c performs the element-wise matrix division  C = A/B. 
+c performs the element-wise matrix division  C = A/B.
 c Modified from aplsb by Pin Ng on 2/27/03
 c-----------------------------------------------------------------------
 c on entry:
@@ -1432,25 +1432,25 @@ c
 c a,
 c ja,
 c ia   = Matrix A in compressed sparse row format.
-c 
-c b, 
-c jb, 
+c
+c b,
+c jb,
 c ib	=  Matrix B in compressed sparse row format.
 c
 c nzmax	= integer. The  length of the arrays c and jc.
-c         amub will stop if the result matrix C  has a number 
+c         amub will stop if the result matrix C  has a number
 c         of elements that exceeds exceeds nzmax. See ierr.
-c 
+c
 c on return:
 c----------
-c c, 
-c jc, 
+c c,
+c jc,
 c ic	= resulting matrix C in compressed sparse row sparse format.
-c	    
-c ierr	= integer. serving as error message. 
+c
+c ierr	= integer. serving as error message.
 c         ierr = 0 means normal return,
 c         ierr .gt. 0 means that amub stopped while computing the
-c         i-th row  of C with i=ierr, because the number 
+c         i-th row  of C with i=ierr, because the number
 c         of elements in C exceeds nzmax.
 c
 c work arrays:
@@ -1463,26 +1463,26 @@ c
 c-----------------------------------------------------------------------
       logical values
       integer len, j, ii, ka, kb, k, jpos, jcol
-      values = (job .ne. 0) 
+      values = (job .ne. 0)
       ierr = 0
       len = 0
-      ic(1) = 1 
+      ic(1) = 1
       do 1 j=1, ncol
          iw(j) = 0
  1    continue
-c     
+c
       do 500 ii=1, nrow
-c     row i 
-         do 200 ka=ia(ii), ia(ii+1)-1 
+c     row i
+         do 200 ka=ia(ii), ia(ii+1)-1
             len = len+1
             jcol    = ja(ka)
             if (len .gt. nzmax) goto 999
-            jc(len) = jcol 
-            if (values) c(len)  = a(ka)/0.0 
+            jc(len) = jcol
+            if (values) c(len)  = a(ka)/0.0
             iw(jcol)= len
             aw(jcol) = a(ka)
  200     continue
-c     
+c
          do 300 kb=ib(ii),ib(ii+1)-1
             jcol = jb(kb)
             jpos = iw(jcol)
@@ -1504,7 +1504,7 @@ c
       return
  999  ierr = ii
       return
-c------------end of aedib ----------------------------------------------- 
+c------------end of aedib -----------------------------------------------
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
@@ -1512,11 +1512,11 @@ c-----------------------------------------------------------------------
      *     c,jc,ic,nzmax,iw,aw,ierr)
       implicit none
       integer nrow, ncol, job, nzmax, ierr
-      real(8) a(*), b(*), c(*), aw(ncol) 
+      real(8) a(*), b(*), c(*), aw(ncol)
       integer ja(*),jb(*),jc(*),ia(nrow+1),ib(nrow+1),ic(nrow+1),
      *     iw(ncol)
 c-----------------------------------------------------------------------
-c performs the element-wise matrix division  C = A/B. 
+c performs the element-wise matrix division  C = A/B.
 c Modified from aplsb by Pin Ng on 2/27/03
 c-----------------------------------------------------------------------
 c on entry:
@@ -1530,25 +1530,25 @@ c
 c a,
 c ja,
 c ia   = Matrix A in compressed sparse row format.
-c 
-c b, 
-c jb, 
+c
+c b,
+c jb,
 c ib	=  Matrix B in compressed sparse row format.
 c
 c nzmax	= integer. The  length of the arrays c and jc.
-c         amub will stop if the result matrix C  has a number 
+c         amub will stop if the result matrix C  has a number
 c         of elements that exceeds exceeds nzmax. See ierr.
-c 
+c
 c on return:
 c----------
-c c, 
-c jc, 
+c c,
+c jc,
 c ic	= resulting matrix C in compressed sparse row sparse format.
-c	    
-c ierr	= integer. serving as error message. 
+c
+c ierr	= integer. serving as error message.
 c         ierr = 0 means normal return,
 c         ierr .gt. 0 means that amub stopped while computing the
-c         i-th row  of C with i=ierr, because the number 
+c         i-th row  of C with i=ierr, because the number
 c         of elements in C exceeds nzmax.
 c
 c work arrays:
@@ -1561,26 +1561,26 @@ c
 c-----------------------------------------------------------------------
       logical values
       integer len, kb, ka, k, jpos, jcol, j, ii
-      values = (job .ne. 0) 
+      values = (job .ne. 0)
       ierr = 0
       len = 0
-      ic(1) = 1 
+      ic(1) = 1
       do 1 j=1, ncol
          iw(j) = 0
  1    continue
-c     
+c
       do 500 ii=1, nrow
-c     row i 
-         do 200 ka=ia(ii), ia(ii+1)-1 
+c     row i
+         do 200 ka=ia(ii), ia(ii+1)-1
             len = len+1
             jcol    = ja(ka)
             if (len .gt. nzmax) goto 999
-            jc(len) = jcol 
+            jc(len) = jcol
             if (values) c(len)  = 1.0
             iw(jcol)= len
             aw(jcol) = a(ka)
  200     continue
-c     
+c
          do 300 kb=ib(ii),ib(ii+1)-1
             jcol = jb(kb)
             jpos = iw(jcol)
@@ -1602,7 +1602,7 @@ c
       return
  999  ierr = ii
       return
-c------------end of aeexpb ----------------------------------------------- 
+c------------end of aeexpb -----------------------------------------------
 c-----------------------------------------------------------------------
       end
 
@@ -1664,12 +1664,12 @@ c     cholcja (integer)        ja for cholesky factor
 c-----------------------------------------------------------------------
 c     Transposition
 c     similar to csrcsc from sparsekit
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
 c on entry:
 c----------
 c n	= number of rows of CSR matrix.
 c m    = number of columns of CSC matrix.
-c a	= real array of length nnz (nnz=number of nonzero elements in input 
+c a	= real array of length nnz (nnz=number of nonzero elements in input
 c         matrix) containing the nonzero elements.
 c ja	= integer array of length nnz containing the column positions
 c 	  of the corresponding elements in a.
@@ -1677,16 +1677,16 @@ c ia	= integer of size n+1. ia(k) contains the position in a, ja of
 c	  the beginning of the k-th row.
 c
 c on return:
-c ---------- 
+c ----------
 c ao	= real array of size nzz containing the "a" part of the transpose
 c jao	= integer array of size nnz containing the column indices.
 c iao	= integer array of size n+1 containing the "ia" index array of
-c	  the transpose. 
+c	  the transpose.
 c
-c----------------------------------------------------------------------- 
+c-----------------------------------------------------------------------
 c----------------- compute lengths of rows of transp(A) ----------------
       do  i=1, n
-         do  k=ia(i), ia(i+1)-1 
+         do  k=ia(i), ia(i+1)-1
             j = ja(k)+1
             iao(j) = iao(j)+1
          enddo
@@ -1696,17 +1696,17 @@ c---------- compute pointers from lengths ------------------------------
       do  i=1,m
          iao(i+1) = iao(i) + iao(i+1)
       enddo
-c--------------- now do the actual copying ----------------------------- 
+c--------------- now do the actual copying -----------------------------
       do  i=1,n
-         do  k=ia(i),ia(i+1)-1 
-            j = ja(k) 
+         do  k=ia(i),ia(i+1)-1
+            j = ja(k)
             next = iao(j)
             ao(next) = a(k)
             jao(next) = i
             iao(j) = next+1
          enddo
       enddo
-c-------------------------- reshift iao and leave ---------------------- 
+c-------------------------- reshift iao and leave ----------------------
       do  i=m,1,-1
          iao(i+1) = iao(i)
       enddo
@@ -1714,7 +1714,7 @@ c-------------------------- reshift iao and leave ----------------------
 c-----------------------------------------------------------------------
       end
 c-----------------------------------------------------------------------
- 
+
 c-----------------------------------------------------------------------
 
 
@@ -1806,16 +1806,17 @@ c----------------------------------------------------------------------c
 
       subroutine spamforward (n,p,x,b,l,jl,il)
       implicit none
+      logical,  external :: eqZERO
 
       integer n, p, jl(*),il(n+1)
       double precision  x(n,p), b(n,p), l(*)
 
-      integer i, j, k 
+      integer i, j, k
       double precision  t
 
 c-----------------------------------------------------------------------
 c   solves    L x = y ; L = lower triang. /  CSR format
-c                        sequential forward elimination 
+c                        sequential forward elimination
 c-----------------------------------------------------------------------
 c
 c On entry:
@@ -1829,17 +1830,17 @@ c On return:
 c-----------
 c       x  = The solution of  L x  = b.
 c--------------------------------------------------------------------
-c     Reinhard Furrer June 2008, April 2012, Sept 2016
-      
+c     Reinhard Furrer June 2008, April 2012, Sept 2016, Nov 2019
+
 
 c     initialize k for next setting
       k=0
 c     if first diagonal element is zero, break
-      if (l(1) .eq. 0.0 ) goto 5
+      if (eqZERO(l(1))) goto 5
 
 c     cycle over all columns of b
-      do i=1,p 
-         
+      do i=1,p
+
 c     first row has one element then cycle over all rows
          x(1,i) = b(1,i) / l(1)
          do 3 k = 2, n
@@ -1849,14 +1850,14 @@ c     first row has one element then cycle over all rows
                   t = t-l(j)*x(jl(j),i)
                else
                   if (jl(j) .eq. k) then
-                     if (l(j) .eq. 0.0) goto 5 
+                     if (eqZERO(l(j))) goto 5
 c     diagonal element is not zero, hence we divide and leave the loop
                      x(k,i) = t / l(j)
                      goto 3
-                  endif 
+                  endif
                endif
  1          continue
- 3       continue      
+ 3       continue
       enddo
 
       return
@@ -1866,6 +1867,7 @@ c     diagonal element is not zero, hence we divide and leave the loop
 c-----------------------------------------------------------------------
       subroutine spamback (n,p,x,b,r,jr,ir)
       implicit none
+      logical,  external :: eqZERO
 
       integer n, p, jr(*),ir(n+1)
       double precision  x(n,p), b(n,p), r(*)
@@ -1887,10 +1889,10 @@ c On return:
 c-----------
 c       x = The solution of  R x = b .
 c--------------------------------------------------------------------
-c     Reinhard Furrer June 2008, April 2012, Sept 2016
+c     Reinhard Furrer June 2008, April 2012, Sept 2016, Nov 2019
 
       k = n+1
-      if (r(ir(n+1)-1) .eq. 0.0 ) goto 5
+      if (eqZERO( r(ir(n+1)-1))) goto 5
       do l=1,p
          x(n,l) = b(n,l) / r(ir(n+1)-1)
          do 3 k = n-1,1,-1
@@ -1900,14 +1902,14 @@ c     Reinhard Furrer June 2008, April 2012, Sept 2016
                   t = t - r(j)*x(jr(j),l)
                else
                   if (jr(j) .eq. k) then
-                     if (r(j) .eq. 0.0) goto 5 
+                     if (eqZERO(r(j))) goto 5
 c     diagonal element is not zero, hence we divide and leave the loop
                      x(k,l) = t / r(j)
                      goto 3
-                  endif 
+                  endif
                endif
  1          continue
- 3       continue      
+ 3       continue
       enddo
       return
  5    n = -k

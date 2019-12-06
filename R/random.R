@@ -67,11 +67,12 @@ spam_random <- function(nrow = 1L, ncol = nrow, density = 0.5, distribution = NU
     entries <- distribution(n, ...)
   if (!is.null(digits))
     entries <- round(entries, digits)
-    rspam <- .newSpam(entries,
-                      colindices = coli,
-                      rowpointers = rowp,
-                      dimension = c(nrow, ncol),
-                      force64 = getOption("spam.force64"))
+
+  rspam <- .newSpam(entries,
+                    colindices = coli,
+                    rowpointers = rowp,
+                    dimension = c(nrow, ncol),
+                    force64 = getOption("spam.force64"))
 
   if (spd) {
     sym <- TRUE

@@ -1,8 +1,28 @@
-# spam 2.3-1
+# spam 2.5-0
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* improved examples for `spam_random()` and `eigen.spam()`.
+* Fortran code used by `eigen.spam()` for non-symmetric matrices is now stable.
+
+INTERNAL CHANGES
+
+* fixing real comparison warnings in Fortran.
+* removing remaining and unused print/count/timing variables in Fortran.
+* implement dimension upper bound for `eigen.spam()` due to BLAS/LAPACK routines, which are used in Arnoldi iteration (ARPACK).
 
 BUG FIXES
 
-* cleaning and consolidation of init.c with spam64.
+* adjusting spam.Rmd vignette to pandoc2.8.
+* correct class checking for matrices.
+* cleaning and consolidation of init.c with spam64 (LTO's).
+
+
+# spam 2.4-0
+
+INTERNAL CHANGES
+
+* cleaning GCC-10 Fortran warnings.
 
 
 # spam 2.3-0
@@ -21,7 +41,7 @@ SIGNIFICANT USER-VISIBLE CHANGES
 INTERNAL CHANGES
 
 * Fortran modification to address LTO issues.
-* Not exported depreceated function `subset.rows.spam()` is now defunct.
+* Not exported deprecated function `subset.rows.spam()` is now defunct.
 
 BUG FIXES
 
@@ -56,7 +76,7 @@ INTERNAL CHANGES
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
-*  Implementation of 'eigen.spam' and 'eigen_approx' to calculate eigenvalues and eigenvectors for sparse matrices.
+*  Implementation of 'eigen.spam()' and 'eigen_approx()' to calculate eigenvalues and eigenvectors for sparse matrices.
 
 
 # spam 2.1-4

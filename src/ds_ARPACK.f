@@ -10,7 +10,6 @@ c dgetv0.f
 c dsapps.f
 c dseigt.f
 c dstqrb.f
-c dstats.f
 c dsortr.f
 c
 c\BeginDoc
@@ -237,12 +236,7 @@ c-----------------------------------------------------------------------
      &                   iparam, ipntr , workd , workl,
      &                   lworkl, info )
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -281,7 +275,6 @@ c
       character  type*6
       integer    bounds , ierr   , ih    , ihb   , ihd   ,
      &           iq     , iw     , j     , k     , ldh   ,
-cm     &           ldq    , mode   , msglvl, nconv , next  ,
      &           ldq    , mode   , nconv , next  ,
      &           ritz   , irz    , ibd   , np    , ishift,
      &           leftptr, rghtptr, numcnv, jj
@@ -318,7 +311,6 @@ c     %------------------------%
 c     | Set default parameters |
 c     %------------------------%
 c
-cm      msglvl = mseupd
       mode = iparam(7)
       nconv = iparam(5)
       info = 0
@@ -345,7 +337,7 @@ c
      &           howmny .ne. 'P' .and.
      &           howmny .ne. 'S') .and. rvec )
      &                                         ierr = -15
-      if (rvec .and. howmny .eq. 'S')           ierr = -16
+      if (rvec .and. howmny .eq. 'S')          ierr = -16
 c
       if (rvec .and. lworkl .lt. ncv**2+8*ncv) ierr = -7
 c
@@ -542,10 +534,6 @@ c
             go to 9000
          end if
 c
-cm         if (msglvl .gt. 1) then
-cm            call dcopy (ncv, workl(iq+ncv-1), ldq, workl(iw), 1)
-cm         end if
-c
          if (reord) then
 c
 c           %---------------------------------------------%
@@ -614,7 +602,6 @@ c        | Load the converged Ritz values into D. |
 c        %----------------------------------------%
 c
          call dcopy (nconv, workl(ihd), 1, d(1), 1)
-cx         call dcopy (nconv, workl(ihd), 1, d, 1)
 c
       else
 c
@@ -622,7 +609,6 @@ c        %-----------------------------------------------------%
 c        | Ritz vectors not required. Load Ritz values into D. |
 c        %-----------------------------------------------------%
 c
-cx         call dcopy (nconv, workl(ritz), 1, d, 1)
          call dcopy (nconv, workl(ritz), 1, d(1), 1)
          call dcopy (ncv, workl(ritz), 1, workl(ihd), 1)
 c
@@ -697,7 +683,6 @@ c        |  Ritz vector purification.                                  |
 c        %-------------------------------------------------------------%
 c
          call dcopy (nconv, workl(ihd), 1, d(1), 1)
-cx         call dcopy (nconv, workl(ihd), 1, d, 1)
          call dsortr ('LA', dseupdtrue, nconv, workl(ihd), workl(iw))
          if (rvec) then
             call dsesrt ('LA', rvec , nconv, d, ncv, workl(iq), ldq)
@@ -740,7 +725,6 @@ c
      &                ldq    , workl(iw+ncv), v        ,
      &                ldv    , workd(n+1)   , ierr)
          call dlacpy ('All', n, nconv, v(1,1), ldv, z, ldz)
-cx         call dlacpy ('All', n, nconv, v, ldv, z, ldz)
 c
 c        %-----------------------------------------------------%
 c        | In order to compute the Ritz estimates for the Ritz |
@@ -754,7 +738,6 @@ c
          workl(ihb+ncv-1) = one
          call dorm2r ('Left', 'Transpose'  , ncv       ,
      &                ione  , nconv        , workl(iq) ,
-cv     &                1  , nconv        , workl(iq) ,
      &                ldq   , workl(iw+ncv), workl(ihb),
      &                ncv   , temp         , ierr)
 c
@@ -910,6 +893,8 @@ c
 c-----------------------------------------------------------------------
 c
       subroutine dsesrt (which, apply, n, x, na, a, lda)
+c
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -1153,12 +1138,7 @@ c-----------------------------------------------------------------------
 c
       subroutine dsgets ( ishift, which, kev, np, ritz, bounds, shifts )
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -1174,19 +1154,10 @@ c
       Double precision
      &           bounds(kev+np), ritz(kev+np), shifts(np)
 c
-cua     %------------%
-cua     | Parameters |
-cua     %------------%
-cua
-cua      Double precision
-cua     &           one, zero
-cua      parameter (one = 1.0D+0, zero = 0.0D+0)
-cua
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-cm      integer    kevd2, msglvl
       integer    kevd2
       logical    dsgetstrue
 c
@@ -1194,7 +1165,6 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-c      external   dswap, dcopy, dsortr, second
       external   dswap, dcopy, dsortr
 c
 c     %---------------------%
@@ -1213,8 +1183,6 @@ c     | & message level for debugging |
 c     %-------------------------------%
 c
       dsgetstrue = .true.
-c      call second (t0)
-cm      msglvl = msgets
 c
       if (which .eq. 'BE') then
 c
@@ -1231,10 +1199,8 @@ c
          kevd2 = kev / 2
          if ( kev .gt. 1 ) then
             call dswap ( min(kevd2,np), ritz(1), 1,
-cx            call dswap ( min(kevd2,np), ritz, 1,
      &                   ritz( max(kevd2,np)+1 ), 1)
             call dswap ( min(kevd2,np), bounds(1), 1,
-cx            call dswap ( min(kevd2,np), bounds, 1,
      &                   bounds( max(kevd2,np)+1 ), 1)
          end if
 c
@@ -1263,13 +1229,7 @@ c        %-------------------------------------------------------%
 c
          call dsortr ('SM', dsgetstrue, np, bounds, ritz)
          call dcopy (np, ritz, 1, shifts(1), 1)
-cx         call dcopy (np, ritz, 1, shifts, 1)
       end if
-c
-c      call second (t1)
-cs      tsgets = tsgets + (t1 - t0)
-      tsgets = 0.0
-c
 c
       return
 c
@@ -1476,10 +1436,10 @@ c          communication (IPARAM(1)=0), dsaupd  returns NP, the number
 c          of shifts the user is to provide. 0 < NP <=NCV-NEV. See Remark
 c          6 below.
 c
-c          IPARAM(9) = NUMOP, IPARAM(10) = NUMOPB, IPARAM(11) = NUMREO,
-c          OUTPUT: NUMOP  = total number of OP*x operations,
-c                  NUMOPB = total number of B*x operations if BMAT='G',
-c                  NUMREO = total number of steps of re-orthogonalization.
+crc          IPARAM(9) = NUMOP, IPARAM(10) = NUMOPB, IPARAM(11) = NUMREO,
+crc          OUTPUT: NUMOP  = total number of OP*x operations,
+crc                  NUMOPB = total number of B*x operations if BMAT='G',
+crc                  NUMREO = total number of steps of re-orthogonalization.c
 c
 c  IPNTR   Integer array of length 11.  (OUTPUT)
 c          Pointer to mark the starting locations in the WORKD and WORKL
@@ -1689,12 +1649,7 @@ c
      &   ( ido, bmat, n, which, nev, tol, resid, ncv, v, ldv, iparam,
      &     ipntr, workd, workl, lworkl, info )
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -1709,7 +1664,7 @@ c     %-----------------%
 c     | Array Arguments |
 c     %-----------------%
 c
-      integer    iparam(11), ipntr(11)
+      integer    iparam(8), ipntr(11)
       Double precision
      &           resid(n), v(ldv,ncv), workd(3*n), workl(lworkl)
 c
@@ -1720,9 +1675,6 @@ c
       Double precision
      &           zero
       parameter (zero = 0.0D+0 )
-cua     &           one, zero
-cua      parameter (one = 1.0D+0 , zero = 0.0D+0 )
-
 c
 c     %---------------%
 c     | Local Scalars |
@@ -1730,10 +1682,8 @@ c     %---------------%
 c
       integer    bounds, ierr, ih, iq, ishift, iw,
      &           ldh, ldq, mxiter, mode, nb,
-cm     &           ldh, ldq, msglvl, mxiter, mode, nb,
      &           nev0, next, np, ritz, j
       save       bounds, ierr, ih, iq, ishift, iw,
-cm     &     ldh, ldq, msglvl, mxiter, mode, nb,
      &           ldh, ldq, mxiter, mode, nb,
      &           nev0, next, np, ritz
 c
@@ -1741,8 +1691,7 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-      external   dsaup2, dstats
-c      external   dsaup2, second, dstats
+      external   dsaup2
 c
 c     %--------------------%
 c     | External Functions |
@@ -1763,14 +1712,9 @@ c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
 c
-         call dstats
-c         call second (t0)
-cm         msglvl = msaupd
-c
          ierr   = 0
          ishift = iparam(1)
          mxiter = iparam(3)
-c         nb     = iparam(4)
          nb     = 1
 c
 c        %--------------------------------------------%
@@ -1900,9 +1844,6 @@ c
 c
       iparam(3) = mxiter
       iparam(5) = np
-      iparam(9) = nopx
-      iparam(10) = nbx
-      iparam(11) = nrorth
 c
 c     %------------------------------------%
 c     | Exit if there was an informational |
@@ -1911,56 +1852,6 @@ c     %------------------------------------%
 c
       if (info .lt. 0) go to 9000
       if (info .eq. 2) info = 3
-c
-c      call second (t1)
-cs      tsaupd = t1 - t0
-ct      tsaupd = 0.0
-c
-cm      if (msglvl .gt. 0) then
-c
-c        %--------------------------------------------------------%
-c        | Version Number & Version Date are defined in version.h |
-c        %--------------------------------------------------------%
-c
-c
-CcC      callintpr(' ', -1, 0, 0)
-CcC      callintpr(' ', -1, 0, 0)
-c
-CcC      callintpr('  ============================================',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = Symmetric implicit Arnoldi update code   =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = Version Number: 2.4                      =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = Version Date: 07/31/96                   =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  ============================================',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = Summary of timing statistics             =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  ============================================',
-CcC     &            -1, 0, 0)
-c
-CcC      callintpr(' ', -1, 0, 0)
-CcC      callintpr(' ', -1, 0, 0)
-c
-CcC      callintpr('  Total number update iterations             = ',
-CcC     &            -1, mxiter, 1)
-CcC      callintpr('  Total number of reorthogonalization steps  = ',
-CcC     &            -1, nrorth, 1)
-CcC      callintpr('  Total time in Arnoldi update routine       = ',
-CcC     &            -1, tsaupd, 1)
-CcC      callintpr('  Total time in saup2 routine                = ',
-CcC     &            -1, tsaitr, 1)
-CcC      callintpr('  Total time in basic Arnoldi iteration loop = ',
-CcC     &            -1, titref, 1)
-CcC      callintpr('  Total time in reorthogonalization phase    = ',
-CcC     &            -1, tgetv0, 1)
-c
-CcC      callintpr(' ', -1, 0, 0)
-CcC      callintpr(' ', -1, 0, 0)
-c
-cm      end if
 c
  9000 continue
 c
@@ -2161,8 +2052,6 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-cm      include   'debug.h'
-      include   'stat.h'
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -2188,9 +2077,6 @@ c     %------------%
 c     | Parameters |
 c     %------------%
 c
-      Double precision
-     &           zero
-      parameter (zero = 0.0D+0)
       integer   ione
       parameter (ione=1)
       integer
@@ -2204,13 +2090,10 @@ c
       character  wprime*2
       logical    cnorm, getv0, initv, update, ushift, dsaup2true
       integer    ierr, iter, j, kplusp,  nconv, nevbef, nev0,
-cm      integer    ierr, iter, j, kplusp, msglvl, nconv, nevbef, nev0,
-cm     &           np0, nptemp, nevd2, nevm2, kp(3), dsaup2zero
      &           np0, nptemp, nevd2, nevm2, dsaup2zero
       Double precision
      &           rnorm, temp, eps23
       save       cnorm, getv0, initv, update, ushift,
-cm     &           iter, kplusp, msglvl, nconv, nev0, np0,
      &           iter, kplusp,  nconv, nev0, np0,
      &           rnorm, eps23
 c
@@ -2220,12 +2103,13 @@ c     %----------------------%
 c
       external   dcopy, dgetv0, dsaitr, dscal, dsconv, dseigt, dsgets,
      &           dsapps, dsortr, dswap
-c     &           dsapps, dsortr, second, dswap
 c
 c     %--------------------%
 c     | External Functions |
 c     %--------------------%
 c
+      logical,  external :: eqZERO
+
       Double precision
      &           ddot, dnrm2, dlamch
       external   ddot, dnrm2, dlamch
@@ -2244,14 +2128,6 @@ c
       dsaup2zero = 0
 c
       if (ido .eq. 0) then
-c
-c        %-------------------------------%
-c        | Initialize timing statistics  |
-c        | & message level for debugging |
-c        %-------------------------------%
-c
-c         call second (t0)
-cm         msglvl = msaup2
 c
 c        %---------------------------------%
 c        | Set machine dependent constant. |
@@ -2312,13 +2188,12 @@ c
 c   10 continue
 c
       if (getv0) then
-cv         call dgetv0 (ido, bmat, initv, n, 1, v, ldv, resid, rnorm,
          call dgetv0 (ido, bmat, initv, n, ione, v, ldv, resid, rnorm,
      &                ipntr, workd, info)
 c
          if (ido .ne. 99) go to 9000
 c
-         if (rnorm .eq. zero) then
+         if (eqZERO(rnorm)) then
 c
 c           %-----------------------------------------%
 c           | The initial vector is zero. Error exit. |
@@ -2465,12 +2340,6 @@ c
          call dcopy (nev, bounds(np+1), 1, workl(np+1), 1)
          call dsconv (nev, ritz(np+1), workl(np+1), tol, nconv)
 c
-cm         if (msglvl .gt. 2) then
-cm            kp(1) = nev
-cm            kp(2) = np
-cm            kp(3) = nconv
-cm         end if
-c
 c        %---------------------------------------------------------%
 c        | Count the number of unwanted Ritz values that have zero |
 c        | Ritz estimates. If any Ritz estimates are equal to zero |
@@ -2483,7 +2352,7 @@ c        %---------------------------------------------------------%
 c
          nptemp = np
          do 30 j=1, nptemp
-            if (bounds(j) .eq. zero) then
+            if (eqZERO(bounds(j))) then
                np = np - 1
                nev = nev + 1
             end if
@@ -2655,14 +2524,6 @@ c
 c
          end if
 c
-cm         if (msglvl .gt. 0) then
-cm            if (msglvl .gt. 1) then
-cm               kp(1) = nev
-cm               kp(2) = np
-cm            end if
-cm         end if
-
-c
          if (ishift .eq. 0) then
 c
 c           %-----------------------------------------------------%
@@ -2716,7 +2577,6 @@ c
          cnorm = .true.
 c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(n+1), 1)
             ipntr(1) = n + 1
             ipntr(2) = 1
@@ -2729,7 +2589,6 @@ c
             go to 9000
          else if (bmat .eq. 'I') then
             call dcopy (n, resid, 1, workd(1), 1)
-cx            call dcopy (n, resid, 1, workd, 1)
          end if
 c
   100    continue
@@ -2738,12 +2597,6 @@ c        %----------------------------------%
 c        | Back from reverse communication; |
 c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
-c
-         if (bmat .eq. 'G') then
-cs            call second (t3)
-cs            tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-         end if
 c
          if (bmat .eq. 'G') then
             rnorm = ddot (n, resid, 1, workd, 1)
@@ -2774,10 +2627,6 @@ c
 c     %------------%
 c     | Error exit |
 c     %------------%
-c
-c     call second (t1)
-cs    tsaup2 = t1 - t0
-cs      tsaup2 = 0.0
 c
  9000 continue
       return
@@ -2851,8 +2700,7 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-cm      include   'debug.h'
-      include   'stat.h'
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -2916,8 +2764,6 @@ c
    10 continue
 c
 c      call second (t1)
-cs      tsconv = tsconv + (t1 - t0)
-      tsconv = 0.0
 c
       return
 c
@@ -3136,13 +2982,6 @@ c
 
       implicit none
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -3175,14 +3014,12 @@ c     | Local Scalars |
 c     %---------------%
 c
       logical    first, orth1, orth2, rstart, step3, step4
-cm      integer    i, ierr, ipj, irj, ivj, iter, j, msglvl,
       integer    i, ierr, ipj, irj, ivj, iter, itry, j,
      &           infol, jj
       Double precision
      &           rnorm1, wnorm, safmin, temp1
       save       orth1, orth2, rstart, step3, step4,
      &           ierr, ipj, irj, ivj, iter, itry, j,
-cm     &           ierr, ipj, irj, ivj, iter, itry, j, msglvl,
      &           rnorm1, safmin, wnorm
 c
 c     %-----------------------%
@@ -3198,7 +3035,6 @@ c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dgemv, dgetv0,
      &           dlascl
-c     &           dlascl, second
 c
 c     %--------------------%
 c     | External Functions |
@@ -3237,7 +3073,6 @@ c        | & message level for debugging |
 c        %-------------------------------%
 c
 c         call second (t0)
-cm         msglvl = msaitr
 c
 c        %------------------------------%
 c        | Initial call to this routine |
@@ -3319,7 +3154,6 @@ c           | attempted. NRSTRT is used by stat.h         |
 c           %---------------------------------------------%
 c
             itry   = 1
-cp            nrstrt = nrstrt + 1
    20       continue
             rstart = .true.
             ido    = 0
@@ -3344,9 +3178,6 @@ c              | which spans OP and exit.                       |
 c              %------------------------------------------------%
 c
                info = j - 1
-c               call second (t1)
-cs               tsaitr = tsaitr + (t1 - t0)
-cs               tsaitr = 0.0
                ido = 99
                go to 9000
             end if
@@ -3384,8 +3215,6 @@ c        | Note that this is not quite yet r_{j}. See STEP 4    |
 c        %------------------------------------------------------%
 c
          step3 = .true.
-         nopx  = nopx + 1
-c         call second (t2)
          call dcopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
          ipntr(2) = irj
@@ -3404,10 +3233,6 @@ c        | Back from reverse communication;  |
 c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}.   |
 c        %-----------------------------------%
 c
-c         call second (t3)
-cs         tmvopx = tmvopx + (t3 - t2)
-cs         tmvopx = 0.0
-c
          step3 = .false.
 c
 c        %------------------------------------------%
@@ -3415,7 +3240,6 @@ c        | Put another copy of OP*v_{j} into RESID. |
 c        %------------------------------------------%
 c
          call dcopy (n, workd(irj), 1, resid(1), 1)
-cx         call dcopy (n, workd(irj), 1, resid, 1)
 c
 c        %-------------------------------------------%
 c        | STEP 4:  Finish extending the symmetric   |
@@ -3429,7 +3253,6 @@ c
          if (mode .eq. 2) go to 65
 c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             step4 = .true.
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -3449,12 +3272,6 @@ c        %-----------------------------------%
 c        | Back from reverse communication;  |
 c        | WORKD(IPJ:IPJ+N-1) := B*OP*v_{j}. |
 c        %-----------------------------------%
-c
-cs         if (bmat .eq. 'G') then
-cs            call second (t3)
-cs            tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-cs         end if
 c
          step4 = .false.
 c
@@ -3509,7 +3326,6 @@ c        %--------------------------------------%
 c
          call dgemv('N', n, j, -one, v, ldv, workd(irj), 1, one,
      &               resid(1), 1)
-cx     &               resid, 1)
 c
 c        %--------------------------------------%
 c        | Extend H to have j rows and columns. |
@@ -3528,7 +3344,6 @@ c
 c
 c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -3548,12 +3363,6 @@ c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH1 = .true. |
 c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
-c
-         if (bmat .eq. 'G') then
-c            call second (t3)
-cs          tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-         end if
 c
          orth1 = .false.
 c
@@ -3584,7 +3393,6 @@ c        | to enforce ||v(:,1:j)^T * r_{j}|| .le. eps * || r_{j} ||  |
 c        %-----------------------------------------------------------%
 c
          if (rnorm .gt. 0.717*wnorm) go to 100
-         nrorth = nrorth + 1
 c
 c        %---------------------------------------------------%
 c        | Enter the Iterative refinement phase. If further  |
@@ -3594,11 +3402,6 @@ c        | Gram-Schmidt using all the Arnoldi vectors V_{j}  |
 c        %---------------------------------------------------%
 c
    80    continue
-c
-cm         if (msglvl .gt. 2) then
-cm            xtemp(1) = wnorm
-cm            xtemp(2) = rnorm
-cm         end if
 c
 c        %----------------------------------------------------%
 c        | Compute V_{j}^T * B * r_{j}.                       |
@@ -3618,7 +3421,6 @@ c        %----------------------------------------------%
 c
          call dgemv ('N', n, j, -one, v, ldv, workd(irj), 1,
      &               one, resid(1), 1)
-cx     &               one, resid, 1)
 c
          if (j .eq. 1  .or.  rstart) h(j,1) = zero
          h(j,2) = h(j,2) + workd(irj + j - 1)
@@ -3626,7 +3428,6 @@ c
          orth2 = .true.
 c        call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -3647,12 +3448,6 @@ c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 c
-cs         if (bmat .eq. 'G') then
-cs           call second (t3)
-cs          tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-cs         end if
-c
 c        %-----------------------------------------------------%
 c        | Compute the B-norm of the corrected residual r_{j}. |
 c        %-----------------------------------------------------%
@@ -3663,13 +3458,6 @@ c
          else if (bmat .eq. 'I') then
              rnorm1 = dnrm2(n, resid, 1)
          end if
-c
-cm         if (msglvl .gt. 0 .and. iter .gt. 0) then
-cm            if (msglvl .gt. 2) then
-cm                xtemp(1) = rnorm
-cm                xtemp(2) = rnorm1
-cm            end if
-cm         end if
 c
 c        %-----------------------------------------%
 c        | Determine if we need to perform another |
@@ -3691,7 +3479,6 @@ c           | Another step of iterative refinement step |
 c           | is required. NITREF is used by stat.h     |
 c           %-------------------------------------------%
 c
-cp            nitref = nitref + 1
             rnorm  = rnorm1
             iter   = iter + 1
             if (iter .le. 1) go to 80
@@ -3717,10 +3504,6 @@ c
          rstart = .false.
          orth2  = .false.
 c
-c        call second (t5)
-cs         titref = itref
-cCC         titref = itref + (t5 - t4)
-c
 c        %----------------------------------------------------------%
 c        | Make sure the last off-diagonal element is non negative  |
 c        | If not perform a similarity transformation on H(1:j,1:j) |
@@ -3733,7 +3516,6 @@ c
                call dscal(n, -one, v(1,j+1), 1)
             else
                call dscal(n, -one, resid(1), 1)
-cx               call dscal(n, -one, resid, 1)
             end if
          end if
 c
@@ -3743,15 +3525,7 @@ c        %------------------------------------%
 c
          j = j + 1
          if (j .gt. k+np) then
-c           call second (t1)
-cs          tsaitr = tsaitr + (t1 - t0)
-cs            tsaitr = 0.0
             ido = 99
-c
-cs            if (msglvl .gt. 1) then
-cs               if (k+np .gt. 1) then
-cs               end if
-cs            end if
 c
             go to 9000
          end if
@@ -3913,8 +3687,7 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-cm      include   'debug.h'
-      include   'stat.h'
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -3943,7 +3716,6 @@ c     | Local Scalars |
 c     %---------------%
 c
       integer    i, iend, istart, itop, j, jj, kplusp
-cm      integer    i, iend, istart, itop, j, jj, kplusp, msglvl
       logical    first
       Double precision
      &           a1, a2, a3, a4, big, c, epsmch, f, g, r, s
@@ -3956,7 +3728,6 @@ c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dlacpy, dlartg, dlaset,
      &           dgemv
-c    &           second, dgemv
 c
 c     %--------------------%
 c     | External Functions |
@@ -3992,9 +3763,6 @@ c     %-------------------------------%
 c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
-c
-c     call second (t0)
-cm      msglvl = msapps
 c
       kplusp = kev + np
 c
@@ -4227,7 +3995,6 @@ c
       do 130 i = 1, kev
          call dgemv ('N', n, kplusp-i+1, one, v, ldv,
      &               q(1,kev-i+1), 1, zero, workd(1), 1)
-cx     &               q(1,kev-i+1), 1, zero, workd, 1)
          call dcopy (n, workd, 1, v(1,kplusp-i+1), 1)
   130 continue
 c
@@ -4254,14 +4021,9 @@ c     |    betak = e_{kev+1}'*H*e_{kev}     |
 c     %-------------------------------------%
 c
       call dscal (n, q(kplusp,kev), resid(1), 1)
-cx      call dscal (n, q(kplusp,kev), resid, 1)
+c
       if (h(kev+1,1) .gt. zero)
      &   call daxpy (n, h(kev+1,1), v(1,kev+1), 1, resid, 1)
-c
-c
-c     call second (t1)
-cs    tsapps = tsapps + (t1 - t0)
-      tsapps = 0.0
 c
  9000 continue
       return
@@ -4364,8 +4126,7 @@ c     %----------------------------------------------------%
 c     | Include files for debugging and timing information |
 c     %----------------------------------------------------%
 c
-cm      include   'debug.h'
-      include   'stat.h'
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -4382,26 +4143,16 @@ c
       Double precision
      &           eig(n), bounds(n), h(ldh,2), workl(3*n)
 c
-c     %------------%
-c     | Parameters |
-c     %------------%
-c
-cua      Double precision
-cua     &           zero
-cua      parameter (zero = 0.0D+0)
-c
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
       integer    k
-cm      integer    k, msglvl
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-c     external   dcopy, dstqrb, second
       external   dcopy, dstqrb
 c
 c     %-----------------------%
@@ -4414,13 +4165,10 @@ c     | & message level for debugging |
 c     %-------------------------------%
 c
 c     call second (t0)
-cm      msglvl = mseigt
 c
 c
       call dcopy  (n, h(1,2), 1, eig(1), 1)
       call dcopy  (n-1, h(2,1), 1, workl(1), 1)
-cx      call dcopy  (n, h(1,2), 1, eig, 1)
-cx      call dcopy  (n-1, h(2,1), 1, workl, 1)
       call dstqrb (n, eig, workl, bounds, workl(n+1), ierr)
       if (ierr .ne. 0) go to 9000
 c
@@ -4434,8 +4182,6 @@ c
    30 continue
 c
 c     call second (t1)
-cs    tseigt = tseigt + (t1 - t0)
-      tseigt = 0.0
 c
  9000 continue
       return
@@ -4551,6 +4297,8 @@ c-----------------------------------------------------------------------
 c
       subroutine dstqrb ( n, d, e, z, work, info )
 c
+      implicit none
+c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -4564,17 +4312,17 @@ c
       Double precision
      &           d( n ), e( n-1 ), z( n ), work( 2*n-2 )
 c
-c     .. parameters ..
       Double precision
      &                   zero, one, two, three
       parameter          ( zero = 0.0D+0, one = 1.0D+0,
      &                     two = 2.0D+0, three = 3.0D+0 )
+c
       integer            izero
       parameter          (izero=0 )
+c
       integer            maxit
       parameter          ( maxit = 30 )
-c     ..
-c     .. local scalars ..
+c
       integer            i, icompz, ii, iscale, j, jtot, k, l, l1,
      &                   lendm1, lendp1, lendsv, lm1, lsv, m, mm, mm1,
      &                   nm1, nmaxit, lend
@@ -4583,6 +4331,8 @@ c     .. local scalars ..
      &                   s, safmax, safmin, ssfmax, ssfmin, tst
 c     ..
 c     .. external functions ..
+      logical,  external :: neZERO, eqZERO
+
       logical            lsame
       Double precision
      &                   dlamch, dlanst, dlapy2
@@ -4600,28 +4350,6 @@ c
 c     test the input parameters.
 c
       info = 0
-c
-c$$$      IF( LSAME( COMPZ, 'N' ) ) THEN
-c$$$         ICOMPZ = 0
-c$$$      ELSE IF( LSAME( COMPZ, 'V' ) ) THEN
-c$$$         ICOMPZ = 1
-c$$$      ELSE IF( LSAME( COMPZ, 'I' ) ) THEN
-c$$$         ICOMPZ = 2
-c$$$      ELSE
-c$$$         ICOMPZ = -1
-c$$$      END IF
-c$$$      IF( ICOMPZ.LT.0 ) THEN
-c$$$         INFO = -1
-c$$$      ELSE IF( N.LT.0 ) THEN
-c$$$         INFO = -2
-c$$$      ELSE IF( ( LDZ.LT.1 ) .OR. ( ICOMPZ.GT.0 .AND. LDZ.LT.MAX( 1,
-c$$$     $         N ) ) ) THEN
-c$$$         INFO = -6
-c$$$      END IF
-c$$$      IF( INFO.NE.0 ) THEN
-c$$$         CALL XERBLA( 'SSTEQR', -INFO )
-c$$$         RETURN
-c$$$      END IF
 c
 c    *** New starting with version 2.5 ***
 c
@@ -4649,9 +4377,6 @@ c
 c
 c     compute the eigenvalues and eigenvectors of the tridiagonal
 c     matrix.
-c
-c$$      if( icompz.eq.2 )
-c$$$     $   call dlaset( 'full', n, n, zero, one, z, ldz )
 c
 c     *** New starting with version 2.5 ***
 c
@@ -4681,7 +4406,7 @@ c
       if( l1.le.nm1 ) then
          do 20 m = l1, nm1
             tst = abs( e( m ) )
-            if( tst.eq.zero )
+            if (eqZERO( tst))
      $         go to 30
             if( tst.le.( sqrt( abs( d( m ) ) )*sqrt( abs( d( m+
      $          1 ) ) ) )*eps ) then
@@ -4705,7 +4430,7 @@ c     scale submatrix in rows and columns l to lend
 c
       anorm = dlanst( 'i', lend-l+1, d( l ), e( l ) )
       iscale = 0
-      if( anorm.eq.zero )
+      if (eqZERO( anorm))
      $   go to 10
       if( anorm.gt.ssfmax ) then
          iscale = 1
@@ -4713,20 +4438,14 @@ c
      $                d( l ), n, info )
          call dlascl( 'g', izero, izero, anorm, ssfmax, lend-l, 1,
      $                 e( l ), n, info )
-cv         call dlascl( 'g', 0, 0, anorm, ssfmax, lend-l+1, 1, d( l ), n,
-cv     $                info )
-cv         call dlascl( 'g', 0, 0, anorm, ssfmax, lend-l, 1, e( l ), n,
-cv     $                info )
+c
       else if( anorm.lt.ssfmin ) then
          iscale = 2
          call dlascl( 'g', izero, izero, anorm, ssfmin, lend-l+1, 1,
      $                d( l ), n, info )
          call dlascl( 'g', izero, izero, anorm, ssfmin, lend-l, 1,
      $                 e( l ), n, info )
-cv         call dlascl( 'g', 0, 0, anorm, ssfmin, lend-l+1, 1, d( l ), n,
-cv     $                info )
-cv         call dlascl( 'g', 0, 0, anorm, ssfmin, lend-l, 1, e( l ), n,
-cv     $                info )
+c
       end if
 c
 c     choose between ql and qr iteration
@@ -4769,8 +4488,6 @@ c
                call dlaev2( d( l ), e( l ), d( l+1 ), rt1, rt2, c, s )
                work( l ) = c
                work( n-1+l ) = s
-c$$$               call dlasr( 'r', 'v', 'b', n, 2, work( l ),
-c$$$     $                     work( n-1+l ), z( 1, l ), ldz )
 c
 c              *** New starting with version 2.5 ***
 c
@@ -4832,8 +4549,6 @@ c        if eigenvectors are desired, then apply saved rotations.
 c
          if( icompz.gt.0 ) then
             mm = m - l + 1
-c$$$            call dlasr( 'r', 'v', 'b', n, mm, work( l ), work( n-1+l ),
-c$$$     $                  z( 1, l ), ldz )
 c
 c             *** New starting with version 2.5 ***
 c
@@ -4887,10 +4602,6 @@ c
          if( m.eq.l-1 ) then
             if( icompz.gt.0 ) then
                call dlaev2( d( l-1 ), e( l-1 ), d( l ), rt1, rt2, c, s )
-c$$$               work( m ) = c
-c$$$               work( n-1+m ) = s
-c$$$               call dlasr( 'r', 'v', 'f', n, 2, work( m ),
-c$$$     $                     work( n-1+m ), z( 1, l-1 ), ldz )
 c
 c               *** New starting with version 2.5 ***
 c
@@ -4952,8 +4663,6 @@ c        if eigenvectors are desired, then apply saved rotations.
 c
          if( icompz.gt.0 ) then
             mm = l - m + 1
-c$$$            call dlasr( 'r', 'v', 'f', n, mm, work( m ), work( n-1+m ),
-c$$$     $                  z( 1, m ), ldz )
 c
 c           *** New starting with version 2.5 ***
 c
@@ -4986,19 +4695,13 @@ c
      $                 1, d( lsv ), n, info )
          call dlascl( 'g', izero, izero, ssfmax, anorm, lendsv-lsv,
      $                 1, e( lsv ), n, info )
-cv         call dlascl( 'g', 0, 0, ssfmax, anorm, lendsv-lsv+1, 1,
-cv     $                d( lsv ), n, info )
-cv         call dlascl( 'g', 0, 0, ssfmax, anorm, lendsv-lsv, 1, e( lsv ),
-cv     $                n, info )
+c
       else if( iscale.eq.2 ) then
          call dlascl( 'g', izero, izero, ssfmin, anorm, lendsv-lsv+1,
      $                 1, d( lsv ), n, info )
          call dlascl( 'g', izero, izero, ssfmin, anorm, lendsv-lsv,
      $                 1, e( lsv ), n, info )
-cv         call dlascl( 'g', 0, 0, ssfmin, anorm, lendsv-lsv+1, 1,
-cv     $                d( lsv ), n, info )
-cv         call dlascl( 'g', 0, 0, ssfmin, anorm, lendsv-lsv, 1, e( lsv ),
-cv     $                n, info )
+c
       end if
 c
 c     check for no convergence to an eigenvalue after a total
@@ -5007,7 +4710,7 @@ c
       if( jtot.lt.nmaxit )
      $   go to 10
       do 150 i = 1, n - 1
-         if( e( i ).ne.zero )
+         if(neZERO( e( i )))
      $      info = info + 1
   150 continue
       go to 190
@@ -5038,7 +4741,7 @@ c
             if( k.ne.i ) then
                d( k ) = d( i )
                d( i ) = p
-c$$$               call dswap( n, z( 1, i ), 1, z( 1, k ), 1 )
+c
 c           *** New starting with version 2.5 ***
 c
                p    = z(k)
@@ -5058,53 +4761,7 @@ c     %---------------%
 c
       end
 c
-c\SCCS Information: @(#)
-c FILE: stats.F   SID: 2.1   DATE OF SID: 4/19/96   RELEASE: 2
-c     %---------------------------------------------%
-c     | Initialize statistic and timing information |
-c     | for symmetric Arnoldi code.                 |
-c     %---------------------------------------------%
-
-      subroutine dstats
-
-c     %--------------------------------%
-c     | See stat.doc for documentation |
-c     %--------------------------------%
-      include   'stat.h'
-
-c     %-----------------------%
-c     | Executable Statements |
-c     %-----------------------%
-
-      nopx   = 0
-      nbx    = 0
-      nrorth = 0
-cp      nitref = 0
-cp      nrstrt = 0
-
-ct      tsaupd = 0.0D+0
-ct      tsaup2 = 0.0D+0
-ct      tsaitr = 0.0D+0
-ct      tseigt = 0.0D+0
-ct      tsgets = 0.0D+0
-ct      tsapps = 0.0D+0
-ct      tsconv = 0.0D+0
-ct      titref = 0.0D+0
-ct      tgetv0 = 0.0D+0
-ct      trvec  = 0.0D+0
-
-c     %----------------------------------------------------%
-c     | User time including reverse communication overhead |
-c     %----------------------------------------------------%
-ct      tmvopx = 0.0D+0
-ct      tmvbx  = 0.0D+0
-
-      return
 c
-c     End of dstats
-c
-      end
-c-----------------------------------------------------------------------
 c\BeginDoc
 c
 c\Name: dsortr
@@ -5163,6 +4820,8 @@ c
 c-----------------------------------------------------------------------
 c
       subroutine dsortr (which, apply, n, x1, x2)
+c
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |

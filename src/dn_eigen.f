@@ -12,7 +12,7 @@ c     %--------------%
 c     | Local Arrays |
 c     %--------------%
 c
-      integer           iparam(11), ipntr(14),
+      integer           iparam(8), ipntr(14),
      &                  ja(*), ia(na+1)
 c
       logical           select(ncv)
@@ -21,7 +21,7 @@ c
      &                  dr(maxnev+1), di(maxnev+1), resid(n),
      &                  v(n, ncv), workd(3*n),
      &                  workev(3*ncv),
-     &                  workl(3*ncv*ncv+6*ncv),
+     &                  workl(3*ncv**2+6*ncv),
      &                  a(*)
 c
 c     %---------------%
@@ -41,16 +41,6 @@ c
       Double precision
      &                  zero
       parameter         (zero = 0.0D+0)
-c
-cm    include 'debug.h'
-cm    ndigit = -3
-cm    logfil = 6
-cm    mngets = 0
-cm    mnaitr = 0
-cm    mnapps = 0
-cm    mnaupd = 0
-cm    mnaup2 = 0
-cm    mneupd = 0
 c
       bmat   = 'I'
 c
@@ -79,7 +69,6 @@ c
       else if (iwhich .eq. 6) then
             which = 'SI'
       else
-CcC           callintpr(' Error: Invalid mode.', -1, 0, 0)
 c
         goto 9000
       end if
@@ -109,8 +98,6 @@ c
 c
       if ( info .lt. 0 ) then
 c
-c         call errpr (info)
-c
          goto 9000
 c
       else
@@ -122,8 +109,6 @@ c
 c
          if ( ierr .lt. 0 ) then
 c
-c            call errpr (ierr)
-c
             goto 9000
 c
          end if
@@ -133,5 +118,4 @@ c
  9000 continue
 c
       end
-c
 c

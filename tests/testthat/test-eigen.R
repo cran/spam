@@ -24,12 +24,12 @@ test_that("check format of return", {
   spameigen <- eigen.spam(prec2020, nev = nEV, control = list(spamflag = TRUE, mode = 'LM'), only.values = FALSE)
   nsys_spameigen <- eigen.spam(dn_gmrf, nev = nEV, control = list(spamflag = TRUE, mode = 'LM'), only.values = FALSE)
 
-  expect_identical(class(spameigen),              "list")
-  expect_identical(class(spameigen$values),       "numeric")
-  expect_identical(class(spameigen$vectors),      "matrix")
-  expect_identical(class(nsys_spameigen),         "list")
-  expect_identical(class(nsys_spameigen$values),  "complex")
-  expect_identical(class(nsys_spameigen$vectors), "matrix")
+  expect_true(is(spameigen,              "list"))
+  expect_true(is(spameigen$values,       "numeric"))
+  expect_true(is(spameigen$vectors,      "matrix"))
+  expect_true(is(nsys_spameigen,         "list"))
+  expect_true(is(nsys_spameigen$values,  "complex"))
+  expect_true(is(nsys_spameigen$vectors, "matrix"))
 })
 
 test_that("eigenvalues", {

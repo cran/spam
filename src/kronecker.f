@@ -14,7 +14,7 @@
       n = 1
       nr = 2
       row(1) = 1
-      do i = 1,xnrow 
+      do i = 1,xnrow
          xdiffi = xrow(i+1)-xrow(i)
          do k = 1,ynrow
             ydiffk = yrow(k+1)-yrow(k)
@@ -52,7 +52,7 @@
       n = 1
       nr = 2
       row(1) = 1
-      do i = 1,xnrow 
+      do i = 1,xnrow
          xdiffi = xrow(i+1)-xrow(i)-1
          do k = 1,ynrow
             ydiffk = yrow(k+1)-yrow(k)-1

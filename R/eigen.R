@@ -139,22 +139,34 @@ eigen_approx <- function(x,
   if (f_routine != "ds_eigen_f" && f_routine != "dn_eigen_f")
     stop("non valid fortran routine is specified", call. = TRUE)
 
+
+
   f_mode <- setMode(sMode = mode, symmetric = ifelse(identical(f_routine, "ds_eigen_f"), TRUE, FALSE))
 
   fortran_object <- result <- list(NULL)
 
   if(getOption("spam.force64") || .format.spam(x)$package != "spam") {
     SS <- .format64()
+    f_routine <- paste0(f_routine, "64")
   } else {
     SS <- .format32 }
 
   # Fortran call: symmetric matrices
-  if (f_routine == "ds_eigen_f") {
+  if (identical(f_routine, "ds_eigen_f") || identical(f_routine, "ds_eigen_f64")) {
+
+    # define upperbound for matrices in spam64, since ARPACK routines rely on BLAS/LAPACK functions
+    # which have no integer/logical's of kind = 8
+    if (max(x@dimension[1], ncv*(ncv + 8))*3 >= 2^31-1) {
+      stop("the dimension and of the input matrix and/or the required number of eigenvalues
+            is too large for the current eigenvalue decomposition implementation.\n
+            Reducing the argument \"nev\" and\"ncv\" in the contorl options may helps.")
+    }
+
     fortran_object <- .C64 (f_routine,
-                            SIGNATURE = c(SS$signature, SS$signature, SS$signature, SS$signature,
+                            SIGNATURE = c("integer", "integer", "integer", "integer",
+                                          "integer", "integer", "double",
                                           SS$signature, SS$signature, "double",
-                                          SS$signature, SS$signature, "double",
-                                          "double", SS$signature),
+                                          "double", "integer"),
                             maxnev    = nev,
                             ncv       = ncv,
                             maxitr    = nitr,
@@ -166,7 +178,7 @@ eigen_approx <- function(x,
                             ia        = x@rowpointers,
                             v         = vector_dc("double", x@dimension[1]*ncv),
                             d         = vector_dc("double", nev),
-                            iparam    = integer_dc(11),
+                            iparam    = integer_dc(8),
                             INTENT    = c("r", "r", "r", "r", "r", "r", "r", "r", "r",
                                            "rw", "rw", "rw"),
                             NAOK      = getOption("spam.NAOK"),
@@ -183,12 +195,20 @@ eigen_approx <- function(x,
   }
 
   # Fortran call: nonsymmetric matrices
-  if (f_routine == "dn_eigen_f") {
+  if (identical(f_routine, "dn_eigen_f") || identical(f_routine, "dn_eigen_f64")) {
+
+    if (max(x@dimension[1], ncv^2+6*ncv)*3 >= 2^31-1) {
+      stop("the dimension and of the input matrix and/or the required number of eigenvalues
+            is too large for the current eigenvalue decomposition implementation.\n
+            Reducing the argument \"nev\" and\"ncv\" in the contorl options may helps.")
+    }
+
+
     fortran_object <- .C64 (f_routine,
-                            SIGNATURE = c(SS$signature, SS$signature, SS$signature, SS$signature,
+                            SIGNATURE = c("integer", "integer", "integer", "integer",
+                                          "integer", "integer", "double",
                                           SS$signature, SS$signature, "double",
-                                          SS$signature, SS$signature, "double",
-                                          "double", "double", SS$signature),
+                                          "double", "double", "integer"),
                             maxnev    = nev,
                             ncv       = ncv,
                             maxitr    = nitr,
@@ -201,7 +221,7 @@ eigen_approx <- function(x,
                             v         = vector_dc("double", x@dimension[1]*ncv),
                             dr        = vector_dc("double", nev),
                             di        = vector_dc("double", nev),
-                            iparam    = integer_dc(11),
+                            iparam    = integer_dc(8),
                             INTENT    = c("r", "r", "r", "r", "r", "r", "r", "r", "r",
                                           "rw", "rw", "rw", "rw"),
                             NAOK      = getOption("spam.NAOK"),
@@ -219,7 +239,10 @@ eigen_approx <- function(x,
 
   if (verbose) {
     cat("\n used options/arguments:")
-    if (identical(f_routine, "dn_eigen_f") ) { issym <- "non symmetric" } else { issym <- "symmetric" }
+    if (identical(f_routine, "dn_eigen_f") || identical(f_routine, "dn_eigen_f64")) {
+      issym <- "non symmetric"
+    } else {
+      issym <- "symmetric" }
     cat(paste("\n      FORTRAN routine:", issym, "matrices"))
     cat(paste("\n      nitr:", nitr))
     cat(paste("\n      ncv:", ncv, "\n"))
@@ -228,7 +251,7 @@ eigen_approx <- function(x,
     cat(paste("\n     ", nev, "eigenvalues requested and", result$nconv, "converged\n"))
   }
 
-  if (nev != result$nconv)
+  if (result$nconv < nev)
     warning(paste("\n only", result$nconv, "instead of", nev ,"eigenvalues converged, try to increase 'control = list(nitr = .., ncv = ..)'"), call. = TRUE)
 
   if (is.null(result)) {
@@ -298,8 +321,6 @@ eigen.spam <- function (x, nev = 10, symmetric, only.values = FALSE, control = l
       con$ncv <- min(x@dimension[1] + 1, max(2 * nev + 1, ncvMaxMin)) }
 
     if (is.null(con$nitr)) { con$nitr <- con$ncv + 1000 }
-
-    # if (is.null(con$cmplxeps)) { con$cmplxeps <- .Machine$double.eps }
 
     # calculate eigenvalues and vectors
     resContainer <- eigen_approx(x            = x,

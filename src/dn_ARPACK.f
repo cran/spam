@@ -10,7 +10,6 @@ c dlaqrb.f
 c dngets.f
 c dgetv0.f
 c dnaitr.f
-c dstatn.f
 c
 
 
@@ -323,13 +322,6 @@ c-----------------------------------------------------------------------
 c
       implicit none
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -344,7 +336,7 @@ c     %-----------------%
 c     | Array Arguments |
 c     %-----------------%
 c
-      integer    iparam(11), ipntr(14)
+      integer    iparam(8), ipntr(14)
       logical    select(ncv)
       Double precision
      &           dr(nev+1)    , di(nev+1), resid(n)  ,
@@ -373,7 +365,6 @@ c
      &           invsub, iuptri, iwev  , iwork(1),
      &           j     , k     , ldh   , ldq     ,
      &           mode  , outncv, ritzr   ,
-cm     &           mode  , msglvl, outncv, ritzr   ,
      &           ritzi , wri   , wrr   , irr     ,
      &           iri   , ibd   , ishift, numcnv  ,
      &           np    , jj
@@ -412,7 +403,6 @@ c     %------------------------%
 c     | Set default parameters |
 c     %------------------------%
 c
-cm      msglvl = mneupd
       mode = iparam(7)
       nconv = iparam(5)
       info = 0
@@ -459,7 +449,7 @@ c
 c
       if (mode .eq. 1 .or. mode .eq. 2) then
          type = 'REGULR'
-      else if (mode .eq. 3 .and. sigmai .eq. zero) then
+      else if (mode .eq. 3 .and. (abs(sigmai) .le. zero)) then
          type = 'SHIFTI'
       else if (mode .eq. 3 ) then
          type = 'REALPT'
@@ -678,8 +668,6 @@ c
          if (type .eq. 'REGULR') then
             call dcopy (nconv, workl(iheigr), 1, dr(ione), 1)
             call dcopy (nconv, workl(iheigi), 1, di(ione), 1)
-CO            call dcopy (nconv, workl(iheigr), 1, dr, 1)
-CO            call dcopy (nconv, workl(iheigi), 1, di, 1)
          end if
 c
 c        %----------------------------------------------------------%
@@ -709,7 +697,6 @@ c
      &                ldq   , workev       , v            ,
      &                ldv   , workd(n+1)   , ierr)
          call dlacpy ('All', n, nconv, v(1,1), ldv, z, ldz)
-cx         call dlacpy ('All', n, nconv, v, ldv, z, ldz)
 c
          do 20 j=1, nconv
 c
@@ -748,11 +735,9 @@ c
 c
             call dtrevc ('Right', 'Select'     , select       ,
      &                   ncv    , workl(iuptri), ldq          ,
-CO     &                   vl     , 1            , workl(invsub),
      &                   vl, ione, workl(invsub),
      &                   ldq    , ncv          , outncv       ,
      &                   workev(1) , ierr)
-cx     &                   workev , ierr)
 c
             if (ierr .ne. 0) then
                 info = -9
@@ -770,7 +755,7 @@ c
             iconj = 0
             do 40 j=1, nconv
 c
-               if ( workl(iheigi+j-1) .eq. zero ) then
+               if ( abs( workl(iheigi+j-1) ) .le. zero ) then
 c
 c                 %----------------------%
 c                 | real eigenvalue case |
@@ -814,14 +799,12 @@ c
  40         continue
 c
             call dgemv ('T', ncv, nconv, one, workl(invsub),
-CO     &                 ldq, workl(ihbds), 1, zero,  workev, 1)
-cx     &                 ldq, workl(ihbds), ione, zero, workev, 1)
      &               ldq, workl(ihbds), int(ione, kind=4),
      &               zero, workev(ione), 1)
 c
             iconj = 0
             do 45 j=1, nconv
-               if (workl(iheigi+j-1) < zero) then
+               if (workl(iheigi+j-1) .le. zero) then
 c
 c                 %-------------------------------------------%
 c                 | Complex conjugate pair case. Note that    |
@@ -838,11 +821,6 @@ c
                   end if
                end if
  45         continue
-c
-cm            if (msglvl .gt. 2) then
-cm               call dcopy (ncv, workl(invsub+ncv-1), ldq,
-cm     &                    workl(ihbds), 1)
-cm            end if
 c
 c           %---------------------------------------%
 c           | Copy Ritz estimates into workl(ihbds) |
@@ -887,8 +865,6 @@ c        | An approximate invariant subspace is not needed.     |
 c        | Place the Ritz values computed DNAUPD  into DR and DI |
 c        %------------------------------------------------------%
 c
-CO         call dcopy (nconv, workl(ritzr), 1, dr, 1)
-CO         call dcopy (nconv, workl(ritzi), 1, di, 1)
          call dcopy (nconv, workl(ritzr), 1, dr(ione), 1)
          call dcopy (nconv, workl(ritzi), 1, di(ione), 1)
          call dcopy (nconv, workl(ritzr), 1, workl(iheigr), 1)
@@ -960,15 +936,11 @@ c
      &                           + sigmai
  80         continue
 c
-CO            call dcopy (nconv, workl(iheigr), 1, dr, 1)
-CO            call dcopy (nconv, workl(iheigi), 1, di, 1)
             call dcopy (nconv, workl(iheigr), 1, dr(ione), 1)
             call dcopy (nconv, workl(iheigi), 1, di(ione), 1)
 c
          else if (type .eq. 'REALPT' .or. type .eq. 'IMAGPT') then
 c
-CO            call dcopy (nconv, workl(iheigr), 1, dr, 1)
-CO            call dcopy (nconv, workl(iheigi), 1, di, 1)
             call dcopy (nconv, workl(iheigr), 1, dr(ione), 1)
             call dcopy (nconv, workl(iheigi), 1, di(ione), 1)
 c
@@ -997,7 +969,8 @@ c        %------------------------------------------------%
 c
          iconj = 0
          do 110 j=1, nconv
-            if (workl(iheigi+j-1) .eq. zero) then
+c            if (workl(iheigi+j-1) .eq. zero) then
+            if (abs(workl(iheigi+j-1)) .le. zero) then
                workev(j) =  workl(invsub+(j-1)*ldq+ncv-1) /
      &                      workl(iheigr+j-1)
             else if (iconj .eq. 0) then
@@ -1201,7 +1174,6 @@ c                      vectors associated with the "wanted" Ritz values.
 c          -------------------------------------------------------------
 c
 c          IPARAM(2) = No longer referenced.
-c
 c          IPARAM(3) = MXITER
 c          On INPUT:  maximum number of Arnoldi update iterations allowed.
 c          On OUTPUT: actual number of Arnoldi update iterations taken.
@@ -1227,10 +1199,10 @@ c          communication (IPARAM(1)=0), dnaupd returns NP, the number
 c          of shifts the user is to provide. 0 < NP <=NCV-NEV. See Remark
 c          5 below.
 c
-c          IPARAM(9) = NUMOP, IPARAM(10) = NUMOPB, IPARAM(11) = NUMREO,
-c          OUTPUT: NUMOP  = total number of OP*x operations,
-c                  NUMOPB = total number of B*x operations if BMAT='G',
-c                  NUMREO = total number of steps of re-orthogonalization.
+crc          IPARAM(9) = NUMOP, IPARAM(10) = NUMOPB, IPARAM(11) = NUMREO,
+crc          OUTPUT: NUMOP  = total number of OP*x operations,
+crc                  NUMOPB = total number of B*x operations if BMAT='G',
+crc                  NUMREO = total number of steps of re-orthogonalization.
 c
 c  IPNTR   Integer array of length 14.  (OUTPUT)
 c          Pointer to mark the starting locations in the WORKD and WORKL
@@ -1445,13 +1417,6 @@ c
 c
       implicit none
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -1465,7 +1430,7 @@ c     %-----------------%
 c     | Array Arguments |
 c     %-----------------%
 c
-      integer    iparam(11), ipntr(14)
+      integer    iparam(8), ipntr(14)
       Double precision
      &           resid(n), v(ldv,ncv), workd(3*n), workl(lworkl)
 c
@@ -1476,28 +1441,23 @@ c
       Double precision
      &           zero
       parameter (zero = 0.0D+0)
-cua     &           one,
-cua      parameter (one = 1.0D+0, zero = 0.0D+0)
 c
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
       integer    bounds, ierr, ih, iq, ishift, iupd, iw,
-cm     &           ldh, ldq, levec, mode, msglvl, mxiter, nb,
      &           ldh, ldq, levec, mode, mxiter, nb,
      &           nev0, next, np, ritzi, ritzr, j
       save       bounds, ih, iq, ishift, iupd, iw, ldh, ldq,
      &           levec, mode,  mxiter, nb, nev0, next,
-cm      &           levec, mode, msglvl, mxiter, nb, nev0, next,
      &           np, ritzi, ritzr
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-c      external   dnaup2, second, dstatn
-      external   dnaup2,  dstatn
+      external   dnaup2
 c
 c     %--------------------%
 c     | External Functions |
@@ -1521,10 +1481,6 @@ c        %-------------------------------%
 c        | Initialize timing statistics  |
 c        | & message level for debugging |
 c        %-------------------------------%
-c
-         call dstatn
-c         call second (t0)
-cm         msglvl = mnaupd
 c
 c        %----------------%
 c        | Error checking |
@@ -1662,9 +1618,6 @@ c
 c
       iparam(3) = mxiter
       iparam(5) = np
-      iparam(9) = nopx
-      iparam(10) = nbx
-      iparam(11) = nrorth
 c
 c     %------------------------------------%
 c     | Exit if there was an informational |
@@ -1674,55 +1627,9 @@ c
       if (info .lt. 0) go to 9000
       if (info .eq. 2) info = 3
 c
-c      call second (t1)
-cs      tnaupd = t1 - t0
-ct      tnaupd = 0.0
-c
-cm      if (msglvl .gt. 0) then
-c
 c        %--------------------------------------------------------%
 c        | Version Number & Version Date are defined in version.h |
 c        %--------------------------------------------------------%
-c
-c
-CcC      callintpr(' ', -1, 0, 0)
-CcC      callintpr(' ', -1, 0, 0)
-c
-CcC      callintpr('  ============================================',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = nonsym implicit Arnoldi update code      =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = Version Number: 2.4                      =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = Version Date: 07/31/96                   =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  ============================================',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  = Summary of timing statistics             =',
-CcC     &            -1, 0, 0)
-CcC      callintpr('  ============================================',
-CcC     &            -1, 0, 0)
-c
-CcC      callintpr(' ', -1, 0, 0)
-CcC      callintpr(' ', -1, 0, 0)
-c
-CcC      callintpr('  Total number update iterations             = ',
-CcC     &            -1, mxiter, 1)
-CcC      callintpr('  Total number of reorthogonalization steps  = ',
-CcC     &            -1, nrorth, 1)
-CcC      callintpr('  Total time in Arnoldi update routine       = ',
-CcC     &            -1, tnaupd, 1)
-CcC      callintpr('  Total time in saup2 routine                = ',
-CcC     &            -1, tnaitr, 1)
-CcC      callintpr('  Total time in basic Arnoldi iteration loop = ',
-CcC     &            -1, titref, 1)
-CcC      callintpr('  Total time in reorthogonalization phase    = ',
-CcC     &            -1, tgetv0, 1)
-c
-CcC      callintpr(' ', -1, 0, 0)
-CcC      callintpr(' ', -1, 0, 0)
-c
-cm      end if
 c
  9000 continue
 c
@@ -1917,9 +1824,6 @@ c     %----------------------------------------------------%
 c
       implicit none
 c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -1959,20 +1863,16 @@ c
       character  wprime*2
       logical    cnorm , getv0, initv, update, ushift, dnatrue
       integer    ierr  , iter , j    , kplusp, nconv,
-cm      integer    ierr  , iter , j    , kplusp, msglvl, nconv,
      &           nevbef, nev0 , np0  , nptemp, numcnv
       Double precision
      &           rnorm , temp , eps23
       save       cnorm , getv0, initv, update, ushift,
      &           rnorm , iter , eps23, kplusp,  nconv ,
-cm    &           rnorm , iter , eps23, kplusp, msglvl, nconv ,
      &           nevbef, nev0 , np0  , numcnv
 c
 c     %-----------------------%
 c     | Local array arguments |
 c     %-----------------------%
-c
-cm      integer    kp(4)
 c
 c     %----------------------%
 c     | External Subroutines |
@@ -1985,6 +1885,7 @@ c
 c     %--------------------%
 c     | External Functions |
 c     %--------------------%
+c
 c
       Double precision
      &           ddot, dnrm2, dlapy2, dlamch
@@ -2003,10 +1904,6 @@ c
       dnatrue = .true.
 c
       if (ido .eq. 0) then
-c
-c         call second (t0)
-c
-cm         msglvl = mnaup2
 c
 c        %-------------------------------------%
 c        | Get the machine dependent constant. |
@@ -2067,7 +1964,8 @@ c
 c
          if (ido .ne. 99) go to 9000
 c
-         if (rnorm .eq. zero) then
+         if (abs(rnorm) .le. zero) then
+c         if (rnorm .eq. zero) then
 c
 c           %-----------------------------------------%
 c           | The initial vector is zero. Error exit. |
@@ -2218,13 +2116,6 @@ c
          call dnconv (nev, ritzr(np+1), ritzi(np+1), workl(2*np+1),
      &        tol, nconv)
 c
-cm         if (msglvl .gt. 2) then
-cm            kp(1) = nev
-cm            kp(2) = np
-cm            kp(3) = numcnv
-cm            kp(4) = nconv
-cm         end if
-c
 c        %---------------------------------------------------------%
 c        | Count the number of unwanted Ritz values that have zero |
 c        | Ritz estimates. If any Ritz estimates are equal to zero |
@@ -2237,7 +2128,8 @@ c        %---------------------------------------------------------%
 c
          nptemp = np
          do 30 j=1, nptemp
-            if (bounds(j) .eq. zero) then
+c            if (bounds(j) .eq. zero) then
+            if (abs( bounds(j) ) .le. zero) then
                np = np - 1
                nev = nev + 1
             end if
@@ -2380,13 +2272,6 @@ c
 c
          end if
 c
-cm         if (msglvl .gt. 0) then
-cm            if (msglvl .gt. 1) then
-cm               kp(1) = nev
-cm               kp(2) = np
-cm            end if
-cm         end if
-c
          if (ishift .eq. 0) then
 c
 c           %-------------------------------------------------------%
@@ -2418,8 +2303,6 @@ c            | RITZR, RITZI to free up WORKL    |
 c            | for non-exact shift case.        |
 c            %----------------------------------%
 c
-CO             call dcopy (np, workl,       1, ritzr, 1)
-CO             call dcopy (np, workl(np+1), 1, ritzi, 1)
              call dcopy (np, workl,       1, ritzr(1), 1)
              call dcopy (np, workl(np+1), 1, ritzi(1), 1)
          end if
@@ -2442,9 +2325,7 @@ c        | the first step of the next call to dnaitr.  |
 c        %---------------------------------------------%
 c
          cnorm = .true.
-c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(n+1), 1)
             ipntr(1) = n + 1
             ipntr(2) = 1
@@ -2456,7 +2337,6 @@ c           %----------------------------------%
 c
             go to 9000
          else if (bmat .eq. 'I') then
-CO            call dcopy (n, resid, 1, workd, 1)
             call dcopy (n, resid, 1, workd(1), 1)
          end if
 c
@@ -2466,12 +2346,6 @@ c        %----------------------------------%
 c        | Back from reverse communication; |
 c        | WORKD(1:N) := B*RESID            |
 c        %----------------------------------%
-c
-cs         if (bmat .eq. 'G') then
-c            call second (t3)
-cs            tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-cs         end if
 c
          if (bmat .eq. 'G') then
             rnorm = ddot (n, resid, 1, workd, 1)
@@ -2500,10 +2374,6 @@ c
 c     %------------%
 c     | Error Exit |
 c     %------------%
-c
-c      call second (t1)
-cs      tnaup2 = t1 - t0
-cs      tnaup2 = 0.0
 c
  9000 continue
 c
@@ -2661,13 +2531,6 @@ c
 
       implicit none
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -2697,7 +2560,6 @@ c     | Local Scalars & Arrays |
 c     %------------------------%
 c
       integer    i, iend, ir, istart, j, jj, kplusp, nr
-cm      integer    i, iend, ir, istart, j, jj, kplusp, msglvl, nr
       logical    cconj, first
       Double precision
      &           c, f, g, h11, h12, h21, h22, h32, ovfl, r, s, sigmai,
@@ -2710,11 +2572,11 @@ c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dlacpy, dlarfg, dlarf,
      &           dlaset, dlabad, dlartg
-c     &           dlaset, dlabad, second, dlartg
 c
 c     %--------------------%
 c     | External Functions |
 c     %--------------------%
+c
 c
       Double precision
      &           dlamch, dlanhs, dlapy2
@@ -2759,7 +2621,6 @@ c     | & message level for debugging |
 c     %-------------------------------%
 c
 c      call second (t0)
-cm      msglvl = mnapps
       kplusp = kev + np
 c
 c     %--------------------------------------------%
@@ -2843,7 +2704,8 @@ c           | REFERENCE: LAPACK subroutine dlahqr    |
 c           %----------------------------------------%
 c
             tst1 = abs( h( i, i ) ) + abs( h( i+1, i+1 ) )
-            if( tst1.eq.zero )
+c            if( tst1.eq.zero )
+            if( abs(tst1) .le. zero )
      &         tst1 = dlanhs( '1', kplusp-jj+1, h, ldh, workl )
             if( abs( h( i+1,i ) ).le.max( ulp*tst1, smlnum ) ) then
                iend = i
@@ -3067,7 +2929,8 @@ c        | REFERENCE: LAPACK subroutine dlahqr        |
 c        %--------------------------------------------%
 c
          tst1 = abs( h( i, i ) ) + abs( h( i+1, i+1 ) )
-         if( tst1.eq.zero )
+c         if( tst1.eq.zero )
+         if( abs(tst1) .le. zero)
      &       tst1 = dlanhs( '1', kev, h, ldh, workl )
          if( h( i+1,i ) .le. max( ulp*tst1, smlnum ) )
      &       h(i+1,i) = zero
@@ -3093,7 +2956,6 @@ c
       do 140 i = 1, kev
          call dgemv ('N', n, kplusp-i+1, one, v, ldv,
      &        q(1,kev-i+1), 1, zero, workd(1), 1)
-CO     &               q(1,kev-i+1), 1, zero, workd(:), 1)
          call dcopy (n, workd, 1, v(1,kplusp-i+1), 1)
   140 continue
 c
@@ -3118,15 +2980,11 @@ c     |    sigmak = (e_{kplusp}'*Q)*e_{kev} |
 c     |    betak = e_{kev+1}'*H*e_{kev}     |
 c     %-------------------------------------%
 c
-CO      call dscal (n, q(kplusp,kev), resid, 1)
       call dscal (n, q(kplusp,kev), resid(1), int(ione, kind=4))
       if (h(kev+1,kev) .gt. zero)
      &   call daxpy (n, h(kev+1,kev), v(1,kev+1), 1, resid, 1)
 c
  9000 continue
-c      call second (t1)
-cs      tnapps = tnapps + (t1 - t0)
-cs      tnapps = 0.0
 c
       return
 c
@@ -3204,13 +3062,6 @@ c
 
       implicit none
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -3258,8 +3109,6 @@ c     |                                                             |
 c     | for some appropriate choice of norm.                        |
 c     %-------------------------------------------------------------%
 c
-c      call second (t0)
-c
 c     %---------------------------------%
 c     | Get machine dependent constant. |
 c     %---------------------------------%
@@ -3272,10 +3121,6 @@ c
          temp = max( eps23, dlapy2( ritzr(i), ritzi(i) ) )
          if (bounds(i) .le. tol*temp)   nconv = nconv + 1
    20 continue
-c
-c      call second (t1)
-cs      tnconv = tnconv + (t1 - t0)
-cs      tnconv = 0.0
 c
       return
 c
@@ -3734,13 +3579,6 @@ c
 
       implicit none
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -3779,7 +3617,6 @@ c     % initialization for spam/spam64
 c     % analogue for dneighone
       logical    select(1), dneightrue
       integer    i, iconj,  dneighone
-cm      integer    i, iconj, msglvl, dneighone
       Double precision
      &           temp, vl(1)
 c
@@ -3787,7 +3624,6 @@ c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
-c      external   dcopy, dlacpy, dlaqrb, dtrevc, second
       external   dcopy, dlacpy, dlaqrb, dtrevc
 c
 c     %--------------------%
@@ -3814,8 +3650,6 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-c      call second (t0)
-cm      msglvl = mneigh
       dneightrue = .true.
       dneighone = 1
 c
@@ -3893,7 +3727,6 @@ c
          end if
    10 continue
 c
-cx      call dgemv ('T', n, n, one, q, ldq, bounds, 1, zero, workl, 1)
       call dgemv('T', n, n, one, q, ldq, bounds(1), 1, zero,
      &         workl(1), 1)
 c
@@ -3930,11 +3763,6 @@ c
             end if
          end if
    20 continue
-c
-c
-c      call second (t1)
-cs      tneigh = tneigh + (t1 - t0)
-cs      tneigh = 0.0
 c
  9000 continue
       return
@@ -4104,6 +3932,7 @@ c     %--------------------%
 c     | External Functions |
 c     %--------------------%
 c
+c
       Double precision
      &           dlamch, dlanhs
       external   dlamch, dlanhs
@@ -4214,7 +4043,7 @@ c        %----------------------------------------------%
 c
          do 20 k = i, l + 1, -1
             tst1 = abs( h( k-1, k-1 ) ) + abs( h( k, k ) )
-            if( tst1.eq.zero )
+            if( abs(tst1) .le. zero)
      &         tst1 = dlanhs( '1', i-l+1, h( l, l ), ldh, work )
             if( abs( h( k, k-1 ) ).le.max( ulp*tst1, smlnum ) )
      &         go to 30
@@ -4327,7 +4156,6 @@ c           ------------------------------------------------------------
 c
             nr = min( dlqthree, i-k+1 )
             if( k.gt.m )
-cx     &         call dcopy( nr, h( k, k-1 ), 1, v, 1 )
      &         call dcopy( nr, h( k, k-1 ), 1, v(1), 1 )
             call dlarfg( nr, v( 1 ), v( 2 ), 1, t1 )
             if( k.gt.m ) then
@@ -4577,12 +4405,7 @@ c
       subroutine dngets ( ishift, which, kev, np, ritzr, ritzi, bounds)
 c     &                    shiftr, shifti )
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
+      implicit none
 c
 c     %------------------%
 c     | Scalar Arguments |
@@ -4597,7 +4420,6 @@ c     %-----------------%
 c
       Double precision
      &           bounds(kev+np), ritzr(kev+np), ritzi(kev+np)
-c     &           shiftr(1), shifti(1)
 c
 c     %------------%
 c     | Parameters |
@@ -4606,14 +4428,11 @@ c
       Double precision
      &           zero
       parameter (zero = 0.0)
-cua     &           one, zero
-cua      parameter (one = 1.0, zero = 0.0)
 c
 c     %---------------%
 c     | Local Scalars |
 c     %---------------%
 c
-cm      integer    msglvl
       logical    dngetstrue
 c
 c     %----------------------%
@@ -4621,7 +4440,6 @@ c     | External Subroutines |
 c     %----------------------%
 c
       external   dcopy, dsortc
-c      external   dcopy, dsortc, second
 c
 c     %----------------------%
 c     | Intrinsics Functions |
@@ -4638,8 +4456,6 @@ c     | Initialize timing statistics  |
 c     | & message level for debugging |
 c     %-------------------------------%
 c
-c      call second (t0)
-cm      msglvl = mngets
       dngetstrue = .true.
 c
 c
@@ -4676,8 +4492,9 @@ c     | Accordingly decrease NP by one. In other words keep   |
 c     | complex conjugate pairs together.                     |
 c     %-------------------------------------------------------%
 c
-      if (       ( ritzr(np+1) - ritzr(np) ) .eq. zero
-     &     .and. ( ritzi(np+1) + ritzi(np) ) .eq. zero ) then
+      if (       (  abs(ritzr(np+1) - ritzr(np)) .le. zero)
+     &     .and. (  abs(ritzi(np+1) + ritzi(np)) .le. zero) ) then
+
          np = np - 1
          kev = kev + 1
       end if
@@ -4695,10 +4512,6 @@ c        %-------------------------------------------------------%
 c
          call dsortc ( 'SR', dngetstrue, np, bounds, ritzr, ritzi )
       end if
-c
-c      call second (t1)
-cs      tngets = tngets + (t1 - t0)
-cs      tngets = 0.0
 c
       return
 c
@@ -4921,13 +4734,6 @@ c
 
       implicit none
 c
-c     %----------------------------------------------------%
-c     | Include files for debugging and timing information |
-c     %----------------------------------------------------%
-c
-cm      include   'debug.h'
-      include   'stat.h'
-c
 c     %------------------%
 c     | Scalar Arguments |
 c     %------------------%
@@ -4962,7 +4768,6 @@ c
       logical    first, orth1, orth2, rstart, step3, step4
       integer    ierr, i, infol, ipj, irj, ivj, iter, itry, j,
      &            jj
-cm     &           msglvl, jj
       integer    dnaitrone
       parameter (dnaitrone = 1)
 c
@@ -4975,22 +4780,13 @@ c
      &           wnorm
       save       first, orth1, orth2, rstart, step3, step4,
      &           ierr, ipj, irj, ivj, iter, itry, j,  ovfl,
-cm     &           ierr, ipj, irj, ivj, iter, itry, j, msglvl, ovfl,
      &           betaj, rnorm1, smlnum, ulp, unfl, wnorm
-c
-c     %-----------------------%
-c     | Local Array Arguments |
-c     %-----------------------%
-c
-cm      Double precision
-cm     &           xtemp(2)
 c
 c     %----------------------%
 c     | External Subroutines |
 c     %----------------------%
 c
       external   daxpy, dcopy, dscal, dgemv, dgetv0, dlabad
-c     &           second
 c
 c     %--------------------%
 c     | External Functions |
@@ -5143,9 +4939,6 @@ c              | which spans OP and exit.                       |
 c              %------------------------------------------------%
 c
                info = j - 1
-c               call second (t1)
-cs               tnaitr = tnaitr + (t1 - t0)
-cs               tnaitr = 0.0
                ido = 99
                go to 9000
             end if
@@ -5183,8 +4976,6 @@ c        | Note that this is not quite yet r_{j}. See STEP 4    |
 c        %------------------------------------------------------%
 c
          step3 = .true.
-         nopx  = nopx + 1
-c         call second (t2)
          call dcopy (n, v(1,j), 1, workd(ivj), 1)
          ipntr(1) = ivj
          ipntr(2) = irj
@@ -5204,17 +4995,12 @@ c        | WORKD(IRJ:IRJ+N-1) := OP*v_{j}   |
 c        | if step3 = .true.                |
 c        %----------------------------------%
 c
-c         call second (t3)
-cs         tmvopx = tmvopx + (t3 - t2)
-cs         tmvopx = 0.0
-
          step3 = .false.
 c
 c        %------------------------------------------%
 c        | Put another copy of OP*v_{j} into RESID. |
 c        %------------------------------------------%
 c
-cx         call dcopy (n, workd(irj), 1, resid, 1)
          call dcopy (n, workd(irj), 1, resid(1), 1)
 c
 c        %---------------------------------------%
@@ -5222,9 +5008,7 @@ c        | STEP 4:  Finish extending the Arnoldi |
 c        |          factorization to length j.   |
 c        %---------------------------------------%
 c
-c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             step4 = .true.
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -5245,12 +5029,6 @@ c        | Back from reverse communication; |
 c        | WORKD(IPJ:IPJ+N-1) := B*OP*v_{j} |
 c        | if step4 = .true.                |
 c        %----------------------------------%
-c
-         if (bmat .eq. 'G') then
-c            call second (t3)
-cs            tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-         end if
 c
          step4 = .false.
 c
@@ -5289,18 +5067,13 @@ c        | RESID contains OP*v_{j}. See STEP 3. |
 c        %--------------------------------------%
 c
          call dgemv ('N', n, j, -one, v, ldv, h(1,j), 1,
-cx     &               one, resid, 1)
      &               one, resid(1), 1)
 c
          if (j .gt. 1) h(j,j-1) = betaj
 c
-c         call second (t4)
-c
          orth1 = .true.
 c
-c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -5320,12 +5093,6 @@ c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH1 = .true. |
 c        | WORKD(IPJ:IPJ+N-1) := B*r_{j}.                    |
 c        %---------------------------------------------------%
-c
-cs         if (bmat .eq. 'G') then
-c            call second (t3)
-cs            tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-cs         end if
 c
          orth1 = .false.
 c
@@ -5360,7 +5127,6 @@ c        %-----------------------------------------------------------%
 c
          if (rnorm .gt. 0.717*wnorm) go to 100
          iter  = 0
-         nrorth = nrorth + 1
 c
 c        %---------------------------------------------------%
 c        | Enter the Iterative refinement phase. If further  |
@@ -5370,11 +5136,6 @@ c        | Gram-Schmidt using all the Arnoldi vectors V_{j}  |
 c        %---------------------------------------------------%
 c
    80    continue
-c
-cm         if (msglvl .gt. 2) then
-cm            xtemp(1) = wnorm
-cm            xtemp(2) = rnorm
-cm         end if
 c
 c        %----------------------------------------------------%
 c        | Compute V_{j}^T * B * r_{j}.                       |
@@ -5393,13 +5154,10 @@ c        %---------------------------------------------%
 c
          call dgemv ('N', n, j, -one, v, ldv, workd(irj), 1,
      &               one, resid(1), 1)
-cx     &               one, resid, 1)
          call daxpy (j, one, workd(irj), 1, h(1,j), 1)
 c
          orth2 = .true.
-c         call second (t2)
          if (bmat .eq. 'G') then
-            nbx = nbx + 1
             call dcopy (n, resid, 1, workd(irj), 1)
             ipntr(1) = irj
             ipntr(2) = ipj
@@ -5420,12 +5178,6 @@ c        %---------------------------------------------------%
 c        | Back from reverse communication if ORTH2 = .true. |
 c        %---------------------------------------------------%
 c
-cs         if (bmat .eq. 'G') then
-cs            call second (t3)
-cs            tmvbx = tmvbx + (t3 - t2)
-cs            tmvbx = 0.0
-cs         end if
-c
 c        %-----------------------------------------------------%
 c        | Compute the B-norm of the corrected residual r_{j}. |
 c        %-----------------------------------------------------%
@@ -5436,13 +5188,6 @@ c
          else if (bmat .eq. 'I') then
              rnorm1 = dnrm2(n, resid, 1)
          end if
-c
-cm         if (msglvl .gt. 0 .and. iter .gt. 0) then
-cm            if (msglvl .gt. 2) then
-cm                xtemp(1) = rnorm
-cm                xtemp(2) = rnorm1
-cm            end if
-cm         end if
 c
 c        %-----------------------------------------%
 c        | Determine if we need to perform another |
@@ -5470,7 +5215,6 @@ c           | Another step of iterative refinement step |
 c           | is required. NITREF is used by stat.h     |
 c           %-------------------------------------------%
 c
-cp            nitref = nitref + 1
             rnorm  = rnorm1
             iter   = iter + 1
             if (iter .le. 1) go to 80
@@ -5496,19 +5240,12 @@ c
          rstart = .false.
          orth2  = .false.
 c
-c         call second (t5)
-cs         titref = titref + (t5 - t4)
-cs         titref = 0.0
-c
 c        %------------------------------------%
 c        | STEP 6: Update  j = j+1;  Continue |
 c        %------------------------------------%
 c
          j = j + 1
          if (j .gt. k+np) then
-c            call second (t1)
-cs            tnaitr = tnaitr + (t1 - t0)
-cs            tnaitr = 0.0
             ido = 99
             do 110 i = max(dnaitrone,k), k+np-1
 c
@@ -5519,7 +5256,7 @@ c              | REFERENCE: LAPACK subroutine dlahqr        |
 c              %--------------------------------------------%
 c
                tst1 = abs( h( i, i ) ) + abs( h( i+1, i+1 ) )
-               if( tst1.eq.zero )
+               if( abs(tst1) .le. zero )
      &              tst1 = dlanhs( '1', k+np, h, ldh, workd(n+1) )
                if( abs( h( i+1,i ) ).le.max( ulp*tst1, smlnum ) )
      &              h(i+1,i) = zero
@@ -5549,63 +5286,3 @@ c     %---------------%
 c
       end
 c
-c     %---------------------------------------------%
-c     | Initialize statistic and timing information |
-c     | for nonsymmetric Arnoldi code.              |
-c     %---------------------------------------------%
-c
-c\Author
-c     Danny Sorensen               Phuong Vu
-c     Richard Lehoucq              CRPC / Rice University
-c     Dept. of Computational &     Houston, Texas
-c     Applied Mathematics
-c     Rice University
-c     Houston, Texas
-c
-c\SCCS Information: @(#)
-c FILE: statn.F   SID: 2.4   DATE OF SID: 4/20/96   RELEASE: 2
-c
-      subroutine dstatn
-c
-c     %--------------------------------%
-c     | See stat.doc for documentation |
-c     %--------------------------------%
-c
-      include   'stat.h'
-c
-c     %-----------------------%
-c     | Executable Statements |
-c     %-----------------------%
-c
-      nopx   = 0
-      nbx    = 0
-      nrorth = 0
-cp      nitref = 0
-cp      nrstrt = 0
-c
-ct      tnaupd = 0.0D+0
-ct      tnaup2 = 0.0D+0
-ct      tnaitr = 0.0D+0
-ct      tneigh = 0.0D+0
-ct      tngets = 0.0D+0
-ct      tnapps = 0.0D+0
-ct      tnconv = 0.0D+0
-ct      titref = 0.0D+0
-ct      tgetv0 = 0.0D+0
-ct      trvec  = 0.0D+0
-c
-c     %----------------------------------------------------%
-c     | User time including reverse communication overhead |
-c     %----------------------------------------------------%
-c
-ct      tmvopx = 0.0D+0
-ct      tmvbx  = 0.0D+0
-c
-      return
-c
-c
-c     %---------------%
-c     | End of dstatn |
-c     %---------------%
-c
-      end
