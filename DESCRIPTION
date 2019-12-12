@@ -1,8 +1,8 @@
 Package: spam
 Type: Package
 Title: SPArse Matrix
-Version: 2.5-0
-Date: 2019-12-06
+Version: 2.5-1
+Date: 2019-12-12
 Authors@R: c(person("Reinhard", "Furrer", role = c("aut", "cre"),
                     email = "reinhard.furrer@math.uzh.ch"),
              person("Florian", "Gerber", role = c("aut"),
@@ -47,7 +47,7 @@ License: LGPL-2 | BSD_3_clause + file LICENSE
 URL: https://www.math.uzh.ch/pages/spam/
 BugReports: https://git.math.uzh.ch/reinhard.furrer/spam/issues
 NeedsCompilation: yes
-Packaged: 2019-12-06 14:09:17 UTC; furrer
+Packaged: 2019-12-12 12:30:52 UTC; roflur
 Author: Reinhard Furrer [aut, cre],
   Florian Gerber [aut],
   Roman Flury [aut],
@@ -65,4 +65,4 @@ Author: Reinhard Furrer [aut, cre],
   Yang Chao [ctb] (ARPACK)
 Maintainer: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Repository: CRAN
-Date/Publication: 2019-12-06 15:30:02 UTC
+Date/Publication: 2019-12-12 17:00:03 UTC

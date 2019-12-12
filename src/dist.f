@@ -83,8 +83,6 @@ c     p power for minkowski
 
       implicit none
 
-      logical,  external :: eqREAL
-
       double precision distfcn
       external distfcn
 
@@ -136,10 +134,10 @@ c     in case nnz was too small, recall line to get a better estimate
             endif
 
             colindices(jja) = j
-            if (eqREAL(p,2)) then
+            if (abs(p-2) .le. 0.D0) then
                entries(jja) = sqrt(tmp)
             else
-               if (eqREAL(p,1)) then
+               if (abs(p-1) .le. 0.D0) then
                   entries(jja) = tmp
                else
                   entries(jja) = tmp**pinv

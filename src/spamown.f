@@ -1806,7 +1806,6 @@ c----------------------------------------------------------------------c
 
       subroutine spamforward (n,p,x,b,l,jl,il)
       implicit none
-      logical,  external :: eqZERO
 
       integer n, p, jl(*),il(n+1)
       double precision  x(n,p), b(n,p), l(*)
@@ -1836,7 +1835,7 @@ c     Reinhard Furrer June 2008, April 2012, Sept 2016, Nov 2019
 c     initialize k for next setting
       k=0
 c     if first diagonal element is zero, break
-      if (eqZERO(l(1))) goto 5
+      if (abs(l(1)) .le. 0.D0) goto 5
 
 c     cycle over all columns of b
       do i=1,p
@@ -1850,7 +1849,7 @@ c     first row has one element then cycle over all rows
                   t = t-l(j)*x(jl(j),i)
                else
                   if (jl(j) .eq. k) then
-                     if (eqZERO(l(j))) goto 5
+                     if (abs(l(j)) .le. 0.D0) goto 5
 c     diagonal element is not zero, hence we divide and leave the loop
                      x(k,i) = t / l(j)
                      goto 3
@@ -1867,7 +1866,6 @@ c     diagonal element is not zero, hence we divide and leave the loop
 c-----------------------------------------------------------------------
       subroutine spamback (n,p,x,b,r,jr,ir)
       implicit none
-      logical,  external :: eqZERO
 
       integer n, p, jr(*),ir(n+1)
       double precision  x(n,p), b(n,p), r(*)
@@ -1892,7 +1890,7 @@ c--------------------------------------------------------------------
 c     Reinhard Furrer June 2008, April 2012, Sept 2016, Nov 2019
 
       k = n+1
-      if (eqZERO( r(ir(n+1)-1))) goto 5
+      if (abs( r(ir(n+1)-1) ) .le. 0.D0) goto 5
       do l=1,p
          x(n,l) = b(n,l) / r(ir(n+1)-1)
          do 3 k = n-1,1,-1
@@ -1902,7 +1900,7 @@ c     Reinhard Furrer June 2008, April 2012, Sept 2016, Nov 2019
                   t = t - r(j)*x(jr(j),l)
                else
                   if (jr(j) .eq. k) then
-                     if (eqZERO(r(j))) goto 5
+                     if (abs(r(j)) .le. 0.D0) goto 5
 c     diagonal element is not zero, hence we divide and leave the loop
                      x(k,l) = t / r(j)
                      goto 3

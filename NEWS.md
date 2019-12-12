@@ -1,3 +1,10 @@
+# spam 2.5-1
+
+BUG FIXES
+
+* fixing warning in linking of fortran code.
+
+
 # spam 2.5-0
 
 SIGNIFICANT USER-VISIBLE CHANGES

@@ -85,17 +85,6 @@ c     | time spent in the various stages of computation |
 c     | given by setting msaupd = 1.                    |
 c     %-------------------------------------------------%
 c
-cm    include 'debug.h'
-cm    ndigit = -3
-cm    logfil = 6
-cm    msgets = 0
-cm    msaitr = 0
-cm    msapps = 0
-cm    msaupd = 0
-cm    msaup2 = 0
-cm    mseigt = 0
-cm    mseupd = 0
-c
 c     %-------------------------------------------------%
 c     | The following sets dimensions for this problem. |
 c     %-------------------------------------------------%
@@ -113,7 +102,6 @@ c
       else if (iwhich .eq. 9) then
             which = 'BE'
       else
-CcC            callintpr(' Error: Invalid mode.', -1, 0, 0)
 c
         goto 9000
       end if
@@ -232,8 +220,6 @@ c        | Error message. Check the |
 c        | documentation in DSAUPD. |
 c        %--------------------------%
 c
-c         call errpr (info)
-c
          goto 9000
 c
       else
@@ -277,8 +263,6 @@ c            %------------------------------------%
 c            | Error condition:                   |
 c            | Check the documentation of DSEUPD. |
 c            %------------------------------------%
-c
-c             call errpr (ierr)
 c
              goto 9000
 c

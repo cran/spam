@@ -12,6 +12,32 @@ c dseigt.f
 c dstqrb.f
 c dsortr.f
 c
+c
+c test for equal zero
+c
+      function eqZERO( a)
+      implicit none
+
+      logical eqZERO
+      double precision a
+
+      eqZERO = (abs( a) .LE. 1.1*epsilon( 0.0))
+      return
+      end function
+c
+c test not equal to zero
+c
+      function neZERO( a)
+      implicit none
+
+      logical neZERO
+      double precision a
+
+      neZERO = (abs( a) .GT. 1.1*epsilon( 0.0))
+      return
+      end function
+c
+c
 c\BeginDoc
 c
 c\Name: dseupd
