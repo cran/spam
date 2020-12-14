@@ -49,6 +49,7 @@ extern void F77_NAME(dperm            )( void *, void *, void *, void *, void *,
 extern void F77_NAME(backsolvef       )( void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(forwardsolvef    )( void *, void *, void *, void *, void *, void *, void *, void *, void *);
 // 8
+extern void F77_NAME(gmult_f          )( void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(spamdnscsr       )( void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(transpose        )( void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(colmeans         )( void *, void *, void *, void *, void *, void *, void *, void *);
@@ -124,6 +125,7 @@ static const R_FortranMethodDef FortranEntries[] = {
     {"backsolvef",        (DL_FUNC) &F77_NAME(backsolvef        ), 9},
     {"forwardsolvef",     (DL_FUNC) &F77_NAME(forwardsolvef     ), 9},
 
+    {"gmult_f",           (DL_FUNC) &F77_NAME(gmult_f           ), 8},
     {"spamdnscsr",        (DL_FUNC) &F77_NAME(spamdnscsr        ), 8},
     {"transpose",         (DL_FUNC) &F77_NAME(transpose         ), 8},
     {"colmeans",          (DL_FUNC) &F77_NAME(colmeans          ), 8},

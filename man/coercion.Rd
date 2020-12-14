@@ -8,11 +8,12 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 \name{Coercion}
 \docType{class}
+\alias{as.vector}
 \alias{as.vector.spam}
 \alias{as.vector,spam-method}
 \alias{as.vector,spam.chol.NgPeyton-method}

@@ -8,12 +8,12 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
 
 
 
 
-\name{spam operations}
+
+\name{spam-operations}
 \alias{Ops.spam}
 \alias{spam.ops}
 \alias{\%*\%-methods}
@@ -75,21 +75,21 @@
 \alias{<=,spam-method}
 \alias{==,spam-method}
 \alias{!=,spam-method}
-\alias{norm} 
-\alias{norm.spam} 
-\alias{norm,ANY-method} 
-\alias{norm,spam,character-method} 
-\alias{norm,spam,missing-method} 
-\alias{norm,numeric,missing-method} 
-\alias{norm,numeric,character-method} 
-\alias{norm,matrix,missing-method} 
-\alias{norm,matrix,character-method} 
-%\alias{t,ANY-method} 
-\alias{t.spam} 
-\alias{ncol,spam-method} 
-\alias{nrow,spam-method} 
-\alias{dim,ANY-method} 
-\alias{dim,spam-method} 
+\alias{norm}
+\alias{norm.spam}
+\alias{norm,ANY-method}
+\alias{norm,spam,character-method}
+\alias{norm,spam,missing-method}
+\alias{norm,numeric,missing-method}
+\alias{norm,numeric,character-method}
+\alias{norm,matrix,missing-method}
+\alias{norm,matrix,character-method}
+%\alias{t,ANY-method}
+\alias{t.spam}
+\alias{ncol,spam-method}
+\alias{nrow,spam-method}
+\alias{dim,ANY-method}
+\alias{dim,spam-method}
 \alias{[.spam}
 \alias{[<-.spam}
 \alias{[<-,spam,missing,missing-method}
@@ -105,7 +105,7 @@
 \alias{assign.spam}
 \title{Basic Linear Algebra for Sparse Matrices}
 \description{Basic linear algebra operations for sparse matrices
-of class \code{spam}.  
+of class \code{spam}.
 }
 %\usage{x \%*\% y
 %y \%d*\% x
@@ -120,9 +120,9 @@ of class \code{spam}.
 %\item{i,j}{vectors of elements to extract or replace.}
 %\item{nrow}{optional number of rows for the result.}
 %}
-\details{Linear algebra operations for matrices of class 
-\code{spam} are designed to behave exactly as for 
-regular matrices.  In particular, matrix multiplication, transpose, addition, 
+\details{Linear algebra operations for matrices of class
+\code{spam} are designed to behave exactly as for
+regular matrices.  In particular, matrix multiplication, transpose, addition,
 subtraction and various logical operations should work as with the conventional
 dense form of matrix storage, as does indexing, rbind, cbind, and diagonal
 assignment and extraction (see for example \code{\link{diag}}).
@@ -152,8 +152,8 @@ The operator \code{\%d+\%} efficiently adds a diagonal matrix (in vector
 form) and a sparse matrix, similarly to the operator \code{\%d+\%}.
 
 }
-\references{Some Fortran functions are based on 
-  \url{http://people.sc.fsu.edu/~jburkardt/f_src/sparsekit/sparsekit.html}
+\references{Some Fortran functions are based on
+  \url{https://github.com/johannesgerer/jburkardt-f/blob/master/sparsekit/sparsekit.html}
 }
 \seealso{
 \code{\link{spam}} for coercion and other class relations involving the

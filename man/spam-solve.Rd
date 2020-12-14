@@ -8,9 +8,10 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
 
-\name{spam solve}
+
+\name{spam-solve}
+\alias{solve}
 \alias{backsolve}
 \alias{forwardsolve}
 \alias{backsolve-methods}
@@ -23,6 +24,7 @@
 \alias{forwardsolve,spam-method}
 \alias{forwardsolve,matrix-method}
 \alias{forwardsolve.spam}
+\alias{chol2inv}
 \alias{chol2inv.spam}
 \alias{chol2inv,spam-method}
 \alias{chol2inv,spam.chol.NgPeyton-method}
@@ -45,7 +47,7 @@ of a matrix if the right-hand-side is missing.
 \S4method{chol2inv}{spam}(x, \dots)
 }
 \arguments{
-\item{a}{symmetric positive definite matrix of class \code{spam} or a Cholesky factor 
+\item{a}{symmetric positive definite matrix of class \code{spam} or a Cholesky factor
 		  as the result of a \code{chol} call.}
 \item{l,r}{object of class \code{spam} or \code{spam.chol.}\emph{method} returned by the function
 \code{chol}.}
@@ -77,7 +79,7 @@ In case \code{a} is from a \code{chol} call, then \code{solve} is an
    wrong because  \code{t(a.spam)} is a \code{spam} and not a
    \code{spam.chol.NgPeyton} object.
 
-   
+
 \code{forwardsolve} and \code{backsolve} solve a system of linear
 equations where the coefficient matrix is lower (\code{forwardsolve}) or
 upper (\code{backsolve}) triangular.  Usually, the triangular matrix is
@@ -88,20 +90,20 @@ effects here.
 
 Notice that it is more efficient to solve successively the linear
 equations (both triangular solves) than to implement these in the
-Fortran code. 
+Fortran code.
 
 If the right-hand-side in \code{solve} is missing it will compute
 the inverse of a matrix. For details about the specific Cholsesky
 decomposition, see \code{\link{chol}}.
 
-Recall that the Cholesky factors are from ordered matrices. 
+Recall that the Cholesky factors are from ordered matrices.
 
 
 \code{chol2inv(x)} is a faster way to \code{solve(x)}.
 }
 \note{There is intentionally no \acronym{S3} distinction between the classes
   \code{spam} and \code{spam.chol.}\emph{method}.}
-\references{See references in \code{\link{chol}}. 
+\references{See references in \code{\link{chol}}.
 }
 \seealso{\code{\link{chol.spam}} and \code{\link{ordering}}.
 }
@@ -115,7 +117,7 @@ Sigmainv <- .25^abs(outer(1:n,1:n,"-"))
 Sigmainv <- as.spam( Sigmainv, eps=1e-4)
 
 
-Sigma <- solve( Sigmainv)  # for verification 
+Sigma <- solve( Sigmainv)  # for verification
 iidsample <- array(rnorm(N*n),c(n,N))
 
 mvsample <- backsolve( chol(Sigmainv), iidsample)
@@ -123,7 +125,7 @@ norm( var(t(mvsample)) - Sigma)
 
 # compare with:
 mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample, n)
-   #### ,n as patch 
+   #### ,n as patch
 norm( var(t(mvsample)) - Sigma)
 
 

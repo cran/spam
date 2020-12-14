@@ -41,7 +41,7 @@
 \references{The meta-data has been constructed based on (essentially)
   files from the   package \pkg{INLA}, see \code{demo(Bym)}.\cr
 
-  See also \url{http://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl\%C3\%BCssel}
+  See also \url{https://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl\%C3\%BCssel}
 and \url{https://en.wikipedia.org/wiki/Districts_of_Germany}}
 \details{The representative coordinates are calculated based on the mean
   value of the polygon coordinates. This creates sometimes strange

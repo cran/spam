@@ -8,9 +8,10 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{diff}
+\alias{diff}
 \alias{diff.spam}
 \alias{diff,spam-method}
 \title{Lagged Differences}
@@ -31,7 +32,7 @@
 }
 %\details{    }
 %\references{}
-\seealso{\code{diff} in \code{base}, \code{\link{precmat}}.}
+\seealso{\code{\link[base]{diff}} in \code{base}, \code{\link{precmat}}.}
 \examples{
 # incidence matrix for a RW(3) model
 D <- diff.spam(diag.spam(10), lag=1, differences=3)

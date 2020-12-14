@@ -87,7 +87,7 @@ eigen_approx(x, nev, ncv, nitr, mode, only.values = FALSE, verbose = FALSE, f_ro
 }
 \examples{
 set.seed(81)
-rspam <- spam_random(50^2, density = .0001, spd = TRUE)
+rspam <- spam_random(42^2, density = .0001, spd = TRUE)
 SPD <- eigen.spam(rspam, nev = 20, control = list(mode = "SM"),
                   only.values = TRUE)
 

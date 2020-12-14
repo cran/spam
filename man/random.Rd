@@ -36,7 +36,7 @@ spam_random(nrow = 1L, ncol = nrow, density = 0.5, distribution = NULL, digits =
 \value{A random matrix in \code{spam} format.}
 \details{To create a random spam64 matrix, set \code{options(spam.force64 = TRUE)}.}
 %\references{}
-\seealso{\code{\link{spam}} and \code{\link{display.spam}}}
+\seealso{\code{\link{spam-class}} and \code{\link{display.spam}}}
 \examples{
 set.seed(42)
 rspam <- spam_random(500, digits = 2, distribution = rnorm, sd = 2, mean = 10, density = .01)

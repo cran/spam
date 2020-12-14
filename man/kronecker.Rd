@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{kronecker}
 \alias{kronecker.default}
@@ -27,7 +27,7 @@ kronecker.spam(X, Y, FUN = "*", make.dimnames = FALSE, ...)
   \item{Y}{sparse matrix of class \code{spam}, a vector or a matrix.}
   \item{FUN}{a function; it may be a quoted string. See details}
   \item{make.dimnames}{Provide dimnames that are the product of the dimnames of
-    \code{X} and \code{Y}. } 
+    \code{X} and \code{Y}. }
     \item{ ...}{optional arguments to be passed to \code{FUN}.}
 }
 \value{An array \code{A} with dimensions
@@ -44,7 +44,7 @@ kronecker.spam( diag(2), array(1:4, c(2, 2)))
 
 kronecker( diag.spam(2), array(1:4, c(2, 2)))
 
-# Notice the preservation of sparsity structure: 
+# Notice the preservation of sparsity structure:
 kronecker( diag.spam(2), array(1:4, c(2, 2)), FUN="+")
 
 

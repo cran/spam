@@ -35,7 +35,7 @@ as.spam.matrix.csr <- function(x)
 # The following should not be necessary because it is
 # as."matrix.csr".spam and not "as.matrix".csr.spam.
 # Is there anyway around this?
-    
+
 #as.matrix.csr.spam <- function(x,...) {
 #  if (require("SparseM")){
 #    newx <- new("matrix.csr")
@@ -44,8 +44,8 @@ as.spam.matrix.csr <- function(x)
 #    slot(newx,"ia",check=FALSE) <- x@rowpointers
 #    slot(newx,"dimension",check=FALSE) <- x@dimension
 #    return(newx)
-#  }       
-  
+#  }
+
 #}
 
 
@@ -62,13 +62,13 @@ as.dgRMatrix.spam <- function(x) {
       slot(newx,"p",check=FALSE) <- x@rowpointers-1L
       slot(newx,"Dim",check=FALSE) <- x@dimension
       return(newx)
-    } 
+    }
   }
 
 as.dgCMatrix.spam <- function(x)  {
     if(.format.spam(x)$package != "spam"){
         stop("dgCMatrix structure is not compatible with numeric/large integer type.")
-    } 
+    }
     if (requireNamespace("Matrix")) {
       dimx <- x@dimension
       nz <- x@rowpointers[dimx[1] + 1] - 1
@@ -83,14 +83,14 @@ as.dgCMatrix.spam <- function(x)  {
       ##           SIGNATURE = c( SS$signature, SS$signature,
       ##                         "double", SS$signature, SS$signature,
       ##                         "double", SS$signature, SS$signature),
-                
+
       ##           n = dimx[1],
       ##           m = dimx[2],
-                
+
       ##           a = x@entries,
       ##           ja = x@colindices,
       ##           ia = x@rowpointers,
-                
+
       ##           entries = vector_dc("double",nz),
       ##           colindices = vector_dc(SS$type, nz),
       ##           rowpointers = vector_dc(SS$type, dimx[2] + 1),
@@ -106,12 +106,12 @@ as.dgCMatrix.spam <- function(x)  {
       slot(newx,"p",check=FALSE) <- z$rowpointers-1L
       slot(newx,"Dim",check=FALSE) <- dimx
       return(newx)
-    } 
+    }
   }
-    
+
 
 as.spam.dgRMatrix <- function(x)  {
-    
+
     if (is(x,"dgRMatrix")){
       if (identical(length(x@x),0L))  # zero matrix
         return(new("spam",rowpointers=c(1L,rep.int(2L,x@Dim[1])), dimension=x@Dim))
@@ -125,9 +125,9 @@ as.spam.dgRMatrix <- function(x)  {
     }
     stop("Wrong object passed to 'as.spam.dgRMatrix'")
   }
-    
+
 as.spam.dgCMatrix <- function(x)  {
-    
+
     if (is(x,"dgCMatrix")){
       if (identical(length(x@x),0L))  # zero matrix
         return(new("spam",rowpointers=c(1L,rep.int(2L,x@Dim[1])), dimension=x@Dim))
@@ -157,7 +157,7 @@ as.spam.dgCMatrix <- function(x)  {
 
 
 readone <- function(ln, iwd, nper, conv)
-# By Bates/Maechler from Matrix 0.999375-10 
+# By Bates/Maechler from Matrix 0.999375-10
 {
     ln <- gsub("D", "E", ln)
     inds <- seq(0, by = iwd, length = nper + 1)
@@ -165,7 +165,7 @@ readone <- function(ln, iwd, nper, conv)
 }
 
 readmany <- function(conn, nlines, nvals, fmt, conv)
-# By Bates/Maechler from Matrix 0.999375-10 
+# By Bates/Maechler from Matrix 0.999375-10
 {
     if (!grep("[[:digit:]]+[DEFGI][[:digit:]]+", fmt))
 	stop("Not a valid format")
@@ -227,7 +227,7 @@ read.HB <- function(file)
 
     # Spam related changes:
     if (t3 =="E")
-        stop("Only assembled Harwell-Boeing formats implemented")      
+        stop("Only assembled Harwell-Boeing formats implemented")
     z <- .Fortran("transpose", n = as.integer(nc), m = as.integer(nr),
                   a = as.double(vals),ja = as.integer(ind), ia = as.integer(ptr),
                   entries = vector("double",nz), colindices = vector("integer", nz),
@@ -240,7 +240,7 @@ read.HB <- function(file)
     slot(newx,"rowpointers",check=FALSE) <- z$rowpointers
     slot(newx,"dimension",check=FALSE) <- c(nr, nc)
     if (t2 %in% c("H", "S"))
-      newx <- newx+t.spam(newx)-diag.spam(spam(newx))
+      newx <- newx+t.spam(newx)-diag.spam(diag(newx))
     if (t2 =="Z")
       newx <- newx-t.spam(newx)
     return(newx)
@@ -261,7 +261,7 @@ read.MM <- function(file)  {
   }
   scan1 <- function(what, ...)
     scan(file, nmax = 1, what = what, quiet = TRUE, ...)
-  
+
   if ((hdr <- tolower(scan1(character()))) != "%%matrixmarket")  # RF: added a to lower
     stop("file is not a MatrixMarket file")
   if (!(typ <- tolower(scan1(character()))) %in% "matrix")
@@ -287,10 +287,10 @@ read.MM <- function(file)  {
                          warning("matrix elements assumed as 1 ('pattern' format)", call. = FALSE)    },
            "complex" = { what <- list(i= integer(), j= integer(), x= numeric(), y= numeric())
                          warning("retaining only real part of 'complex' format", call. = FALSE) }           )
-    
+
     z <- scan(file, nmax = nz, quiet = TRUE, what= what)
     newx <- spam.list(list(ind=cbind(z$i,z$j),x= if(elt=="pattern") rep.int(1,nz) else z$x ), nr,nc)
-    
+
     if (sym %in% c("symmetric", "hermitian"))  {
       dim(newx) <- rep(max(nr,nc),2)
       newx <- newx+t.spam(newx)-diag.spam(diag(newx))
@@ -309,12 +309,12 @@ read.MM <- function(file)  {
                   colindices = vector("integer", nz), rowpointers = vector("integer",nr + 1),
                   eps = options("spam.eps"), NAOK = TRUE,
                   PACKAGE = "spam")
-    
+
     warning("returning a (possibly) dense 'spam' object", call. = FALSE)
     nz <- z$rowpointers[nr+1]-1
     if (identical(nz, 0L))
       return(new("spam",rowpointers=c(1L,rep.int(2L,nr)), dimension=c(nr,nc)))
-  
+
     newx <- new("spam")
     slot(newx,"entries",check=FALSE) <- z$entries[1:nz]
     slot(newx,"colindices",check=FALSE) <- z$colindices[1:nz]

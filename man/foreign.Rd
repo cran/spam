@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -50,10 +50,10 @@ as.spam.dgCMatrix(x)
 
 \dontrun{
 S <- diag.spam(4)
-R <- as.dgRMatrix.spam( S) 
+R <- as.dgRMatrix.spam( S)
 C <- as.dgCMatrix.spam( S)
-as.spam.dgCMatrix(C) 
-slotNames(U)
+as.spam.dgCMatrix(C)
+slotNames(C)
 slotNames(R)
 # For column oriented sparse formats a transpose does not the job,
 # as the slot names change.
@@ -64,21 +64,25 @@ slotNames(R)
 
 \dontrun{
 # for transformations between SparseM and spam:
+
 as.matrix.csr.spam <- function(x,...) {
+  if (new("matrix.csr")) {
     newx <- new("matrix.csr")
     slot(newx,"ra",check=FALSE) <- x@entries
     slot(newx,"ja",check=FALSE) <- x@colindices
     slot(newx,"ia",check=FALSE) <- x@rowpointers
     slot(newx,"dimension",check=FALSE) <- x@dimension
     return(newx)
-  }       
-U <- as.matrix.csr.spam( S) 
+    }
+  stop("function requires 'SparseM' package")
+}
+# then with `SparseM`:  as.matrix.csr.spam( spamobject )
 }
 
 \dontrun{
 # a dataset contained in Matrix
-data(KNex)
-as.spam.dgCMatrix(KNex$mm) 
+data(KNex, package='Matrix')
+summary( KN <- as.spam.dgCMatrix(KNex$mm) )
 
 }
 }

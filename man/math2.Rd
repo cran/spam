@@ -8,10 +8,11 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 \name{Math2}
+\alias{Math2}
 \alias{Math2.spam}
 \alias{Math2,spam-method}
 \alias{Math2,spam,numeric-method}

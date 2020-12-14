@@ -36,8 +36,8 @@ germany.plot(vect,  col=NULL, zlim=range(vect), legend=TRUE,
 \item{add}{logical, if true adds to current plot.}
 \item{\dots}{additional arguments passed to \code{polygon}.}
 }
-\references{See also \url{http://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl\%C3\%BCssel}
-and \url{http://de.wikipedia.org/wiki/Liste_der_Landkreise_in_Deutschland}
+\references{See also \url{https://de.wikipedia.org/wiki/Amtlicher_Gemeindeschl\%C3\%BCssel}
+and \url{https://de.wikipedia.org/wiki/Liste_der_Landkreise_in_Deutschland}
 %The code of \code{map.landkreis} is very similar to
 %\code{germany.map} from the package \pkg{INLA}.}
 }

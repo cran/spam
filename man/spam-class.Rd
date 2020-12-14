@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -117,9 +117,9 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
     \item{cbind}{\code{signature(x = "spam")}: binds sparse matrices, see \code{\link{cbind}} for details.}
     \item{chol}{\code{signature(x = "spam")}:
     see \code{\link{chol}} for details.}
-    \item{diag}{\code{signature(x = "spam")}: 
+    \item{diag}{\code{signature(x = "spam")}:
     see \code{\link{diag}} for details.}
-  \item{dim<-}{\code{signature(x = "spam")}: rearranges 
+  \item{dim<-}{\code{signature(x = "spam")}: rearranges
     the matrix to reflect a new dimension.}
     \item{dim}{\code{signature(x = "spam")}: gives the dimension of the
       sparse matrix.}
@@ -139,7 +139,7 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
     \item{Math2}{\code{signature(x = "spam")}: see \code{\link{Math2}} for details. }
     \item{norm}{\code{signature(x = "spam")}: calculates the norm of a matrix.}
     \item{plot}{\code{signature(x = "spam", y)}: same functionality as
-      the ordinary \code{plot}. }
+      the ordinary \code{\link{plot}}. }
     \item{print}{\code{signature(x = "spam")}: see \code{\link{print}} for details.}
     \item{rbind}{\code{signature(x = "spam")}: binds sparse
       matrices, see \code{\link{cbind}} for details.}
@@ -163,7 +163,7 @@ the \code{x@colindices} vector. The column index for element \code{x@entries[k]}
 }
 \section{Note}{The slots \code{colindices} and \code{rowpointers} are
   tested for proper integer assignments. This is not true for
-  \code{entries}. 
+  \code{entries}.
 }
 %\references{}
 \author{Reinhard Furrer, some of the Fortran code is based on A. George,

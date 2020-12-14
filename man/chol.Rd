@@ -11,6 +11,7 @@
 
 
 \name{chol}
+\alias{chol}
 \alias{chol.spam}
 \alias{chol,ANY-method}
 \alias{chol,matrix-method}
@@ -71,7 +72,7 @@ Often the sparsity structure is fixed and does not change, but the
 entries do. In those cases, we can update the Cholesky factor with
 \code{update.spam.chol.NgPeyton} by suppling a Cholesky factor and the
 updated matrix. For \code{U <- chol(A)},  \code{update(U,
-  Anew)} and \code{chol(Anew, Rstruct=U)} are equivalent. 
+  Anew)} and \code{chol(Anew, Rstruct=U)} are equivalent.
 
 The option \code{cholupdatesingular} determines how singular matrices
 are handled by \code{update}. The function hands back an error

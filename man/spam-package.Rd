@@ -11,11 +11,11 @@
 
 
 
-\name{. SPAM .}
+\name{spam-package}
 \alias{overview}
 \alias{SPAM}
 \alias{Spam}
-\alias{spam-package}
+\alias{. SPAM .}
 \docType{package}
 \title{SPArse Matrix Package}
 \description{\code{spam} is a collection of functions for sparse matrix
@@ -55,11 +55,11 @@ The packages \code{fields} and \code{spam} are closely linked.  \cr
   "spam: A Sparse Matrix R Package with Emphasis on MCMC
   Methods for Gaussian Markov Random Fields.",
         \emph{Journal of Statistical Software}, 36(10), 1-25,
-        \url{http://www.jstatsoft.org/v36/i10/}.\cr
+        \url{https://www.jstatsoft.org/v36/i10/}.\cr
 Florian Gerber, Reinhard Furrer (2015).
         "Pitfalls in the Implementation of Bayesian Hierarchical Modeling of Areal Count Data: An Illustration Using BYM and Leroux Models.",
         \emph{Journal of Statistical Software}, Code Snippets, 63(1), 1-32,
-        \url{http://www.jstatsoft.org/v63/c01/}.\cr
+        \url{https://www.jstatsoft.org/v63/c01/}.\cr
 F. Gerber, K. Moesinger, R. Furrer (2017),
         "Extending R packages to support 64-bit compiled code: An illustration with spam64 and GIMMS NDVI3g data.",
         \emph{Computer & Geoscience} 104, 109-119,
@@ -67,8 +67,8 @@ F. Gerber, K. Moesinger, R. Furrer (2017),
 	}
 
 \seealso{See \code{\link{spam.class}} for a detailed class description,
-  \code{\link{spam}} and \code{\link{spam.ops}} for creation,
-  coercion and algebraic operations.%\cr%
+  \code{\link{spam}} and  \code{\link{spam.ops}} for creation,
+  coercion and algebraic operations. \code{\link{options}}.%\cr%
 %
 %\code{demo(package='spam')} lists available demos.\cr%
 %Related packages are \code{\link[fields]{fields}},

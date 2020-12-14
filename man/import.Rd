@@ -60,7 +60,7 @@ read.MM(file)
   At present, \code{read.MM} is more flexible than  \code{readMM}.
 }
 \references{
-  \url{http://math.nist.gov/MatrixMarket}
+  \url{https://math.nist.gov/MatrixMarket/}
   
   \url{https://sparse.tamu.edu/}
 }

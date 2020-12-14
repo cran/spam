@@ -1,8 +1,19 @@
+# spam 2.6-0
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* `print.spam()` is able to print non-zero entries of a spam matrix.
+* new fast fortran routines used in new `gmult()` to multiply specific spam submatrices with different factors.
+
+INTERNAL CHANGES
+* renaming man files such that pkgdown is linking correctly.
+
+
 # spam 2.5-1
 
 BUG FIXES
 
-* fixing warning in linking of fortran code.
+* fixing fortran linking warning.
 
 
 # spam 2.5-0

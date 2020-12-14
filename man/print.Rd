@@ -12,6 +12,7 @@
 
 \name{print}
 \docType{methods}
+\alias{print}
 \alias{print.spam}
 \alias{print,spam-method}
 %\alias{print,spam.chol.NgPeyton-method}
@@ -22,6 +23,7 @@
 %\alias{summary,spam.chol.NgPeyton-method}
 \alias{summary.spam.chol}
 \alias{summary.spam.chol.NgPeyton}
+\alias{print_nnzpos}
 \title{Printing and summarizing sparse matrices}
 \description{Printing (non-zero elements) of sparse matrices
   and summarizing the sparsity structure thereof.
@@ -32,8 +34,11 @@
 }
 \arguments{\item{x}{matrix of class \code{spam} or \code{spam.chol.}\emph{method}.}
   \item{object}{matrix of class \code{spam} or \code{spam.chol.}\emph{method}.}
-  \item{...}{any other arguments passed
-    to \code{print.default}.}
+  \item{...}{any other arguments passed to \code{print.default}.
+             If the non-standard argument \code{minimal} is set to \code{FALSE},
+             an extended spam print is available with logical argument \code{rowpointer}
+             to print rowpointers, and \code{zerosymbol} defining the character
+             to display the zero element.}
 }
 \value{\code{NULL} for \code{print}, because the information is printed with \code{cat} there
   is no real need to pass any object back. \cr
@@ -61,6 +66,13 @@ options(spam.printsize=10)
 print(smat)
 summary(smat)
 summary(smat)$nnz
+
+smat@entries[1:5] <- 0
+print(smat, minimal = FALSE)
+print(smat, minimal = FALSE, rowpointer = TRUE)
+smat@rowpointers
+print_nnzpos(smat)
+
 }
 \author{Reinhard Furrer}
 \keyword{hplot}

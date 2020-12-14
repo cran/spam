@@ -8,10 +8,11 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 \name{Summary}
+\alias{Summary}
 \alias{Summary.spam}
 \alias{Summary,spam-method}
 \alias{all.spam}

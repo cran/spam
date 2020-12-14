@@ -13,6 +13,7 @@
 
 
 \name{Math}
+\alias{Math}
 \alias{Math.spam}
 \alias{Math,spam-method}
 \alias{ceiling.spam}

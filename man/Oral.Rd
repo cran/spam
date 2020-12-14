@@ -37,7 +37,7 @@ There is a similar dataset \code{data(Germany)}  with larynx cancer cases from t
   \pkg{INLA} as well, with an additional smoking covariate.
 }
 \source{The data is available from the package \pkg{INLA}
-  distributed from \url{http://www.r-inla.org}.
+  distributed from \url{https://www.r-inla.org}.
 }
 \references{
 Knorr-Held, L. and Rasser, G. (2000) Bayesian Detection of Clusters and Discontinuities in Disease Maps,

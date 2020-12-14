@@ -118,18 +118,109 @@ setClass(
 }
 
 
-print.spam <- function(x,...) {
+.print.spam <- function(x, digits = 2, rowpointer = FALSE, minimal = TRUE, # show row pointers in left margin
+              zerosymbol = "'", ...){
+
+    if (minimal) {
+      print(x@entries, ...)
+      return(invisible(NULL))
+    }
+
+    # never true if used via print.spam
+    if(is.matrix(x)) {
+      x <- as.spam(x) }
+    digits <- round(digits)
+
+    stopifnot(is.spam(x), is.numeric(digits), length(digits)==1,
+              !rowpointer || (rowpointer && (is.spam(x) || is(x, "spam.chol.NgPeyton"))), # rowpointes are only available for spam
+              is.character(zerosymbol), nchar(zerosymbol) == 1)
+
+    if (length(x@entries) == 0 || ((length(x@entries) == 1) && (x@entries[1] == 0))) {
+        cat("zero-matrix. class: spam (", .format.spam(x)$name, "). dim: ",  x@dimension[1],
+              "x", x@dimension[2], ".", sep = "", fill = TRUE)
+
+        return(invisible(NULL))
+    }
+
+    tmp <- round(x@entries, digits = digits)
+    x@entries <- ifelse(tmp == 0 & x@entries < 0, 0, tmp) # because sprintf() prints "-0"
+
+    if(digits == 0 || any(grep("\\.", format(x@entries, scientific = FALSE)))) {
+        digits <- min(digits, max(nchar(gsub("(.*)(\\.)|([0]*$)","", x@entries))))
+    } else {
+        digits <- 0 }
+
+    width <- max(nchar(as.character(round(abs(x@entries))))) #left side of comma
+    if(any(round(x@entries,digits = digits) < 0)) { # minus sign
+        width <- width+1 }
+    if(digits > 0) {
+        width <- width+1+digits }
+    if(width < 3 && ncol(x) >= 10) { #minus sign or two digits for col number
+        width <- width+1 }
+
+    if(nrow(x) > getOption("spam.printsize") || ncol(x)*(width+1) > getOption("width")[1]) {
+        cat("class: spam (", .format.spam(x)$name, "). dim: ", x@dimension[1], "x",
+                x@dimension[2], ". density: ", signif(100*length(x@entries)/prod(x@dimension),3), "%.\nrow-wise nonzero elements:",
+                sep = "", fill = TRUE)
+        if(length(x@entries)>10)
+            cat(round(x@entries[1:10], digits), "...\n")
+        else
+            cat(round(x@entries, digits), "\n")
+
+        return(invisible(NULL))
+    }
+
+    headerstring <- paste("Matrix of dimension ",x@dimension[1],"x",
+                          x@dimension[2], " with (row-wise) nonzero elements", sep ="")
+    if (rowpointer)
+      headerstring <- paste(headerstring, ",\n number left of the vertical bars denote the respective rowpointer:\n", sep = "")
+    else
+      headerstring <- paste(headerstring, ":\n", sep = "")
+
+    cat(headerstring)
+    cat("    ", formatC(1:ncol(x), width = width), "\n", sep = " ")
+    cat("    ", rep("-", ncol(x)*(width+1)), "\n" , sep = "")
+    zerostring <- paste(c(rep(" ",width-1), zerosymbol), collapse="")
+    rowtmp <- rep(zerostring, x@dimension[2])
+    for(i in 1:x@dimension[1]){
+        if(rowpointer)
+            cat(formatC(x@rowpointers[i], width = 3), "| ", sep = "")
+        else
+            cat(formatC(i, width = 3), "| ", sep = "")
+        if(x@rowpointers[i]==x@rowpointers[i+1]){
+            cat(rowtmp, "\n")
+            next
+        }
+        row <- rowtmp
+        coli <- x@colindices[x@rowpointers[i]:(x@rowpointers[i+1]-1)]
+        row[coli] <- sprintf(paste0("%", width, ".", digits,"f", collapse=""),
+                             x@entries[x@rowpointers[i]:(x@rowpointers[i+1]-1)],
+                             width = digits+2)
+        cat(row, "\n")
+    }
+    cat(paste0("class: spam (", .format.spam(x)$name, ")\n"))
+}
+
+
+print_nnzpos <- function(x, ...){
+  stopifnot(is.spam(x) || is(x, "spam.chol.NgPeyton"))
+  if(prod(x@dimension) < getOption("spam.printsize"))
+    stop("dim too large for nnzpos=TRUE")
+  x@entries <- seq_along(x@entries)
+  spam::print.spam(x, digits = 0, minimal = FALSE, ...)
+}
+
+
+print.spam <- function(x, ...) {
   SS <- .format.spam(x, validate = FALSE)
   if (prod(x@dimension) < getOption("spam.printsize")) {
-    print(as.matrix.spam(x),...)
+    print(as.matrix.spam(x), ...)
   } else {
     if ( (length(x@entries)==1) && (x@entries[1]==0)) {
       cat("Zero matrix of dimension ",x@dimension[1],"x",
                 x@dimension[2],".\n",sep="", fill=TRUE)
-    }else {
-      cat("Matrix of dimension ",x@dimension[1],"x",
-          x@dimension[2], " with (row-wise) nonzero elements:\n",sep="", fill=TRUE)
-      print(x@entries,...)
+    } else {
+      .print.spam(x, ...)
     }
   }
 

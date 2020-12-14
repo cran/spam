@@ -96,7 +96,7 @@ is.spam(x)
   "spam: A Sparse Matrix R Package with Emphasis on MCMC
   Methods for Gaussian Markov Random Fields.",
         \emph{Journal of Statistical Software}, 36(10), 1-25,
-        \url{http://www.jstatsoft.org/v36/i10/.}
+        \url{https://www.jstatsoft.org/v36/i10/.}
 }
 \seealso{
   \code{\link{SPAM}} for a general overview of the package;

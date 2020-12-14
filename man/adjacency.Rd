@@ -8,15 +8,6 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
-
-
-
-
-
-
-
-
 
 
 \name{adjacency}
@@ -25,10 +16,10 @@
 \alias{adjacency.landkreis}
 \alias{germany.graph}
 \title{Administrative districts of Germany}
-\description{Constructing the adjacency graph 
+\description{Constructing the adjacency graph
   of the administrative districts of Germany}
 \usage{
-adjacency.landkreis( loc)
+adjacency.landkreis(loc)
 }
 \arguments{
 \item{loc}{location of the graph structure, can be an URL.}
@@ -39,7 +30,7 @@ For the particular example, note that the nodes are not numbered
 consecutively and that they start from zero.}
 \value{a sparse matrix in \code{spam} format.}
 \references{The adjacency data has been provided by Havard Rue and is
-  also available in  \pkg{INLA}.}
+  also available in \pkg{INLA}.}
 \seealso{\code{\link{germany.plot}} super-seeding \code{map.landkreis}
   for plotting.\cr
   \code{\link{Oral}}.}

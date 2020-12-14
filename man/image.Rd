@@ -11,6 +11,7 @@
 
 
 \name{image}
+\alias{image}
 \alias{image.spam}
 \alias{image.spam.chol}
 \alias{image,spam-method}

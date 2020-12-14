@@ -8,11 +8,11 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
 
 
 
-\name{fields wrapper}
+
+\name{fields-wrapper}
 \alias{spam_rdist}
 \alias{rdist.dist}
 \alias{spam_rdist.earth}
@@ -29,9 +29,9 @@ spam_rdist.earth( x1, x2, delta = 1, miles=TRUE, R=NULL)
   \item{x2}{Matrix of second set of locations where each row gives the
           coordinates of a particular point.}
   \item{delta}{only distances smaller than \code{delta} are recorded,
-    see Details.} 
+    see Details.}
   \item{miles}{For great circle distance: If true distances are in statute miles if false distances in
-          kilometers.} 
+          kilometers.}
   \item{R}{Radius to use for sphere to find spherical distances. If \code{NULL}
           the radius is either in miles or kilometers depending on the
           values of the miles argument. If \code{R=1} then distances are of
