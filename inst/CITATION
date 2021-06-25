@@ -1,5 +1,18 @@
 citHeader("To cite `spam` in publications use:")
 
+# dont change formatting because of Makefile
+citEntry(entry = "Manual", year = "2021",
+  title        = "{spam}: SPArse Matrix",
+  author       = personList(as.person("Reinhard Furrer"),
+                            as.person("Roman Flury"),
+                            as.person("Florian Gerber")),
+  note = "R package version 2.7-0",
+  url = {"https://CRAN.R-project.org/package=spam"},
+  textVersion  = paste("Furrer, R., Flury R. and Gerber, F. (2021).
+                        spam: SPArse Matrix. R package version 2.7-0.
+                        URL https://CRAN.R-project.org/package=spam"),
+)
+
 citEntry(entry = "Article",
   title        = "{spam}: A Sparse Matrix {R} Package with Emphasis on {MCMC} Methods for {G}aussian {M}arkov Random Fields",
   author       = personList(as.person("Reinhard Furrer"),

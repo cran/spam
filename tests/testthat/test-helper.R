@@ -47,6 +47,21 @@ b <- 1:n
 struct <- chol(Q)
 
 test_that("rmvnorm", {
+
+    set.seed(14)
+    tmp1 <- rmvnorm(10,  Sigma=Sigma) 
+    set.seed(14)
+    tmp2 <- rmvnorm.spam(10, Sigma=Sigma) 
+    expect_equal( tmp1, tmp2)
+    
+    set.seed(14)
+    tmp1 <- rmvnorm(10,  Sigma=Q) 
+    set.seed(14)
+    tmp2 <- rmvnorm.spam(10, Sigma=Q) 
+    expect_equal( tmp1, tmp2)
+
+    
+    
     set.seed(14)
     tmp1 <- rmvnorm.canonical(10, b, Q) 
     set.seed(14)

@@ -47,8 +47,8 @@ c Numerical factorization
 
 
 
-      subroutine cholstepwise(m,nnzd,
-     &     d,jd,id,    doperm,invp,perm,
+      subroutine cholstepwise(  m,nnzd,  d,jd,id,
+     &                doperm,invp,perm,
      &                nsub,nsubmax,
      &                lindx,xlindx,nsuper,nnzlmax,lnz,xlnz,
      &                snode,xsuper,
@@ -64,6 +64,7 @@ c     d -- an nnzd-vector of non-zero values of A
 c     jd -- an nnzd-vector of indices in d
 c     id -- an (m+1)-vector of pointers to the begining of each
 c           row in d and jd
+c     nsub  --  [output] length of entries in lindx
 c     nsubmax -- upper bound of the dimension of lindx
 c     lindx -- an nsub-vector of integer which contains, in
 c           column major oder, the row subscripts of the nonzero
@@ -106,27 +107,27 @@ c       10 -- insufficient work storage in tmpvec when calling
 c            blkfct
 c       11 -- insufficient work storage in iwork when calling
 c            blkfct
-c OUTPUT:
-c     y -- an m-vector of least squares solution
-c     nsub -- number of subscripts in lindx
 c WORK ARRAYS:
 c     adjncy -- the indices of non diag elements
 c     iwsiz -- set at 7*m+3
 c     iwork -- an iwsiz-vector of integer as work space
 c
-c
+c FIXME: difference between nsub and nnzl ???
       implicit none
       integer m,nnzd,doperm
-      integer nsub,nsuper,nnzl,iwsiz,tmpsiz,
+      integer nsub,nsuper,nnzl,
      &        nnzlmax,nsubmax,cachsz,ierr,
-     &        adj(m+1),adjncy(nnzd-m+1),jd(nnzd),
-c  fix introduced in 29-3
-c     &        adj(m+1),adjncy(nnzd-m),jd(nnzd),
+     &        jd(nnzd),
      &        id(m+1),lindx(nsubmax),xlindx(m+1),
      &        invp(m),perm(m),xlnz(m+1),
-     &        colcnt(m),snode(m),xsuper(m+1),split(m)
+     &        snode(m),xsuper(m+1),split(m)
       double precision d(nnzd),lnz(nnzlmax)
 
+c local variables:
+c  fix introduced in 29-3
+c     &        adj(m+1),adjncy(nnzd-m)
+      integer adj(m+1), adjncy(nnzd-m+1), colcnt(m),
+     &         iwsiz,tmpsiz
 c temp and working stuff, loops, etc
       integer i,j,k,  nnzadj, jtmp, intmp1, intmp2
       integer iwork(7*m+3)
@@ -2802,11 +2803,12 @@ C               -----------------------------------------
 C               FOR EACH COLUMN IN THE CURRENT SUPERNODE,
 C               FIRST INITIALIZE THE DATA STRUCTURE.
 C               -----------------------------------------
-c                DO  200  II = XLNZ(J), XLNZ(J+1)-1
-c                    LNZ(II) = 0.0
-c  200           CONTINUE
-c     The previous lines are not required as R initializes the arrays
-c     Reinhard Furrer, Nov 19, 2007
+                DO  200  II = XLNZ(J), XLNZ(J+1)-1
+                    LNZ(II) = 0.0
+  200           CONTINUE
+C     re-commented the previous lines because of vector_dc!
+c   C        The previous lines are not required as R initializes the arrays
+c   C        Reinhard Furrer, Nov 19, 2007
 C
 C               -----------------------------------
 C               NEXT INPUT THE INDIVIDUAL NONZEROS.

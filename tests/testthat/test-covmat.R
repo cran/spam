@@ -20,6 +20,21 @@ source("helper.R")
 context("test-covmat.R")
 
 
+test_that("cov.sph", {
+    nl <- 10
+    range <- .5
+    h <- nearest.dist(cbind( runif(nl), runif(nl)),  delta=range, upper=NULL)
+    expect_identical( cov.sph(h, c(range, 1, 0)),   cor.sph(h, range) )
+
+    powerboost()
+    expect_identical( cov.sph(h, c(range, 1+1e-10 )),     cov.sph(h, range) )
+    expect_identical( cov.sph(h, c(range, 1+1e-10 )),     cov.sph(h, range) )
+    expect_identical( cov.sph(h, c(range, 1+1e-9, 1e-9)), cov.sph(h, range) )
+
+    powerboost("aus")    
+    expect_equal( cov.sph(h, c(range, 1+1e-9, 1e-9)), cov.sph(h, range) )
+})
+
 
 test_that("cov.*", {
     h <- nearest.dist(100*1:10, 100*1:10+1:10, delta=10)

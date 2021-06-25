@@ -9,7 +9,7 @@
 #    Kaspar Moesinger [ctb]                                 #
 # HEADER END ################################################
 
-     
+
 
 "rowpointers<-" <- function(x, value) {
     dimx <- x@dimension
@@ -27,7 +27,7 @@
         stop("first element of row pointers is < 1 in `rowpointers<-`.", call.=FALSE)
     if(value[dimx[1]+1] != nnz1)
         stop("last element of row pointers does not conform in `rowpointers<-`.", call.=FALSE)
-       
+
     x@rowpointers <- as.integer(value)
     x
 }
@@ -36,7 +36,7 @@
     dimx <- x@dimension
     if ( any(!is.finite(value)))
         stop("column indices should be postive integers in `colindices<-`.", call.=FALSE)
-    
+
     if ( any(value<1) | any(value> dimx[2]))
         stop("column indices exceed dimension `colindices<-`.", call.=FALSE)
     diffcolindices <- diff(value)     # positive values within each row
@@ -62,10 +62,10 @@
     }
     if (!is.numeric( value))
         stop("numerical required in `entries<-`.", call.=FALSE)
-    
+
     x@entries <- as.double(value)
     x
-}    
+}
 
 "dimension<-" <- function(x, value) {
     stop("modification through dim() or pad()", call.=FALSE)

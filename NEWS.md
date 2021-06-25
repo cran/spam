@@ -1,11 +1,33 @@
+# spam 2.7
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* spam package `citeEntry`.
+* updated examples and description of `covmat()` and `nearest.dist()`.
+* new functions `rmvnorm()`, `cor.sph()`.
+* improved
+* better memory allocation for Cholesky factorization.
+
+INTERNAL CHANGES
+
+* `covmat()` with elementary `if()` clauses instead of `ifelse()`, for stable memory usage.
+* `nearest.dist()` unleashed for spam64.
+* reorganized functions in R source files. Cleaned unnecessary comments. 
+
+BUG FIXES
+
+* addressed memory allocation issues for very, very large matrices. 
+
+
 # spam 2.6-0
 
 SIGNIFICANT USER-VISIBLE CHANGES
 
 * `print.spam()` is able to print non-zero entries of a spam matrix.
-* new fast fortran routines used in new `gmult()` to multiply specific spam submatrices with different factors.
+* new fast Fortran routines used in new `gmult()` to multiply specific spam submatrices with different factors.
 
 INTERNAL CHANGES
+
 * renaming man files such that pkgdown is linking correctly.
 
 

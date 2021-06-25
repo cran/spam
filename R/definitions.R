@@ -9,6 +9,7 @@
 #    Kaspar Moesinger [ctb]                                 #
 # HEADER END ################################################
 
+
 # We check that
 # 1.  #colindices equals #entries
 # 2.	class(entries) is "numeric"
@@ -65,6 +66,8 @@ validate_spam <- function(object) {
 }
 
 
+
+# Start with the two classes. Remaining part contains `spam` only material.
 setClass(
   Class = "spam",
   slots = c(entries="numeric",
@@ -79,6 +82,24 @@ setClass(
     ),
   validity = validate_spam
 )
+
+setClass("spam.chol.NgPeyton",
+         representation(entries="numeric",      colindices="integer",
+                        colpointers="integer",  rowpointers="integer",
+                        dimension="integer",
+                        pivot="integer",        invpivot="integer",
+                        supernodes="integer",   snmember="integer",
+                        memory="integer",       nnzA="integer")
+         )
+
+# lindx=  colindices
+# xlindx= colpointers
+# xlnz=   rowpointers
+# snode=snmember
+# xsuper=supernodes
+# c(... nnztmp,cachesize)= memory
+########################################################################
+
 
 
 # Internal function to create new spam or spam64 object, depending on the size.
@@ -115,6 +136,16 @@ setClass(
         slot(newx,"dimension",check=FALSE) <- as.integer(dimension)
         return(newx)
     }
+}
+
+
+# Create a string containing the matrix size with appropriate unit. 
+# not planned to be exported.
+# If length(x)==1, this represents the number of doubles (or other size).
+printSize <- function(x, size=8, digits=2L) {
+    mat <- if (length(x)==1) 8*as.numeric(x) else  as.numeric( object.size(x))
+    unitpower <- max(min( floor( log(mat, 1024)),3),1)
+    paste(round(mat/1024^unitpower, digits=digits), c("Kb","Mb","Gb")[unitpower])
 }
 
 
@@ -160,8 +191,8 @@ setClass(
 
     if(nrow(x) > getOption("spam.printsize") || ncol(x)*(width+1) > getOption("width")[1]) {
         cat("class: spam (", .format.spam(x)$name, "). dim: ", x@dimension[1], "x",
-                x@dimension[2], ". density: ", signif(100*length(x@entries)/prod(x@dimension),3), "%.\nrow-wise nonzero elements:",
-                sep = "", fill = TRUE)
+            x@dimension[2], ". density: ", signif(100*length(x@entries)/prod(x@dimension),3),
+            "%.\nrow-wise nonzero elements:",   sep = "", fill = TRUE)
         if(length(x@entries)>10)
             cat(round(x@entries[1:10], digits), "...\n")
         else
@@ -280,6 +311,7 @@ setMethod("c","spam", function(x,...){
 ########################################################################
 # diag and derivatives
 "diag.spam" <- function(x=1, nrow, ncol)  {
+  ## structure of function according an older version of base:::diag  
   if (is.spam(x)) return( diag.of.spam( x, nrow, ncol))
 
   if (is.array(x) && length(dim(x)) != 1)
@@ -300,13 +332,15 @@ setMethod("c","spam", function(x,...){
 
   m <- min(n, p)
 
-  newx <- new("spam")
-  slot(newx,"entries",check=FALSE) <- vector("double", m)
-  newx@entries[1:m] <- as.double(x)
-  slot(newx,"colindices",check=FALSE) <- 1:m
-  slot(newx,"rowpointers",check=FALSE) <- as.integer(c(1:m,rep(m+1,n+1-m)))
-  slot(newx,"dimension",check=FALSE) <- c(n,p)
-  return(newx)
+  ###CheckMe: are the following two lines efficient?
+  entries <- vector("double", m)
+  entries[1:m] <- x 
+  return(.newSpam(
+      entries=entries,
+        colindices=1:m,
+        rowpointers=c(1:m,rep(m+1,n+1-m)),
+        dimension=c(n,p)
+    ))
 }
 
 spam_diag <- function(x=1, nrow, ncol)  diag.spam(x=x, nrow, ncol)

@@ -171,7 +171,7 @@ We proceed by factorizing $\boldsymbol{A}$ into $\boldsymbol{R}^T\boldsymbol{R}$
 To reduce the fill-in of the Cholesky factor $\boldsymbol{R}$, we permute the columns and rows of $\boldsymbol{A}$ according to a (cleverly chosen) permutation $\boldsymbol{P}$, i.e., $\boldsymbol{U}^T\boldsymbol{U}=\boldsymbol{P}^T\boldsymbol{A}\boldsymbol{P}$, with $\boldsymbol{U}$ an upper triangular matrix.
 There exist many different algorithms to find permutations which are optimal for specific matrices %tridiagonal matrices finite element/difference matrices defined on square grids or at least close to optimal with respect to different criteria.
 Note that $\boldsymbol{R}$ and $\boldsymbol{U}$ cannot be linked through $\boldsymbol{P}$ alone.
-Figure \ref{fig:ill} illustrates the factorization with and without permutation.
+The right panel of Figure \ref{fig:tree} illustrates the factorization with and without permutation.
 For solving a linear system the two triangular solves are performed after the factorization.
 The determinant of $\boldsymbol{A}$ is the squared product of the diagonal elements of its Cholesky factor $\boldsymbol{R}$.
 Hence the same factorization can be used to calculate determinants (a necessary and computational bottleneck in the computation of the log-likelihood of a Gaussian model), illustrating that it is very important to have a very efficient integration (with respect to calculation time and storage capacity) of the Cholesky factorization.
@@ -188,10 +188,10 @@ A[cbind(i, j)] <- rep(0.5, length(i))
 A <- t(A) + A + diag.spam(5)
 A
 
-U <- chol(A)
+U <- chol(x = A)
 ```
 
-```{r tree, echo=FALSE, results = 'markup', out.width='40%', fig.show='hold', warning=FALSE, fig.cap='\\label{fig:tree}On the left side the associated graph to the matrix $\\boldsymbol{A}$ is visualized. The nodes of the graph are labeled according to $\\boldsymbol{A}$ (upright) and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (italics). On the right side the sparsity structure of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (top row) and the Cholesky factors $\\boldsymbol{R}$ and $\\boldsymbol{U}$ of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ respectively are given in the bottom row. The dashed lines in $\\boldsymbol{U}$ indicate the supernode partition.'}
+```{r tree, echo=FALSE, results = 'markup', out.width='40%', fig.show='hold', warning=FALSE, fig.cap='On the left side the associated graph to the matrix $\\boldsymbol{A}$ is visualized. The nodes of the graph are labeled according to $\\boldsymbol{A}$ (upright) and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (italics). On the right side the sparsity structure of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (top row) and the Cholesky factors $\\boldsymbol{R}$ and $\\boldsymbol{U}$ of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ respectively are given in the bottom row. The dashed lines in $\\boldsymbol{U}$ indicate the supernode partition.'}
 
 knitr::include_graphics(c('figures/tree.png', 'figures/ill.png'))
 ```
@@ -219,13 +219,13 @@ However, none of the existing sparse matrix packages in R (`SparseM`, `Matrix`) 
 
 As for Step 1, there are many different algorithms to find a permutation, for example, the multiple minimum degree (MMD) algorithm, @Liu:85, and the reverse Cuthill-McKee (RCM) algorithm, @Geor:71.
 The resulting sparsity structure in the permuted matrix determines the sparsity structure of the Cholesky factor.
-As an illustration, Figure \ref{fig:ch2:factor} shows the sparsity structure of the Cholesky factor resulting from an MMD, an RCM, and no permutation of a precision matrix induced by a second-order neighbor structure of the US counties.
+As an illustration, Figure \ref{fig:fillin} shows the sparsity structure of the Cholesky factor resulting from an MMD, an RCM, and no permutation of a precision matrix induced by a second-order neighbor structure of the US counties.
 
-How much fill-in with zeros is present depends on the permutation algorithm, in the example of Figure \@ref{fig:ch2:factor} there are $146735$, $256198$ and $689615$ non-zero elements in the Cholesky factors resulting from the MMD, RCM, and no permutation, respectively.
+How much fill-in with zeros is present depends on the permutation algorithm, in the example of Figure \ref{fig:fillin} there are $146735$, $256198$ and $689615$ non-zero elements in the Cholesky factors resulting from the MMD, RCM, and no permutation, respectively.
 Note that the actual number of non-zero elements of the Cholesky factor may be smaller than what the constructed sparsity structure indicates.
 Here, there are $14111$, $97565$ and $398353$ zero elements (up to machine precision) that are not exploited.
 
-```{r fillin, echo=FALSE, fig.show='hold', warning=FALSE, fig.cap='\\label{fig:ch2:factor}Sparsity structure of the Cholesky factor with MMD, RCM and no permutation of a precision matrix induced by a second-order neighbor structure of the US counties. The values *nnzR* and *fillin* are the number of non-zero elements in the sparsity structure of the factor and the fill-in, respectively.'}
+```{r fillin, echo=FALSE, fig.show='hold', out.width='\\textwidth', warning=FALSE, fig.cap='Sparsity structure of the Cholesky factor with MMD, RCM and no permutation of a precision matrix induced by a second-order neighbor structure of the US counties. The values *nnzR* and *fillin* are the number of non-zero elements in the sparsity structure of the factor and the fill-in, respectively.'}
 
 knitr::include_graphics(c('figures/fig_ch2_factors.png'))
 ```

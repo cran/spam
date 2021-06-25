@@ -18,7 +18,7 @@
 # rdist.earth(x1, x2, miles = TRUE, R = NULL)
 # fields.rdist.near( x1, x2, delta, max.points= NULL)
 #
-### in sp 
+### in sp
 # spDistsN1(pts, pt, longlat=FALSE)
 #
 ### in amap     ### nbproc  integer, Number of subprocess for parallelization
@@ -46,12 +46,12 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
 {
   # see help for exact parameter meaning
 
-  # We always include all small distances. Hence, this function 
+  # We always include all small distances. Hence, this function
   #   works different than any other spam functions. An addititonal
-  #   call to an as.spam would eliminate the small values. 
+  #   call to an as.spam would eliminate the small values.
 #  if (!is.null(diag)) warning("Argument "diag" is deprecated")
 #  if (!is.null(eps))  warning("Argument "eps" is deprecated")
-  
+
   if (!is.na(pmatch(method, "euclidian")))     method <- "euclidean"
   METHODS <- c("euclidean", "maximum", "minkowski", "greatcircle")
   method <- pmatch(method, METHODS)  # result is integer
@@ -69,9 +69,9 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
     }
     if (abs(delta)>180.1)  stop("'delta' should be smaller than 180 degrees.")
   }
-  
 
-  if (is.null(upper)) 
+
+  if (is.null(upper))
     part <- 0L
   else
     part <- ifelse(upper, 1L ,-1L)
@@ -107,80 +107,80 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
                     n1*getOption("spam.nearestdistnnz")[2]),
                 (as.double(n1)*(n1+1))/ ifelse( is.null(upper), 1, 2))
   }
-  
-  # EXPLICIT-STORAGE-FORMAT     
+
+  # EXPLICIT-STORAGE-FORMAT
   if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
       SS <- .format64()
   else
       SS <- .format32
-  
-  if(2147483647 < nnz) stop("Distance matrix is too dense (1)")
+
+  # if(2147483647 < nnz) stop("Distance matrix is too dense (1)")
 
   repeat {
     d <- NULL # Free the memory allocated by a previous attemp
     d <- .C64("closestdist",
     ##              subroutine closestdist( ncol, x,nrowx, y, nrowy,
-    ##  &    part, p, method, 
+    ##  &    part, p, method,
     ##  &    eta, colindices, rowpointers, entries, nnz, iflag)
               SIGNATURE=c(SS$signature, "double", SS$signature, "double", SS$signature,
                           SS$signature, "double", SS$signature, "double", SS$signature,
                           SS$signature, "double", SS$signature, SS$signature),
-              
+
               nd,
               x,
               n1, #w
               y,
-              
+
               n2, #w
               part, #arg 6
-              p[1], 
-              method, 
-              
+              p[1],
+              method,
+
               abs( delta[1]),
               colindices=vector(SS$type, nnz),
               rowpointers=vector(SS$type, n1+1), #arg 11
-              entries=vector("double",nnz), 
-              
+              entries=vector("double",nnz),
+
               nnz=nnz,
               iflag=0,
-              
+
               INTENT = c("r", "r", "r", "r",
-                     "r", "r", "rw", "r", 
-                     "r", "w", "w", "w", 
+                     "r", "r", "rw", "r",
+                     "r", "w", "w", "w",
                      "rw", "w"),
               NAOK = getOption("spam.NAOK"),
               PACKAGE=SS$package)
-    
+
     if (d$iflag==0) break else {
       nnz <-  nnz*getOption("spam.nearestdistincreasefactor")*n1/(d$iflag-1)
-        
-      # EXPLICIT-STORAGE-FORMAT     
+
+      # EXPLICIT-STORAGE-FORMAT
       if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
         SS <- .format64()
       else
         SS <- .format32
-        
-      if(nnz > 2147483647) stop("Distance matrix is too dense (2)")
-      
+
+      # if(nnz > 2147483647) stop("Distance matrix is too dense (2)")
+
       madens <- d$iflag
       warning(paste("You ask for a 'dense' sparse distance matrix, I require one more iteration.",
                             "\nTo avoid the iteration, increase 'nearestdistnnz' option to something like\n",
                             "'options(spam.nearestdistnnz=c(",d$nnz,",400))'\n(constructed ",madens,
                             " lines out of ",n1,").\n",sep=""), call. = TRUE)
-              
+
     }
   }
-  
+
   length(d$entries) <- d$nnz
   length(d$colindices) <- d$nnz
-  
+
   if(d$nnz == 0) {
     return(.newSpam(
       dimension=c(n1,n2),
       force64 = force64
     ))
   }
-  
+
   return(.newSpam(
     entries=d$entries,
     colindices=d$colindices,
@@ -191,13 +191,13 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
 }
 
 # in fields:
-# rdist <- function (x1, x2) 
+# rdist <- function (x1, x2)
 
-spam_rdist <- function(x1, x2, delta = 1) 
+spam_rdist <- function(x1, x2, delta = 1)
      nearest.dist(x1, y=x2,   delta = delta,  upper = NULL)
 
 # in fields:
-# rdist.earth <- function (x1, x2, miles = TRUE, R = NULL) 
+# rdist.earth <- function (x1, x2, miles = TRUE, R = NULL)
 spam_rdist.earth <- function(x1, x2, delta=1, miles = TRUE, R = NULL)
     nearest.dist( x1, y=x2, method = "greatcircle",
                          delta = delta, miles=miles, R=R,  upper = NULL)

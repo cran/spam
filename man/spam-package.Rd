@@ -62,9 +62,8 @@ Florian Gerber, Reinhard Furrer (2015).
         \url{https://www.jstatsoft.org/v63/c01/}.\cr
 F. Gerber, K. Moesinger, R. Furrer (2017),
         "Extending R packages to support 64-bit compiled code: An illustration with spam64 and GIMMS NDVI3g data.",
-        \emph{Computer & Geoscience} 104, 109-119,
-	\url{https://doi.org/10.1016/j.cageo.2016.11.015}."
-	}
+        \emph{Computer & Geoscience} 104, 109-119, \doi{10.1016/j.cageo.2016.11.015}."
+}
 
 \seealso{See \code{\link{spam.class}} for a detailed class description,
   \code{\link{spam}} and  \code{\link{spam.ops}} for creation,
@@ -73,7 +72,7 @@ F. Gerber, K. Moesinger, R. Furrer (2017),
 %\code{demo(package='spam')} lists available demos.\cr%
 %Related packages are \code{\link[fields]{fields}},
 %  \code{\link[Matrix]{Matrix}} and
-%  \code{\link[SparseM]{SparseM.ontology}}.
+%  \code{SparseM.ontology}.
 }
 \examples{
 ## Citations:

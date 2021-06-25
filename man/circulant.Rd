@@ -30,7 +30,7 @@ circulant.spam(x, n = NULL, eps = getOption("spam.eps"))
 %  and its first element is discarded.
 %    }
 %\references{}
-\seealso{\code{\link[magic]{circulant}} from package \pkg{magic}, \code{\link{toeplitz.spam}}}
+\seealso{\code{circulant} from package \pkg{magic}, \code{\link{toeplitz.spam}}}
 \examples{
 circulant.spam(c(1,.25,0,0,0))
 }

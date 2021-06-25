@@ -13,8 +13,20 @@
 
 # Draw from a multivariate normal:
 # (Algorithm 2.3 from Rue and Held, 2005)
+rmvnorm <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, ...) {
+  # taken from ?chol.spam
+
+  if (is( Sigma, "spam")) return( rmvnorm.spam( n, mu, Sigma, ...))
+
+  R <- chol( Sigma, ...)
+  N <- dim( Sigma)[1]
+
+  return(sweep( as.matrix( ( array(rnorm(n*N),c(n,N)) %*% R)), 2, mu, "+"))
+}
+
 rmvnorm.spam <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, Rstruct = NULL, ...) {
   # taken from ?chol.spam
+  if (!is(Sigma, "spam"))  return(  rmvnorm(n, mu, Sigma, ...))  # just in case!
 
   if (is(Rstruct,"spam.chol.NgPeyton"))
     cholS <- update.spam.chol.NgPeyton( Rstruct, Sigma, ...)
@@ -31,6 +43,9 @@ rmvnorm.spam <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, Rstruct = NUL
      # R itself.
   return(sweep(retval, 2, mu, "+"))
 }
+
+
+
 
 # Draw from a multivariate normal given a precision matrix:
 # (Algorithm 2.4 from Rue and Held, 2005)

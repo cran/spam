@@ -11,14 +11,6 @@
    
 
 
-
-
-
-
-
-
-
-
 \name{spam.chol.NgPeyton-class}
 \docType{class}
 \alias{spam.chol.NgPeyton-class}
@@ -28,6 +20,7 @@
 \alias{c,spam.chol.NgPeyton-method}
 \alias{determinant,spam.chol.NgPeyton-method}
 \alias{diag,spam.chol.NgPeyton-method}
+\alias{diag<-,spam.chol.NgPeyton-method}
 \alias{dim<-,spam.chol.NgPeyton-method}
 \alias{dim,spam.chol.NgPeyton-method}
 \alias{display,spam.chol.NgPeyton-method}
@@ -91,6 +84,10 @@ be transformed into a \code{spam} object.
     \item{chol}{\code{signature(x = "spam.chol.NgPeyton")}: Returns
       \code{x} unchanged. }
   }
+}
+\details{
+It is not possible to directly change the length, dimension and the
+diagonal entries of a \code{"spam.chol.NgPeyton"} object. 
 }
 \references{Ng, E. G. and B. W. Peyton (1993), "Block sparse Cholesky algorithms
 on advanced uniprocessor computers", \emph{SIAM J. Sci. Comput.}, \bold{14},

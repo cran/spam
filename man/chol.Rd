@@ -28,7 +28,8 @@ of class \code{spam}.}
 # chol(x, \dots)
 
 \S4method{chol}{spam}(x, pivot = "MMD", method = "NgPeyton",
-       memory = list(), eps = getOption("spam.eps"), Rstruct=NULL, \dots)
+       memory = list(), eps = getOption("spam.eps"), Rstruct=NULL,
+       \dots, verbose=FALSE)
 %force64 =  getOption("spam.force64"),\dots)
 
 # update.spam.chol.NgPeyton(object, x,...)
@@ -49,6 +50,8 @@ of class \code{spam}.}
 \item{\dots}{further arguments passed to or from other methods.}
 \item{object}{an object from a previous call to \code{chol}, i.e.,
   sparsity structure of the factor.}
+\item{verbose}{provides more details about the decomposition. Useful
+  when working with  huge matrices.}
 }
 \value{The function returns the Cholesky factor in an object of class
   \code{spam.chol.}\emph{method}. Recall that the latter is the Cholesky

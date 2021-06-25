@@ -41,7 +41,7 @@ Adjacency structure of the counties in the contiguous United States
 }
 }
 %\source{\url{ www.to somethin??}}
-\seealso{\code{\link[maps]{map}} from \pkg{maps}.}
+\seealso{\code{map}, from \pkg{maps}.}
 %\references{}
 \examples{
 # number of counties:

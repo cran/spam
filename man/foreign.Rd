@@ -45,7 +45,7 @@ as.spam.dgCMatrix(x)
   Notice that \code{as.matrix.csr.spam} should read as \code{as."matrix.csr".spam}.
 }
 %\references{}
-\seealso{ \code{\link{triplet}}, \code{\link[Matrix]{Matrix}} or   \code{\link[SparseM]{matrix.csr}}}
+\seealso{\code{\link{triplet}}, \code{\link[Matrix]{Matrix}} or \code{matrix.csr} from package \pkg{SparseM}.}
 \examples{
 
 \dontrun{

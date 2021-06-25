@@ -14,6 +14,7 @@
 \alias{covmat}
 \alias{cov.exp}
 \alias{cov.sph}
+\alias{cor.sph}
 \alias{cov.nug}
 \alias{cov.wu1}
 \alias{cov.wu2}
@@ -30,32 +31,42 @@ covmat(h, theta, ... , type="sph")
 cov.exp(h, theta, ... , eps= getOption("spam.eps"))
 cov.sph(h, theta, ... , eps= getOption("spam.eps"))
 cov.nug(h, theta, ... , eps= getOption("spam.eps"))
+cov.wend1(h, theta, ... , eps= getOption("spam.eps"))
+cov.wend2(h, theta, ... , eps= getOption("spam.eps"))
 cov.wu1(h, theta, ... , eps= getOption("spam.eps"))
 cov.wu2(h, theta, ... , eps= getOption("spam.eps"))
 cov.wu3(h, theta, ... , eps= getOption("spam.eps"))
-cov.wend1(h, theta, ... , eps= getOption("spam.eps"))
-cov.wend2(h, theta, ... , eps= getOption("spam.eps"))
 cov.mat(h, theta, ... , eps= getOption("spam.eps"))
+
+cor.sph(h, range, ... , eps= getOption("spam.eps"))
 
 }
 \arguments{
 \item{h}{object containing the lags.}
 \item{theta}{parameter of the covariance function, see
   \sQuote{Details}.}
+\item{range}{parameter defining the compact support.}
 \item{type}{covariance function specification.}
 \item{\dots}{arguments passed from other methods.}
-\item{eps}{tolerance level.}
+\item{eps}{tolerance level, see
+  \sQuote{Details}.}
 }
 \details{\code{covmat} is a wrapper that calls the other functions
   according to the argument \code{type}. The nomenclature is similar to
-  \code{premat}
+  \code{premat}.
   \cr
-  The parametrization is (range, partial- sill, [smoothness = 1], [nugget = 0]), where
+  The parametrization is (range, partial-sill, [smoothness = 1], [nugget = 0]), where
   only the range needs to be specified.
   In case of negative parameter values, a warning is issued and the
   absolute value is retained.
   Although more cryptic, having all arguments as a single vector
   simplifies optimization with \code{optim}.
+  \cr
+  The parameters are and locations are up to precision
+  \code{epsilon}. That means that all distances smaller than \code{eps}
+  are considered zero, nugget smaller than \code{eps} is ignored, etc.
+  \cr
+  \code{cor.sph(,range)} is a fast version of \code{cov.sph(,c(range,1,0))}.
   \cr
   Currently, the functions distinguish between a sparse \code{spam}
   object \code{h} and any other numeric type. In the future, this might
@@ -67,9 +78,17 @@ cov.mat(h, theta, ... , eps= getOption("spam.eps"))
 \references{Any classical book about geostatistics.}
 \seealso{\code{\link{precmat}}.}
 \examples{
-locs <- cbind(runif(10),runif(10))
-h <- nearest.dist(locs, delta=.3)
+set.seed(123)
+n <- 200
+locs <- cbind(runif(n),runif(n))
+h <- nearest.dist(locs, delta=sqrt(2), upper = NULL)
 Sigma <- cov.sph(h, c(.3, 1, .1))
+
+iidsample <- rnorm(n)
+cholS <- chol.spam(as.spam(Sigma))
+iorder <- iord <- ordering(cholS, inv = TRUE)
+sample <- (iidsample \%*\% as.spam(cholS))[iorder]
+plot(locs, col = fields::tim.colors(n = 256)[cut(sample, n)], pch = 20)
 
 \dontrun{
 h <- seq(0, to=1, length.out=100)

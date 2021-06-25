@@ -65,13 +65,13 @@ A[cbind(i, j)] <- rep(0.5, length(i))
 A <- t(A) + A + diag.spam(5)
 A
 
-U <- chol(A)
+U <- chol(x = A)
 
-## ----tree, echo=FALSE, results = 'markup', out.width='40%', fig.show='hold', warning=FALSE, fig.cap='\\label{fig:tree}On the left side the associated graph to the matrix $\\boldsymbol{A}$ is visualized. The nodes of the graph are labeled according to $\\boldsymbol{A}$ (upright) and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (italics). On the right side the sparsity structure of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (top row) and the Cholesky factors $\\boldsymbol{R}$ and $\\boldsymbol{U}$ of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ respectively are given in the bottom row. The dashed lines in $\\boldsymbol{U}$ indicate the supernode partition.'----
+## ----tree, echo=FALSE, results = 'markup', out.width='40%', fig.show='hold', warning=FALSE, fig.cap='On the left side the associated graph to the matrix $\\boldsymbol{A}$ is visualized. The nodes of the graph are labeled according to $\\boldsymbol{A}$ (upright) and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (italics). On the right side the sparsity structure of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ (top row) and the Cholesky factors $\\boldsymbol{R}$ and $\\boldsymbol{U}$ of $\\boldsymbol{A}$ and $\\boldsymbol{P}^T\\boldsymbol{A}\\boldsymbol{P}$ respectively are given in the bottom row. The dashed lines in $\\boldsymbol{U}$ indicate the supernode partition.'----
 
 knitr::include_graphics(c('figures/tree.png', 'figures/ill.png'))
 
-## ----fillin, echo=FALSE, fig.show='hold', warning=FALSE, fig.cap='\\label{fig:ch2:factor}Sparsity structure of the Cholesky factor with MMD, RCM and no permutation of a precision matrix induced by a second-order neighbor structure of the US counties. The values *nnzR* and *fillin* are the number of non-zero elements in the sparsity structure of the factor and the fill-in, respectively.'----
+## ----fillin, echo=FALSE, fig.show='hold', out.width='\\textwidth', warning=FALSE, fig.cap='Sparsity structure of the Cholesky factor with MMD, RCM and no permutation of a precision matrix induced by a second-order neighbor structure of the US counties. The values *nnzR* and *fillin* are the number of non-zero elements in the sparsity structure of the factor and the fill-in, respectively.'----
 
 knitr::include_graphics(c('figures/fig_ch2_factors.png'))
 

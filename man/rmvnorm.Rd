@@ -11,6 +11,7 @@
 
 
 \name{rmvnorm}
+\alias{rmvnorm}
 \alias{rmvnorm.spam}
 \alias{rmvnorm.prec}
 \alias{rmvnorm.canonical}
@@ -19,31 +20,38 @@
   Fast ways to draw multivariate normals when the variance or precision matrix
   is sparse.}
 \usage{
-rmvnorm.spam(n,mu=rep.int(0, dim(Sigma)[1]), Sigma, Rstruct=NULL, ...)
-rmvnorm.prec(n,mu=rep.int(0, dim(Q)[1]), Q, Rstruct=NULL, ...)
+rmvnorm(n, mu=rep.int(0, dim(Sigma)[1]), Sigma, ...)
+rmvnorm.spam(n, mu=rep.int(0, dim(Sigma)[1]), Sigma, Rstruct=NULL, ...)
+rmvnorm.prec(n, mu=rep.int(0, dim(Q)[1]), Q, Rstruct=NULL, ...)
 rmvnorm.canonical(n, b, Q, Rstruct=NULL, ...)
 }
 \arguments{
 \item{n}{number of observations.}
 \item{mu}{mean vector.}
-\item{Sigma}{covariance matrix of class \code{spam}.}
+\item{Sigma}{covariance matrix (of class \code{spam}).}
 \item{Q}{precision matrix.}
 \item{b}{vector determining the mean.}
 \item{Rstruct}{the Cholesky structure of \code{Sigma} or \code{Q}.}
 \item{\dots}{arguments passed to \code{chol}.}
 }
-\details{The functions \code{rmvnorm.prec} and \code{rmvnorm.canonical}
-  do not require sparse precision matrices.
-  For \code{rmvnorm.spam}, the differences between regular and sparse
-  covariance matrices are too significant to be implemented here.  \cr
+\details{All functions rely on a Cholesky factorization of the
+  covariance or precision matrix. 
+  \cr
+  The functions \code{rmvnorm.prec} and \code{rmvnorm.canonical}
+  do not require sparse precision matrices
+  Depending on the the covariance matrix \code{Sigma},  \code{rmvnorm}
+  or \code{rmvnorm.spam} is used. If wrongly specified, dispatching to
+  the other function is done.
+  \cr
+  Default mean is zero. Side note: mean is added via \code{sweep()} and
+  no gain is accieved by distinguishing this case. 
+  \cr
   Often (e.g., in a Gibbs sampler setting), the sparsity structure of
   the covariance/precision does not change. In such setting, the
   Cholesky factor can be passed via \code{Rstruct} in which only updates
   are performed (i.e., \code{update.spam.chol.NgPeyton} instead of a
   full \code{chol}).
 }
-%\note{There is intentionally no \acronym{S3} distinction between the classes
-%  \code{spam} and \code{spam.chol.}\emph{method}.}
 \references{See references in \code{\link{chol}}.
 }
 \seealso{\code{\link{chol}} and \code{\link{ordering}}.
@@ -68,7 +76,6 @@ norm( var(t(mvsample)) - Sigma, type="m")
 mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample, n)
    #### ,n as patch
 norm( var(t(mvsample)) - Sigma, type="m")
-
 
 
 # 'solve' step by step:

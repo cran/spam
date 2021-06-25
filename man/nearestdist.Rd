@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -36,18 +36,18 @@ nearest.dist( x, y=NULL, method = "euclidean",
                 \code{"greatcircle"}. Any unambiguous substring can be
           given.}
   \item{delta}{only distances smaller than \code{delta} are recorded,
-    see Details.} 
+    see Details.}
   \item{upper}{Should the entire matrix (\code{NULL}) or only the upper-triagonal (\code{TRUE})
-               or lower-triagonal (\code{FALSE}) values be calculated.} 
-  \item{p}{The power of the Minkowski distance.} 
+               or lower-triagonal (\code{FALSE}) values be calculated.}
+  \item{p}{The power of the Minkowski distance.}
   \item{miles}{For great circle distance: If true distances are in statute miles if false distances in
-          kilometers.} 
+          kilometers.}
   \item{R}{For great circle distance: Radius to use for sphere to find spherical distances. If \code{NULL}
           the radius is either in miles or kilometers depending on the
           values of the miles argument. If \code{R=1} then distances are of
           course in radians.}
-%  \item{eps}{deprecated. Left for backwards consistency.} 
-%  \item{diag}{deprecated. Left for backwards consistency. See \sQuote{Details}.} 
+%  \item{eps}{deprecated. Left for backwards consistency.}
+%  \item{diag}{deprecated. Left for backwards consistency. See \sQuote{Details}.}
 }
 \value{A \code{spam} object containing the distances spanned between
   zero and \code{delta}. The sparse matrix may contain many zeros
@@ -63,23 +63,24 @@ nearest.dist( x, y=NULL, method = "euclidean",
   The distances are calculated based on spherical law of cosines.
   Care is needed for `zero' distances due to the final acosin:
   \code{acos(1-1e-16)}, especially with an actual radius.
-  
+
 %  The distance is
 %  in single precision (I am still not sure where I lose the double precision in
 %  the Fortran code) and if calculating the entire matrix
 %  \code{upper=NULL} (instead of adding its transpose) it may not
-%  pass the symmetry checks, for example.\cr 
+%  pass the symmetry checks, for example.\cr
 
   Default value of Earth's radius is 3963.34miles (6378.388km).\cr
 
   There are many other packages providing distance functions. Especially
   for great circle distances there are considerable differences between
   the implementations. For high precision results, \code{sp::spDists} is
-  a good candidate. \cr
-  
+  a good candidate and distnces of large amount of locations can be
+  processed in parallel with the \code{parallelDist} package.\cr
+
   The formerly depreciated arguments \code{eps} and \code{diag} are now
-  eliminated. 
-  
+  eliminated.
+
   \code{x} and \code{y} can be any object with an existing
   \code{as.matrix} method.\cr
 
