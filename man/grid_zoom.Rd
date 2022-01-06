@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -58,12 +58,13 @@ grid_zoom(inputGrob = pointsGrob(runif(200),runif(200)),
 A zoom plot does only make sense if all objects of the \code{inputGrob}
 are specified in \code{native} units. Additional caution me be require
 for certain grobs: e.g. a zoom of a circleGrob() is problematic if the x
-and y axis are stretched by a different amount. 
-  
+and y axis are stretched by a different amount.
+
 }
 %\references{}
 \seealso{grid_trace2}
 \examples{
+require(grid)
 ## -- Example 1 --
 set.seed(133)
 grid_zoom(inputGrob = pointsGrob(runif(200), runif(200)),

@@ -20,8 +20,8 @@
   Fast ways to draw multivariate normals when the variance or precision matrix
   is sparse.}
 \usage{
-rmvnorm(n, mu=rep.int(0, dim(Sigma)[1]), Sigma, ...)
-rmvnorm.spam(n, mu=rep.int(0, dim(Sigma)[1]), Sigma, Rstruct=NULL, ...)
+rmvnorm(n, mu=rep.int(0, dim(Sigma)[1]), Sigma, ..., mean, sigma)
+rmvnorm.spam(n, mu=rep.int(0, dim(Sigma)[1]), Sigma, Rstruct=NULL, ..., mean, sigma)
 rmvnorm.prec(n, mu=rep.int(0, dim(Q)[1]), Q, Rstruct=NULL, ...)
 rmvnorm.canonical(n, b, Q, Rstruct=NULL, ...)
 }
@@ -33,9 +33,10 @@ rmvnorm.canonical(n, b, Q, Rstruct=NULL, ...)
 \item{b}{vector determining the mean.}
 \item{Rstruct}{the Cholesky structure of \code{Sigma} or \code{Q}.}
 \item{\dots}{arguments passed to \code{chol}.}
+\item{mean,sigma}{similar to \code{mu} and  \code{Sigma}. Here for portability with \code{mvtnorm::rmvnorm()}}
 }
 \details{All functions rely on a Cholesky factorization of the
-  covariance or precision matrix. 
+  covariance or precision matrix.
   \cr
   The functions \code{rmvnorm.prec} and \code{rmvnorm.canonical}
   do not require sparse precision matrices
@@ -44,7 +45,7 @@ rmvnorm.canonical(n, b, Q, Rstruct=NULL, ...)
   the other function is done.
   \cr
   Default mean is zero. Side note: mean is added via \code{sweep()} and
-  no gain is accieved by distinguishing this case. 
+  no gain is accieved by distinguishing this case.
   \cr
   Often (e.g., in a Gibbs sampler setting), the sparsity structure of
   the covariance/precision does not change. In such setting, the

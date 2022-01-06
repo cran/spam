@@ -1,8 +1,15 @@
 useDynLib(spam, .registration = TRUE)
 
-import(grid)
-import("dotCall64")
+#importFrom("grid", "grid.layout", "grid.draw", "unit", "gTree", "gList", "gpar",
+#                "textGrob", "rectGrob", "linesGrob", "yaxisGrob", "xaxisGrob", "pointsGrob",
+#                "editGrob", "grobHeight", "stringHeight",
+#                "plotViewport","viewport","dataViewport",
+#                "vpStack","vpList")
+import("grid")
 
+
+importFrom("dotCall64", ".C64", "integer_dc", "numeric_dc", "vector_dc")
+         # these are the only functions exported by dotCall64, btw.
 
 importFrom("grDevices", "gray", "heat.colors")
 importFrom("graphics",
@@ -132,6 +139,7 @@ export(
        "rmvnorm.const",
        "rmvnorm.canonical.const",
        "rmvnorm.prec.const",
+       "rmvnorm.conditional",
 
        "precmat",
        "precmat.RW1",

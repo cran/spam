@@ -1,20 +1,7 @@
-# This is file ../spam/demo/timing.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
-
-
-
-
-
-
-
 # We construct a few large matrices and we compare how much faster (slower)
 # we are compared to the full matrix analysis.
 # Since all the calculation are also done with full matrices, we do not
-# exagerate with the sizes.
+# exaggerate with the sizes.
 
 set.seed(14)
 
@@ -45,14 +32,9 @@ compare(rbind(fmat1,fmat1),rbind(smat1,smat1))
 compare(cbind(fmat1,fmat1),cbind(smat1,smat1))
 
 
-
-
-
 # now create a sparse matrix.
 fmat1[fmat1<3] <- 0
 smat1 <- as.spam(fmat1)
-
-
 
 compare(fmat2 <- t(fmat1), smat2 <- t(smat1), "Transpose")
 
@@ -74,5 +56,3 @@ summary(ssmat)
 
 compare(rbind(fmat1,fmat1),rbind(smat1,smat1))
 compare(cbind(fmat1,fmat1),cbind(smat1,smat1))
-
-

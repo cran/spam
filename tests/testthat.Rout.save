@@ -16,7 +16,7 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > # HEADER ####################################################
-> # This is file spam/tests/demo_spam.R.                      #
+> # This is file spam/tests/testthat.R.                       #
 > # It is part of the R package spam,                         #
 > #  --> https://CRAN.R-project.org/package=spam              #
 > #  --> https://CRAN.R-project.org/package=spam64            #
@@ -26,26 +26,25 @@ Type 'q()' to quit R.
 > #    Kaspar Moesinger [ctb]                                 #
 > # HEADER END ################################################
 > 
+> library("testthat")
+> # library("spam")
 > 
-> # This is a simple demo, wrapping up the functionality of spam.
-> options( echo=FALSE)
+> test_check("spam")
+Loading required package: spam
 Spam version 2.8-0 (2022-01-05) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
 suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
-           [,1]     [,2]       [,3]      [,4]      [,5]       [,6]      [,7]
-[1,] -0.6618498 1.231945 -0.3828219 0.8828018 -1.266815 -0.7666105 -1.421992
-Class 'spam' (32-bit)
-     [,1]        [,2]       [,3]      [,4]       [,5]       [,6]       [,7]
-[1,]    0  1.23194518 -0.3828219 0.8828018 -1.2668148 -0.7666105 -1.4219925
-[2,]    0 -0.06488077  0.2994216 1.8627490 -0.1985833  1.4433629 -0.3282283
-[3,]    0  1.06899373  0.6742398 1.6117253  0.1388658  0.8448793  0.2845701
-[4,]    0 -0.37696531 -0.2928163 0.1354795 -0.2793360 -0.3993704  0.7193359
-[5,]    0  1.04318309  0.4880534 1.0880860  0.7089194 -1.4277676  0.4324160
-Class 'spam' (32-bit)
-[1] -0.36181804  0.07322929 -0.13634352  0.59605327  0.52252315
+
+Attaching package: 'spam'
+
+The following objects are masked from 'package:base':
+
+    backsolve, forwardsolve
+
+[ FAIL 0 | WARN 0 | SKIP 0 | PASS 672 ]
 > 
 > proc.time()
    user  system elapsed 
-  0.340   0.020   0.354 
+  2.711   0.087   2.793 

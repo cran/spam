@@ -33,70 +33,9 @@ B <- spam(rnorm(16),4)
 
 test_that("bdiag.spam", {
     spamtest_eq( bdiag.spam(A),A)
-    
+
     spamtest_eq( bdiag.spam(A,B),rbind(cbind(A,rep(0,8)),
                                        cbind(spam(rep(0,20),4),B)))
-}) 
-
-
-n <- 5
-Sigma <- .25^abs(outer(1:n,1:n,'-'))
-Q <- as.spam(solve(Sigma))
-b <- 1:n
-
-struct <- chol(Q)
-
-test_that("rmvnorm", {
-
-    set.seed(14)
-    tmp1 <- rmvnorm(10,  Sigma=Sigma) 
-    set.seed(14)
-    tmp2 <- rmvnorm.spam(10, Sigma=Sigma) 
-    expect_equal( tmp1, tmp2)
-    
-    set.seed(14)
-    tmp1 <- rmvnorm(10,  Sigma=Q) 
-    set.seed(14)
-    tmp2 <- rmvnorm.spam(10, Sigma=Q) 
-    expect_equal( tmp1, tmp2)
-
-    
-    
-    set.seed(14)
-    tmp1 <- rmvnorm.canonical(10, b, Q) 
-    set.seed(14)
-    spamtest_eq( rmvnorm.canonical(10, b, Q, Lstruct=struct), tmp1 )
-    set.seed(14)
-    spamtest_eq( rmvnorm.prec(10, solve(Q,b), Q), tmp1 )
-    set.seed(14)
-    spamtest_eq( rmvnorm.prec(10, solve(Q,b), Q, Lstruct=struct), tmp1 )
-    set.seed(14)
-    ## cat("For rmvnorm.canonical:\n- comparing sample mean with truth:\n")
-    ## for (i in 10^(1:4))
-    ##     cat('    sample size n=',i,' yields  Frobenius-norm:',
-    ##         norm( apply(rmvnorm.canonical(i, b, Q, Lstruct=struct), 2,mean)- solve(Q,b),'f'),'\n')
-    ## cat("- comparing sample variance with truth:\n")
-    ## for (i in 10^(1:4)){
-    ##     cat('    sample size n=',i,' yields Frobenius-norm:',
-    ##         norm( var( rmvnorm.canonical(i, b, Q=Q, Lstruct=struct))- Sigma,'f'),'\n')
-    ## set.seed(14)
-    ## cat("For rmvnorm.prec:\n- comparing sample mean with truth:\n")
-    ## for (i in 10^(1:4))
-    ##     cat('    sample size n=',i,' yields  Frobenius-norm:',
-    ##         norm( apply(rmvnorm.prec(i, b, Q, Lstruct=struct), 2,mean)- b,'f'),'\n')
-    ## cat("- comparing sample variance with truth:\n")
-    ## for (i in 10^(1:4)){
-    ##     cat('    sample size n=',i,' yields Frobenius-norm:',
-    ##         norm( var( rmvnorm.prec(i, Q=Q, Lstruct=struct))- Sigma,'f'),'\n')
-    ## }
-    ## set.seed(14)
-    ## cat("For rmvnorm.spam:\n- comparing sample mean with truth:\n")
-    ## for (i in 10^(1:4))
-    ##   cat('    sample size n=',i,' yields  Frobenius-norm:',
-    ##       norm( apply(rmvnorm.spam(i, b, as.spam(Sigma), Lstruct=struct), 2,mean)- b,'f'),'\n')
-    ## cat("- comparing sample variance with truth:\n")
-    ## for (i in 10^(1:4)){
-    ##   cat('    sample size n=',i,' yields Frobenius-norm:',
-    ##       norm( var( rmvnorm.spam(i, b, as.spam(Sigma), Lstruct=struct))- Sigma,'f'),'\n')
-    ## }
 })
+
+

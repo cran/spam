@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 
 
@@ -38,25 +38,26 @@
   \item{...}{Further arguments for different methods.}
 }
 \value{Either \code{TRUE} or a vector of 'mode' \code{"character"} describing the
-  differences between
-  \code{target} and \code{current}.
+  differences between \code{target} and \code{current}.
 }
 \details{
-  Numerical comparisons for
-  \code{scale = NULL} (the default) are done by
-     first computing the mean absolute difference of the two numerical
-     vectors.  If this is smaller than \code{tolerance} or not finite,
-     absolute differences are used, otherwise relative differences
-     scaled by the mean absolute difference.
+   Numerical comparisons for \code{scale = NULL} (the default) are
+   typically on a \emph{relative difference} scale unless the
+   \code{target} values are close to zero or infinite. Specifically,
+   the scale is computed as the average absolute value of \code{target}.
+   If this scale is finite and exceeds \code{tolerance}, differences
+   are expressed relative to it; otherwise, absolute differences are used.
 
-     If \code{scale} is positive, absolute comparisons are made after
-     scaling (dividing) by \code{scale}.
+   If \code{scale} is numeric (and positive), absolute comparisons are
+   made after scaling (dividing) by \code{scale}. Note that if all of
+   scale is sufficiently close to 1 (specifically, within \code{tolerance}),
+   the difference is still reported as being on an absolute scale.
 
-     Do not use \code{all.equal.spam} directly in \code{if}
-  expressions: either use \code{isTRUE( all.equal.spam(...))} or
-  \code{identical} if appropriate.
+   Do not use \code{all.equal.spam} directly in \code{if}
+   expressions: either use \code{isTRUE( all.equal.spam(...))} or
+   \code{identical} if appropriate.
 
-  
+
   Cholesky decomposition routines use this function to test for
   symmetry.
 
@@ -89,7 +90,7 @@ all.equal(diag.spam(2),diag(2))
 str(spam(0))
 # hence
 all.equal.spam(spam(0,3,3), diag.spam(0,3) )
-norm(spam(0,3,3) - diag.spam(0,3) ) 
+norm(spam(0,3,3) - diag.spam(0,3) )
 }
 \author{Reinhard Furrer}
 \keyword{array}

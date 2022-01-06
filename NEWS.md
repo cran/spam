@@ -1,3 +1,42 @@
+# spam 2.8
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* The function `chol.spam()` has a much better verbose offering.
+* The function `determinant.spam()` does not take any arguments for the Cholesky 
+  factorization, if needed, pass via `chol()`, i.e., `det(chol(., args=))^2`.
+* New function `rmvnorm.conditional()` to sample from a multivariate conditional 
+  normal random variable.
+* The functions `rmvnorm()` and `rmvnorm.spam()` have now arguments `mean` and 
+  `sigma` (equivalent to `mu` and `Sigma`), to match `mvtnorm::rmvnorm()`.
+* Demo `article-jss` has been renamed `jss10-figures-table`.
+  Deprecated demos `article-jss-example1`, `article-jss-example2` and 
+  `jss10-example2` have been eliminated.
+
+INTERNAL CHANGES
+
+* `determinant.spam()` and `chol.spam()` now use the common routine `.spam.chol.basis()`.
+* Added 64 bit support for back solve routines. Not fully tested.
+* Switched from URL to DOI for JJS references.
+* Some additional unit tests. 
+* Demo files have been deprived from the unnecessary footer.
+
+BUG FIXES
+
+* Memory allocation for `nnzcolindicies` was corrected (as in versions <=2.6).
+  The change in 2.7 was working well for huge matrices. 
+  This addresses bug reported by Curtis Storlie, Martin Boer and Paul Eilers.
+* Help of `determinant.spam()` now reflects what is calculated.
+* `determinant.spam()` should now work with 64-bit as well.
+* In case of insufficient memory allocation `chol.spam()` now has appropriate 64-bit 
+  support for the subsequent iterations.
+* Addressing heap-buffer-overflow and allocating larger arrays in `eigen_approx`.
+  Debian package 2.7.0-2 contains the patch. Thanks to Sébastien Villemot.
+* \code{`all.equal.spam(, scale=s)} now works for `length(s)>1`, see PR#18272 for
+  `base::all.equal.numeric()`, thanks to Michael Chirico. 
+
+
+
 # spam 2.7
 
 SIGNIFICANT USER-VISIBLE CHANGES
@@ -5,7 +44,6 @@ SIGNIFICANT USER-VISIBLE CHANGES
 * spam package `citeEntry`.
 * updated examples and description of `covmat()` and `nearest.dist()`.
 * new functions `rmvnorm()`, `cor.sph()`.
-* improved
 * better memory allocation for Cholesky factorization.
 
 INTERNAL CHANGES
@@ -16,7 +54,7 @@ INTERNAL CHANGES
 
 BUG FIXES
 
-* addressed memory allocation issues for very, very large matrices. 
+*  
 
 
 # spam 2.6-0

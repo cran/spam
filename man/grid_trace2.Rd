@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{grid_trace2}
 \alias{grid_trace2}
@@ -55,7 +55,7 @@ grid_trace2(runif(500), runif(500),
             chain1_yaxis_at = seq(.2, 1, by = .2),
             chain1_lab = "chain1", chain2_lab = "chain2",
             main = "Uniform",
-            lwd_lines = unit(.5, "mm"))
+            lwd_lines = grid::unit(.5, "mm"))
 }
 \author{Florian Gerber <florian.gerber@math.uzh.ch>}
 \keyword{plot}

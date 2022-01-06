@@ -1,19 +1,4 @@
-# This is file ../spam/demo/spam.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
-
-
-
-
-
-
-
-# This is a simple demo, wrapping up the functionality of spam.
-
-
+# This is a simple demo, illustrating the functionality of spam.
 set.seed(14)
 
 nrow <- 5
@@ -37,7 +22,6 @@ cholssmat <- chol(ssmat)
 
 
 # works also for large matrices:
-
 set.seed(14)
 
 nz <- 1000
@@ -48,8 +32,6 @@ smat <- diag.spam(1,nrow,ncol)
 smat[cbind(sample(1:(nrow*ncol),size=nz))] <- runif(nz)
 
 smat <- smat %*% t(smat)
-
-
 
 
 b <- rnorm(nz)

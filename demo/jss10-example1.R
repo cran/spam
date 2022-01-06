@@ -1,11 +1,3 @@
-# This is file ../spam/demo/jss10-example1.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
-
-
 # This demo contains the R code of the example in Section 5.1 of the
 # JSS article:
 #     "spam: A Sparse Matrix R Package with Emphasis on
@@ -15,8 +7,6 @@
 # - improved formatting
 # - more comments
 # - the R code to construct the figures
-
-
 
 # SETUP:
 library("spam")
@@ -31,7 +21,7 @@ nm <- n+m                          # Total length of s and t
 
 
 priorshape <-  c(4, 1, 1)          # alpha's, as in Rue & Held (2005)
-priorinvscale <- c(4, 0.1, 0.0005) # beta's 
+priorinvscale <- c(4, 0.1, 0.0005) # beta's
 
 # Construct the individual block precisions
 # (based on unit precision parameters kappa, denoted with k):
@@ -55,9 +45,7 @@ for (i in 0:(nm-m)) {
 }
 
 # Note that for the final version we need:
-# Qss <- k_s * Qss + k_y * diag.spam(nm)  
-
-
+# Qss <- k_s * Qss + k_y * diag.spam(nm)
 
 
 # The form of Qtt is given by (Rue and Held equation 3.40).
@@ -70,28 +58,24 @@ Qtt <- Qtt + t( Qtt)
 diag(Qtt) <- c(1,5,rep(6,nm-4),5,1)
 
 
-
 # Create temporary kappa and precision matrix to illustrate
 # adjacency matrix and ordering.
 k <- c(1,1,1)
 Qst_yk <- rbind(cbind(k[2]*Qss + k[1]*diag.spam(nm), k[1]*Qst),
        	        cbind(k[1]*Qst, k[3]*Qtt + k[1]*diag.spam(nm)))
-                
+
 struct <- chol(Qst_yk)
 
-
 # Figure 6:
-display(Qst_yk)           
-display(struct)           
+display(Qst_yk)
+display(struct)
 
-# Note that we do not provide the exactly the same ordering 
+# Note that we do not provide the exactly the same ordering
 # algorithms. Hence, the following is sightly different than
 # Figure RH4.2.
 cholQst_yk <- chol(Qst_yk,pivot="RCM")
 P <- ordering(cholQst_yk)
 display(Qst_yk[P,P])
-
-
 
 # Recall:
 # k=( kappa_y, kappa_s, kappa_t)'
@@ -104,44 +88,44 @@ set.seed(14)
 
 # Initialize parameters:
 spost <- tpost <- array(0, c(totalg, nm))
-kpost <- array(0, c(totalg, 3)) 
+kpost <- array(0, c(totalg, 3))
 
 # Starting values:
 kpost[1,] <- c(.5,28,500)
 tpost[1,] <- 40
 
 # calculation of a few variables:
-postshape <- priorshape + c(	n/2, (n+1)/2, (n+m-2)/2) 
+postshape <- priorshape + c(	n/2, (n+1)/2, (n+m-2)/2)
 
 # GIBBS' ITERATIONS:
 timing <- system.time({
 for (ig in 2:totalg) {
-    
-  Q <- rbind(cbind(kpost[ig-1,2]*Qss + kpost[ig-1,1]*Qst, 
+
+  Q <- rbind(cbind(kpost[ig-1,2]*Qss + kpost[ig-1,1]*Qst,
                    kpost[ig-1,1]*Qst),
-             cbind(kpost[ig-1,1]*Qst,  
+             cbind(kpost[ig-1,1]*Qst,
                    kpost[ig-1,3]*Qtt + kpost[ig-1,1]*Qst))
-  
-  
+
+
   b <- c(kpost[ig-1,1]*Qsy %*% y, kpost[ig-1,1]*Qsy %*% y)
-  
-  tmp <- rmvnorm.canonical(1, b, Q, Lstruct=struct) 
-  
-      
-  spost[ig,] <- tmp[1:nm]		 
+
+  tmp <- rmvnorm.canonical(1, b, Q, Lstruct=struct)
+
+
+  spost[ig,] <- tmp[1:nm]
 
   tpost[ig,] <- tmp[1:nm+nm]
 
 
   tmp <- y-spost[ig,1:n]-tpost[ig,1:n]
-  
+
   postinvscale <- priorinvscale + # prior contribution
     c( sum( tmp^2)/2,     # Qyy_st is the identity
       t(spost[ig,]) %*% (Qss %*% spost[ig,])/2,
       t(tpost[ig,]) %*% (Qtt %*% tpost[ig,])/2)
 
 
-  kpost[ig,] <- rgamma(3, postshape, postinvscale)	
+  kpost[ig,] <- rgamma(3, postshape, postinvscale)
 
   if( (ig%%10)==0) cat(".")
 
@@ -181,9 +165,8 @@ legend("topright",legend=c("Posterior median", "Quantiles of posterior sample",
 
 
 
-
 # Constructing a predictive distribution:
-ypred <- rnorm( ngibbs*nm, c(spost+tpost),sd=rep( 1/sqrt(kpost[,1]), nm)) 
+ypred <- rnorm( ngibbs*nm, c(spost+tpost),sd=rep( 1/sqrt(kpost[,1]), nm))
 dim(ypred) <- c(ngibbs,nm)
 postpredquant <- apply(ypred, 2, quantile,c(.025,.975))
 matlines( t(postpredquant)^2, col=3,lty=1)
@@ -209,7 +192,3 @@ colnames(allkappas) <- c("kappa_y", "kappa_s", "kappa_t")
 rownames(allkappas) <- c("Prec (mean)", "Prec (median)",
                          "Var (mean)", "Var (median) ")
 print(allkappas,4)
-
-
-
-

@@ -13,8 +13,10 @@
 
 # Draw from a multivariate normal:
 # (Algorithm 2.3 from Rue and Held, 2005)
-rmvnorm <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, ...) {
-  # taken from ?chol.spam
+rmvnorm <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, ..., mean, sigma) {
+
+  if (!missing(mean))   mu <- mean
+  if (!missing(sigma))  Sigma <- sigma
 
   if (is( Sigma, "spam")) return( rmvnorm.spam( n, mu, Sigma, ...))
 
@@ -24,8 +26,11 @@ rmvnorm <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, ...) {
   return(sweep( as.matrix( ( array(rnorm(n*N),c(n,N)) %*% R)), 2, mu, "+"))
 }
 
-rmvnorm.spam <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, Rstruct = NULL, ...) {
+rmvnorm.spam <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, Rstruct = NULL, ..., mean, sigma) {
   # taken from ?chol.spam
+  if (!missing(mean))   mu <- mean
+  if (!missing(sigma))  Sigma <- sigma
+
   if (!is(Sigma, "spam"))  return(  rmvnorm(n, mu, Sigma, ...))  # just in case!
 
   if (is(Rstruct,"spam.chol.NgPeyton"))
@@ -159,4 +164,39 @@ rmvnorm.canonical.const <- function (n, b, Q, Rstruct = NULL,
     return(t(x- t(U) %*% correct))
 
 
+}
+
+
+
+### conditional simulation
+rmvnorm.conditional <- function(n, y, mu = rep.int(0, dim(SigmaXX)[1]+dim(SigmaYY)[1]),
+                                   SigmaXX, SigmaYY, SigmaXY,
+                                   noise,
+                                   RstructYY = NULL, ...) {
+
+  if (!is(SigmaXX, "spam"))  stop("Implemented only for 'spam' covariance matrices")
+
+  nx <- dim(SigmaXX)[1]
+  if (missing(SigmaYY)) {
+    if (missing(noise)) stop("Either 'noise' or 'SigmaYY' are required")
+    SigmaYY <- SigmaXX+diag.spam(noise, nx, nx)
+  } else if (!missing(noise)) stop("Either 'noise' or 'SigmaYY' are required, not both")
+
+  ny <- dim(SigmaYY)[1]
+  if (length(y)!=ny)  stop("Length of 'y' does not match dimension of 'SigmaYY'")
+
+  if (missing(SigmaXY)) {  # save one transpose
+    if (nx!=ny) stop("'SigmaXY' needs to be specified")
+    Sigma <- rbind.spam(cbind.spam(SigmaXX, SigmaXX), cbind(SigmaXX, SigmaYY))
+    SigmaXY <- SigmaXX   # alternative would be to have another if below...
+  } else {
+    if (!all(dim(SigmaXY) == c(nx,ny))) stop("Wrong dimension for 'SigmaXY'")
+    Sigma <- rbind.spam(cbind.spam(SigmaXX, SigmaXY), cbind(t(SigmaXY), SigmaYY))
+  }
+  #  Rstruct <- chol.spam(Sigma)
+  rsample <- t(rmvnorm.spam(n = n, mu = mu, Sigma = Sigma)) #, Rstruct = Rstruct)
+
+  t(rsample[1:nx,] + SigmaXY %*%
+      solve.spam(a = SigmaYY, b = y-rsample[(nx+1):(nx+ny),],
+                 Rstruct = RstructYY))
 }

@@ -1,17 +1,8 @@
-# This is file ../spam/demo/jss15-BYM.R
-# This file is part of the spam package, 
-#      http://www.math.uzh.ch/furrer/software/spam/
-# by Reinhard Furrer [aut, cre], Florian Gerber [ctb]
-     
-
-
-
-
 # This is the MCMC sampler presented in Section 2.2 of the article:
 #
 # Florian Gerber, Reinhard Furrer (2015). Pitfalls in the Implementation
 # of Bayesian Hierarchical Modeling of Areal Count Data: An Illustration
-# Using BYM and Leroux Models. Journal of Statistical Software, 
+# Using BYM and Leroux Models. Journal of Statistical Software,
 # Code Snippets, 63(1), 1-32. URL http://www.jstatsoft.org/v63/c01/.
 #
 # Note: For illustration we set
@@ -31,15 +22,15 @@ invisible(readline(prompt = "Type  <Return>\t to continue : "))
 library("spam")
 options(spam.structurebased=TRUE)
 
-# Besag-York-Molie model (BYM) 
+# Besag-York-Molie model (BYM)
 # load data
-data(Oral); attach(Oral) 
+data(Oral); attach(Oral)
 path <- system.file("demodata/germany.adjacency", package = "spam")
 A <- adjacency.landkreis(path); n <- dim(A)[1]
 
 set.seed(2)
 # hyper priors
-hyperA <- c(1, 1); hyperB <- c(0.5, .01)  
+hyperA <- c(1, 1); hyperB <- c(0.5, .01)
 
 # sampler length, burnin and thinning
 totalg <- 5000
@@ -47,11 +38,11 @@ burnin <- 500
 thin <- 10
 
 # variable to store samples
-upost <- vpost <- array(0, c(totalg, n))  
+upost <- vpost <- array(0, c(totalg, n))
 kpost <- array(NA, c(totalg, 2)); accept <- rep(NA, totalg)
 
 # initial values
-upost[1,] <- vpost[1,] <- rep(.001, 544); kpost[1,] <- c(10, 100) 
+upost[1,] <- vpost[1,] <- rep(.001, 544); kpost[1,] <- c(10, 100)
 
 # precalculate some quantities
 eta <- upost[1,] + vpost[1,]
@@ -73,7 +64,7 @@ for (i in 2:totalg) {
     # update precision
     kpost[i,] <- rgamma(2, postshape, hyperB + c(uRuHalf, vvHalf))
 
-    # find eta tilde 
+    # find eta tilde
     etaTilde <- eta
     for(index in 1:2){
         C <- E * exp(etaTilde)
@@ -83,7 +74,7 @@ for (i in 2:totalg) {
         etaTilde <- c(solve.spam(Q, b,
                                  Rstruct = struct))[1:n + n]
     }
- 
+
     C <- exp(etaTilde) * E; diagC <- diag.spam(c(rep(0, n), C))
     b <- c( rep(0, n), Y + (etaTilde - 1) * C)
     Q <- kpost[i,1] * Qu + kpost[i,2] * Qv + diagC
@@ -104,7 +95,7 @@ for (i in 2:totalg) {
        etaTilde_ <- c(solve.spam(Q_, b_,
                                  Rstruct = struct))[1:n + n]
     }
-     
+
     C_ <- exp(etaTilde_) * E; diagC_ <- diag.spam(c(rep(0, n), C_))
     b_ <- c( rep(0, n), Y + (etaTilde_ - 1) * C_)
     Q_ <- kpost[i,1] * Qu + kpost[i,2] * Qv + diagC_
@@ -120,20 +111,20 @@ for (i in 2:totalg) {
     logAlpha <- min(0, logPost_ - logPost + logApproxX - logApproxX_)
 
     # accept or reject proposal
-    if (log(runif(1)) < logAlpha) {    
+    if (log(runif(1)) < logAlpha) {
         uRuHalf <- uRuHalf_;  vvHalf <- vvHalf_
         eta <- eta_; b <- b_; C <- C_; accept[i] <- 1
-    } else{                            
+    } else{
         accept[i] <- 0; upost[i,] <- upost[i-1,]; vpost[i,] <- vpost[i-1,]
-    } 
+    }
 
     # progress report
     if(i%%500 == 0) cat(paste(i / 50, "%\n", sep = "" ))
 }
- 
 
 
-## remove burnin 
+
+## remove burnin
 kpost <- kpost[-seq(burnin), ]
 upost <- upost[-seq(burnin), ]
 vpost <- vpost[-seq(burnin), ]
@@ -157,17 +148,14 @@ grid.newpage()
 grid_trace2(kpost, chain1_lab = expression(log~kappa[u]),
             chain2_lab = expression(log~kappa[v]), log = TRUE)
 
-## summary statistics of 
+## summary statistics of
 ## kappa_u and kappa_v
-apply(kpost, 2, summary)           
+apply(kpost, 2, summary)
 
 
 par(mfrow = c(1,2))
 ## standardized mortality ratios
-germany.plot(log(Y/E), main = "SMR")              
+germany.plot(log(Y/E), main = "SMR")
 ## estimated relative log-risk
-germany.plot(apply(upost, 2, mean), main = "U | Y, hyper-priors") 
-
-
-
+germany.plot(apply(upost, 2, mean), main = "U | Y, hyper-priors")
 

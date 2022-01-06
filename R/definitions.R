@@ -139,7 +139,7 @@ setClass("spam.chol.NgPeyton",
 }
 
 
-# Create a string containing the matrix size with appropriate unit. 
+# Create a string containing the matrix size with appropriate unit.
 # not planned to be exported.
 # If length(x)==1, this represents the number of doubles (or other size).
 printSize <- function(x, size=8, digits=2L) {
@@ -311,7 +311,7 @@ setMethod("c","spam", function(x,...){
 ########################################################################
 # diag and derivatives
 "diag.spam" <- function(x=1, nrow, ncol)  {
-  ## structure of function according an older version of base:::diag  
+  ## structure of function according an older version of base:::diag
   if (is.spam(x)) return( diag.of.spam( x, nrow, ncol))
 
   if (is.array(x) && length(dim(x)) != 1)
@@ -334,7 +334,7 @@ setMethod("c","spam", function(x,...){
 
   ###CheckMe: are the following two lines efficient?
   entries <- vector("double", m)
-  entries[1:m] <- x 
+  entries[1:m] <- x
   return(.newSpam(
       entries=entries,
         colindices=1:m,
@@ -1707,35 +1707,32 @@ all.equal.spam <- function (target, current, tolerance = .Machine$double.eps^0.5
     # --- CHANGED ---
     # Add suppressWarnings
     tmp <- suppressWarnings(sum(target@colindices != current@colindices))
-    if ( tmp>0)
+    if ( tmp > 0)
       msg <- c(msg,paste("Column-sparsity structure differ (at least",
                     tmp,"instance(s))"))
 
     tmp <- suppressWarnings(sum(target@rowpointers != current@rowpointers))
-    if ( tmp>0)
+    if ( tmp > 0)
       msg <- c(msg,paste("Row-sparsity structure differ (at least",
                     tmp,"instance(s))"))
 
-    xy <- suppressWarnings(mean(abs(target@entries - current@entries)))
     what <- if (is.null(scale)) {
-        xn <- mean(abs(target@entries))
-        if (is.finite(xn) && xn > tolerance) {
-            xy <- xy/xn
-            "relative"
-        }
-        else "absolute"
-    }
-    else {
-        xy <- xy/scale
+      scale <- mean(abs(target@entries))
+      if (is.finite(scale) && scale > tolerance) {
+        "relative"
+      } else {
+        scale <- 1
+        "absolute"
+      }
+    } else {
         "scaled"
     }
+    xy <- suppressWarnings(mean(abs(target@entries - current@entries) / scale))
     if (is.na(xy) || xy > tolerance)
-        msg <- c(msg,paste("Mean", what, "difference:",
-            format(xy)))
+        msg <- c(msg,paste("Mean", what, "difference:", format(xy)))
     if (is.null(msg))
         TRUE
     else msg
-
 }
 
 

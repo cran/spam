@@ -8,7 +8,7 @@
 %    Roman Flury [aut], Daniel Gerber [ctb],                %
 %    Kaspar Moesinger [ctb]                                 %
 % HEADER END %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-   
+
 
 \name{det}
 \alias{det,spam-method}
@@ -21,11 +21,11 @@
 \alias{determinant.spam}
 \alias{determinant.spam.chol}
 \alias{determinant.spam.chol.NgPeyton}
-\title{Calculate the determinant of a positive definite Sparse Matrix}
+\title{Determinant of a symmetric positive definite sparse matrix}
 \description{\code{det} and \code{determinant} calculate the determinant of a
-  positive definite sparse matrix. \code{determinant} returns separately the
-  modulus of the determinant, optionally on the logarithm scale, and
-  the sign of the determinant.
+  symmetric, positive definite sparse matrix. \code{determinant} returns
+  separately the modulus of the determinant, optionally on the logarithm scale,
+  and the sign of the determinant.
 
 }
 \usage{
@@ -40,15 +40,14 @@ determinant(x, logarithm = TRUE, ...)
   \item{...}{Optional arguments. Examples include \code{method} argument
     and additional parameters used by the method.}
 }
-\value{For \code{det}, the determinant of \code{x}.  For \code{determinant}, a list with
-     components
+\value{For \code{det}, the determinant of \code{x}.  For \code{determinant}, a
+   list with components
 
- \item{modulus}{a numeric value.  The modulus (absolute value) of the
+  \item{modulus}{a numeric value.  The modulus (absolute value) of the
           determinant if \code{logarithm} is \code{FALSE}; otherwise the
           logarithm of the modulus.}
 
-   \item{sign}{integer; either +1 or -1 according to whether the determinant
-          is positive or negative.}
+  \item{sign}{+1, as only symmetric positive definite matrices are considered.}
 
 }
 \details{If the matrix is not positive definite, the function issues a
@@ -58,7 +57,8 @@ determinant(x, logarithm = TRUE, ...)
   Cholesky factor, i.e. internally, a Cholesky decomposition is
   performed. By default, the NgPeyton algorithm with minimal degree
   ordering us used. To change the methods or supply additonal parameters
-  to the Cholesky factorization function, see the help for \code{\link{chol}}.
+  to the Cholesky factorization function, it is possible to pass via
+  \code{\link{chol}}.
 
   The determinant of a Cholesky factor is also defined.
 }
@@ -70,7 +70,7 @@ on advanced uniprocessor computers, \emph{SIAM J. Sci. Comput.}, \bold{14},
 \seealso{\code{\link{chol.spam}}
 }
 \examples{
-x <- spam( c(4,3,0,3,5,1,0,1,4),3)
+x <- spam( c(4,3,0,3,5,1,0,1,4), 3)
 det( x)
 determinant( x)
 

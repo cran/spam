@@ -11,8 +11,8 @@
 rm(list = ls())
 source("helper.R")
 
-library("testthat")     
-library("spam", lib.loc = LIB.LOC)     
+library("testthat")
+library("spam", lib.loc = LIB.LOC)
 
 context("test-solve.R")
 
@@ -38,37 +38,37 @@ ctt <- chol(tt[ordering(css),ordering(css)])
 # solving system
 test_that("'solve' and derivatives", {
     b <- rnorm(n)
-    
+
     spamtest_eq(solve(ss),solve(tt))
     spamtest_eq(solve(ss,b),solve(tt,b))
-    
+
     spamtest_eq(t(as.spam(css))%*%as.spam(css), t(ctt)%*%ctt)
     spamtest_eq(t(as.spam(css))%*%as.spam(css), tt[ordering(css),ordering(css)])
     spamtest_eq((t(as.spam(css))%*%as.spam(css))[ordering(css,inv=T),ordering(css,inv=T)], tt)
-    
+
     spamtest_eq(backsolve(css,forwardsolve(css,b[ordering(css,inv=T)]))[ordering(css)],
                 backsolve(ctt,forwardsolve(t(ctt),b),n))
-#### ,n as patch 
-    
+#### ,n as patch
+
     spamtest_eq(backsolve(css,b[ordering(css,inv=T)])[ordering(css)],
                 backsolve(ctt,b,n))
-#### ,n as patch 
-    
+#### ,n as patch
+
     spamtest_eq(forwardsolve(css,b[ordering(css,inv=T)])[ordering(css)],
                 forwardsolve(t(ctt),b))
     spamtest_eq(forwardsolve(css,b)[ordering(css)],
                 forwardsolve(t(ctt),b[ordering(css)]))
-    
+
     spamtest_eq(forwardsolve(css,tt[ordering(css,inv=T),])[ordering(css),],
                 forwardsolve(t(ctt),tt))
 })
-    
-test_that("option 'chol.update'", { 
+
+test_that("option 'chol.update'", {
     ss1 <- ss+diag.spam(dim(ss)[1])
     spamtest_eq( chol(ss), update.spam.chol.NgPeyton(css, ss))
-    
+
     spamtest_eq( chol(ss, Rstruct=css), update.spam.chol.NgPeyton(css, ss))
-    
+
     sel <- which(ss[1,,drop=TRUE]!=0)
     ss1[1,sel[-1]] <- 0
     ss2 <- ss
@@ -76,8 +76,8 @@ test_that("option 'chol.update'", {
     options(spam.cholsymmetrycheck=FALSE)
     spamtest_eq(as.spam(update.spam.chol.NgPeyton(css,ss1)), as.spam( chol(ss1)))
     spamtest_diff(as.spam(update.spam.chol.NgPeyton(css,ss1)), as.spam( chol(ss2)))
-})    
-    
+})
+
 # spam.options(trivalues=TRUE)
 # spam.options(trivalues=FALSE)
 
@@ -92,8 +92,8 @@ test_that("'spam.chol.NgPeyton'", {
     spamtest_eq(dim(css), dim(ctt))
     spamtest_eq(c(css), c(ctt))
 })
-    
-                                       
+
+
 test_that("option 'cholupdatesingular'\n", {
     ss3 <- spam(rep(1,4),2)
     ch3 <- chol( ss3+diag.spam(2))
@@ -122,8 +122,16 @@ test_that("'det' and derivatives", {
     spamtest_eq(determinant(ss,log=F)$mod,determinant(tt,log=F)$mod)
     spamtest_eq(det(chol(ss)),det(chol(tt)))
     spamtest_eq(2*sum(log(diag(css))), determinant(tt)$modulus)
+
+    expect_error(det(spam(1,2,1)), "non-square")
+    # det now gives an error if neg definite! (2.8)
+    expect_error(det(spam(-1)), "not positive definit")
+
+    # since 2.8: warning when passing arguments to det
+    expect_warning(det(spam(1), pivot=FALSE), "will become defunct in the future")
+
 })
-    
+
 # orderings and derivatives
 test_that("'ordering' and derivatives", {
     tt5 <- matrix(c( 2,0,2,0,4,0,2,0,3),3)
@@ -139,7 +147,7 @@ test_that("'ordering' and derivatives", {
 
 
 # spam triangular solves
-test_that("triangular solves", { 
+test_that("triangular solves", {
     ## We need to generate a upper triangular matrix first.
     ctt <- chol(tt)
     css <- as.spam(ctt)
@@ -147,26 +155,26 @@ test_that("triangular solves", {
 
     # a good way to test that we do not use the lower triangular part:
     ctt[2:10,1] <- NA
-   
+
                                         # Recall:
     spamtest_eq(backsolve(ctt,forwardsolve(t(ctt),b),n),
                 solve(tt,b))
-    
+
                                         # Now do testing:
     spamtest_eq(forwardsolve(t(css),b), forwardsolve(t(ctt),b))
-    
+
     spamtest_eq(forwardsolve(ss,b), forwardsolve(tt,b))
-    
+
     cs <- ss
     cs[upper.tri(cs)] <- 0
     spamtest_eq(forwardsolve( cs ,b), forwardsolve( ss,b))
-    
-    
-#### ,n as patch 
+
+
+#### ,n as patch
     spamtest_eq(backsolve(css,b), backsolve(ctt,b, n))
     spamtest_eq(backsolve(ss,b), backsolve(tt,b, n))
     spamtest_eq(backsolve(t(cs),b), backsolve(tt,b, n))
-    
+
     spamtest_eq(backsolve(css,forwardsolve(t(css),b)),
                 backsolve(ctt,forwardsolve(t(ctt),b), n))
 })

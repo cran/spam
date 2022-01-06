@@ -15,7 +15,7 @@
 ########################################################################
 #
 # Contains routines linked to solving spd linear systems. Namely:
-#    chol.spam and chol.update
+#    chol.spam, chol.update and triangular solves.
 # Associated S4 elements and determinant are in different files.
 #
 #
@@ -24,272 +24,49 @@
 
 
 
-# lindx=  colindices       of length nsub   = nnzR
-# xlindx= colpointers                nsuper = nnzcolindices
-# xlnz=   rowpointers
-# snode=  snmember
-# xsuper= supernodes
-# c(... nnztmp,cachesize)= memory
-
-
-#### Summary of memory usage in cholstepwise:
-# Fortran      R
-# m            nrow,ncol
-# nsuper                     nnzcolindices
-# nnzlmax                    nnzR
-#
-# Internally, we additionally assign several arrays (of length):
-#  m: adj, colcnt
-#  7*m+3: iwork
-#  iwork: but 7*m+3 is used!
 
 
 
-# TODO below, check with determinant.spam for use of vector_ds and potential switches
-# from "rw" to "w" signature.
-chol.spam <- function(x, pivot = "MMD",
-                      method="NgPeyton",
-                      memory=list(),
-                      eps = getOption("spam.eps"), Rstruct=NULL, ..., verbose=FALSE){
+# TODO below, check with solve.spam and triangular solves for use of vector_dc
+# determinant.spam from "rw" to "w" signature.
 
-  if (verbose) timeused <- proc.time()
+
+chol.spam <- function(x, pivot="MMD", method="NgPeyton", memory=list(),
+                      eps=getOption("spam.eps"), Rstruct=NULL, ..., verbose=FALSE){
+
   if (is(Rstruct,"spam.chol.NgPeyton")) invisible( update.spam.chol.NgPeyton(Rstruct,x,...))
-  if (eps<.Machine$double.eps) stop("'eps' should not be smaller than machine precision",call.=FALSE)
 
-  nrow <- x@dimension[1]
-  nnzA <- x@rowpointers[nrow+1]-1L
-  if(nrow!=x@dimension[2]) stop("non-square matrix in 'chol'",call.=FALSE)
-
-  if (any( diag.of.spam(x, nrow, nrow) < getOption("spam.eps")))
-    stop("Input matrix to 'chol' not positive definite (up to eps)",call.=FALSE)
-# base rule:
-#  `nrow(x) * .Machine$double.neg.eps * max(diag(x)`.
-
-    if (length(pivot)==1) {
-        if (pivot==FALSE) {
-            doperm <- 0
-         } else if(pivot==TRUE) {
-            doperm <- 1
-        } else {
-            doperm <- as.integer( switch(match.arg(pivot,c("MMD","RCM")),MMD=1,RCM=2))
-        }
-    } else  if (length(pivot)==nrow) {
-        doperm <- 0
-        if (getOption("spam.cholpivotcheck")) {
-            checkpivot(pivot,nrow)
-        }
-    } else stop("'pivot' should be 'MMD', 'RCM' or a valid permutation")
-
-  ### IMPROVEME get better parameter values
-  nnzcfact <- c(5,1,5)
-  nnzRfact <- c(5,1,2)
-  # nnzcolindices = length of array holding the colindices
-  if(is.null(memory$nnzcolindices))  {
-   nnzcolindices <- ifelse((nnzA/nrow < 5), # very sparse matrix
-                           max(1000,nnzA*(1.05*nnzA/nrow-3.8)),
-                           nnzA)*nnzcfact[doperm+1]
-  }else {
-    nnzcolindices <- max(memory$nnzcolindices,nnzA)
-    memory$nnzcolindices <- NULL
-  }
-  # nnzR = length of array holding the nonzero values of the factor
-  if(is.null(memory$nnzR)) {
-    nnzR <- min(max(4*nnzA,floor(.2*nnzA^1.3))*nnzRfact[doperm+1],nrow*(nrow+1)/2)
-  } else {
-    nnzR <- memory$nnzR
-    memory$nnzR <- NULL
-  }
-
-#!4#
-  if(is.null(memory$cache))     cache <- 512  else {
-    cache <- memory$cache
-    memory$cache <- NULL
-  }
-
-  if (length( memory)>0 )
-    warning("The component(s) ", paste("'",names(memory),"'",sep='',collapse=","),
-            " of the argument 'memory'\npassed to function 'chol' not meaningful and hence ignored.",call.=FALSE)
-
-
-  if(getOption("spam.cholsymmetrycheck")) {
-    test <- isSymmetric(x, tol = eps*100)
-#  from help of isSymmetric:
-#     isSymmetric(object, tol = 100 * .Machine$double.eps, ...)
-    if (!isTRUE(test))
-      stop("Input matrix to 'chol' not symmetric (up to 100*eps)",call.=FALSE)
-  }
-
+    if (verbose) {
+        timeused <- proc.time()
+        cat("\nStarting Cholesky factorization with method '",method,"'.\n")
+    }
   if (method != "NgPeyton")
-    warning(gettextf("method = '%s' is not supported. Using 'NgPeyton'",
+      warning(gettextf("method = '%s' is not supported. Using 'NgPeyton'",
                      method), domain = NA)
 
-    if (verbose) {
-        cat("Factorizing matrix of dimension ", nrow, " with ", length(x@entries)," entries (",
-            printSize(x),  "). \nReserved memory for factor with ", nnzR, " entries (",
-            printSize(nnzR),").", sep='')
-        }
+  z <- .chol.spam.basis(x, pivot=pivot, memory=memory, eps=eps, verbose=verbose)
 
-    force64 <- getOption("spam.force64")
-    # we elaborate on the sizes and check for 2^31-2 to allow one additional iteration per counter
-    if(force64 || 7*nrow+3  > 2147483646 || nnzcolindices  > 2147483646 || nnzR  > 2147483646) {
-        SS <- .format64()
-    } else {
-        SS <- .format32
-    }
-  #!3#
-
-
-    if (length(pivot)==1) {
-        if (pivot==FALSE) {
-            pivot <- as.vector( seq_len(nrow), SS$type)
-        } else if(pivot==TRUE) {
-            pivot <- vector(SS$type,nrow)
-        } else {
-           pivot <- vector(SS$type, nrow)
-        }
-    } else  pivot <- as.vector( pivot, SS$type)
-
-
-
-    if (verbose) {
-        cat("\nWorking with",SS$name,"spam matrix")
-        if (SS$type != class(x@dimension)) cat(", casting original matrix")
-
-        ## note that object.size(x)  is not required as we have reading mode
-        m1 <- object.size(x) +
-            6*object.size(pivot)+
-            (nnzcolindices +     # length lindx
-             2*nrow +nnzA + 7*nrow+3)*   # work arrays {colcnt, split}, {adj, adjncy}  iwork
-            ifelse(SS$signature=='double',8,4) +      # depending on 32/64-bit
-            nnzR*8    # final entries
-        cat(".\nApproximate amount of memory needed: ", printSize( m1),".", sep='')
-                                        # gestimate for total use is:
-#        m2 <- (8+6)*object.size(pivot)+
-#            nnzcolindices*ifelse(SS$signature=='double',8,4) + nnzR*8
-    }
-  cholstep.intent <- c("r", "r", "r", "r",
-                    "r", "r", "rw", "rw",
-                    "rw", "r", "w", "w",    # 'w' for lindx xlindx  # _FOR SURE_
-                    "rw", "rw", "w", "w",   # 'w' for lnz  xlnz
-                    "rw", "rw", "r", "rw")
-
-  cholstep.signature <- rep(SS$signature, 20)
-  cholstep.signature[c(3,15)] <- "double"
-  z <- .C64("cholstepwise",                # 11 huge objects...
-            SIGNATURE=cholstep.signature,
-
-            nrow = as.vector(nrow, mode=SS$type),
-            nnzA = as.vector(nnzA, SS$type),
-            d =  x@entries,                          #Size _D_nrow
-            jd = as.vector(x@colindices, SS$type),   #Size nrow
-
-            id = as.vector(x@rowpointers, SS$type),#5#Size nrow
-            doperm = as.vector(doperm,    SS$type),
-            invp = vector(SS$type,nrow),             #Size nrow
-            perm = pivot,                            #Size nrow
-
-            nnzlindx = vector(SS$type, 1), #9
-            nnzcolindices = as.vector(nnzcolindices, SS$type),
-            lindx = vector_dc(SS$type, nnzcolindices), #Size nnzcolindices
-            xlindx = vector_dc(SS$type, nrow+1),       #Size nrow
-
-            nsuper = vector(SS$type, 1), #13
-            nnzR = as.vector(nnzR, SS$type),
-            lnz = vector_dc( "double", nnzR),      #Size _D_nnzR
-            xlnz = vector_dc( SS$type, nrow+1),    #Size nrow
-
-            snode = vector(SS$type, nrow), #17     #Size nrow
-            xsuper = vector(SS$type, nrow+1),      #Size nrow
-            cachesize = as.vector(cache, SS$type),
-            ierr = vector(SS$type, 1),
-
-            INTENT=cholstep.intent,
-            NAOK = getOption("spam.NAOK"),
-            PACKAGE = SS$package)
-
-  if (verbose) cat(".\n(Final size of R-Fortran transfered object: ", printSize( z),").", sep='')
-
-  if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.")
-  if(z$ierr == 6) stop("Inconsitency in the input",call.=FALSE)
-
-  while( z$ierr>1) {
-    if(z$ierr == 4) {
-      tmp <- ceiling(nnzR*getOption("spam.cholincreasefactor")[1])
-      warning("Increased 'nnzR' with 'NgPeyton' method\n",
-                    "(currently set to ",tmp," from ",nnzR,")",call.=FALSE)
-      nnzR <- tmp
-    }
-    if(z$ierr == 5) {
-      tmp <- ceiling(nnzcolindices*getOption("spam.cholincreasefactor")[2])
-      warning("Increased 'nnzcolindices' with 'NgPeyton' method\n",
-         "(currently set to ",tmp," from ",nnzcolindices,")",call.=FALSE)
-      nnzcolindices <- tmp
-    }
-    if(force64 || nnzcolindices  > 2147483647) {
-        SS <- .format64()
-    } else {
-        SS <- .format32
-    }
-    cholstep.signature <- rep(SS$signature, 20)
-    cholstep.signature[c(3,15)] <- "double"
-
-
-    z <- .C64("cholstepwise",
-              SIGNATURE=cholstep.signature,
-
-              nrow = nrow,
-              nnzA = x@rowpointers[nrow+1]-1,
-              d =  x@entries,
-              jd = x@colindices,
-
-              id = x@rowpointers,
-              doperm = doperm,
-              invp = vector(SS$type,nrow),
-              perm = pivot,
-
-              nnzlindx = vector(SS$type,1),   # nnzR !!!
-              nnzcolindices = nnzcolindices,
-              lindx = vector(SS$type, nnzcolindices),
-              xlindx = vector(SS$type, nrow+1),     #
-
-              nsuper = 1,          #  number of supernodes
-              nnzR = nnzR,#
-              lnz = vector("double",nnzR),        #
-              xlnz = vector(SS$type, nrow+1),     #
-
-              snode = vector(SS$type, nrow),
-              xsuper = vector(SS$type, nrow+1),
-              cachesize = cache,
-              ierr = 0L,
-
-              INTENT=cholstep.intent,
-              NAOK = getOption("spam.NAOK"),
-              PACKAGE = SS$package)
-
-    if(z$ierr == 1) stop("Singularity problem when calculating the Cholesky factor.")
-  }
-
-  nnzR <- z$xlnz[length(z$xlnz)]-1
+  nnzRfinal <- z$xlnz[length(z$xlnz)]-1  # reduce to final size
 
   newx <- new("spam.chol.NgPeyton")
-  slot(newx,"entries",check=FALSE) <- z$lnz[1:nnzR]
-  slot(newx,"colindices",check=FALSE) <- z$lindx[1:z$nnzlindx]
-  slot(newx,"colpointers",check=FALSE) <- z$xlindx[1:(z$nsuper+1)]
-  slot(newx,"rowpointers",check=FALSE) <- z$xlnz
-  slot(newx,"dimension",check=FALSE) <- c(nrow,nrow)
-  slot(newx,"pivot",check=FALSE) <- z$perm
-  slot(newx,"invpivot",check=FALSE) <- z$invp
-  slot(newx,"supernodes",check=FALSE) <- z$xsuper[1:(z$nsuper+1)]
-  slot(newx,"snmember",check=FALSE) <- z$snode
-  slot(newx,"memory",check=FALSE) <- c(nnzcolindices,z$nnzR,cache)
-  slot(newx,"nnzA",check=FALSE) <- nnzA
+  slot(newx, "entries", check=FALSE) <- z$lnz[1:nnzRfinal]
+  slot(newx, "colindices", check=FALSE) <- z$lindx[1:z$nnzlindx]
+  slot(newx, "colpointers", check=FALSE) <- z$xlindx[1:(z$nsuper+1)]
+  slot(newx, "rowpointers", check=FALSE) <- z$xlnz
+  slot(newx, "dimension", check=FALSE) <- c(z$nrow, z$nrow)
+  slot(newx, "pivot", check=FALSE) <- z$perm
+  slot(newx, "invpivot", check=FALSE) <- z$invp
+  slot(newx, "supernodes", check=FALSE) <- z$xsuper[1:(z$nsuper+1)]
+  slot(newx, "snmember", check=FALSE) <- z$snode
+  slot(newx, "memory", check=FALSE) <- c(z$nnzcolindices, z$nnzR, z$cachesize)
+  slot(newx, "nnzA", check=FALSE) <- z$nnzA
 
-    if (verbose) {
-        cat("Final size of Cholesky factor (of class 'spam.chol.NgPeyton'): ")
-        print( object.size(newx), units=c("Kb","Mb","Gb")[floor( log(as.numeric(m1),1024))])
+  if (verbose) {
+      cat("Final size of Cholesky factor (of class 'spam.chol.NgPeyton'): ",
+          printSize(newx), ".\n")
+      cat("Finished factorization (total time used:", (proc.time()-timeused)[1], "s).\n\n")
+  }
 
-        cat("Finished factorization (total time used:", (proc.time()-timeused)[1],"s).\n\n")
-        }
   invisible(newx)
 }
 
@@ -360,7 +137,7 @@ update.spam.chol.NgPeyton <- function(object,x,...){
     else
       stop("'cholupdatesingular' should be 'error', 'null' or 'warning'.")
   }  else {
-    slot(object, "entries", check = FALSE) <- u$entries
+    slot(object, "entries", check=FALSE) <- u$entries
   }
   invisible(object)
 }
@@ -368,7 +145,7 @@ update.spam.chol.NgPeyton <- function(object,x,...){
 
 
 
-solve.spam <- function (a, b,  Rstruct = NULL, ...) {
+solve.spam <- function (a, b,  Rstruct=NULL, ...) {
   nrow <- a@dimension[1]
   ncol <- a@dimension[2]
   if (ncol != nrow)      stop("only square matrices can be inverted")
@@ -406,7 +183,7 @@ solve.spam <- function (a, b,  Rstruct = NULL, ...) {
                 p,
                 a@colindices,
                 a@colpointers,
-                a@entries,
+                a@entries,  # "double"
                 a@rowpointers,
                 a@invpivot,
                 a@pivot,
@@ -451,7 +228,7 @@ chol2inv.spam <- function (x, ...) {
                   nrow, #r
                   x@colindices,
                   x@colpointers,
-                  x@entries,
+                  x@entries,   # "double"
                   x@rowpointers,
                   x@invpivot, #r
                   x@pivot, #r
@@ -499,8 +276,7 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
     if (!getOption("spam.dopivoting")) {
 
       z <- .C64("backsolvef",
-                SIGNATURE=c(SS$signature, SS$signature, SS$signature, SS$signature,
-                            SS$signature, "double", SS$signature, SS$signature,
+                SIGNATURE=c(rep(SS$signature, 5), "double", SS$signature, SS$signature,
                             "double"),
 
                 m,
@@ -509,11 +285,11 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
                 r@colindices,
 
                 r@colpointers,
-                r@entries,
+                r@entries,   # "double"
                 r@rowpointers,
                 r@supernodes,
 
-                sol = vector("double",m*p),
+                sol = vector_dc("double",m*p),
 
                 INTENT=c("r", "r", "r", "r", "r", "r", "r", "r", "w"),
                 NAOK = getOption("spam.NAOK"),
@@ -521,10 +297,8 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
 
     }else{
       z <- .C64("pivotbacksolve",
-                SIGNATURE=c(SS$signature, SS$signature, SS$signature, SS$signature,
-                            SS$signature, "double", SS$signature, SS$signature,
-                            SS$signature, SS$signature, "double", "double",
-                            "double"),
+                SIGNATURE=c(rep(SS$signature, 5), "double", rep(SS$signature, 4),
+                            "double", "double", "double"),
 
                 m,
                 nsuper,
@@ -532,16 +306,15 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
                 r@colindices,
 
                 r@colpointers,
-                r@entries,
+                r@entries, #  "double"
                 r@rowpointers,
                 r@invpivot,
 
                 r@pivot,
                 r@supernodes,
                 vector("double",m),
-                sol = vector("double",m*p),
-
-                x,
+                sol = vector_dc("double",m*p),
+                x,            #  "double"
 
                 INTENT=c("r", "r", "r", "r",
                     "r", "r", "r", "r",
@@ -558,14 +331,14 @@ backsolve.spam <- function(r, x,...){#, k = NULL, upper.tri = NULL, transpose = 
                           "double", SS$signature, SS$signature),
               m=m,
               unused=p,
-              sol = vector("double",m*p),
+              sol = vector_dc("double",m*p),
               x=x,
 
               al=r@entries,
               jal=r@colindices,
               ial=r@rowpointers,
 
-              INTENT=c("rw", "rw", "rw", "rw", "rw", "rw", "rw"),
+              INTENT=c("rw", "r", "w", "r", "r", "r", "r"),
               NAOK = getOption("spam.NAOK"),
               PACKAGE=SS$package)
     if (z$m<0) stop(gettextf("singular matrix in 'backsolve'. Last zero in diagonal [%d]",
@@ -629,24 +402,22 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
                 PACKAGE=SS$package)$sol
     }else{
       z <- .C64("pivotforwardsolve",
-                SIGNATURE=c(SS$signature, SS$signature, SS$signature, SS$signature,
-                            SS$signature, "double", SS$signature, SS$signature,
-                            SS$signature, SS$signature, "double", "double",
-                            "double"),
+                SIGNATURE=c(rep(SS$signature,5), "double", rep(SS$signature, 4),
+                            "double", "double", "double"),
                 m,
                 nsuper,
                 p,
                 l@colindices,
 
                 l@colpointers,
-                l@entries,
+                l@entries,     # "double"
                 l@rowpointers,
                 l@invpivot,
 
                 l@pivot,
                 l@supernodes,
-                vector("double",m), #!5#
-                sol = vector("double",m*p),
+                vector("double",m),
+                sol = vector_dc("double",m*p),
 
                 x,
 
@@ -665,7 +436,7 @@ forwardsolve.spam <- function(l, x,...){#, k = NULL, upper.tri = NULL, transpose
 
               m=m,
               p,
-              sol = vector("double",m*p),
+              sol = vector_dc("double",m*p),
               x=x,
 
               al=l@entries,
