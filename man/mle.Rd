@@ -12,6 +12,7 @@
 
 \name{mle}
 \alias{neg2loglikelihood.spam}
+\alias{neg2loglikelihood.nomean}
 \alias{mle.spam}
 \alias{mle.nomean.spam}
 \alias{neg2loglikelihood}
@@ -21,30 +22,29 @@
 \description{Maximum likelihood estimates of a simple spatial model}
 \usage{
 neg2loglikelihood.spam(y, X, distmat, Covariance,
-                 beta, theta, Rstruct = NULL, ...)
+                 beta, theta, Rstruct = NULL, cov.args = NULL, ...)
 
 neg2loglikelihood(y, X, distmat, Covariance,
-                 beta, theta, ...)
+                 beta, theta, cov.args = NULL, ...)
+
+neg2loglikelihood.nomean(y, distmat, Covariance,
+                 theta, cov.args = NULL, ...)
 
 mle.spam(y, X, distmat, Covariance,
-     beta0, theta0,
-     thetalower, thetaupper, optim.control=NULL,
-     Rstruct = NULL, hessian = FALSE,...)
+     beta0, theta0, thetalower, thetaupper, optim.control=NULL,
+     Rstruct = NULL, hessian = FALSE, cov.args = NULL, ...)
 
 mle(y, X, distmat, Covariance,
-     beta0, theta0,
-     thetalower, thetaupper, optim.control=NULL,
-     hessian = FALSE, ...)
+     beta0, theta0, thetalower, thetaupper, optim.control=NULL,
+     hessian = FALSE, cov.args = NULL, ...)
 
 mle.nomean.spam(y, distmat, Covariance,
-     theta0,
-     thetalower, thetaupper, optim.control=NULL,
-     Rstruct = NULL, hessian = FALSE, ...) 
+     theta0, thetalower, thetaupper, optim.control=NULL,
+     Rstruct = NULL, hessian = FALSE, cov.args = NULL, ...) 
 
 mle.nomean(y, distmat, Covariance,
-     theta0,
-     thetalower, thetaupper, optim.control=NULL,
-     hessian = FALSE, ...) 
+     theta0, thetalower, thetaupper, optim.control=NULL,
+     hessian = FALSE, cov.args = NULL, ...) 
 }
 \arguments{
   \item{y}{data vector of length n.}
@@ -60,7 +60,8 @@ mle.nomean(y, distmat, Covariance,
     \code{theta}.}
   \item{optim.control}{arguments passed to \code{optim}.}
   \item{hessian}{Logical. Should a numerically differentiated Hessian matrix
-          be returned?}
+    be returned?}
+  \item{cov.args}{additional arguments passed to \code{Covariance}.}
   \item{...}{additional arguments passed to \code{chol}.}
 }
 \value{The negative-2-loglikelihood or the output from the function
@@ -102,7 +103,7 @@ In the zero-mean case, the \code{neg2loglikelihood} is calculated by setting
 the parameters \code{X} or \code{beta} to zero.
 }
 %\references{}
-\seealso{\code{\link{covmat}}
+\seealso{\code{\link{covmat}}, \code{\link{rmvnorm.spam}}
 }
 \examples{
 # True parameter values:

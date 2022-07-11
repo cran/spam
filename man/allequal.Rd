@@ -18,7 +18,7 @@
 \alias{all.equal,matrix,spam-method}
 \alias{all.equal,spam,matrix-method}
 \alias{all.equal,spam,spam-method}
-\title{Test if Two 'spam' Objects are (Nearly) Equal}
+\title{Test if Two Sparse Matrices are (Nearly) Equal}
 \description{Utility to compare two \code{spam} objects
      testing 'near equality'.  Depending on the type of difference, comparison is
      still made to some extent, and a report of the differences is

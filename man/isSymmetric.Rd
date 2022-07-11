@@ -14,7 +14,7 @@
 \name{isSymmetric}
 \alias{isSymmetric.spam}
 \alias{isSymmetric,spam-method}
-\title{Test if a spam matrix is Symmetric}
+\title{Test if a Sparse Matrix is Symmetric}
 \description{Efficient function to test if 'object' is symmetric or not.}
 \usage{
 # isSymmetric.spam(object, ...)

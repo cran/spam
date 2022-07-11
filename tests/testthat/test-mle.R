@@ -129,3 +129,13 @@ test_that("mle2", {
     spamtest_eq(round(res3$val,2), 259.03)
 })
 
+
+
+test_that("cov.args", {
+
+ 
+    expect_equal(
+        neg2loglikelihood.spam( y, X, distmat, cov.sph, truebeta, truetheta, cov.args=list(eps=1e-15)),
+        neg2loglikelihood.spam( y, X, distmat, cov.sph, truebeta, truetheta)
+        )
+    })

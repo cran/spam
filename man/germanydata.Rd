@@ -12,8 +12,6 @@
 
 
 
-
-
 \name{germany.data}
 \alias{germany.data}
 \alias{germany.info}
@@ -21,10 +19,9 @@
 \alias{germany.spam}
 \alias{germany}
 \docType{data}
-
-\title{Meta-data about administrative districts of Germany}
-\description{Data for the display of  data
-  over the administrative districts of Germany}
+\title{Meta-data About Administrative Districts of Germany}
+\description{Supplementary data used for the display of data
+  from the administrative districts of Germany}
 \format{\code{germany.info} is a list with elements
   \describe{
     \item{n}{544 (number of districts around 1990).}

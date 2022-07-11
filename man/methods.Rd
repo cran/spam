@@ -13,7 +13,7 @@
 
 \name{spam methods}
 \alias{methods.spam}
-\title{Methods for sparse matrices}
+\title{Methods for Sparse Matrices}
 \description{Methods without any additional parameters for sparse matrices.
 }
 \details{If a method for \code{spam} objects takes the same arguments,

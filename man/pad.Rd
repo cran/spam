@@ -20,9 +20,9 @@
 \alias{pad<-.spam} 
 \alias{pad<-,spam-method}
 \alias{pad<-,matrix-method}
-\title{Padding a (sparse) matrix}
+\title{Padding a Sparse Matrix}
 \description{
-  Resets the dimension of a (\code{spam}) matrix by truncation or zero padding.
+  Resets the dimension of a \code{spam} matrix by truncation or zero padding.
 }
 \usage{
 pad(x) <- value

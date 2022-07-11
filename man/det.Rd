@@ -21,7 +21,7 @@
 \alias{determinant.spam}
 \alias{determinant.spam.chol}
 \alias{determinant.spam.chol.NgPeyton}
-\title{Determinant of a symmetric positive definite sparse matrix}
+\title{Determinant of a Symmetric Positive Definite Sparse Matrix}
 \description{\code{det} and \code{determinant} calculate the determinant of a
   symmetric, positive definite sparse matrix. \code{determinant} returns
   separately the modulus of the determinant, optionally on the logarithm scale,

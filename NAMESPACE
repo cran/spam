@@ -15,8 +15,8 @@ importFrom("grDevices", "gray", "heat.colors")
 importFrom("graphics",
            "axis", "box", "image.default", "par", "points", "polygon", "text")
 importFrom("methods",
-           "callGeneric", "is", "new", "slot<-",  "validObject")
-importFrom("stats", "optim", "rnorm", "runif", "rbinom", "var")
+           "callGeneric", "is", "new", "slot<-",  "validObject", "hasArg")
+importFrom("stats", "optim", "rnorm", "runif", "rbinom", "rchisq", "var", "dist")
 importFrom("utils", "help", "object.size")
 
 # Next two paragraphs are from Matrix....
@@ -140,6 +140,12 @@ export(
        "rmvnorm.canonical.const",
        "rmvnorm.prec.const",
        "rmvnorm.conditional",
+       "rmvnorm.cond",
+
+       "rmvt",
+       "rmvt.spam",
+
+       "rgrf",
 
        "precmat",
        "precmat.RW1",
@@ -161,6 +167,11 @@ export(
        "cov.wend1",
        "cov.wend2",
        "cov.mat",
+       "cov.finnmat",
+    "cov.mat12",
+    "cov.mat32",
+    "cov.mat52",
+
 
        "rowSums.spam",
        "colSums.spam",
@@ -177,6 +188,7 @@ export(
        "mle.nomean",
        "mle.nomean.spam",
        "neg2loglikelihood",
+       "neg2loglikelihood.nomean",
        "neg2loglikelihood.spam",
 
        "bdiag.spam",

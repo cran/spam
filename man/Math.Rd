@@ -72,7 +72,7 @@
 \alias{atan,spam-method}
 \alias{atanh.spam}
 \alias{atanh,spam-method}
-\title{Mathematical functions}
+\title{Mathematical Functions}
 \description{Applies the \code{Math} group functions to \code{spam} objects
 }
 \usage{# ceiling(x)

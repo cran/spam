@@ -19,7 +19,7 @@
 \alias{entries<-}
 \alias{dimension<-}
 \alias{constructors}
-\title{Slot modification}
+\title{Slot Modification}
 \description{Modify slots of \code{spam} objects
 }
 \usage{

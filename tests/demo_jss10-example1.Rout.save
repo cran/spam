@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-01-04 r81445) -- "Unsuffered Consequences"
+R Under development (unstable) (2022-07-10 r82573) -- "Unsuffered Consequences"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -40,7 +40,7 @@ Type 'q()' to quit R.
 > 
 > # SETUP:
 > library("spam")
-Spam version 2.8-0 (2022-01-05) is loaded.
+Spam version 2.9-0 (2022-07-11) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -253,4 +253,4 @@ default value for 'cex' in 'display' might not be the optimal choice
 > 
 > proc.time()
    user  system elapsed 
-  0.670   0.036   0.700 
+  2.318   4.309   1.105 

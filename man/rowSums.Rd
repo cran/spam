@@ -23,9 +23,7 @@
 \alias{colSums,spam-method}
 \alias{rowMeans,spam-method}
 \alias{colMeans,spam-method}
-\title{
-Form Row and Column Sums and Means
-}
+\title{Form Row and Column Sums and Means}
 \description{
 Form row and column sums and means for sparse \code{\linkS4class{spam}} matrices
 }

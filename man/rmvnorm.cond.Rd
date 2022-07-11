@@ -33,19 +33,24 @@ rmvnorm.conditional(n, y, mu = rep.int(0, dim(SigmaXX)[1]+dim(SigmaYY)[1]),
 \item{RstructYY}{the Cholesky structure of \code{SigmaYY}.}
 \item{\dots}{arguments passed to \code{chol}.}
 }
-\details{Quite often, we want to draw condional observations \deqn{X|y}
-  from the model \deqn{Y=X+e}, where \deqn{X} has covariance matrix
-  \code{SigmaXX} and \deqn{e} has white noise.\cr
+\details{Quite often, we want to draw condional observations \eqn{X|y}
+  from the model \eqn{Y=X+e}, where \eqn{X} has covariance matrix
+  \code{SigmaXX} and \eqn{e} has white noise.\cr
 
-  Covariance of \deqn{Y} can be specified by \code{SigmaYY} or
-  \code{SigmaXX+diag(noise,)}. If \deqn{Y} and \deqn{X} do not have the
+  Covariance of \eqn{Y} can be specified by \code{SigmaYY} or
+  \code{SigmaXX+diag(noise,)}. If \eqn{Y} and \eqn{X} do not have the
   same dimensions, \code{SigmaXY} needs to be specified. \cr
 
 
-  
+
   The function also implmements a general multivariate model, where the
   we only observe part of the vector.  The components are first
-  \deqn{X} then \deqn{Y}.
+  \eqn{X} then \eqn{Y}.
+
+
+  The function \code{rmvnorm.cond()} is a wrapper to
+  \code{rmvnorm.conditional()} and included to increase similarities
+  with other packages.
 }
 \seealso{\code{\link{rmvnorm.spam}}.
 }
@@ -53,8 +58,8 @@ rmvnorm.conditional(n, y, mu = rep.int(0, dim(SigmaXX)[1]+dim(SigmaYY)[1]),
 set.seed(12)
 N <- 300
 y <- c(5, -5, -5, 5)
-SigmaXX <- as.spam(.95^abs(outer(1:N,1:N,"-")), eps=1e-4)
-sel <- c(10,100,120,300)        # where we observe y
+SigmaXX <- as.spam(.95^abs(outer(1:N, 1:N, "-")), eps=1e-4)
+sel <- c(10, 100, 120, 300)        # where we observe y
 SigmaXY <- SigmaXX[, sel]
 SigmaYY <- SigmaXX[sel,sel] + diag.spam(.01, length(y)) # some noise
 x <- rmvnorm.conditional(3, y, SigmaXX=SigmaXX, SigmaXY=SigmaXY,
@@ -62,7 +67,7 @@ x <- rmvnorm.conditional(3, y, SigmaXX=SigmaXX, SigmaXY=SigmaXY,
 # unconditional sample:
 ux <- rmvnorm(1, Sigma=SigmaXX)
 matplot(t(rbind(x, ux)), type='l', lty=1)
-points(sel, y, pch=19)  
+points(sel, y, pch=19)
 }
 \author{Reinhard Furrer}
 \keyword{algebra}

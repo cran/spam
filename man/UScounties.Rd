@@ -15,9 +15,7 @@
 \alias{UScounties.storder}
 \alias{UScounties.ndorder}
 \docType{data}
-\title{
-Adjacency structure of the counties in the contiguous United States
-}
+\title{Adjacency Structure of the Counties in the Contiguous United States}
 \description{
   First and second order adjacency structure of the counties
   in the contiguous United States. We consider that two counties

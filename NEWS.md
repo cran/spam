@@ -1,6 +1,60 @@
-# spam 2.8
+# spam 2.9.0
 
 SIGNIFICANT USER-VISIBLE CHANGES
+
+* New functions `rmvt.spam()` and `rmvt()` sampling from a multivariate t-distribution.
+Approach is similar to `mvtnorm::rmvt()`.
+
+
+INTERNAL CHANGES
+
+* Cleaning of help inconsistencies.
+
+BUG FIXES
+
+* A zero sparse matrix caused severe errors within low level code of `spam.eigen`.
+
+
+
+# spam 2.8-3
+
+Prelease for version 2.9, only available on  https://git.math.uzh.ch/reinhard.furrer/spam.
+
+
+
+# spam 2.8-2
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* New function `rgrf()` to sample a Gaussian random field (minimalistic replacement of
+`geoR::grf()`. 
+
+* New implementation of the Matern covariance function for half-integer smoothness:
+`cov.mat12()` (wrapps to `cov.exp()`) `cov.mat32()` and `cov.mat52()` for nu=1/2, 3/2, and
+5/2, respectively. The function are factor 10 faster than `cov.mat()` with corresponding
+smoothness. 
+
+* New function `cov.finnmat()` using the parametrization sqrt(8*smoothness)*h/range for
+as argument for the Bessel function.
+
+* All `*likelihood*()` and `mle*()` functions have now an argument `cov.args=` which will
+be passed to the covariance function. This creates a larger flexibility to fine-tune
+covariance functions.
+
+* New function `neg2likelihood.nomean()`, similar to `neg2likelihood()`.
+
+
+# spam 2.8-1
+
+BUG FIXES
+
+* All covariance functions now call `cov.nug()`, when range is smaller than `eps`.
+
+# spam 2.8-0
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* Minor improvements in the help files. (2.8-1)
 
 * The function `chol.spam()` has a much better verbose offering.
 * The function `determinant.spam()` does not take any arguments for the Cholesky 

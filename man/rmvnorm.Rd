@@ -55,7 +55,7 @@ rmvnorm.canonical(n, b, Q, Rstruct=NULL, ...)
 }
 \references{See references in \code{\link{chol}}.
 }
-\seealso{\code{\link{chol}} and \code{\link{ordering}}.
+\seealso{\code{\link{rgrf}}, \code{\link{chol}} and \code{\link{ordering}}.
 }
 \examples{
 # Generate multivariate from a covariance inverse:

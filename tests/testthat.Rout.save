@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2022-01-04 r81445) -- "Unsuffered Consequences"
+R Under development (unstable) (2022-07-10 r82573) -- "Unsuffered Consequences"
 Copyright (C) 2022 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
@@ -31,7 +31,7 @@ Type 'q()' to quit R.
 > 
 > test_check("spam")
 Loading required package: spam
-Spam version 2.8-0 (2022-01-05) is loaded.
+Spam version 2.9-0 (2022-07-11) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -43,8 +43,13 @@ The following objects are masked from 'package:base':
 
     backsolve, forwardsolve
 
-[ FAIL 0 | WARN 0 | SKIP 0 | PASS 672 ]
+[ FAIL 0 | WARN 0 | SKIP 1 | PASS 689 ]
+
+══ Skipped tests ═══════════════════════════════════════════════════════════════
+• empty test (1)
+
+[ FAIL 0 | WARN 0 | SKIP 1 | PASS 689 ]
 > 
 > proc.time()
    user  system elapsed 
-  2.711   0.087   2.793 
+ 36.242  94.935   4.806 

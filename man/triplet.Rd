@@ -11,17 +11,9 @@
 
 
 
-
-
-
-
-
-
-
-
 \name{triplet}
 \alias{triplet}
-\title{Transform a spam format to triplets}
+\title{Transform a "spam" Format to Triplets}
 \description{Returns a list containing the indices and elements of a  \code{spam} object.}
 \usage{
 triplet(x, tri=FALSE)

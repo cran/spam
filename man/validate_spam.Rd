@@ -14,8 +14,8 @@
 
 \name{validate_spam}
 \alias{validate_spam}
-\title{Validate a spam objects}
-\description{Checks if the spam object has the correct structure.}
+\title{Validate a Sparse Matrix}
+\description{Checks if the sparse matrix has the correct structure.}
 \usage{
 validate_spam(object)
 }

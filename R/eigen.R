@@ -132,6 +132,11 @@ eigen_approx <- function(x,
                          verbose      = FALSE,
                          f_routine){
 
+  nz <- x@rowpointers[x@dimension[1]+1]-1  
+    if((nz==0) | (norm(x@entries) <= getOption("spam.eps"))){#trap zero matrix
+        stop("'x' is an emtpy matrix")
+    }
+    
   # check & parse arguments
   if (x@dimension[1] <= nev)
     stop("nev: the number of eigenvalues to calculate must be smaller than the matrix dimensions", call. = TRUE)
@@ -277,6 +282,11 @@ eigen.spam <- function (x, nev = 10, symmetric, only.values = FALSE, control = l
     warning("unknown names in control: ", paste(noNms, collapse = ", "), call. = TRUE)
 
   ifelse(!con$verbose, vFlag <- FALSE, vFlag <- TRUE)
+
+  nz <- x@rowpointers[x@dimension[1]+1]-1  
+  if((nz==0) | (norm(x@entries) <= getOption("spam.eps"))){#trap zero matrix
+      stop("'x' is an emtpy matrix")
+  }
 
   # arpack routines cant handle 'small' matrices
   minDimARPACK <- 100

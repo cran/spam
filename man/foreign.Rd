@@ -11,7 +11,6 @@
 
 
 
-
 \name{foreign}
 \alias{foreign}
 \alias{as.spam.matrix.csr}
@@ -20,7 +19,7 @@
 \alias{as.dgCMatrix.spam}
 \alias{as.spam.dgRMatrix}
 \alias{as.spam.dgCMatrix}
-\title{Transformation to other sparse formats}
+\title{Transformation to Other Sparse Formats}
 \description{Transform between the \code{spam} sparse format to the
   \code{matrix.csr} format of \code{SparseM} and  \code{dgRMatrix} format of \code{Matrix}}
 \usage{

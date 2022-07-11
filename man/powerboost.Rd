@@ -14,7 +14,7 @@
 
 \name{powerboost}
 \alias{powerboost}
-\title{Specific options Setting}
+\title{Specific Options Setting}
 \description{
   Sets several options for speed-up.
 }

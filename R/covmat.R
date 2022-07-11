@@ -16,7 +16,8 @@
 
 covmat <- function(h, theta, ... , type="sph") {
   avtype <- c("exponential", "spherical", "nugget",
-              "wu1","wu2","wu3","wendland1","wendland2", "matern")
+              "wu1","wu2","wu3","wendland1","wendland2",
+              "matern12", "matern32", "matern52", "matern")
   method <- pmatch(tolower(type), avtype)
   if (is.na(method))
      stop("Covariance function not implemented yet. Please ask for.")
@@ -29,6 +30,9 @@ covmat <- function(h, theta, ... , type="sph") {
          return(cov.wu3(h, theta, ...)),
          return(cov.wend1(h, theta, ...)),
          return(cov.wend2(h, theta, ...)),
+         return(cov.mat12(h, theta, ...)),
+         return(cov.mat32(h, theta, ...)),
+         return(cov.mat52(h, theta, ...)),
          return(cov.mat(h, theta, ...)))
 }
 
@@ -48,23 +52,26 @@ covmat <- function(h, theta, ... , type="sph") {
 
 cov.sph <- function(h, theta, ..., eps=getOption("spam.eps")) {
 # approach: we separate   the cases of h spam versus not.
-# we distinguish 'no-nugget'-type and correlation matrix.      
+# we distinguish 'no-nugget'-type and correlation matrix.
 
   theta <- .par.check.cov(theta)    # checking parameters, range, sill, [nugget]
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+         # range so small, is considered as nugget
+
   if (is.spam(h)) {
       tmp <- h@entries/theta[1]     # (range==1) is unlikely, we do not test
       if (theta[3] > eps) {         # case of a nugget
           ypos <- tmp <= eps        # nugget cases
           npos <- tmp >= 1          # zero cases
           ypos2 <- !(ypos|npos)     # cov cases
-        
+
           if (any(ypos)) {
               h@entries[ypos] <- theta[2] + theta[3] }
       }else{
           npos <- tmp >= 1          # zero cases
           ypos2 <- !npos            # cov cases
       }                             # end nugget remaining part remains the same
-          
+
       if (any(ypos2)) {
           ttmp <- tmp[ypos2]
           h@entries[ypos2] <-  if ( abs(theta[2]-1) > eps) { theta[2]*(1 - 1.5 * ttmp + 0.5 * (ttmp*ttmp)*ttmp)
@@ -72,71 +79,74 @@ cov.sph <- function(h, theta, ..., eps=getOption("spam.eps")) {
       }
       if (any(npos)) {
           h@entries[npos] <- 0 }
-       
+
   } else {
     tmp <- c(h)/theta[1]
       if (theta[3] > eps) {         # case of a nugget
           ypos <- tmp <= eps        # nugget cases
           npos <- tmp >= 1          # zero cases
           ypos2 <- !(ypos|npos)     # cov cases
-        
+
           if (any(ypos)) {
               h[ypos] <- theta[2] + theta[3] }
       }else{
           npos <- tmp >= 1          # zero cases
           ypos2 <- !npos            # cov cases
       }                             # end nugget remaining part remains the same
-          
+
       if (any(ypos2)) {
           ttmp <- tmp[ypos2]
           h[ypos2] <-  if ( abs(theta[2]-1) > eps)  theta[2]*(1 - 1.5 * ttmp + 0.5 * (ttmp*ttmp)*ttmp)   else (1 - 1.5 * ttmp + 0.5 * (ttmp*ttmp)*ttmp)
        }
       if (any(npos)) {
           h[npos] <- 0 }
-       
+
   }
   return(h)
 }
 
 cor.sph <- function(h, range, ..., eps=getOption("spam.eps")) {
 # approach: we separate   the cases of h spam versus not.
-# we distinguish 'no-nugget'-type and correlation matrix.      
+# we distinguish 'no-nugget'-type and correlation matrix.
 
   theta <- .par.check.cov(range,1)  # checking parameters, range
+  if (theta[1] < eps) return( cov.nug(h, 1))  # range so small, is considered as nugget
   if (is.spam(h)) {
       tmp <- h@entries/theta[1]     # (range==1) is unlikely, we do not test
       npos <- tmp >= 1          # zero cases
       ypos2 <- !npos            # cor cases
-                                            
+
       if (any(ypos2)) {
           ttmp <- tmp[ypos2]
-          h@entries[ypos2] <- (1 - 1.5 * ttmp + 0.5 * (ttmp*ttmp)*ttmp)  
+          h@entries[ypos2] <- (1 - 1.5 * ttmp + 0.5 * (ttmp*ttmp)*ttmp)
       }
       if (any(npos)) {
           h@entries[npos] <- 0 }
-       
+
   } else {
       tmp <- c(h)/theta[1]
       npos <- tmp >= 1          # zero cases
       ypos2 <- !npos            # cor cases
-      
+
       if (any(ypos2)) {
           ttmp <- tmp[ypos2]
           h[ypos2] <-  (1 - 1.5 * ttmp + 0.5 * (ttmp*ttmp)*ttmp)
       }
       if (any(npos)) {
-          h[npos] <- 0 }      
+          h[npos] <- 0 }
   }
   return(h)
 }
 
 cov.wend1 <- function(h, theta,  ... , eps=getOption("spam.eps")) {
-  # is \phi_{3,1} in the 98 paper and \psi_{3,1} in the 95 paper, the latter corresponds also  
-  # to \phi_{\mu,\kappa} in Bevilacqua. 
+  # is \phi_{3,1} in the 98 paper and \psi_{3,1} in the 95 paper, the latter corresponds also
+  # to \phi_{\mu,\kappa} in Bevilacqua.
   # For validity it would only be necessary that \mu >= (d+1)/2 + \kappa. In d=2 we would require here
   # \mu >= 2.5. Most theorem in Bevilacqua require \mu > (d+1)/2 + \kappa +d/2, some  \mu > (d+1)/2 + \kappa + 3
   # here this would mean \mu > 3.5 and > 5.5 !
   theta <- .par.check.cov(theta)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
 
   if (is.spam(h)) {
     tmp <- h@entries/theta[1]
@@ -172,8 +182,11 @@ cov.wend1 <- function(h, theta,  ... , eps=getOption("spam.eps")) {
 cov.wend2 <- function(h, theta,  ..., eps=getOption("spam.eps")) {
   # is \phi_{3,2} in the 98 paper and \psi_{4,2} in the 95 paper
   # See comment for cov.wend1. Here smoothness is increased, k=2 twice mean squared differentiable.
-  # Simple add "1" to the values above.  
+  # Simple add "1" to the values above.
   theta <- .par.check.cov(theta)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+     # range so small, is considered as nugget
+
 
   if (is.spam(h)) {
     tmp <- h@entries/theta[1]
@@ -208,6 +221,8 @@ cov.wend2 <- function(h, theta,  ..., eps=getOption("spam.eps")) {
 
 cov.wu1 <- function(h, theta, ... ,  eps=getOption("spam.eps")) {
   theta <- .par.check.cov(theta)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
 
   if (is.spam(h)) {
     tmp <- h@entries/theta[1]
@@ -242,6 +257,8 @@ cov.wu1 <- function(h, theta, ... ,  eps=getOption("spam.eps")) {
 
 cov.wu2 <- function(h, theta,  ... , eps=getOption("spam.eps")) {
   theta <- .par.check.cov(theta)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
 
   if (is.spam(h)) {
     tmp <- h@entries/theta[1]
@@ -277,6 +294,8 @@ cov.wu2 <- function(h, theta,  ... , eps=getOption("spam.eps")) {
 cov.wu3 <- function(h, theta,  ..., eps=getOption("spam.eps")) {
 
   theta <- .par.check.cov(theta)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
   if (is.spam(h)) {
     tmp <- h@entries/theta[1]
     ypos <- tmp < eps
@@ -313,6 +332,8 @@ cov.wu3 <- function(h, theta,  ..., eps=getOption("spam.eps")) {
 cov.mat <- function(h, theta,  ..., eps=getOption("spam.eps")) {
 
   theta <- .par.check.cov(theta, 3)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
   if (is.spam(h)) {
     tmp <- h@entries/theta[1]
     ypos <- tmp < eps
@@ -341,9 +362,46 @@ cov.mat <- function(h, theta,  ..., eps=getOption("spam.eps")) {
 }
 
 
+cov.finnmat <- function (h, theta, ..., eps = getOption("spam.eps"))
+{
+  theta <- .par.check.cov(theta, 3)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  if (is.spam(h)) {
+    tmp <- sqrt(8 * theta[3])/theta[1] * h@entries
+    ypos <- tmp < eps
+    npos <- !ypos
+
+    if (any(ypos)) {
+      h@entries[ypos] <- theta[2] + theta[4]
+    }
+    if (any(npos)) {
+      h@entries[npos] <- theta[2] * (((2^(-(theta[3] - 1)))/gamma(theta[3])) *
+                                       (tmp[npos]^theta[3]) *
+                                       besselK(tmp[npos], nu = theta[3]))
+    }
+  } else {
+    tmp <- sqrt(8 * theta[3])/theta[1] * c(h)
+    ypos <- tmp < eps
+    npos <- !ypos
+    if (any(ypos)) {
+      h[ypos] <- theta[2] + theta[4]
+    }
+    if (any(npos)) {
+      h[npos] <- theta[2] * (((2^(-(theta[3] - 1)))/gamma(theta[3])) *
+                               (tmp[npos]^theta[3]) *
+                               besselK(tmp[npos], nu = theta[3])) }
+  }
+
+  return(h)
+}
+
+
+
 cov.exp <- function(h, theta, ..., eps=getOption("spam.eps")) {
 
   theta <- .par.check.cov(theta,2)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
   if (is.spam(h)) {
     tmp <- h@entries/theta[1]
     ypos <- tmp < eps
@@ -362,12 +420,71 @@ cov.exp <- function(h, theta, ..., eps=getOption("spam.eps")) {
     if (any(ypos)) {
       h[ypos] <- theta[2] + theta[3] }
     if (any(npos)) {
-      h[npos] <- theta[2] * exp( -tmp[npos]) }
+      h[npos] <- theta[2] * exp( -tmp[npos])   }
   }
 
   return(h)
 }
 
+cov.mat32 <- function(h, theta, ..., eps=getOption("spam.eps")) {
+
+  theta <- .par.check.cov(theta,2)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
+  if (is.spam(h)) {
+    tmp <- h@entries/theta[1]
+    ypos <- tmp < eps
+    npos <- !ypos
+
+    if (any(ypos)) {
+      h@entries[ypos] <- theta[2] + theta[3] }
+    if (any(npos)) {
+      h@entries[npos] <- theta[2] * exp( -tmp[npos]) * (1+tmp[npos]) }
+
+  } else {
+    tmp <- c(h)/theta[1]
+    ypos <- tmp < eps
+    npos <- !ypos
+
+    if (any(ypos)) {
+      h[ypos] <- theta[2] + theta[3] }
+    if (any(npos)) {
+      h[npos] <- theta[2] * exp( -tmp[npos]) * (1+tmp[npos])  }
+  }
+
+  return(h)
+}
+
+cov.mat52 <- function(h, theta, ..., eps=getOption("spam.eps")) {
+
+  theta <- .par.check.cov(theta,2)
+  if (theta[1] < eps) return( cov.nug(h, theta[2] + theta[3]))
+  # range so small, is considered as nugget
+  if (is.spam(h)) {
+    tmp <- h@entries/theta[1]
+    ypos <- tmp < eps
+    npos <- !ypos
+
+    if (any(ypos)) {
+      h@entries[ypos] <- theta[2] + theta[3] }
+    if (any(npos)) {
+      h@entries[npos] <- theta[2] * exp( -tmp[npos]) * (1+tmp[npos]+(tmp[npos]^2)/3) }
+
+  } else {
+    tmp <- c(h)/theta[1]
+    ypos <- tmp < eps
+    npos <- !ypos
+
+    if (any(ypos)) {
+      h[ypos] <- theta[2] + theta[3] }
+    if (any(npos)) {
+      h[npos] <- theta[2] * exp( -tmp[npos]) * (1+tmp[npos]+(tmp[npos]^2)/3) }
+  }
+
+  return(h)
+}
+
+cov.mat12 <- cov.exp
 
 cov.nug <- function(h, theta, ..., eps=getOption("spam.eps")) {
 

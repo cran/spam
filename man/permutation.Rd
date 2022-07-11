@@ -16,8 +16,8 @@
 \alias{permutation.spam}
 \alias{permutation,spam-method}
 \alias{permutation,matrix-method}
-\title{Permute a matrix}
-\description{Row and/or column permutes a matrix.
+\title{Permute a Matrix}
+\description{Row and/or column permutes a (sparse) matrix.
 }
 \usage{
 permutation.spam(A, P=NULL, Q=NULL, ind=FALSE, check=TRUE)

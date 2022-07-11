@@ -14,9 +14,9 @@
 
 
 neg2loglikelihood.spam <- function(y, X, distmat, Covariance,
-                                   beta, theta, Rstruct = NULL,...) {
+                                   beta, theta, Rstruct = NULL, cov.args=NULL,...) {
 
-  Sigma <- do.call(Covariance,list(distmat,theta))
+  Sigma <- do.call(Covariance, c(list(distmat, theta), cov.args))
   if (!is.spam(Sigma)){
     warning("\"Covariance\" should return a spam object. Forced to spam.")
     Sigma <- as.spam(Sigma)
@@ -35,9 +35,10 @@ neg2loglikelihood.spam <- function(y, X, distmat, Covariance,
 
 
 neg2loglikelihood <- function(y, X, distmat, Covariance,
-                                   beta, theta, ...) {
+                                   beta, theta, cov.args=NULL, ...) {
 
-  Sigma <- do.call(Covariance,list(distmat,theta))
+#   Sigma <- do.call(Covariance,list(distmat,theta))
+  Sigma <- do.call(Covariance, c(list(distmat,theta),cov.args))
   cholS <- chol(Sigma, ...)
   logdet <- sum(log(diag(cholS)))
   
@@ -52,18 +53,32 @@ neg2loglikelihood <- function(y, X, distmat, Covariance,
 }
 
 
+neg2loglikelihood.nomean <- function (y, distmat, Covariance,
+                                      theta, cov.args=NULL, ...) {
+# 	Sigma <- do.call(Covariance, list(distmat, theta))
+    Sigma <- do.call(Covariance, c(list(distmat,theta),cov.args))
+    cholS <- chol(Sigma, ...)
+    logdet <- sum(log(diag(cholS)))
+    
+    n <- length(y)
+    return(n * log(2 * pi) + 2 * logdet + sum(y * backsolve(cholS, 
+	    forwardsolve(cholS, y, transpose = TRUE, upper.tri = TRUE), n)))
+}
+
 
 
 
 mle.spam <- function(y, X, distmat, Covariance,
                      beta0, theta0,
                      thetalower, thetaupper, optim.control=NULL,
-                     Rstruct = NULL, hessian = FALSE,...) {
+                     Rstruct = NULL, hessian = FALSE,cov.args=NULL, ...) {
   
   
   if (!is(Rstruct, "spam.chol.NgPeyton")) {
+#    Sigma <- do.call(Covariance,
+#                     list(distmat,c(thetaupper[1],theta0[-1])))
     Sigma <- do.call(Covariance,
-                     list(distmat,c(thetaupper[1],theta0[-1])))
+                     c(list(distmat,c(thetaupper[1],theta0[-1])),cov.args))
     if (!is.spam(Sigma))
       stop("\"Covariance\" should return a spam object.")
    
@@ -74,7 +89,8 @@ mle.spam <- function(y, X, distmat, Covariance,
   n <- length(y)
     
   neg2loglikelihood <- function(fulltheta,...) {
-    Sigma <- do.call(Covariance,list(distmat,fulltheta[-(1:p)]))
+#      Sigma <- do.call(Covariance,list(distmat,fulltheta[-(1:p)]))
+    Sigma <- do.call(Covariance,c(list(distmat,fulltheta[-(1:p)]),cov.args))
     cholS <- update.spam.chol.NgPeyton(Rstruct, Sigma, ...)
 
     resid <- y-X%*%fulltheta[1:p]
@@ -94,14 +110,15 @@ mle.spam <- function(y, X, distmat, Covariance,
 mle <- function(y, X, distmat, Covariance,
                 beta0, theta0,
                 thetalower, thetaupper, optim.control=NULL,
-                hessian = FALSE,
+                hessian = FALSE,cov.args=NULL, 
                 ...) {
     
   p <- dim(X)[2]
   n <- length(y)
     
   neg2loglikelihood <- function(fulltheta,...) {
-    Sigma <- do.call(Covariance,list(distmat,fulltheta[-(1:p)]))
+#      Sigma <- do.call(Covariance,list(distmat,fulltheta[-(1:p)]))
+          Sigma <- do.call(Covariance,c(list(distmat,fulltheta[-(1:p)]),cov.args))
     cholS <- chol(Sigma, ...)
     logdet <- sum(log(diag(cholS)))
 
@@ -124,12 +141,14 @@ mle <- function(y, X, distmat, Covariance,
 mle.nomean.spam <- function(y, distmat, Covariance,
                      theta0,
                      thetalower, thetaupper, optim.control = NULL,
-                     Rstruct = NULL, hessian = FALSE,...) {
+                     Rstruct = NULL, hessian = FALSE, cov.args=NULL, ...) {
   
   
   if (!is(Rstruct, "spam.chol.NgPeyton")) {
+#    Sigma <- do.call(Covariance,
+#                     list(distmat,c(thetaupper[1],theta0[-1])))
     Sigma <- do.call(Covariance,
-                     list(distmat,c(thetaupper[1],theta0[-1])))
+                     c(list(distmat,c(thetaupper[1],theta0[-1])), cov.args))
     if (!is.spam(Sigma))
       stop("\"Covariance\" should return a spam object.")
    
@@ -139,7 +158,9 @@ mle.nomean.spam <- function(y, distmat, Covariance,
   n <- length(y)
     
   neg2loglikelihood <- function(theta,...) {
-    Sigma <- do.call(Covariance,list(distmat,theta))
+#    Sigma <- do.call(Covariance,list(distmat,theta))
+    Sigma <- do.call(Covariance,
+                     c(list(distmat,theta), cov.args))
     cholS <- update.spam.chol.NgPeyton(Rstruct, Sigma, ...)
 
     return( n * log(2*pi) +
@@ -160,13 +181,15 @@ mle.nomean.spam <- function(y, distmat, Covariance,
 mle.nomean <- function(y, distmat, Covariance,
                        theta0,
                        thetalower, thetaupper, optim.control=NULL,
-                       hessian = FALSE,
+                       hessian = FALSE, cov.args=NULL,
                        ...) {
     
   n <- length(y)
     
   neg2loglikelihood <- function(theta,...) {
-    Sigma <- do.call(Covariance,list(distmat,theta))
+ #   Sigma <- do.call(Covariance,list(distmat,theta))
+    Sigma <- do.call(Covariance,
+                     c(list(distmat,theta), cov.args))
     cholS <- chol(Sigma, ...)
     logdet <- sum(log(diag(cholS)))
 

@@ -66,7 +66,7 @@ n <- 10
 Q <- precmat.RW2( n)
 # rmvnorm.prec(1, Q=Q) # does not work, because the matrix is singular.
 
-Q%*%cbind(1,1:n)
+Q\%*\%cbind(1,1:n)
 }
 % backsolve( chol(as.matrix(V)[ord,ord]),iidsample)[iord,]
 %

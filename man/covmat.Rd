@@ -22,7 +22,11 @@
 \alias{cov.wend1}
 \alias{cov.wend2}
 \alias{cov.mat}
-\title{Covariance functions}
+\alias{cov.mat12}
+\alias{cov.mat32}
+\alias{cov.mat52}
+\alias{cov.finnmat}
+\title{Covariance Functions}
 \description{
   Evaluate a covariance function.}
 \usage{
@@ -37,6 +41,10 @@ cov.wu1(h, theta, ... , eps= getOption("spam.eps"))
 cov.wu2(h, theta, ... , eps= getOption("spam.eps"))
 cov.wu3(h, theta, ... , eps= getOption("spam.eps"))
 cov.mat(h, theta, ... , eps= getOption("spam.eps"))
+cov.finnmat(h, theta, ... , eps= getOption("spam.eps"))
+cov.mat12(h, theta, ... , eps= getOption("spam.eps"))
+cov.mat32(h, theta, ... , eps= getOption("spam.eps"))
+cov.mat52(h, theta, ... , eps= getOption("spam.eps"))
 
 cor.sph(h, range, ... , eps= getOption("spam.eps"))
 
@@ -53,18 +61,24 @@ cor.sph(h, range, ... , eps= getOption("spam.eps"))
 }
 \details{\code{covmat} is a wrapper that calls the other functions
   according to the argument \code{type}. The nomenclature is similar to
-  \code{premat}.
+  \code{precmat}.
   \cr
-  The parametrization is (range, partial-sill, [smoothness = 1], [nugget = 0]), where
+  The parametrization is (range, [partial-sill = 1], [smoothness = 1], [nugget = 0]), where
   only the range needs to be specified.
   In case of negative parameter values, a warning is issued and the
   absolute value is retained.
   Although more cryptic, having all arguments as a single vector
   simplifies optimization with \code{optim}.
   \cr
-  The parameters are and locations are up to precision
-  \code{epsilon}. That means that all distances smaller than \code{eps}
-  are considered zero, nugget smaller than \code{eps} is ignored, etc.
+  The parameters are and locations are up to precision \code{epsilon}.
+  That means that all distances smaller than \code{eps} are considered zero; a nugget smaller than \code{eps} is ignored; a range smaller than \code{eps} represents a nugget model; etc.
+  \cr
+  \code{cov.finnmat()} is similar to \code{cov.mat()} but with the
+  \code{sqrt(8*smoothness)/range} argument in the Bessel function
+  (instead of \code{1/range}).
+  \code{cov.mat12()} is a wrapper to \code{cov.exp()}
+  \code{cov.mat32()}, and \code{cov.mat52()} are fast version of
+  \code{cov.mat()} with smoothness 3/2 and 5/2, respectively (factor 10).
   \cr
   \code{cor.sph(,range)} is a fast version of \code{cov.sph(,c(range,1,0))}.
   \cr

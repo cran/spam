@@ -36,7 +36,7 @@
 \examples{
 # incidence matrix for a RW(3) model
 D <- diff.spam(diag.spam(10), lag=1, differences=3)
- t(D)%*%D
+t(D)\%*\%D
 }
 \author{Reinhard Furrer}
 \keyword{array}

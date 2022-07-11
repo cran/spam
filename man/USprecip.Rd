@@ -13,9 +13,7 @@
 \name{USprecip}
 \alias{USprecip}
 \docType{data}
-\title{
-Monthly total precipitation (mm) for April 1948 in the contiguous United States
-}
+\title{Monthly Total Precipitation (mm) for April 1948 in the Contiguous United States}
 \description{
 This is a useful spatial data set of moderate to large size consisting of 11918
 locations. See \url{https://www.image.ucar.edu/GSP/Data/US.monthly.met/} for the source of these data.
@@ -26,10 +24,10 @@ This data set is an array containing the following columns:
 
 \describe{
 \item{lon,lat}{
-  Longitude-latitude position of monitoring stations
+  Longitude-latitude position of monitoring stations.
 }
 \item{raw}{
-  Monthly total precipitation in millimeters for April 1948
+  Monthly total precipitation in millimeters for April 1948.
 }
 \item{anomaly}{
   Preipitation anomaly for April 1948.

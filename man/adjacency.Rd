@@ -15,7 +15,7 @@
 \alias{adjacency.spam}
 \alias{adjacency.landkreis}
 \alias{germany.graph}
-\title{Administrative districts of Germany}
+\title{Administrative Districts of Germany}
 \description{Constructing the adjacency graph
   of the administrative districts of Germany}
 \usage{

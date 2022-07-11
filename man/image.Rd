@@ -16,9 +16,9 @@
 \alias{image.spam.chol}
 \alias{image,spam-method}
 %\alias{image,spam.chol.NgPeyton-method}
-\title{Display a spam Object as Color Image}
+\title{Display a Sparse Matrix as Color Image}
 \description{The function creates a grid of colored rectangles with
-  colors corresponding to the values in \code{z}. }
+  colors corresponding to the values of the \code{spam} matrix. }
 \usage{
 \S4method{image}{spam}(x, cex = NULL, ...)
 }

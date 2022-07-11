@@ -24,7 +24,7 @@
 \alias{summary.spam.chol}
 \alias{summary.spam.chol.NgPeyton}
 \alias{print_nnzpos}
-\title{Printing and summarizing sparse matrices}
+\title{Printing and Summarizing Sparse Matrices}
 \description{Printing (non-zero elements) of sparse matrices
   and summarizing the sparsity structure thereof.
 }

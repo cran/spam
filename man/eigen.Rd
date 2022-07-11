@@ -48,7 +48,7 @@ eigen_approx(x, nev, ncv, nitr, mode, only.values = FALSE, verbose = FALSE, f_ro
 
 \details{
   \describe{
-    \item{\code{mode = "LM"}:}{
+    \item{\code{mode = "  "}:}{
       there are different modes available for this function, each mode returns a different range of eigenvalues.
       Also the available modes are dependent, whether the input matrix is symmetric or not:
       \describe{
@@ -72,7 +72,9 @@ eigen_approx(x, nev, ncv, nitr, mode, only.values = FALSE, verbose = FALSE, f_ro
       the maximum number of iterations.
       The default is set to \code{ncv + 1000}}
     \item{\code{spamflag = FALSE}:}{
-      if TRUE, the Implicitly Restarted Arnoldi Process is used, independent of the dimension of the respective matrix.}
+      if TRUE, the Implicitly Restarted Arnoldi Process is used,
+  independent of the dimension of the respective matrix (provided matrix
+  is larger than 10x10).}
     \item{\code{verbose = FALSE}:}{
       print additional information.}
     \item{\code{cmplxeps}:}{
@@ -88,19 +90,19 @@ eigen_approx(x, nev, ncv, nitr, mode, only.values = FALSE, verbose = FALSE, f_ro
 \examples{
 set.seed(81)
 rspam <- spam_random(42^2, density = .0001, spd = TRUE)
-SPD <- eigen.spam(rspam, nev = 20, control = list(mode = "SM"),
+SPD <- eigen.spam(rspam, nev = 18, control = list(mode = "SM"),
                   only.values = TRUE)
 
-tail(SPD$values, 20)
+any(SPD$values <= 0, na.rm = TRUE)
 isSymmetric(rspam)
 # hence the matrix is symmetric positiv definit
 
 rspam2 <- spam_random(50^2, density = .0001, spd = FALSE, sym = TRUE,
                       distribution = rpois, lambda = 2)
-SNPDF <- eigen.spam(rspam2, nev = 20, control = list(mode = "SM"),
+SNPD <- eigen.spam(rspam2, nev = 18, control = list(mode = "SM"),
                     only.values = TRUE)
 
-tail(SNPDF$values, 20)
+any(SNPD$values <= 0, na.rm = TRUE)
 isSymmetric(rspam2)
 # hence the matrix is symmetric but not positiv definit
 }

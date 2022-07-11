@@ -16,8 +16,7 @@
 
 \name{germany.plot}
 \alias{germany.plot}
-
-\title{Plot administrative districts of Germany}
+\title{Plot Administrative Districts of Germany}
 \description{Displaying data
   over the administrative districts of Germany}
 \usage{

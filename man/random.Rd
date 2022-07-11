@@ -13,7 +13,7 @@
 
 \name{random}
 \alias{spam_random}
-\title{Create Random spam Matrices}
+\title{Create Random Sparse Matrices}
 \description{Creates random spam matrix given the dimension and other parameters.}
 \usage{
 spam_random(nrow = 1L, ncol = nrow, density = 0.5, distribution = NULL, digits = NULL,

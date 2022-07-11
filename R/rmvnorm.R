@@ -50,6 +50,38 @@ rmvnorm.spam <- function(n, mu = rep.int(0, dim(Sigma)[1]), Sigma, Rstruct = NUL
 }
 
 
+rmvt <- function(n, Sigma, df = 1, delta = rep(0, nrow(Sigma)),
+                 type = c("shifted", "Kshirsagar"), ..., sigma) {
+
+  if (!missing(sigma))  Sigma <- sigma
+
+  return( rmvt.spam(n = n, Sigma, df, delta, type, ...))
+}
+
+
+rmvt.spam <- function (n, Sigma, df = 1, delta = rep(0, nrow(Sigma)),
+    type = c("shifted", "Kshirsagar"), ..., sigma) {
+
+    if (!missing(sigma))  Sigma <- sigma
+    if (length(delta) != nrow(Sigma))
+        stop("'delta' and 'Sigma' have non-conforming size")
+    if (hasArg(mean))
+        stop("Providing 'mean' does *not* sample from a multivariate t-distribution!")
+    if (df == 0 || ( (df > 0) & is.infinite(df)))
+        return(rmvnorm.spam(n, mean = delta, Sigma = Sigma, ...))
+    type <- match.arg(type)
+    switch(type, Kshirsagar = {
+        return(rmvnorm.spam(n, mean = delta, Sigma = Sigma, ...)/sqrt(rchisq(n,
+            df)/df))
+    }, shifted = {
+        return( sweep( rmvnorm.spam(n, Sigma = Sigma, ...)/sqrt(rchisq(n,
+            df)/df), 2, delta, "+"))
+    }, stop("wrong 'type'"))
+}
+
+
+
+
 
 
 # Draw from a multivariate normal given a precision matrix:
@@ -200,3 +232,4 @@ rmvnorm.conditional <- function(n, y, mu = rep.int(0, dim(SigmaXX)[1]+dim(SigmaY
       solve.spam(a = SigmaYY, b = y-rsample[(nx+1):(nx+ny),],
                  Rstruct = RstructYY))
 }
+rmvnorm.cond <- rmvnorm.conditional

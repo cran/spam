@@ -212,7 +212,7 @@ grid_zoom <- function(inputGrob = pointsGrob(runif(200),runif(200)),
   
   if (!identical(length(ratio), 1)) 
     ratio <- c(ratio, ratio)
-  if(class(x) == "character")
+  if(inherits(x,"character"))  # old: (class(x) == "character")
     switch(x,
            topleft = {x = 0; y = 1; just = c(0, 1)},
            topright = {x = 1; y = 1 ; just = c(1, 1)},
