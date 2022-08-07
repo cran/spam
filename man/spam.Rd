@@ -115,8 +115,10 @@ ln <- nz^2
 smat <- spam(0,ln,ln)
 is <- sample(ln,nz)
 js <- sample(ln,nz)
+## IGNORE_RDIFF_BEGIN
 system.time(for (i in 1:nz) smat[is[i], js[i]] <- i)
 system.time(smat[cbind(is,js)] <- 1:nz)
+## IGNORE_RDIFF_END
 
 getClass("spam")
 

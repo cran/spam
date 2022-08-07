@@ -64,9 +64,10 @@ R <- as.spam( cholS ) # R'R = P S P', with P=I[ord,],
 RtR <- t(R) \%*\% R
 
 # the following are equivalent:
-as.spam( RtR -            S[ord,ord] )
-as.spam( RtR[iord,iord] - S )
-as.spam( t(R[,iord]) \%*\% R[,iord] - S )
+as.spam( RtR -            S[ord,ord],    eps=1e-15)
+as.spam( RtR[iord,iord] - S,             eps=1e-15)
+as.spam( t(R[,iord]) \%*\% R[,iord] - S, eps=1e-15)
+# we use 'eps' to avoid issues close to machine precision
 
 # trivially:
 as.spam( t(I[iord,]) - I[ord,])  # (P^-1)' = P  

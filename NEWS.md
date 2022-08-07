@@ -1,3 +1,11 @@
+# spam 2.9.1
+
+BUG FIXES
+
+* Use of `## IGNORE_RDIFF_BEGIN` and `eps=1e-15` in the help files to assure coherence
+among different systems.  
+
+
 # spam 2.9.0
 
 SIGNIFICANT USER-VISIBLE CHANGES
