@@ -23,7 +23,7 @@
 \usage{
 nearest.dist( x, y=NULL, method = "euclidean",
              delta = 1, upper = if (is.null(y)) FALSE else NULL,
-             p=2, miles=TRUE, R=NULL)
+             p = 2, miles = TRUE, R = NULL, fortran = FALSE)
 }
 \arguments{
   \item{x}{Matrix of first set of locations where each row gives the
@@ -46,8 +46,9 @@ nearest.dist( x, y=NULL, method = "euclidean",
           the radius is either in miles or kilometers depending on the
           values of the miles argument. If \code{R=1} then distances are of
           course in radians.}
+  \item{fortran}{Should the C++ (\code{FALSE}) or the Fortran code (\code{TRUE}) be used. If 64-bit matrices are needed, the argument is set to (\code{TRUE}).}
 %  \item{eps}{deprecated. Left for backwards consistency.}
-%  \item{diag}{deprecated. Left for backwards consistency. See \sQuote{Details}.}
+%  \item{diag}{deprecated. Left for backwards consistency. See \sQuote{Details}.}a
 }
 \value{A \code{spam} object containing the distances spanned between
   zero and \code{delta}. The sparse matrix may contain many zeros
@@ -56,7 +57,7 @@ nearest.dist( x, y=NULL, method = "euclidean",
 
 \details{For great circle distance, the matrices \code{x} and \code{y}
   contain the degrees longitudes in the first and the degrees latitudes
-  in the second column.  \code{eps} and \code{delta} are in
+  in the second column. \code{delta} is in
   degrees. Hence to restrict to distances smaller than \code{delta.km},
   one has to specify \code{delta=delta.km*360/(6378.388*2*pi)}.
 
@@ -75,7 +76,7 @@ nearest.dist( x, y=NULL, method = "euclidean",
   There are many other packages providing distance functions. Especially
   for great circle distances there are considerable differences between
   the implementations. For high precision results, \code{sp::spDists} is
-  a good candidate and distnces of large amount of locations can be
+  a good candidate and distances of large amount of locations can be
   processed in parallel with the \code{parallelDist} package.\cr
 
   The formerly depreciated arguments \code{eps} and \code{diag} are now
@@ -110,6 +111,6 @@ x <- expand.grid(1:(2*nx),1:nx)
 display( nearest.dist( x, delta=1))
 
 }
-\author{Reinhard Furrer}
+\author{Annina Cincera (C++ code), Reinhard Furrer}
 \keyword{array}
 \keyword{algebra}

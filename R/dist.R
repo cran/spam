@@ -40,14 +40,14 @@
 nearest.dist <- function( x, y=NULL, method = "euclidean",
                          delta = 1,
                          upper = if(is.null(y)) FALSE else NULL,
-                         p = 2, miles=TRUE, R=NULL
+                         p = 2, miles=TRUE, R=NULL, fortran = FALSE
 #                         eps =  NULL, diag = NULL
                          )
 {
   # see help for exact parameter meaning
 
   # We always include all small distances. Hence, this function
-  #   works different than any other spam functions. An addititonal
+  #   works differently than any other spam functions. An additional
   #   call to an as.spam would eliminate the small values.
 #  if (!is.null(diag)) warning("Argument "diag" is deprecated")
 #  if (!is.null(eps))  warning("Argument "eps" is deprecated")
@@ -57,8 +57,6 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
   method <- pmatch(method, METHODS)  # result is integer
 
   if (is.na(method))     stop("invalid distance method")
-
-  force64 <- getOption("spam.force64")
 
   if (method == 4) {
     if (is.null(R))
@@ -70,14 +68,13 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
     if (abs(delta)>180.1)  stop("'delta' should be smaller than 180 degrees.")
   }
 
-
   if (is.null(upper))
     part <- 0L
   else
     part <- ifelse(upper, 1L ,-1L)
   if (is.data.frame(x))  x <- as.matrix(x)
   if (is.list(x)) stop("'x' should be an array or matrix")
-           # as.matrix( list() ) does not work
+  # as.matrix( list() ) does not work
   if (!is.matrix(x)) x <- as.matrix(x)
   nd <- dim(x)[2]
   n1 <- dim(x)[1]
@@ -89,11 +86,7 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
     if (!is.matrix(y)) y <- as.matrix(y)
     if (nd!=dim(y)[2]) stop("'x' and 'y' should have the same number of columns.")
     n2 <- dim(y)[1]
-    mi <- min(n1,n2)
-    ma <- max(n1,n2)
-    nnz <- min(max(getOption("spam.nearestdistnnz")[1],
-                   ma*getOption("spam.nearestdistnnz")[2]),
-               (as.double(mi)*(mi+1)+(ma-mi)^2)/ ifelse( is.null(upper), 1, 2))
+    sizemax <- n2*n1
     # there is an as.double just in case that mi (and n1 below) is > 2^16
   } else {
     # x = y, i.e. proper distance matrix
@@ -103,78 +96,91 @@ nearest.dist <- function( x, y=NULL, method = "euclidean",
     }
     y <- x
     n2 <- n1
-    nnz  <- min(max(getOption("spam.nearestdistnnz")[1],
-                    n1*getOption("spam.nearestdistnnz")[2]),
-                (as.double(n1)*(n1+1))/ ifelse( is.null(upper), 1, 2))
+    sizemax <- n1*(n1+1)/2
   }
 
-  # EXPLICIT-STORAGE-FORMAT
-  if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
+  # which code should be used
+  force64 <- getOption("spam.force64")
+  if (force64 || fortran || sizemax > 2147483647 - 1 ){
+    if (!is.null(y)) {
+      mi <- min(n1,n2)
+      ma <- max(n1,n2)
+      nnz <- min(max(getOption("spam.nearestdistnnz")[1],
+                     ma*getOption("spam.nearestdistnnz")[2]),
+             (as.double(mi)*(mi+1)+(ma-mi)^2)/ ifelse( is.null(upper), 1, 2))
+      } else {
+        nnz  <- min(max(getOption("spam.nearestdistnnz")[1],
+                        ma*getOption("spam.nearestdistnnz")[2]),
+                  (as.double(n1)*(n1+1))/ ifelse( is.null(upper), 1, 2))
+      }
+   # EXPLICIT-STORAGE-FORMAT
+    if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
       SS <- .format64()
-  else
+    else
       SS <- .format32
 
-  # if(2147483647 < nnz) stop("Distance matrix is too dense (1)")
+    repeat {
+      d <- NULL # Free the memory allocated by a previous attempt
+      d <- .C64("closestdist",
+                ##              subroutine closestdist( ncol, x,nrowx, y, nrowy,
+                ##  &    part, p, method,
+                ##  &    eta, colindices, rowpointers, entries, nnz, iflag)
+                SIGNATURE=c(SS$signature, "double", SS$signature, "double", SS$signature,
+                            SS$signature, "double", SS$signature, "double", SS$signature,
+                            SS$signature, "double", SS$signature, SS$signature),
 
-  repeat {
-    d <- NULL # Free the memory allocated by a previous attemp
-    d <- .C64("closestdist",
-    ##              subroutine closestdist( ncol, x,nrowx, y, nrowy,
-    ##  &    part, p, method,
-    ##  &    eta, colindices, rowpointers, entries, nnz, iflag)
-              SIGNATURE=c(SS$signature, "double", SS$signature, "double", SS$signature,
-                          SS$signature, "double", SS$signature, "double", SS$signature,
-                          SS$signature, "double", SS$signature, SS$signature),
+                nd,
+                x,
+                n1, #w
+                y,
 
-              nd,
-              x,
-              n1, #w
-              y,
+                n2, #w
+                part, #arg 6
+                p[1],
+                method,
 
-              n2, #w
-              part, #arg 6
-              p[1],
-              method,
+                abs( delta[1]),
+                colindices=vector(SS$type, nnz),
+                rowpointers=vector(SS$type, n1+1), #arg 11
+                entries=vector("double",nnz),
 
-              abs( delta[1]),
-              colindices=vector(SS$type, nnz),
-              rowpointers=vector(SS$type, n1+1), #arg 11
-              entries=vector("double",nnz),
+                nnz=nnz,
+                iflag=0,
 
-              nnz=nnz,
-              iflag=0,
+                INTENT = c("r", "r", "r", "r",
+                           "r", "r", "rw", "r",
+                           "r", "w", "w", "w",
+                           "rw", "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE=SS$package)
 
-              INTENT = c("r", "r", "r", "r",
-                     "r", "r", "rw", "r",
-                     "r", "w", "w", "w",
-                     "rw", "w"),
-              NAOK = getOption("spam.NAOK"),
-              PACKAGE=SS$package)
+     if (d$iflag==0) break else {
+       nnz <-  nnz*getOption("spam.nearestdistincreasefactor")*n1/(d$iflag-1)
 
-    if (d$iflag==0) break else {
-      nnz <-  nnz*getOption("spam.nearestdistincreasefactor")*n1/(d$iflag-1)
-
-      # EXPLICIT-STORAGE-FORMAT
-      if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
-        SS <- .format64()
-      else
-        SS <- .format32
+        # EXPLICIT-STORAGE-FORMAT
+        if(max(n1,n2,nnz) > 2147483647 - 1 || force64)
+         SS <- .format64()
+        else
+          SS <- .format32
 
       # if(nnz > 2147483647) stop("Distance matrix is too dense (2)")
 
-      madens <- d$iflag
-      warning(paste("You ask for a 'dense' sparse distance matrix, I require one more iteration.",
+        madens <- d$iflag
+        warning(paste("You ask for a 'dense' sparse distance matrix, I require one more iteration.",
                             "\nTo avoid the iteration, increase 'nearestdistnnz' option to something like\n",
-                            "'options(spam.nearestdistnnz=c(",d$nnz,",400))'\n(constructed ",madens,
+                            "'options(spam.nearestdistnnz=c(",d$nnz,",500))'\n(constructed ",madens,
                             " lines out of ",n1,").\n",sep=""), call. = TRUE)
 
+      }
     }
+
+   length(d$entries) <- d$nnz
+   length(d$colindices) <- d$nnz
+  } else {
+    d <- closestdistCpp(x,y,part,p,method,eta=delta)
   }
 
-  length(d$entries) <- d$nnz
-  length(d$colindices) <- d$nnz
-
-  if(d$nnz == 0) {
+  if(length(d$entries) == 0) {
     return(.newSpam(
       dimension=c(n1,n2),
       force64 = force64

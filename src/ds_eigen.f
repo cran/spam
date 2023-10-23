@@ -7,14 +7,14 @@ c
 c
       integer n
 c
-      real ( kind = 8 ) a(*)
+      double precision  a(*)
       integer i
       integer ia(n+1)
       integer ja(*)
       integer k1
       integer k2
-      real ( kind = 8 ) x(*)
-      real ( kind = 8 ) y(*)
+      double precision  x(*)
+      double precision  y(*)
 c
 c spasrse matrix * vector multiplication
 c

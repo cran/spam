@@ -40,19 +40,19 @@ distmatrix <- function(x1,x2=NULL,upper=NULL,...)
 test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
 
     options(spam.printsize=6)
-    
-    
+
+
     n1 <- as.integer( 4)
     n2 <- n1
     nd <- as.integer(2)
     set.seed(14)
     x2 <- x1 <- array(runif(n1*nd), c( n1,nd))
-    
+
     if (F){
                                         # testing the structure
         distmatrix(x1)
         nearest.dist( x1, x1, upper=NULL)
-        
+
                                         # and all other possibilities (3[upper])
                                         # with x1,x1 and x1, NULL:
         par(mfcol=c(3,2))
@@ -69,6 +69,8 @@ test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
     expect_equal(nearest.dist( x1, x1, upper=NULL),  nearest.dist(x1,  upper=NULL) )
     expect_equal(nearest.dist( x1, x1, upper=FALSE), nearest.dist(x1,  upper=FALSE))
     expect_equal(nearest.dist( x1, x1, upper=TRUE),  nearest.dist(x1,  upper=TRUE) )
+# New Rcpp and old Fortran version should be identical...
+    expect_equal(nearest.dist(x1, fortran = FALSE), nearest.dist(x1, fortran = TRUE))
 
 
 # testing  Euclidian
@@ -76,7 +78,7 @@ test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
 
     o1 <- nearest.dist( x1, upper=NULL)
     o2 <- distmatrix(x1)
-    
+
     expect_equal(o2[o2< eta], o1@entries)
 
 
@@ -89,11 +91,11 @@ test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
     x2 <- x1 <- array(runif(n1*nd), c( n1,nd))
     o1 <- nearest.dist( x1,x2,upper=NULL)
     o2 <- distmatrix(x1,x2)
-    
+
     expect_equal(o2[o2< eta], o1@entries)
 
     ## TODO check test.
-    ## o1 <- nearest.dist( x1, upper=!FALSE)  
+    ## o1 <- nearest.dist( x1, upper=!FALSE)
     ## expect_equal(o2[o2< eta & lower.tri(o2)], o1@entries)
 
 
@@ -117,14 +119,17 @@ test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
     o3 <- distmatrix(x1,method=method,p=p, upper=TRUE)
     expect_equal(o1@entries, o3)
 
+# New Rcpp and old Fortran version should also be identical...
+    expect_equal(nearest.dist(x1, method=method, fortran = FALSE), nearest.dist(x1, method = method, fortran = TRUE))
+
 
 
     if (F){ # system.time is not always available...
-        
+
         n1 <- as.integer( 400)
         set.seed(14)
         x1 <- array(runif(n1*nd), c( n1,nd))
-        
+
         system.time( o1 <- nearest.dist( x1,method="max",p=p) )
         system.time( o1 <- nearest.dist( x1,method="min",p=1) )
         system.time( o1 <- nearest.dist( x1,method="min",p=1.5) )
@@ -132,20 +137,20 @@ test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
         system.time( o1 <- nearest.dist( x1,method="euc",p=1) )
         system.time( o1 <- dist( x1) )
     }
-    
+
                                         # testing  GC
     n1 <- as.integer( 4)
     n2 <- as.integer(6)
     set.seed(14)
     x1 <- array(runif(n1*2,-90,90), c( n1,2))
     x2 <- array(runif(n2*2,-90,90), c( n2,2))
-    
-    
-    
+
+
+
     if (F){
                                         # structure
         delta <-  180
-        
+
         par(mfcol=c(3,2))
         display( nearest.dist( x1,    delta=delta,method="gr",  upper=FALSE))
         display( nearest.dist( x1,    delta=delta,method="gr",  upper=TRUE))
@@ -154,35 +159,40 @@ test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
         display( nearest.dist( x1,x1, delta=delta,method="gr",  upper=TRUE))
         display( nearest.dist( x1,x1, delta=delta,method="gr",  upper=NULL))
     }
-    
-                                        # 
-    
+
+                                        #
+
     if (F){
                                         # if fields would be available, the following can be used as well.
         delta <-  180
         o2 <- rdist.earth(x1)
         o1 <- nearest.dist( x1, method="gr",upper=NULL,delta=delta)
         spamtest_eq(o2- o1@entries)
-        
+
+# New Rcpp and old Fortran version should also be identical...
+        expect_equal(nearest.dist(x1, method="gr", fortran = FALSE), nearest.dist(x1, method = "gr", fortran = TRUE))
+
         o2 <- rdist.earth(x1, R=1)
-        o1 <- nearest.dist( x1,  method="gr",upper=NULL,delta=delta,R=1) 
+        o1 <- nearest.dist( x1,  method="gr",upper=NULL,delta=delta,R=1)
         spamtest_eq(o2- o1@entries)
-        
-        
+
+
         delta <- 90
         o2 <- rdist.earth(x2,x1,R=1)
         o1 <- nearest.dist( x1,x2, method="gr",upper=NULL,delta=delta,R=1)
         spamtest_eq(o2[o2<delta*pi/180]- o1@entries)
-        
-        
+
+        expect_equal(nearest.dist(x1, method="gr", fortran = FALSE, R=1), nearest.dist(x1, method = "gr", fortran = TRUE, R=1))
+
+
     }
 ## })
-    
+
 ## # correct storage mode conversion
 ## test_that("storage conversion", {
     nx <- 4
     x <- expand.grid(as.double(1:nx),as.double(1:nx))
-    expect_equal(nearest.dist( x,delta=nx*2, upper=TRUE)@entries, 
+    expect_equal(nearest.dist( x,delta=nx*2, upper=TRUE)@entries,
                 distmatrix(x, upper=TRUE))
     x <- expand.grid(as.integer(1:nx),as.integer(1:nx))
     expect_equal(nearest.dist( x,delta=nx*2, upper=TRUE)@entries,
@@ -226,5 +236,6 @@ test_that("comparing nearest.dist with dist, use diag=true, upper=TRUE",{
 
 # 'NA/NaN/Inf's are coerced to zero:
       expect_warning( as.spam(dist(c(0, NA, 1)))@entries)
+
 })
 

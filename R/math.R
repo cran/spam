@@ -151,12 +151,12 @@ setMethod("all","spam", logical_Summary)
 
 "spam_Logic_vectorspam" <- function(e1, e2) {
     if(getOption("spam.structurebased")) {
+        if( isTRUE(all.equal(length(e2@entries), prod(e2@dimension))))  # spam is full
+            return( as.spam( callGeneric(e1, as.matrix(e2))) )          # 3.0: no as.spam -> matrix
         if(identical(length(e1),1L) | identical(length(e1), length(e2@entries))) {
             e2@entries <- as.double( callGeneric(e1, e2@entries))
             return(e2)
         }
-        if( length(e1) == prod(e2@dimension))
-            return( as.spam( callGeneric(e1, as.matrix(e2))) )
         stop(gettextf("incompatible lengths for %s operation.", sQuote(.Generic)))
     }  else {
         inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e2)))
@@ -166,27 +166,53 @@ setMethod("all","spam", logical_Summary)
 
 "spam_Logic_spamvector" <- function(e1, e2)  {
     if(getOption("spam.structurebased")) {
+        if( isTRUE(all.equal(length(e1@entries), prod(e1@dimension))))  # spam is full
+            return( as.spam( callGeneric(as.matrix(e1), e2)) )   # 3.0: no as.spam -> matrix
         if(identical(length(e2),1L) | identical(length(e2), length(e1@entries))) {
             e1@entries <- as.double( callGeneric(e1@entries, e2))
             return(e1)
         }
-        if( length(e2)== prod(e1@dimension))
-            return( as.spam( callGeneric(as.matrix(e1), e2)) )
         stop(gettextf("incompatible lengths for %s operation.", sQuote(.Generic)))
     }  else {
         inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e1)))
         return( as.spam( callGeneric(as.matrix(e1), e2)) )
     }
 }
+"spam_Logic_matrixspam" <- function(e1, e2){
+  #    cat("spam_Arith_matrixspam")
+  if( identical( e2@dimension, dim(e1))) {
+    if(getOption("spam.structurebased")) {
+      return( as.spam( callGeneric(e1, as.matrix(e2))) )          # 3.0: no as.spam -> matrix
+    }  else {
+      inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e2)))
+      return( as.spam( callGeneric(e1, as.matrix(e2))) )
+    }
+  }
+  stop(gettextf("incompatible dimensions for %s operation.", sQuote(.Generic)))
+}
+"spam_Logic_spammatrix" <- function(e1, e2){
+  #    cat("spam_Arith_spammatrix")
+  if( identical( e1@dimension, dim(e2))) {
+    if(getOption("spam.structurebased")) {
+      return( as.spam( callGeneric(as.matrix(e1), e2)) )          # 3.0: no as.spam -> matrix
+    }  else {
+      inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e1)))
+      return( as.spam( callGeneric(as.matrix(e1), e2)) )
+    }
+  }
+  stop(gettextf("incompatible dimensions for %s operation.", sQuote(.Generic)))
+}
 
 
 setMethod("|",signature(e1="spam",e2="spam"),
-          function(e1,e2){ z <- spam_add(e1,e2);z@entries <- rep(1,length(z@colindices));z})
+          function(e1,e2){ z <- spam_add(e1,e2);  z@entries <- rep(1,length(z@colindices));z})
 
 setMethod("&",signature(e1="spam",e2="spam"),
           function(e1,e2){ z <- spam_mult(e1,e2); z@entries <- rep(1,length(z@colindices));z})
 setMethod("Logic",signature(e1="spam",e2="vector"), spam_Logic_spamvector)
 setMethod("Logic",signature(e1="vector",e2="spam"), spam_Logic_vectorspam)
+setMethod("Logic",signature(e1="spam",e2="matrix"), spam_Logic_spammatrix)
+setMethod("Logic",signature(e1="matrix",e2="spam"), spam_Logic_matrixspam)
 
 ##################################################################################################
 #     `Compare" `"=="", `">"", `"<"", `"!="", `"<="", `">=""
@@ -197,69 +223,121 @@ setMethod("Logic",signature(e1="vector",e2="spam"), spam_Logic_vectorspam)
 
 "spam_Compare_spamvector" <- function(e1, e2){
     if(getOption("spam.structurebased")) {
+        if( isTRUE(all.equal(length(e1@entries), prod(e1@dimension))))  # spam is full
+            return( as.spam( callGeneric(as.matrix(e1), e2)) )   # 3.0: no as.spam -> matrix
         if(identical(length(e2),1L) | identical(length(e2), length(e1@entries))) {
             e1@entries <- as.double(callGeneric(e1@entries, e2))
             return(e1)
         }
-        if( length(e2)== prod(e1@dimension))
-            return( as.spam( callGeneric(as.matrix(e1), e2)) )
         stop(gettextf("incompatible lengths for %s operation.", sQuote(.Generic)))
     }  else {
-        inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)),   prod(dim(e1)))
+        inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e1)))
         return( as.spam( callGeneric(as.matrix(e1), e2)) )
     }
 }
 "spam_Compare_vectorspam" <- function(e1, e2) {
     if(getOption("spam.structurebased")) {
+        if( isTRUE(all.equal(length(e2@entries), prod(e2@dimension))))  # spam is full
+            return( as.spam( callGeneric(e1, as.matrix(e2))) )          # 3.0: no as.spam -> matrix
         if(identical(length(e1),1L) | identical(length(e1), length(e2@entries))) {
             e2@entries <- as.double( callGeneric(e1, e2@entries))
             return(e2)
         }
-        if( length(e1) == prod(e2@dimension))
-            return( as.spam( callGeneric(e1, as.matrix(e2))) )
         stop(gettextf("incompatible lengths for %s operation.", sQuote(.Generic)))
      }  else {
-        inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)),   prod(dim(e2)))
+        inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e2)))
         return( as.spam( callGeneric(e1, as.matrix(e2))) )
     }
+}
+"spam_Compare_matrixspam" <- function(e1, e2){
+  #    cat("spam_Arith_matrixspam")
+  if( identical( e2@dimension, dim(e1))) {
+    if(getOption("spam.structurebased")) {
+      return( as.spam( callGeneric(e1, as.matrix(e2))) )          # 3.0: no as.spam -> matrix
+    }  else {
+      inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e2)))
+      return( as.spam( callGeneric(e1, as.matrix(e2))) )
+    }
+  }
+  stop(gettextf("incompatible dimensions for %s operation.", sQuote(.Generic)))
+}
+"spam_Compare_spammatrix" <- function(e1, e2){
+  #    cat("spam_Arith_spammatrix")
+  if( identical( e1@dimension, dim(e2))) {
+    if(getOption("spam.structurebased")) {
+      return( as.spam( callGeneric(as.matrix(e1), e2)) )          # 3.0: no as.spam -> matrix
+    }  else {
+      inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e1)))
+      return( as.spam( callGeneric(as.matrix(e1), e2)) )
+    }
+  }
+  stop(gettextf("incompatible dimensions for %s operation.", sQuote(.Generic)))
 }
 
 
 setMethod("Compare",signature(e1="spam",e2="spam"),   spam_Compare )
 setMethod("Compare",signature(e1="spam",e2="vector"), spam_Compare_spamvector )
 setMethod("Compare",signature(e1="vector",e2="spam"), spam_Compare_vectorspam )
+setMethod("Compare",signature(e1="spam",e2="matrix"), spam_Compare_spammatrix )
+setMethod("Compare",signature(e1="matrix",e2="spam"), spam_Compare_matrixspam )
+
+
 ##################################################################################################
 #     `Arith": `"+"", `"-"", `"*"", `"^"", `"%%"", `"%/%"", `"/""
 
 "spam_Arith_vectorspam" <- function(e1, e2){
 #    cat("spam_Arith_vectorspam")
     if(getOption("spam.structurebased")) {
+        if( isTRUE(all.equal(length(e2@entries), prod(e2@dimension))))  # spam is full
+            return( as.spam( callGeneric(e1, as.matrix(e2))) )          # 3.0: no as.spam -> matrix
         if(identical(length(e1),1L) | identical(length(e1), length(e2@entries))) {
             e2@entries <- callGeneric(e1, e2@entries)
             return(e2)
         }
-        if( length(e1) == prod(e2@dimension))
-            return( as.spam( callGeneric(e1, as.matrix(e2))) )
         stop(gettextf("incompatible lengths for %s operation.", sQuote(.Generic)))
     }  else {
-        inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e1)))
+        inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e2)))
          return( as.spam( callGeneric(e1, as.matrix(e2))) )
     }
 }
 "spam_Arith_spamvector" <- function(e1, e2){
 #    cat("spam_Arith_spamvector")
     if(getOption("spam.structurebased")) {
+        if( isTRUE(all.equal(length(e1@entries), prod(e1@dimension))))  # spam is full
+            return( as.spam( callGeneric(as.matrix(e1), e2)) )          # 3.0: no as.spam -> matrix
         if(identical(length(e2),1L) | identical(length(e2), length(e1@entries))) {
             e1@entries <- callGeneric(e1@entries, e2)
             return(e1)
         }
-        if( length(e2)== prod(e1@dimension))
-            return( as.spam( callGeneric(as.matrix(e1), e2)) )
         stop(gettextf("incompatible lengths for %s operation.", sQuote(.Generic)))
      }  else {
         inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e1)))
         return( as.spam( callGeneric(as.matrix(e1), e2)) )
     }
+}
+"spam_Arith_matrixspam" <- function(e1, e2){
+  #    cat("spam_Arith_matrixspam")
+  if( identical( e2@dimension, dim(e1))) {
+    if(getOption("spam.structurebased")) {
+      return( as.spam( callGeneric(e1, as.matrix(e2))) )          # 3.0: no as.spam -> matrix
+    }  else {
+      inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e2)))
+      return( as.spam( callGeneric(e1, as.matrix(e2))) )
+    }
+  }
+  stop(gettextf("incompatible dimensions for %s operation.", sQuote(.Generic)))
+}
+"spam_Arith_spammatrix" <- function(e1, e2){
+  #    cat("spam_Arith_spammatrix")
+  if( identical( e1@dimension, dim(e2))) {
+    if(getOption("spam.structurebased")) {
+      return( as.spam( callGeneric(as.matrix(e1), e2)) )          # 3.0: no as.spam -> matrix
+    }  else {
+      inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)), prod(dim(e1)))
+      return( as.spam( callGeneric(as.matrix(e1), e2)) )
+    }
+  }
+  stop(gettextf("incompatible dimensions for %s operation.", sQuote(.Generic)))
 }
 spam_Arith <- function(e1,e2) {
     inefficiencywarning( gettextf("This %s operation may be inefficient",sQuote(.Generic)),  max(prod(dim(e1)), prod(dim(e2))))
@@ -271,9 +349,12 @@ spam_Arith <- function(e1,e2) {
 setMethod("Arith",signature(e1="spam",e2="spam"),   spam_Arith )
 setMethod("Arith",signature(e1="spam",e2="vector"), spam_Arith_spamvector)
 setMethod("Arith",signature(e1="vector",e2="spam"), spam_Arith_vectorspam)
+setMethod("Arith",signature(e1="spam",e2="matrix"), spam_Arith_spammatrix)
+setMethod("Arith",signature(e1="matrix",e2="spam"), spam_Arith_matrixspam)
 
-setMethod("/",signature(e1="spam",e2="spam"), function(e1,e2){ "/"(e1,as.matrix(e2)) } )
-setMethod("^",signature(e1="spam",e2="spam"), function(e1,e2){ "^"(e1,as.matrix(e2)) } )
+setMethod("/",signature(e1="spam",e2="spam"),   function(e1,e2){ "/"(e1,as.matrix(e2)) } )
+setMethod("/",signature(e1="matrix",e2="spam"), function(e1,e2){ "/"(e1,as.matrix(e2)) } )
+setMethod("^",signature(e1="spam",e2="spam"),   function(e1,e2){ "^"(e1,as.matrix(e2)) } )
 
 
 ######################################################################

@@ -1,5 +1,6 @@
 #include <R.h>
 #include <R_ext/Lapack.h>
+#include <Rinternals.h>
 #include <R_ext/RS.h>
 #include <stdlib.h> // for NULL
 #include <R_ext/Rdynload.h>
@@ -166,9 +167,23 @@ static const R_FortranMethodDef FortranEntries[] = {
     {NULL, NULL, 0}
 };
 
+
+
+
+
+/* .Call calls */
+extern SEXP _spam_closestdistCpp(SEXP, SEXP, SEXP, SEXP , SEXP, SEXP);
+
+static const R_CallMethodDef CallEntries[] = {
+  {"_spam_closestdistCpp", (DL_FUNC) &_spam_closestdistCpp, 6},
+  {NULL, NULL, 0}
+};
+
+
+
 void R_init_spam(DllInfo *dll)
 {
-  R_registerRoutines(dll, NULL, NULL, FortranEntries, NULL);
+  R_registerRoutines(dll, NULL, CallEntries, FortranEntries, NULL);
   R_useDynamicSymbols(dll, FALSE);
 }
 

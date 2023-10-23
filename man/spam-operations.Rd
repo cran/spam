@@ -57,6 +57,7 @@
 \alias{/,spam,spam-method}
 \alias{/,ANY,spam-method}
 \alias{/,spam,ANY-method}
+\alias{/,matrix,spam-method}
 \alias{^,spam,spam-method}
 \alias{^,ANY,spam-method}
 \alias{^,spam,ANY-method}

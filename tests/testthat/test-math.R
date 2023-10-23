@@ -12,6 +12,7 @@
 rm(list = ls())
 source("helper.R")
 
+## source("tests/testthat/helper.R")
 ## library("testthat")
 ## library("spam64", lib.loc = LIB.LOC)
 ## library("spam", lib.loc = LIB.LOC)
@@ -69,8 +70,8 @@ test_that("math", {
                                         # str(A) # is what needs to be expected...,
                                         # different to spam:::complement.spam(A)
 })
-    
-    
+
+
 
 
 
@@ -97,7 +98,7 @@ test_that("math Summary", {
 test_that("Math2", {
     spamtest_eq(round(ss), round(tt))
     spamtest_eq(signif(ss), signif(tt))
-    
+
 #     ‘Math’ ‘"abs"’, ‘"sign"’, ‘"sqrt"’, ‘"ceiling"’, ‘"floor"’,
 #          ‘"trunc"’, ‘"log1p"’
 #          ‘"asin"’, ‘"asinh"’, ‘"atan"’, ‘"atanh"’, ‘"expm1"’,
@@ -113,57 +114,132 @@ test_that("Math2", {
     spamtest_eq(abs(ss), abs(tt))
     spamtest_eq(cos(ss), cos(tt))
     spamtest_eq(cosh(ss), cosh(tt))
-    
+
 
     options(spam.NAOK=TRUE) # test for equivalence!
-    
+
     expect_equal(suppressWarnings(c(gamma(tt))), suppressWarnings(c(gamma(ss))), rel = FALSE)  #
     expect_equal(c(suppressWarnings(digamma(ss))), suppressWarnings(c(digamma(tt)))) #
     expect_equal(c(trigamma(ss)), c(trigamma(tt)))
     spamtest_eq(exp(ss), exp(tt))
     spamtest_eq(expm1(ss), expm1(tt))
-    
-    
+
+
     expect_equal(c(log(ss)), c(log(tt)))
     spamtest_eq(cummax(ss), cummax(tt))
-    
-    ## TODO 
+
+    ## TODO
     ## for (f in getGroupMembers("Math"))
     ##     spamtest_eq(do.call(f, list(ss)),
     ##                  do.call(f, list(tt)), relative = FALSE)
-    
- 
+
+
 
 
     for ( i in c(TRUE, FALSE)) {
-        options(spam.structurebased=i) 
-        
+        options(spam.structurebased=i)
+
         set.seed(122)
         S1 <- spam_random(5, nnz=10)
         S2 <- spam_random(5, nnz=10)
         F1 <- as.matrix(S1)
         F2 <- as.matrix(S2)
-        
+
         spamtest_eq(S1+S2, F1+F2)
         spamtest_eq(S1+F2, F1+F2)
         spamtest_eq(F1+S2, F1+F2)
-        
+
         spamtest_eq(S1-S2, F1-F2)
         spamtest_eq(S1-F2, F1-F2)
         spamtest_eq(F1-S2, F1-F2)
-        
+
         S1 <- spam_random(5, nnz=0)
         S2 <- spam_random(5, nnz=10)
         F1 <- as.matrix(S1)
         F2 <- as.matrix(S2)
-        
+
         spamtest_eq(S1+S2, F1+F2)
         spamtest_eq(S1+F2, F1+F2)
         spamtest_eq(F1+S2, F1+F2)
-        
+
         spamtest_eq(S1-S2, F1-F2)
         spamtest_eq(S1-F2, F1-F2)
         spamtest_eq(F1-S2, F1-F2)
     }
 })
+
+test_that("Bug 2.9.2", {
+
+e1 <- matrix( 1:12, 3)
+e2 <- -spam( 1:12,3)
+e3 <- spam_random(3,4)
+
+     spamtest_eq( e1+ e2, e1+ as.matrix(e2), relative=FALSE) # covered previously
+     spamtest_eq( e1- e2, e1- as.matrix(e2), relative=FALSE) # covered previously
+     spamtest_eq( e1+ e3, e1+ as.matrix(e3), relative=FALSE) # covered previously
+     spamtest_eq( e1- e3, e1- as.matrix(e3), relative=FALSE) # covered previously
+
+
+     spamtest_eq( e1* e2, e1* as.matrix(e2), relative=FALSE)
+     spamtest_eq( e1/ e2, e1/ as.matrix(e2), relative=FALSE)
+     spamtest_eq( e1^ e2, e1^ as.matrix(e2), relative=FALSE)
+     spamtest_eq( e1& e2, e1& as.matrix(e2), relative=FALSE)
+     spamtest_eq( e1| e2, e1| as.matrix(e2), relative=FALSE)
+
+     spamtest_eq( e1* e3, e1* as.matrix(e3), relative=FALSE)
+#     spamtest_eq( e1/ e3, e1/ as.matrix(e3), relative=FALSE)  # will fly in 3.
+      spamtest_eq( e3/e1, as.matrix(e3)/e1, relative=FALSE)
+    spamtest_eq( e1^ e3, e1^ as.matrix(e3), relative=FALSE)
+     spamtest_eq( e1& e3, e1& as.matrix(e3), relative=FALSE)
+     spamtest_eq( e1| e3, e1| as.matrix(e3), relative=FALSE)
+
+
+
+})
+
+
+options(spam.structurebased=TRUE) # test for equivalence!
+
+test_that("Bug 2.10-0", {
+
+  set.seed(3)
+  e1 <- matrix( 1:12, 3)
+  e2 <- -spam( 1:12,3)
+  e3 <- spam_random(3,4)
+
+  spamtest_eq( e1+ e2, e1+ as.matrix(e2), relative=FALSE)
+  spamtest_eq( e1- e2, e1- as.matrix(e2), relative=FALSE)
+  spamtest_eq( e1+ e3, e1+ as.matrix(e3), relative=FALSE)
+  spamtest_eq( e1- e3, e1- as.matrix(e3), relative=FALSE)
+
+
+  spamtest_eq( e1* e2, e1* as.matrix(e2), relative=FALSE)
+  spamtest_eq( e1/ e2, e1/ as.matrix(e2), relative=FALSE)
+  spamtest_eq( e2/ e1, e2/ as.matrix(e1), relative=FALSE)
+  spamtest_eq( e1^ e2, e1^ as.matrix(e2), relative=FALSE)
+
+  spamtest_eq( e1& e2, e1& as.matrix(e2), relative=FALSE)
+  spamtest_eq( e1| e2, e1| as.matrix(e2), relative=FALSE)
+  spamtest_eq( e2& e1, e2& as.matrix(e1), relative=FALSE)
+  spamtest_eq( e2| e1, e2| as.matrix(e1), relative=FALSE)
+
+  spamtest_eq( e1* e3, e1* as.matrix(e3), relative=FALSE)
+  spamtest_eq( e1/ e3, e1/ as.matrix(e3), relative=FALSE)
+  spamtest_eq( e3/ e1, as.matrix(e3)/ e1, relative=FALSE)
+  spamtest_eq( e1^ e3, e1^ as.matrix(e3), relative=FALSE)
+  spamtest_eq( e1& e3, e1& as.matrix(e3), relative=FALSE)
+  spamtest_eq( e1| e3, e1| as.matrix(e3), relative=FALSE)
+
+  spamtest_eq( e3* e1, e3* as.matrix(e1), relative=FALSE)
+  spamtest_eq( e3/ e1, e3/ as.matrix(e1), relative=FALSE)
+  spamtest_eq( e1/ e3, as.matrix(e1)/ e3, relative=FALSE)
+  spamtest_eq( e3^ e1, e3^ as.matrix(e1), relative=FALSE)
+  spamtest_eq( e3& e1, e3& as.matrix(e1), relative=FALSE)
+  spamtest_eq( e3| e1, e3| as.matrix(e1), relative=FALSE)
+
+
+
+})
+
+
 

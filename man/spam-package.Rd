@@ -12,7 +12,7 @@
 
 
 \name{spam-package}
-\alias{overview}
+\alias{spam-package}
 \alias{SPAM}
 \alias{Spam}
 \alias{. SPAM .}

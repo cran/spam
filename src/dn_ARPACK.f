@@ -1,4 +1,7 @@
+c     Modifications:
+c     2023-10-17: eliminated all kind=4 occurences.
 c
+c      
 c dneupd.f
 c dnaupd.f
 c dnaup2.f
@@ -351,7 +354,7 @@ c
      &           one, zero
       parameter (one = 1.0D+0 , zero = 0.0D-5 )
 c
-      integer
+      integer(4)
      &           ione
       parameter (ione = 1)
 c
@@ -609,17 +612,17 @@ c        | Make a copy of the upper Hessenberg matrix.               |
 c        | Initialize the Schur vector matrix Q to the identity.     |
 c        %-----------------------------------------------------------%
 c
-         call dcopy (ldh*ncv, workl(ih), int(ione, kind=4),
-     &               workl(iuptri), int(ione, kind=4))
+         call dcopy (ldh*ncv, workl(ih), ione,
+     &               workl(iuptri), ione)
          call dlaset ('All', ncv, ncv,
      &                zero , one, workl(invsub),
      &                ldq)
          call dlahqr (.true., .true.       , ncv,
-     &                int(ione, kind=4), ncv, workl(iuptri),
+     &                ione, ncv, workl(iuptri),
      &                ldh   , workl(iheigr), workl(iheigi),
-     &                int(ione, kind=4), ncv, workl(invsub),
+     &                ione, ncv, workl(invsub),
      &                ldq   , ierr)
-         call dcopy (ncv, workl(invsub+ncv-1), int(ldq, kind=4),
+         call dcopy (ncv, workl(invsub+ncv-1), ldq,
      &               workl(ihbds), 1)
 c
          if (ierr .ne. 0) then
@@ -657,8 +660,8 @@ c        | to compute the Ritz estimates of      |
 c        | converged Ritz values.                |
 c        %---------------------------------------%
 c
-         call dcopy (ncv, workl(invsub+ncv-1), int(ldq, kind=4),
-     &               workl(ihbds), int(ione, kind=4))
+         call dcopy (ncv, workl(invsub+ncv-1), ldq, 
+     &               workl(ihbds), ione)
 c
 c        %----------------------------------------------------%
 c        | Place the computed eigenvalues of H into DR and DI |
@@ -711,9 +714,9 @@ c           %---------------------------------------------------%
 c
             if (workl(invsub+(j-1)*ldq+j-1) .lt. zero) then
                call dscal (nconv, -one, workl(iuptri+j-1),
-     &                     int(ldq, kind=4))
+     &                     ldq)
                call dscal (nconv, -one, workl(iuptri+(j-1)*ldq),
-     &                     int(ione, kind=4))
+     &                     ione)
             end if
 c
  20      continue
@@ -762,9 +765,9 @@ c                 | real eigenvalue case |
 c                 %----------------------%
 c
                   temp = dnrm2 ( ncv, workl(invsub+(j-1)*ldq),
-     &                          int(ione, kind=4))
+     &                          ione)
                   call dscal ( ncv, one / temp,
-     &                 workl(invsub+(j-1)*ldq), int(ione, kind=4) )
+     &                 workl(invsub+(j-1)*ldq), ione )
 c
                else
 c
@@ -785,10 +788,10 @@ c
      &                                   1))
                      call dscal (ncv, one/temp,
      &                           workl(invsub+(j-1)*ldq),
-     &                           int(ione, kind=4))
+     &                           ione)
                      call dscal (ncv, one/temp,
      &                           workl(invsub+j*ldq),
-     &                           int(ione, kind=4) )
+     &                           ione )
                      iconj = 1
                   else
                      iconj = 0
@@ -799,7 +802,7 @@ c
  40         continue
 c
             call dgemv ('T', ncv, nconv, one, workl(invsub),
-     &               ldq, workl(ihbds), int(ione, kind=4),
+     &               ldq, workl(ihbds), ione,
      &               zero, workev(ione), 1)
 c
             iconj = 0
@@ -881,7 +884,7 @@ c
       if (type .eq. 'REGULR') then
 c
          if (rvec)
-     &      call dscal (ncv, rnorm, workl(ihbds), int(ione, kind=4))
+     &      call dscal (ncv, rnorm, workl(ihbds), ione)
 c
       else
 c
@@ -894,7 +897,7 @@ c
          if (type .eq. 'SHIFTI') then
 c
             if (rvec)
-     &         call dscal (ncv, rnorm, workl(ihbds), int(ione, kind=4))
+     &         call dscal (ncv, rnorm, workl(ihbds), ione)
 c
             do 50 k=1, ncv
                temp = dlapy2 ( workl(iheigr+k-1),
@@ -1851,8 +1854,8 @@ c
       Double precision
      &           zero
       parameter (zero = 0.0D+0)
-      integer
-     &           dnazero, ione
+      integer    dnazero
+      integer(4) ione
       parameter (dnazero = 0, ione = 1)
 
 c
@@ -2552,7 +2555,7 @@ c
       Double precision
      &           one, zero
       parameter (one = 1.0D+0, zero = 0.0D+0)
-      integer ione
+      integer(4)  ione
       parameter (ione = 1)
 c
 c     %------------------------%
@@ -2910,11 +2913,11 @@ c     %--------------------------------------------------%
 c
       do 120 j=1,kev
          if ( h(j+1,j) .lt. zero ) then
-            call dscal( kplusp-j+1, -one, h(j+1,j), int(ldh, kind=4))
+            call dscal( kplusp-j+1, -one, h(j+1,j), ldh)
             call dscal( min(j+2, kplusp), -one, h(1,j+1),
-     &                  int(ione, kind=4))
+     &                  ione)
             call dscal( min(j+np+1,kplusp), -one, q(1,j+1),
-     &                  int(ione, kind=4))
+     &                  ione)
 cv              call dscal( min(j+2, kplusp), -one, h(1,j+1), 1 )
 cv              call dscal( min(j+np+1,kplusp), -one, q(1,j+1), 1 )
          end if
@@ -2980,7 +2983,7 @@ c     |    sigmak = (e_{kplusp}'*Q)*e_{kev} |
 c     |    betak = e_{kev+1}'*H*e_{kev}     |
 c     %-------------------------------------%
 c
-      call dscal (n, q(kplusp,kev), resid(1), int(ione, kind=4))
+      call dscal (n, q(kplusp,kev), resid(1), ione)
       if (h(kev+1,kev) .gt. zero)
      &   call daxpy (n, h(kev+1,kev), v(1,kev+1), 1, resid, 1)
 c
@@ -3603,7 +3606,7 @@ c
      &           one, zero
       parameter (one = 1.0D+0, zero = 0.0D+0)
 c
-      integer
+      integer(4)
      &           ione
       parameter (ione = 1)
 
@@ -3702,7 +3705,7 @@ c           | Real eigenvalue case |
 c           %----------------------%
 c
             temp = dnrm2( n, q(1,i), 1 )
-            call dscal ( n, one / temp, q(1,i), int(ione, kind=4) )
+            call dscal ( n, one / temp, q(1,i), ione )
          else
 c
 c           %-------------------------------------------%
@@ -3717,9 +3720,9 @@ c
                temp = dlapy2( dnrm2( n, q(1,i), 1 ),
      &                        dnrm2( n, q(1,i+1), 1 ) )
                call dscal ( n, one / temp, q(1,i),
-     &                      int(ione, kind=4) )
+     &                      ione )
                call dscal ( n, one / temp, q(1,i+1),
-     &                      int(ione, kind=4) )
+     &                      ione )
                iconj = 1
             else
                iconj = 0
@@ -3910,7 +3913,7 @@ c
       parameter (zero = 0.0D+0, one = 1.0D+0, dat1 = 7.5D-1,
      &           dat2 = -4.375D-1)
 c
-      integer    ione
+      integer(4) ione
       parameter (ione = 1)
 c
 c     %------------------------%
@@ -4771,7 +4774,7 @@ c
       integer    dnaitrone
       parameter (dnaitrone = 1)
 c
-      integer
+      integer(4)
      &           ione
       parameter (ione = 1)
 c
@@ -4955,8 +4958,8 @@ c
          call dcopy (n, resid, 1, v(1,j), 1)
          if (rnorm .ge. unfl) then
              temp1 = one / rnorm
-             call dscal (n, temp1, v(1,j), int(ione, kind=4))
-             call dscal (n, temp1, workd(ipj), int(ione, kind=4))
+             call dscal (n, temp1, v(1,j), ione)
+             call dscal (n, temp1, workd(ipj), ione)
          else
 c
 c            %-----------------------------------------%

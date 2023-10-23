@@ -33,14 +33,15 @@
 
 \usage{
 
-     crossprod.spam(x, y = NULL)
+     crossprod.spam(x, y = NULL, \dots)
      
-     tcrossprod.spam(x, y = NULL)
+     tcrossprod.spam(x, y = NULL, \dots)
 }
 \arguments{
   \item{x, y}{matrices: \code{y = NULL} is taken to be the
           same matrix as \code{x}.  Vectors are promoted to single-column or
           single-row matrices, depending on the context.}
+  \item{\dots}{potentially further arguments from other methods.}
 }
 \value{A double matrix}
 \note{

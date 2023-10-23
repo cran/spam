@@ -1,9 +1,54 @@
+# spam 3.0  (UPCOMING)
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* `eps`, the tolerance parameter determining which elements are set to zero has been increased. 
+New default is `spam.eps=100*.Machine$double.eps`
+
+* Operations from S4 Group Generic Functions `Logic` and `Arith` now all return a 
+regular matrix if one of the objects is a full `spam` object.
+
+
+
+
+
+# spam 2.9.2
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* `nearest.dist()` has now a super fast Rcpp implementation by Annina Cincera.
+
+BUG FIXES
+
+* One particular operation from S4 Group Generic Functions `Arith` yielded wrong
+results if the sparse matrix was full, see below. (Thanks to Ethan Heinzen.)
+
+INTERNAL CHANGES
+
+* Changes in `CITATION` according to new format.
+
+* Eliminated `kind` constructs in the Fortran code (addressing `_R_CHECK_FORTRAN_KIND_DETAILS_`)
+
+* Added `...` argument to `[t]crossprod.spam()` as by generic.
+
+
+
+# spam 2.9.2
+
+BUG FIXES
+
+* Certain operations from S4 Group Generic Functions `Logic` and `Arith` yielded wrong
+results if the sparse matrix was full. (Thanks to Ethan Heinzen.)
+
+
+
 # spam 2.9.1
 
 BUG FIXES
 
 * Use of `## IGNORE_RDIFF_BEGIN` and `eps=1e-15` in the help files to assure coherence
 among different systems.  
+
 
 
 # spam 2.9.0

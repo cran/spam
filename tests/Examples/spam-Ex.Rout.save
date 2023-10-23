@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2022-08-06 r82693) -- "Unsuffered Consequences"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R Under development (unstable) (2023-10-04 r85267) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -21,7 +21,7 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('spam')
-Spam version 2.9-1 (2022-08-07) is loaded.
+Spam version 2.10-0 (2023-10-23) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -2109,7 +2109,6 @@ Class 'spam' (32-bit)
 > 
 > require(fields)
 Loading required package: fields
-Loading required package: viridis
 Loading required package: viridisLite
 
 Try help(fields) to get started.
@@ -2128,7 +2127,7 @@ Try help(fields) to get started.
 > 
 > cleanEx()
 
-detaching ‘package:fields’, ‘package:viridis’, ‘package:viridisLite’
+detaching ‘package:fields’, ‘package:viridisLite’
 
 > nameEx("rmvnorm")
 > ### * rmvnorm
@@ -2367,13 +2366,13 @@ Class 'spam' (32-bit)
 > ###   -,matrix,spam-method -,spam,matrix-method -,ANY,spam-method
 > ###   -,spam,ANY-method *,spam,spam-method *,ANY,spam-method
 > ###   *,spam,ANY-method /,spam,spam-method /,ANY,spam-method
-> ###   /,spam,ANY-method ^,spam,spam-method ^,ANY,spam-method
-> ###   ^,spam,ANY-method &,spam,ANY-method &,spam,spam-method
-> ###   &,ANY,spam-method |,spam,ANY-method |,ANY,spam-method
-> ###   |,spam,spam-method ^,spam-method %%,spam-method %/%,spam-method
-> ###   >,spam-method >=,spam-method <,spam-method <=,spam-method
-> ###   ==,spam-method !=,spam-method norm norm.spam norm,ANY-method
-> ###   norm,spam,character-method norm,spam,missing-method
+> ###   /,spam,ANY-method /,matrix,spam-method ^,spam,spam-method
+> ###   ^,ANY,spam-method ^,spam,ANY-method &,spam,ANY-method
+> ###   &,spam,spam-method &,ANY,spam-method |,spam,ANY-method
+> ###   |,ANY,spam-method |,spam,spam-method ^,spam-method %%,spam-method
+> ###   %/%,spam-method >,spam-method >=,spam-method <,spam-method
+> ###   <=,spam-method ==,spam-method !=,spam-method norm norm.spam
+> ###   norm,ANY-method norm,spam,character-method norm,spam,missing-method
 > ###   norm,numeric,missing-method norm,numeric,character-method
 > ###   norm,matrix,missing-method norm,matrix,character-method t.spam
 > ###   ncol,spam-method nrow,spam-method dim,ANY-method dim,spam-method
@@ -2413,18 +2412,17 @@ Class 'spam' (32-bit)
 > 
 > ### Name: spam-package
 > ### Title: SPArse Matrix Package
-> ### Aliases: overview SPAM Spam '. SPAM .'
+> ### Aliases: spam-package SPAM Spam '. SPAM .'
 > ### Keywords: documentation package
 > 
 > ### ** Examples
 > 
 > ## Citations:
 > citation('spam')
-
 To cite `spam` in publications use:
 
-  Furrer, R., Flury R. and Gerber, F. (2022).  spam: SPArse Matrix. R
-  package version 2.9-1.  URL https://CRAN.R-project.org/package=spam
+  Furrer, R., Flury R. and Gerber, F. (2023).  spam: SPArse Matrix. R
+  package version 2.10-0.  URL https://CRAN.R-project.org/package=spam
 
   Reinhard Furrer, Stephan R. Sain (2010). spam: A Sparse Matrix R
   Package with Emphasis on MCMC Methods for Gaussian Markov Random
@@ -2445,26 +2443,21 @@ To cite `spam` in publications use:
 To see these entries in BibTeX format, use 'print(<citation>,
 bibtex=TRUE)', 'toBibtex(.)', or set
 'options(citation.bibtex.max=999)'.
-
 > citation('spam', auto=TRUE)
-
 To cite package ‘spam’ in publications use:
 
-  Furrer R, Gerber F, Flury R (2022). _spam: SPArse Matrix_. R package
-  version 2.9-1, <https://www.math.uzh.ch/pages/spam/>.
+  Furrer R, Gerber F, Flury R (2023). _spam: SPArse Matrix_. R package
+  version 2.10-0, <https://www.math.uzh.ch/pages/spam/>.
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
     title = {spam: SPArse Matrix},
     author = {Reinhard Furrer and Florian Gerber and Roman Flury},
-    year = {2022},
-    note = {R package version 2.9-1},
+    year = {2023},
+    note = {R package version 2.10-0},
     url = {https://www.math.uzh.ch/pages/spam/},
   }
-
-
-
 > 
 > 
 > ## History of changes
@@ -2563,10 +2556,10 @@ A BibTeX entry for LaTeX users is
 > ## IGNORE_RDIFF_BEGIN
 > system.time(for (i in 1:nz) smat[is[i], js[i]] <- i)
    user  system elapsed 
-  0.068   0.004   0.072 
+  0.031   0.004   0.035 
 > system.time(smat[cbind(is,js)] <- 1:nz)
    user  system elapsed 
-  0.003   0.000   0.003 
+  0.001   0.000   0.002 
 > ## IGNORE_RDIFF_END
 > 
 > getClass("spam")
@@ -2720,7 +2713,7 @@ $values
 > ### ** Examples
 > 
 > spam.version$version.string
-[1] "Spam version 2.9-1 (2022-08-07)"
+[1] "Spam version 2.10-0 (2023-10-23)"
 > 
 > 
 > 
@@ -2729,7 +2722,7 @@ $values
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  79.054 227.071 8.646 0 0 
+Time elapsed:  2.407 0.028 2.435 0 0 
 > grDevices::dev.off()
 null device 
           1 

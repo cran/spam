@@ -62,8 +62,10 @@ test_that("zero range", {
   out <- spam::mle.nomean.spam(y = (c(sampleData)), distmat = distmat, Covariance =
                           cov.mat,
                         theta0 = c(2, 1, 1, .01),
-                        thetalower = c(0, 0.1, 0.1, 0.1),
+                        thetalower = c(0, 0.1, 0.01, 0.01),
                         thetaupper = c(5, 5, 5, .2))
+
+  expect_equal(round(out$par,4), c(0, 3.5215, 0.01, 0.2))
 })
 
 

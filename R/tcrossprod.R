@@ -11,7 +11,7 @@
 
      
 
-crossprod.spam <- function(x, y=NULL) {
+crossprod.spam <- function(x, y=NULL, ...) {
     dimx <- dim(x)
     if( is.null(y)) {
         if(!is.spam(x)) return(crossprod(x))
@@ -25,7 +25,7 @@ crossprod.spam <- function(x, y=NULL) {
     return( t(x) %*% y)
     
 }
-tcrossprod.spam <- function(x, y=NULL) {
+tcrossprod.spam <- function(x, y=NULL, ...) {
     dimx <- dim(x)
     if( is.null(y)) {
         if(!is.spam(x)) return(tcrossprod(x))

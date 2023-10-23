@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2022-08-06 r82693) -- "Unsuffered Consequences"
-Copyright (C) 2022 The R Foundation for Statistical Computing
-Platform: x86_64-pc-linux-gnu (64-bit)
+R Under development (unstable) (2023-10-04 r85267) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -37,7 +37,7 @@ Type 'q()' to quit R.
 > 
 > # SETUP:
 > library("spam")
-Spam version 2.9-1 (2022-08-07) is loaded.
+Spam version 2.10-0 (2023-10-23) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -152,4 +152,4 @@ The following objects are masked from 'package:base':
 > 
 > proc.time()
    user  system elapsed 
-  1.684   2.756   1.048 
+  0.610   0.063   0.668 
