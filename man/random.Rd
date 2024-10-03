@@ -25,7 +25,9 @@ spam_random(nrow = 1L, ncol = nrow, density = 0.5, distribution = NULL, digits =
   \item{density}{A numeric value between 0 and 1 specifying the approximate density of matrix.
     If equal to zero the \code{spam} matrix contains only zeros and if equal to 1 the \code{spam} matrix is full.}
   \item{distribution}{a random number generating distribution function to sample the entries of the \code{spam} matrix.
-    The function must have an argument with the name \code{n}, possible candidates are \code{rnorm}, \code{rexp}, \code{rpois}, \code{rweibull}, etc..}
+    The function must have an argument with the name \code{n}, possible
+    candidates are \code{rnorm}, \code{rexp}, \code{rpois},
+    \code{rweibull}, etc. Default (\code{NULL}) fills with ones.}
   \item{...}{possible additional arguments for the distribution function if specified with \code{distribution}.}
   \item{digits}{an integer value for the number of digits the entries should be rounded.}
   \item{sym}{logical value to specify symmetry of the \code{spam} matrix.}

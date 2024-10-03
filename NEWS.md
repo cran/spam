@@ -8,11 +8,20 @@ New default is `spam.eps=100*.Machine$double.eps`
 * Operations from S4 Group Generic Functions `Logic` and `Arith` now all return a 
 regular matrix if one of the objects is a full `spam` object.
 
+# spam 2.11.0
+
+SIGNIFICANT USER-VISIBLE CHANGES
+
+* `rbind()` now works properly with `spam64` for two spam matrices.
+
+INTERNAL CHANGES
+
+* Minor improvements on documentation. 
+
+* Adjustements of `*.Rout.save`, according to new format.
 
 
-
-
-# spam 2.9.2
+# spam 2.10.0
 
 SIGNIFICANT USER-VISIBLE CHANGES
 

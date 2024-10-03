@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2023-10-04 r85267) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
+R Under development (unstable) (2024-10-01 r87205) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,7 +21,7 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('spam')
-Spam version 2.10-0 (2023-10-23) is loaded.
+Spam version 2.11-0 (2024-10-03) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -152,10 +152,11 @@ Class 'spam' (32-bit)
 > getGroupMembers("Math2")
 [1] "round"  "signif"
 > 
+> set.seed(12)
 > smat <- diag.spam( rnorm(15))
 > round(smat, 3)
- [1] -0.626  0.184 -0.836  1.595  0.330 -0.820  0.487  0.738  0.576 -0.305
-[11]  1.512  0.390 -0.621 -2.215  1.125
+ [1] -1.481  1.577 -0.957 -0.920 -1.998 -0.272 -0.315 -0.628 -0.106  0.428
+[11] -0.778 -1.294 -0.780  0.012 -0.152
 Class 'spam' (32-bit)
 > 
 > 
@@ -2421,23 +2422,23 @@ Class 'spam' (32-bit)
 > citation('spam')
 To cite `spam` in publications use:
 
-  Furrer, R., Flury R. and Gerber, F. (2023).  spam: SPArse Matrix. R
-  package version 2.10-0.  URL https://CRAN.R-project.org/package=spam
+  Furrer, R., Flury R. and Gerber, F. (2024).  spam: SPArse Matrix. R
+  package version 2.11-0.  doi: 10.32614/CRAN.package.spam, URL
+  https://CRAN.R-project.org/package=spam
 
-  Reinhard Furrer, Stephan R. Sain (2010). spam: A Sparse Matrix R
-  Package with Emphasis on MCMC Methods for Gaussian Markov Random
-  Fields. Journal of Statistical Software, 36(10), 1-25.
+  Furrer, R. and Sain S. R. (2010). spam: A Sparse Matrix R Package
+  with Emphasis on MCMC Methods for Gaussian Markov Random Fields.
+  Journal of Statistical Software, 36(10), 1-25.
   https://doi.org/10.18637/jss.v036.i10.
 
-  Florian Gerber, Reinhard Furrer (2015). Pitfalls in the
-  Implementation of Bayesian Hierarchical Modeling of Areal Count Data:
-  An Illustration Using BYM and Leroux Models. Journal of Statistical
-  Software, Code Snippets, 63(1), 1-32.
-  https://doi.org/10.18637/jss.v063.c01.
+  Gerber, F. and Furrer, R. (2015). Pitfalls in the Implementation of
+  Bayesian Hierarchical Modeling of Areal Count Data: An Illustration
+  Using BYM and Leroux Models. Journal of Statistical Software, Code
+  Snippets, 63(1), 1-32. https://doi.org/10.18637/jss.v063.c01.
 
-  F. Gerber, K. Moesinger, R. Furrer (2017), Extending R packages to
-  support 64-bit compiled code: An illustration with spam64 and GIMMS
-  NDVI3g data. Computer & Geoscience 104, 109-119,
+  Gerber, F., K. Moesinger, K. and Furrer, R. (2017). Extending R
+  packages to support 64-bit compiled code: An illustration with spam64
+  and GIMMS NDVI3g data. Computer & Geoscience 104, 109-119,
   https://doi.org/10.1016/j.cageo.2016.11.015.
 
 To see these entries in BibTeX format, use 'print(<citation>,
@@ -2446,16 +2447,16 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 > citation('spam', auto=TRUE)
 To cite package ‘spam’ in publications use:
 
-  Furrer R, Gerber F, Flury R (2023). _spam: SPArse Matrix_. R package
-  version 2.10-0, <https://www.math.uzh.ch/pages/spam/>.
+  Furrer R, Gerber F, Flury R (2024). _spam: SPArse Matrix_. R package
+  version 2.11-0, <https://www.math.uzh.ch/pages/spam/>.
 
 A BibTeX entry for LaTeX users is
 
   @Manual{,
     title = {spam: SPArse Matrix},
     author = {Reinhard Furrer and Florian Gerber and Roman Flury},
-    year = {2023},
-    note = {R package version 2.10-0},
+    year = {2024},
+    note = {R package version 2.11-0},
     url = {https://www.math.uzh.ch/pages/spam/},
   }
 > 
@@ -2556,10 +2557,10 @@ A BibTeX entry for LaTeX users is
 > ## IGNORE_RDIFF_BEGIN
 > system.time(for (i in 1:nz) smat[is[i], js[i]] <- i)
    user  system elapsed 
-  0.031   0.004   0.035 
+  0.028   0.013   0.041 
 > system.time(smat[cbind(is,js)] <- 1:nz)
    user  system elapsed 
-  0.001   0.000   0.002 
+  0.001   0.000   0.001 
 > ## IGNORE_RDIFF_END
 > 
 > getClass("spam")
@@ -2713,7 +2714,7 @@ $values
 > ### ** Examples
 > 
 > spam.version$version.string
-[1] "Spam version 2.10-0 (2023-10-23)"
+[1] "Spam version 2.11-0 (2024-10-03)"
 > 
 > 
 > 
@@ -2722,7 +2723,7 @@ $values
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  2.407 0.028 2.435 0 0 
+Time elapsed:  2.189 0.045 2.244 0 0 
 > grDevices::dev.off()
 null device 
           1 

@@ -41,6 +41,7 @@
 \examples{
 getGroupMembers("Math2")
 
+set.seed(12)
 smat <- diag.spam( rnorm(15))
 round(smat, 3)
 }

@@ -35,16 +35,16 @@
   column-wise or row-wise.  (Exception: if there are no inputs or all
   the inputs are \code{NULL}, the value is \code{NULL}.)}
 \details{\code{rbind} and \code{cbind} are not exactly symmetric in how
-  the objects are processed. The former is essentially an concatenation
-  of the slots due to the sparse storage format. Different types of
-  inputs are handled differently. The latter calls a
+  the objects are processed. \code{cbind} calls a
   Fortran routine after the input has been coerced to \code{spam}
-  objects. \cr
+  objects. Whereas \code{rbind} calls a Fortran routine only in the case
+  of to \code{spam} matrices. Note that row binding is essentially an concatenation
+  of the slots due to the sparse storage format.  \cr
 
   Only two objects at a time are processed. If more than two are
   present, a loop concatenates them successively. \cr
 
-  A method is defined for a  \code{spam} object as first argument. 
+  A method is defined for a \code{spam} object as first argument. 
     }
 %\references{}
 %\seealso{\code{\link{cbind,spam-method}}.}

@@ -29,6 +29,7 @@ extern void F77_NAME(pivotbacksolve   )( void *, void *, void *, void *, void *,
 extern void F77_NAME(backsolves       )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(kroneckerf       )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(dn_eigen_f       )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
+extern void F77_NAME(rbindf           )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 // 12
 extern void F77_NAME(amask            )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
 extern void F77_NAME(subass           )( void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *);
@@ -105,6 +106,7 @@ static const R_FortranMethodDef FortranEntries[] = {
     {"aemub",             (DL_FUNC) &F77_NAME(aemub             ),13},
     {"kroneckerf",        (DL_FUNC) &F77_NAME(kroneckerf        ),13},
     {"dn_eigen_f",        (DL_FUNC) &F77_NAME(dn_eigen_f        ),13},
+    {"rbindf",            (DL_FUNC) &F77_NAME(rbindf            ),13},
 
     {"subass",            (DL_FUNC) &F77_NAME(subass            ),12},
     {"amask",             (DL_FUNC) &F77_NAME(amask             ),12},

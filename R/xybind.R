@@ -14,6 +14,8 @@
 "rbind.spam" <-
 function(...,deparse.level=0)
 {
+  force64 <- getOption("spam.force64")
+
   if (deparse.level!=0) warning("Only 'deparse.level=0' implemented, coerced to zero,")
   addnargs <- ifelse(missing(deparse.level),0,1)
 
@@ -42,18 +44,70 @@ function(...,deparse.level=0)
     # Case 1: this is the quick way
     if( is.spam(args[[1]]) & is.spam(args[[2]])) {
 
-      if(ncol(args[[1]])!=ncol(args[[2]]))
+      Xdim <- args[[1]]@dimension
+      Ydim <- args[[2]]@dimension
+
+      if(Xdim[2]!=Ydim[2])
         stop("Arguments have differing numbers of columns, in rbind.spam()",call.=FALSE)
 
-      nrow1 <- args[[1]]@dimension[1]
+ #     nrow1 <- args[[1]]@dimension[1]
 
-      newx <- new("spam")
-      newx@entries <- c(args[[1]]@entries, args[[2]]@entries)
-      newx@colindices <- c(args[[1]]@colindices,  args[[2]]@colindices)
-      newx@rowpointers <- c(args[[1]]@rowpointers,
-                            args[[2]]@rowpointers[-1]+args[[1]]@rowpointers[nrow1+1]-as.integer(1))
-      newx@dimension <- c(nrow1+args[[2]]@dimension[1],args[[1]]@dimension[2])
-      return(newx)
+ #      newx <- new("spam")
+ #     newx@entries <- c(args[[1]]@entries, args[[2]]@entries)
+ #     newx@colindices <- c(args[[1]]@colindices,  args[[2]]@colindices)
+ #     newx@rowpointers <- c(args[[1]]@rowpointers,
+ #                           args[[2]]@rowpointers[-1]+args[[1]]@rowpointers[nrow1+1]-as.integer(1))
+ #     newx@dimension <- c(nrow1+args[[2]]@dimension[1],args[[1]]@dimension[2])
+ #     return(newx)
+
+      XYlen <- as.numeric(args[[1]]@rowpointers[Xdim[1]+1])+as.numeric(args[[2]]@rowpointers[Ydim[1]+1])-2
+      if(force64 || XYlen > 2147483647 || .format.spam(args[[1]])$package =="spam64" || .format.spam(args[[2]])$package =="spam64")
+          SS <- .format64()
+      else
+          SS <- .format32
+
+      #xncol,yncol, xlen, ylen,
+      #a,ia,ja, b,ib,jb, c,ic,jc
+      z <- .C64("rbindf",
+                SIGNATURE=c(SS$signature, SS$signature,SS$signature, SS$signature,
+                    "double", SS$signature, SS$signature,
+                    "double", SS$signature, SS$signature,
+                    "double", SS$signature, SS$signature),
+
+                xncol=Xdim[1],
+                yncol=Ydim[1],
+                xlen=args[[1]]@rowpointers[Xdim[1]+1]-1,
+                ylen=args[[2]]@rowpointers[Ydim[1]+1]-1,
+
+                a=args[[1]]@entries,
+                ia=args[[1]]@colindices,
+                ja=args[[1]]@rowpointers,
+
+                b=args[[2]]@entries,
+                ib=args[[2]]@colindices,
+                jb=args[[2]]@rowpointers,
+
+                entries=vector_dc("double", XYlen),
+                colindices=vector_dc(SS$type, XYlen),
+                rowpointers=vector_dc(SS$type, Xdim[1]+Ydim[1]+1),
+
+                INTENT=c("r", "r", "r", "r",
+                         "r", "r", "r",
+                         "r", "r", "r",
+                         "w", "w", "w"),
+                NAOK = getOption("spam.NAOK"),
+                PACKAGE = SS$package)
+
+      return(.newSpam(
+          entries=z$entries,
+          colindices=z$colindices,
+          rowpointers=z$rowpointers,
+          dimension=c(Xdim[1]+Ydim[1], Xdim[2]),
+          force64=force64))
+
+
+
+
     }
     # Case 2:  spam, numeric (scalar, vector, matrix)
     #    if scalar, coherce it first to vector of appropriate length,
@@ -119,7 +173,7 @@ function(...,deparse.level=0)
     # "recursive" approach only, e.g. no checking
     tmp <- rbind.spam( args[[1]],args[[2]])
     for ( i in 3:nargs)
-      tmp <- rbind.spam( tmp,args[[i]])
+      tmp <- rbind.spam( tmp, args[[i]])
     return( tmp)
   }
 }
@@ -143,7 +197,7 @@ cbind.spam <- function(..., deparse.level=0)
   nargs <- length(args) -  addnargs
   if (nargs == 0)     return( NULL)
   if (nargs == 1)     return( args[[1]])
-   if (nargs == 2) {
+  if (nargs == 2) {
 
     Ydim <- if (is.spam(args[[2]])) args[[2]]@dimension  else
           dim(args[[2]])

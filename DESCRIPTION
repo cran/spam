@@ -1,8 +1,8 @@
 Package: spam
 Type: Package
 Title: SPArse Matrix
-Version: 2.10-0
-Date: 2023-10-23
+Version: 2.11-0
+Date: 2024-10-03
 Authors@R: c(person("Reinhard", "Furrer", role = c("aut", "cre"),
                     email = "reinhard.furrer@math.uzh.ch",
                     comment = c(ORCID = "0000-0002-6319-2332")),
@@ -16,7 +16,7 @@ Authors@R: c(person("Reinhard", "Furrer", role = c("aut", "cre"),
                     email = "daniel_gerber_2222@hotmail.com"),
              person("Kaspar", "Moesinger", role = "ctb",
                     email = "kaspar.moesinger@gmail.com"),
-	     person("Cincera", "Annina", email = "annina.cincera@math.uzh.ch", role = "ctb"),
+             person("Annina", "Cincera", email = "annina.cincera@math.uzh.ch", role = "ctb"),
              person("Youcef", "Saad", role = "ctb",
                     comment = "SPARSEKIT http://www-users.cs.umn.edu/~saad/software/SPARSKIT/"),
              person(c("Esmond", "G."), "Ng", role = "ctb",
@@ -35,7 +35,7 @@ Authors@R: c(person("Reinhard", "Furrer", role = c("aut", "cre"),
                     comment = "ARPACK"),
              person(c("Yang"), "Chao", role = "ctb",
                     comment = "ARPACK"))
-Depends: R (>= 3.5)
+Depends: R (>= 4.0)
 Imports: dotCall64, grid, methods, Rcpp (>= 1.0.8.3)
 LinkingTo: Rcpp
 Suggests: spam64, fields, Matrix, testthat, R.rsp, truncdist, knitr,
@@ -53,13 +53,13 @@ License: LGPL-2 | BSD_3_clause + file LICENSE
 URL: https://www.math.uzh.ch/pages/spam/
 BugReports: https://git.math.uzh.ch/reinhard.furrer/spam/-/issues
 NeedsCompilation: yes
-Packaged: 2023-10-23 07:47:45 UTC; furrer
+Packaged: 2024-10-03 12:35:06 UTC; furrer
 Author: Reinhard Furrer [aut, cre] (<https://orcid.org/0000-0002-6319-2332>),
   Florian Gerber [aut] (<https://orcid.org/0000-0001-8545-5263>),
   Roman Flury [aut] (<https://orcid.org/0000-0002-0349-8698>),
   Daniel Gerber [ctb],
   Kaspar Moesinger [ctb],
-  Cincera Annina [ctb],
+  Annina Cincera [ctb],
   Youcef Saad [ctb] (SPARSEKIT
     http://www-users.cs.umn.edu/~saad/software/SPARSKIT/),
   Esmond G. Ng [ctb] (Fortran Cholesky routines),
@@ -72,4 +72,4 @@ Author: Reinhard Furrer [aut, cre] (<https://orcid.org/0000-0002-6319-2332>),
   Yang Chao [ctb] (ARPACK)
 Maintainer: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Repository: CRAN
-Date/Publication: 2023-10-23 09:30:02 UTC
+Date/Publication: 2024-10-03 23:00:10 UTC
