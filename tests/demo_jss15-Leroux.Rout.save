@@ -27,7 +27,7 @@ Type 'q()' to quit R.
 > # HEADER END ################################################
 > 
 > options( echo=FALSE)
-Spam version 2.11-0 (2024-10-03) is loaded.
+Spam version 2.11-1 (2025-01-20) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -57,4 +57,4 @@ Loading required package: evd
 > 
 > proc.time()
    user  system elapsed 
-  1.015   0.050   1.071 
+  1.066   0.043   1.131 

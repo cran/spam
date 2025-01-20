@@ -4,11 +4,11 @@ citHeader("To cite `spam` in publications use:")
 bibentry(bibtype = "Manual", year = "2024",
   title        = "{spam}: SPArse Matrix",
   author       = c(as.person("Reinhard Furrer"), as.person("Roman Flury"), as.person("Florian Gerber")),
-  note = "R package version 2.11-0",
+  note = "R package version 2.11-1",
   url = {"https://CRAN.R-project.org/package=spam"},
   doi = {"10.32614/CRAN.package.spam"},
-  textVersion  = paste("Furrer, R., Flury R. and Gerber, F. (2024).
-                       spam: SPArse Matrix. R package version 2.11-0.
+  textVersion  = paste("Furrer, R., Flury R. and Gerber, F. (2025).
+                       spam: SPArse Matrix. R package version 2.11-1.
 		       doi: 10.32614/CRAN.package.spam,
                        URL https://CRAN.R-project.org/package=spam"),
 )

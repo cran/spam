@@ -37,7 +37,7 @@ Type 'q()' to quit R.
 > 
 > # SETUP:
 > library("spam")
-Spam version 2.11-0 (2024-10-03) is loaded.
+Spam version 2.11-1 (2025-01-20) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -152,4 +152,4 @@ The following objects are masked from 'package:base':
 > 
 > proc.time()
    user  system elapsed 
-  0.607   0.049   0.651 
+  0.620   0.062   0.677 

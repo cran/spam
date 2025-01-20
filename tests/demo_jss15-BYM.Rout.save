@@ -28,7 +28,7 @@ Type 'q()' to quit R.
 >      
 > 
 > options( echo=FALSE)
-Spam version 2.11-0 (2024-10-03) is loaded.
+Spam version 2.11-1 (2025-01-20) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -47,4 +47,4 @@ suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
 > 
 > proc.time()
    user  system elapsed 
-  0.608   0.051   0.653 
+  0.633   0.057   0.684 

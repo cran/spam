@@ -40,7 +40,7 @@ Type 'q()' to quit R.
 > 
 > # SETUP:
 > library("spam")
-Spam version 2.11-0 (2024-10-03) is loaded.
+Spam version 2.11-1 (2025-01-20) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -253,4 +253,4 @@ default value for 'cex' in 'display' might not be the optimal choice
 > 
 > proc.time()
    user  system elapsed 
-  0.709   0.032   0.744 
+  0.751   0.040   0.794 
