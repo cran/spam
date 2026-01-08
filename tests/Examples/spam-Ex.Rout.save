@@ -1,0 +1,2679 @@
+
+R Under development (unstable) (2025-12-12 r89155) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "spam"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('spam')
+Spam version 2.11-3 (2026-01-05) is loaded.
+Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+and overview of this package.
+Help for individual functions is also obtained by adding the
+suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+
+Attaching package: ‘spam’
+
+The following objects are masked from ‘package:base’:
+
+    backsolve, forwardsolve
+
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("Coercion")
+> ### * Coercion
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Coercion
+> ### Title: Coercion to a Vector
+> ### Aliases: as.vector as.vector.spam as.vector,spam-method
+> ###   as.vector,spam.chol.NgPeyton-method
+> ### Keywords: manip
+> 
+> ### ** Examples
+> 
+> x <- diag(2)
+> ifelse( x, x, 1-x)
+     [,1] [,2]
+[1,]    1    1
+[2,]    1    1
+> ifelse( x, as.vector(x), 1-as.vector(x))
+     [,1] [,2]
+[1,]    1    1
+[2,]    1    1
+> 
+> x <- diag.spam(2)
+> options(spam.structurebased=FALSE)
+> ifelse( x, as.vector(x), 1-as.vector(x))
+[1] 1 1 1 1
+> options(spam.structurebased=TRUE)
+> ifelse( x, as.vector(x), 1-as.vector(x))
+[1] 1 1
+> 
+> 
+> 
+> cleanEx()
+> nameEx("Math")
+> ### * Math
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Math
+> ### Title: Mathematical Functions
+> ### Aliases: Math Math.spam Math,spam-method ceiling.spam
+> ###   ceiling,spam-method floor.spam floor,spam-method trunc.spam
+> ###   trunc,spam-method exp.spam exp,spam-method log.spam log,spam-method
+> ###   log2.spam log2,spam-method log10.spam log10,spam-method sqrt.spam
+> ###   sqrt,spam-method gamma.spam gamma,spam-method digamma.spam
+> ###   digamma,spam-method trigamma.spam trigamma,spam-method lgamma.spam
+> ###   lgamma,spam-method abs.spam abs,spam-method cumprod.spam
+> ###   cumprod,spam-method cumsum.spam cumsum,spam-method cummax.spam
+> ###   cummax,spam-method cummin.spam cummin,spam-method cos.spam
+> ###   cos,spam-method cosh.spam cosh,spam-method acos.spam acos,spam-method
+> ###   acosh.spam acosh,spam-method sin.spam sin,spam-method asin.spam
+> ###   asin,spam-method asinh.spam asinh,spam-method tan.spam
+> ###   tan,spam-method atan.spam atan,spam-method atanh.spam
+> ###   atanh,spam-method
+> ### Keywords: manip
+> 
+> ### ** Examples
+> 
+> getGroupMembers("Math")
+ [1] "abs"      "sign"     "sqrt"     "ceiling"  "floor"    "trunc"   
+ [7] "cummax"   "cummin"   "cumprod"  "cumsum"   "exp"      "expm1"   
+[13] "log"      "log10"    "log2"     "log1p"    "cos"      "cosh"    
+[19] "sin"      "sinh"     "tan"      "tanh"     "acos"     "acosh"   
+[25] "asin"     "asinh"    "atan"     "atanh"    "cospi"    "sinpi"   
+[31] "tanpi"    "gamma"    "lgamma"   "digamma"  "trigamma"
+> 
+> mat <- matrix(c( 1,2,0,3,0,0,0,4,5),3)
+> smat <- as.spam( mat)
+> cos( mat)
+           [,1]       [,2]       [,3]
+[1,]  0.5403023 -0.9899925  1.0000000
+[2,] -0.4161468  1.0000000 -0.6536436
+[3,]  1.0000000  1.0000000  0.2836622
+> cos( smat)
+           [,1]       [,2]       [,3]
+[1,]  0.5403023 -0.9899925  0.0000000
+[2,] -0.4161468  0.0000000 -0.6536436
+[3,]  0.0000000  0.0000000  0.2836622
+Class 'spam' (32-bit)
+> 
+> options(spam.structurebased=FALSE)
+> cos( smat)
+           [,1]       [,2]       [,3]
+[1,]  0.5403023 -0.9899925  1.0000000
+[2,] -0.4161468  1.0000000 -0.6536436
+[3,]  1.0000000  1.0000000  0.2836622
+Class 'spam' (32-bit)
+> 
+> sqrt( smat)
+         [,1]     [,2]     [,3]
+[1,] 1.000000 1.732051 0.000000
+[2,] 1.414214 0.000000 2.000000
+[3,] 0.000000 0.000000 2.236068
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("Math2")
+> ### * Math2
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Math2
+> ### Title: Rounding of Numbers
+> ### Aliases: Math2 Math2.spam Math2,spam-method Math2,spam,numeric-method
+> ###   round,spam-method signif,spam-method round.spam signif.spam
+> ### Keywords: manip
+> 
+> ### ** Examples
+> 
+> getGroupMembers("Math2")
+[1] "round"  "signif"
+> 
+> set.seed(12)
+> smat <- diag.spam( rnorm(15))
+> round(smat, 3)
+ [1] -1.481  1.577 -0.957 -0.920 -1.998 -0.272 -0.315 -0.628 -0.106  0.428
+[11] -0.778 -1.294 -0.780  0.012 -0.152
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("Summary")
+> ### * Summary
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: Summary
+> ### Title: Rounding of Numbers
+> ### Aliases: Summary Summary.spam Summary,spam-method all.spam any.spam
+> ###   max.spam min.spam prod.spam range.spam sum.spam all,spam-method
+> ###   any,spam-method max,spam-method min,spam-method prod,spam-method
+> ###   range,spam-method sum,spam-method
+> ### Keywords: manip
+> 
+> ### ** Examples
+> 
+> getGroupMembers("Summary")
+[1] "max"   "min"   "range" "prod"  "sum"   "any"   "all"  
+> 
+> smat <- diag.spam( runif(15))
+> range(smat)
+[1] 0.0000000 0.9446753
+> options(spam.structurebased=FALSE)
+> range(smat)
+[1] 0.0000000 0.9446753
+> 
+> ## Not run: 
+> ##D max( log(spam(c(1,-1))), na.rm=TRUE)
+> ## End(Not run)
+> # allow 'NA's first:
+> # TODO
+> # options(spam.NAOK=TRUE)
+> # max( log(spam(c(1,-1))), na.rm=TRUE)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("UScounties")
+> ### * UScounties
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: UScounties
+> ### Title: Adjacency Structure of the Counties in the Contiguous United
+> ###   States
+> ### Aliases: UScounties UScounties.storder UScounties.ndorder
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> # number of counties:
+> n  <- nrow( UScounties.storder)
+> 
+> ## Not run: 
+> ##D # make a precision matrix
+> ##D Q <- diag.spam( n) + .2 * UScounties.storder + .1 * UScounties.ndorder
+> ##D display( as.spam( chol( Q)))
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("USprecip")
+> ### * USprecip
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: USprecip
+> ### Title: Monthly Total Precipitation (mm) for April 1948 in the
+> ###   Contiguous United States
+> ### Aliases: USprecip
+> ### Keywords: datasets
+> 
+> ### ** Examples
+> 
+> # plot
+> ## Not run: 
+> ##D library(fields)
+> ##D 
+> ##D data(USprecip)
+> ##D par(mfcol=c(2,1))
+> ##D quilt.plot(USprecip[,1:2],USprecip[,3])
+> ##D US( add=TRUE, col=2, lty=2)
+> ##D quilt.plot(USprecip[,1:2],USprecip[,4])
+> ##D US( add=TRUE, col=2, lty=2)
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("adjacency")
+> ### * adjacency
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: adjacency
+> ### Title: Administrative Districts of Germany
+> ### Aliases: adjacency adjacency.spam adjacency.landkreis germany.graph
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D loc <- system.file("demodata/germany.adjacency", package="spam")
+> ##D display( adjacency.landkreis( loc))
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("allequal")
+> ### * allequal
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: allequal
+> ### Title: Test if Two Sparse Matrices are (Nearly) Equal
+> ### Aliases: all.equal.spam all.equal,matrix,spam-method
+> ###   all.equal,spam,matrix-method all.equal,spam,spam-method
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> obj <- diag.spam(2)
+> obj[1,2] <- .Machine$double.eps
+> 
+> all.equal( diag.spam(2), obj)
+[1] "Lengths (2, 3) differ"
+> 
+> all.equal( t(obj), obj)
+[1] "Column-sparsity structure differ (at least 1 instance(s))"
+[2] "Row-sparsity structure differ (at least 1 instance(s))"   
+> 
+> all.equal( t(obj), obj*1.1)
+[1] "Column-sparsity structure differ (at least 1 instance(s))"
+[2] "Row-sparsity structure differ (at least 1 instance(s))"   
+[3] "Mean relative difference: 0.1"                            
+> 
+> # We can compare a spam to a matrix
+> all.equal(diag(2),diag.spam(2))
+[1] TRUE
+> 
+> # the opposite does often not make sense,
+> # hence, it is not implemented.
+> all.equal(diag.spam(2),diag(2))
+[1] TRUE
+> 
+> 
+> # A zero matrix contains one element:
+> str(spam(0))
+Formal class 'spam' [package "spam"] with 4 slots
+  ..@ entries    : num 0
+  ..@ colindices : int 1
+  ..@ rowpointers: int [1:2] 1 2
+  ..@ dimension  : int [1:2] 1 1
+> # hence
+> all.equal.spam(spam(0,3,3), diag.spam(0,3) )
+[1] "Lengths (1, 3) differ"
+> norm(spam(0,3,3) - diag.spam(0,3) )
+[1] 0
+> 
+> 
+> 
+> cleanEx()
+> nameEx("apply")
+> ### * apply
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: apply
+> ### Title: Apply Functions Over Sparse Matrix Margins
+> ### Aliases: apply.spam
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> S <- as.spam(dist(1:5))
+> S <- apply.spam(S/2, NULL, exp)
+> # instead of 
+> # S@entries <- exp( S@entries/2) 
+> 
+> # Technical detail, a null matrix consists
+> # of one zero element.
+> apply.spam(S,c(1,2),pmax)
+         [,1]     [,2]     [,3]     [,4] [,5]
+[1,] 0.000000 0.000000 0.000000 0.000000    0
+[2,] 1.648721 0.000000 0.000000 0.000000    0
+[3,] 2.718282 1.648721 0.000000 0.000000    0
+[4,] 4.481689 2.718282 1.648721 0.000000    0
+[5,] 7.389056 4.481689 2.718282 1.648721    0
+Class 'spam' (32-bit)
+> apply.spam(S,1,range)
+     [,1]     [,2]     [,3]     [,4]     [,5]
+[1,]    0 1.648721 1.648721 1.648721 1.648721
+[2,]    0 1.648721 2.718282 4.481689 7.389056
+> 
+> 
+> # A similar example as for the base apply.
+> # However, no dimnames else we would get warnings. 
+> x <- as.spam(cbind(x1 = 3, x2 = c(0,0,0, 5:2)))
+> apply.spam(x, 2, mean, trim = .2)
+[1] 3.0 3.5
+> col.sums <- apply.spam(x, 2, sum)
+> row.sums <- apply.spam(x, 1, sum)
+> rbind(cbind(x, row.sums), c(col.sums, sum(col.sums)))
+     [,1] [,2] [,3]
+[1,]    3    0    3
+[2,]    3    0    3
+[3,]    3    0    3
+[4,]    3    5    8
+[5,]    3    4    7
+[6,]    3    3    6
+[7,]    3    2    5
+[8,]   21   14   35
+Class 'spam' (32-bit)
+> 
+> apply.spam(x, 2, is.vector)
+[1] TRUE TRUE
+> 
+> # Sort the columns of a matrix
+> # Notice that the result is a list due to the different
+> # lengths induced by the nonzero elements
+> apply.spam(x, 2, sort)
+[[1]]
+[1] 3 3 3 3 3 3 3
+
+[[2]]
+[1] 2 3 4 5
+
+> 
+> # Function with extra args:
+> cave <- function(x, c1, c2) c(mean(x[c1]), mean(x[c2]))
+> apply(x,1, cave,  c1=1, c2=c(1,2))
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7]
+[1,]  3.0  3.0  3.0    3  3.0    3  3.0
+[2,]  1.5  1.5  1.5    4  3.5    3  2.5
+> 
+> ma <- spam(c(1:4, 0, 0,0, 6), nrow = 2)
+> ma
+     [,1] [,2] [,3] [,4]
+[1,]    1    3    0    0
+[2,]    2    4    0    6
+Class 'spam' (32-bit)
+> apply.spam(ma, 1, table)  #--> a list of length 2
+[[1]]
+
+1 3 
+1 1 
+
+[[2]]
+
+2 4 6 
+1 1 1 
+
+> apply.spam(ma, 1, stats::quantile)# 5 x n matrix with rownames
+     [,1] [,2]
+0%    1.0    2
+25%   1.5    3
+50%   2.0    4
+75%   2.5    5
+100%  3.0    6
+> 
+> 
+> 
+> cleanEx()
+> nameEx("bandwidth")
+> ### * bandwidth
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: bandwidth
+> ### Title: Bandwidth of a Sparse Matrix
+> ### Aliases: bandwidth
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> bandwidth(spam(c(0, 1), 3, 2))
+[1] 1 1
+> 
+> bandwidth(spam(c(0, 0, 1, rep(0, 9)), 4, 3))
+[1]  2 -2
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("bdiag")
+> ### * bdiag
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: bdiag
+> ### Title: Binds Arrays Corner-to-Corner
+> ### Aliases: bdiag bdiag.spam
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> A <- diag.spam(2, 4)           # 2*I4
+> B <- matrix(1,3,3)
+> AB <- bdiag.spam(A,B)
+> 
+> # equivalent to:
+> ABalt <- rbind(cbind( A, matrix(0,nrow(A),ncol(B))),
++                cbind( matrix(0,nrow(B),ncol(A)), B))
+>          
+> norm(AB-ABalt)
+[1] 0
+> 
+> 
+> # Matrices do not need to be square:
+> bdiag.spam(1,2:5,6)
+     [,1] [,2] [,3]
+[1,]    1    0    0
+[2,]    0    2    0
+[3,]    0    3    0
+[4,]    0    4    0
+[5,]    0    5    0
+[6,]    0    0    6
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("cbind")
+> ### * cbind
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: cbind
+> ### Title: Combine Sparse Matrices by Rows or Columns
+> ### Aliases: cbind.spam rbind.spam cbind rbind cbind,spam-method
+> ###   rbind,spam-method
+> ### Keywords: array manip
+> 
+> ### ** Examples
+> 
+> x <- cbind.spam(1:5,6)
+> 
+> y <- cbind(x, 7)
+> 
+> rbind( x, x)
+      [,1] [,2]
+ [1,]    1    6
+ [2,]    2    6
+ [3,]    3    6
+ [4,]    4    6
+ [5,]    5    6
+ [6,]    1    6
+ [7,]    2    6
+ [8,]    3    6
+ [9,]    4    6
+[10,]    5    6
+Class 'spam' (32-bit)
+> # for some large matrices   t( cbind( t(x), t(x)))
+> # might be slightly faster:
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("chol")
+> ### * chol
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: chol
+> ### Title: Cholesky Factorization for Sparse Matrices
+> ### Aliases: chol chol.spam chol,ANY-method chol,matrix-method
+> ###   chol,spam-method update.spam update,spam.chol.NgPeyton-method
+> ###   update.spam.chol.NgPeyton
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # generate multivariate normals:
+> set.seed(13)
+> n <- 25    # dimension
+> N <- 1000  # sample size
+> Sigma <- .25^abs(outer(1:n,1:n,"-"))
+> Sigma <- as.spam( Sigma, eps=1e-4)
+> 
+> cholS <- chol( Sigma)
+> # cholS is the upper triangular part of the permutated matrix Sigma
+> iord <- ordering(cholS, inv=TRUE)
+> 
+> R <- as.spam(cholS)
+> mvsample <- ( array(rnorm(N*n),c(N,n)) %*% R)[,iord]
+> # It is often better to order the sample than the matrix
+> # R itself.
+> 
+> # 'mvsample' is of class 'spam'. We need to transform it to a
+> # regular matrix, as there is no method 'var' for 'spam' (should there?).
+> norm( var( as.matrix( mvsample)) - Sigma, type='m')
+[1] 0.1119671
+> norm( t(R) %*% R - Sigma)
+[1] 0.6665039
+> 
+> 
+> # To speed up factorizations, memory allocations can be optimized:
+> opt <- summary(cholS)
+> # here, some elements of Sigma may be changed...
+> cholS <- chol( Sigma, memory=list(nnzR=opt$nnzR,nnzcolindices=opt$nnzc))
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("circulant")
+> ### * circulant
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: circulant
+> ### Title: Create Circulant Matrices
+> ### Aliases: circulant.spam
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> circulant.spam(c(1,.25,0,0,0))
+     [,1] [,2] [,3] [,4] [,5]
+[1,] 1.00 0.25 0.00 0.00 0.00
+[2,] 0.00 1.00 0.25 0.00 0.00
+[3,] 0.00 0.00 1.00 0.25 0.00
+[4,] 0.00 0.00 0.00 1.00 0.25
+[5,] 0.25 0.00 0.00 0.00 1.00
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("cleanup")
+> ### * cleanup
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: cleanup
+> ### Title: Cleaning up sparse matrices
+> ### Aliases: cleanup
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> A <- diag.spam(2)
+> A[1,2] <- 0
+> 
+> all.equal(A, t(A))
+[1] "Column-sparsity structure differ (at least 1 instance(s))"
+[2] "Row-sparsity structure differ (at least 1 instance(s))"   
+> isSymmetric.spam(A)
+[1] TRUE
+> all.equal(cleanup(A), diag.spam(2))
+[1] TRUE
+> 
+> 
+> 
+> cleanEx()
+> nameEx("coerce-methods")
+> ### * coerce-methods
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: coerce-methods
+> ### Title: Force a 'spam' Object to Belong to a Class
+> ### Aliases: coerce.spam coerce,spam,logical-method
+> ###   coerce,spam,matrix-method coerce,spam,vector-method
+> ###   coerce,spam,list-method coerce,spam,integer-method
+> ### Keywords: methods
+> 
+> ### ** Examples
+> 
+> ifelse( diag.spam(2)*c(0,1), TRUE, FALSE)
+[1] FALSE FALSE FALSE  TRUE
+> 
+> 
+> 
+> cleanEx()
+> nameEx("constructors")
+> ### * constructors
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: constructors
+> ### Title: Slot Modification
+> ### Aliases: rowpointers rowpointers<- colindices colindices<- entries
+> ###   entries<- dimension<- constructors
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> x <- diag.spam( 2)  
+> rowpointers( x) <- c(1,1,3)
+> 
+> # The last line is equivalent to 
+> x@rowpointers <- as.integer( c(1,1,3))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("covmat")
+> ### * covmat
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: covmat
+> ### Title: Covariance Functions
+> ### Aliases: covmat cov.exp cov.sph cor.sph cov.nug cov.wu1 cov.wu2 cov.wu3
+> ###   cov.wend1 cov.wend2 cov.mat cov.mat12 cov.mat32 cov.mat52 cov.finnmat
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> set.seed(123)
+> n <- 200
+> locs <- cbind(runif(n),runif(n))
+> h <- nearest.dist(locs, delta=sqrt(2), upper = NULL)
+> Sigma <- cov.sph(h, c(.3, 1, .1))
+> 
+> iidsample <- rnorm(n)
+> cholS <- chol.spam(as.spam(Sigma))
+> iorder <- iord <- ordering(cholS, inv = TRUE)
+> sample <- (iidsample %*% as.spam(cholS))[iorder]
+> plot(locs, col = fields::tim.colors(n = 256)[cut(sample, n)], pch = 20)
+> 
+> ## Not run: 
+> ##D h <- seq(0, to=1, length.out=100)
+> ##D plot( h, cov.exp(h, c(1/3,1)), type='l', ylim=c(0,1))
+> ##D type <- c("sph","wendland1","wendland2","wu1","wu2","wu3")
+> ##D for (i in 1:6)
+> ##D   lines( h, covmat(h, 1, type=type[i]), col=i+1)
+> ##D legend('topright',legend=type, col=2:7, lty=1)
+> ##D 
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("crossprod")
+> ### * crossprod
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: crossprod
+> ### Title: Spam Matrix Crossproduct
+> ### Aliases: crossprod.default crossprod.spam tcrossprod.spam
+> ###   crossprod,spam,missing-method tcrossprod,spam,missing-method
+> ###   crossprod,ANY,spam-method tcrossprod,ANY,spam-method
+> ###   crossprod,spam,spam-method tcrossprod,spam,spam-method
+> ###   crossprod,spam,ANY-method tcrossprod,spam,ANY-method
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> crossprod.spam(diag.spam(2),1:2)
+     [,1]
+[1,]    1
+[2,]    2
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("det")
+> ### * det
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: det
+> ### Title: Determinant of a Symmetric Positive Definite Sparse Matrix
+> ### Aliases: det,spam-method det,spam.chol.NgPeyton-method det.spam det
+> ###   determinant determinant,spam-method determinant.spam
+> ###   determinant.spam.chol determinant.spam.chol.NgPeyton
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> x <- spam( c(4,3,0,3,5,1,0,1,4), 3)
+> det( x)
+[1] 40
+> determinant( x)
+$modulus
+[1] 3.688879
+attr(,"logarithm")
+[1] TRUE
+
+$sign
+[1] 1
+
+attr(,"class")
+[1] "det"
+> 
+> det( chol( x))
+[1] 6.324555
+> 
+> 
+> 
+> cleanEx()
+> nameEx("diag")
+> ### * diag
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: diag
+> ### Title: Sparse Matrix diagonals
+> ### Aliases: diag diag.of.spam diag.spam spam_diag diag,spam-method
+> ###   diag,ANY-method diag<- diag<-,ANY-method diag<-,spam-method
+> ###   diag<-.spam diag.spam<- diag.assign,spam-method
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> diag.spam(2, 4)           # 2*I4
+     [,1] [,2] [,3] [,4]
+[1,]    2    0    0    0
+[2,]    0    2    0    0
+[3,]    0    0    2    0
+[4,]    0    0    0    2
+Class 'spam' (32-bit)
+> smat <- diag.spam(1:5)
+> diag( smat)
+[1] 1 2 3 4 5
+> diag( smat) <- 5:1
+> 
+> # The last line is equivalent to 
+> diag.spam( smat) <- 5:1
+> 
+> # Note that diag.spam( 1:5) <- 5:1 not work of course.
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("diff")
+> ### * diff
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: diff
+> ### Title: Lagged Differences
+> ### Aliases: diff diff.spam diff,spam-method
+> ### Keywords: array manip
+> 
+> ### ** Examples
+> 
+> # incidence matrix for a RW(3) model
+> D <- diff.spam(diag.spam(10), lag=1, differences=3)
+> t(D)%*%D
+ [1]   1  -3   3  -1  -3  10 -12   6  -1   3 -12  19 -15   6  -1  -1   6 -15  20
+[20] -15   6  -1  -1   6 -15  20 -15   6  -1  -1   6 -15  20 -15   6  -1  -1   6
+[39] -15  20 -15   6  -1  -1   6 -15  19 -12   3  -1   6 -12  10  -3  -1   3  -3
+[58]   1
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("dim")
+> ### * dim
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: dim
+> ### Title: Dimensions of an Object
+> ### Aliases: dim.spam dim<-.spam dim<-,spam-method
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> x <- diag(4)
+> dim(x)<-c(2,8)
+> x
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+[1,]    1    0    0    0    0    1    0    0
+[2,]    0    0    1    0    0    0    0    1
+> 
+> s <- diag.spam(4)
+> dim(s) <- c(2,8)  # result is different than x
+> 
+> s <- diag.spam(4)
+> pad(s) <- c(7,3)  # any positive value can be used
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("display")
+> ### * display
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: display
+> ### Title: Graphially Represent the Nonzero Entries
+> ### Aliases: display display.spam display,spam-method
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> set.seed(13)
+> 
+> smat <- spam_random(8)
+> par(mfcol=c(1,2), pty='s')
+> options(spam.imagesize = 1000)
+> display(smat)
+> options(spam.imagesize = 10)
+> display(smat, cex=.25)
+> 
+> 
+> # very large but very sparse matrix
+> smat <- spam_random(2^14, distribution=rnorm, density=1e-5, verbose=TRUE)
+Density is 1.04e-05, specified is 1e-05 (nnz=2798).
+> par(mfcol=c(1, 1), mai=c(.4,.4,.1,.1), pty='s')
+> display(smat)
+Warning: default value for 'cex' in 'display' might not be the optimal choice
+> 
+> 
+> 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("eigen")
+> ### * eigen
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: eigen
+> ### Title: Eigenvalues for Sparse Matrices
+> ### Aliases: eigen.spam eigen_approx
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> set.seed(81)
+> rspam <- spam_random(42^2, density = .0001, spd = TRUE)
+> SPD <- eigen.spam(rspam, nev = 18, control = list(mode = "SM"),
++                   only.values = TRUE)
+> 
+> any(SPD$values <= 0, na.rm = TRUE)
+[1] FALSE
+> isSymmetric(rspam)
+[1] TRUE
+> # hence the matrix is symmetric positiv definit
+> 
+> rspam2 <- spam_random(50^2, density = .0001, spd = FALSE, sym = TRUE,
++                       distribution = rpois, lambda = 2)
+> SNPD <- eigen.spam(rspam2, nev = 18, control = list(mode = "SM"),
++                     only.values = TRUE)
+> 
+> any(SNPD$values <= 0, na.rm = TRUE)
+[1] TRUE
+> isSymmetric(rspam2)
+[1] TRUE
+> # hence the matrix is symmetric but not positiv definit
+> 
+> 
+> 
+> cleanEx()
+> nameEx("fields-wrapper")
+> ### * fields-wrapper
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: fields-wrapper
+> ### Title: Wrapper for Distance Matrix Computation
+> ### Aliases: spam_rdist rdist.dist spam_rdist.earth
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D require(fields)
+> ##D look <- mKrig(x,Y, Covariance="Wendland", dimension=2, k=1,
+> ##D     cov.args=list( Distance='spam_rdist'))
+> ## End(Not run)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("foreign")
+> ### * foreign
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: foreign
+> ### Title: Transformation to Other Sparse Formats
+> ### Aliases: foreign as.spam.matrix.csr as.dgRMatrix.spam as.dgCMatrix.spam
+> ###   as.spam.dgRMatrix as.spam.dgCMatrix
+> ### Keywords: array manip
+> 
+> ### ** Examples
+> 
+> 
+> ## Not run: 
+> ##D S <- diag.spam(4)
+> ##D R <- as.dgRMatrix.spam( S)
+> ##D C <- as.dgCMatrix.spam( S)
+> ##D as.spam.dgCMatrix(C)
+> ##D slotNames(C)
+> ##D slotNames(R)
+> ##D # For column oriented sparse formats a transpose does not the job,
+> ##D # as the slot names change.
+> ##D 
+> ##D 
+> ##D # as.spam(R) does not work.
+> ## End(Not run)
+> 
+> ## Not run: 
+> ##D # for transformations between SparseM and spam:
+> ##D 
+> ##D as.matrix.csr.spam <- function(x,...) {
+> ##D   if (new("matrix.csr")) {
+> ##D     newx <- new("matrix.csr")
+> ##D     slot(newx,"ra",check=FALSE) <- x@entries
+> ##D     slot(newx,"ja",check=FALSE) <- x@colindices
+> ##D     slot(newx,"ia",check=FALSE) <- x@rowpointers
+> ##D     slot(newx,"dimension",check=FALSE) <- x@dimension
+> ##D     return(newx)
+> ##D     }
+> ##D   stop("function requires 'SparseM' package")
+> ##D }
+> ##D # then with `SparseM`:  as.matrix.csr.spam( spamobject )
+> ## End(Not run)
+> 
+> ## Not run: 
+> ##D # a dataset contained in Matrix
+> ##D data(KNex, package='Matrix')
+> ##D summary( KN <- as.spam.dgCMatrix(KNex$mm) )
+> ##D 
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("germany.plot")
+> ### * germany.plot
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: germany.plot
+> ### Title: Plot Administrative Districts of Germany
+> ### Aliases: germany.plot
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> data( Oral)
+> germany.plot( Oral$Y/Oral$E)
+> 
+> 
+> # Plot the Bundeslaender:
+> germany.plot(germany.info$id%/%1000,col=rep(2:8,3), legend=FALSE)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("germanydata")
+> ### * germanydata
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: germany.data
+> ### Title: Meta-data About Administrative Districts of Germany
+> ### Aliases: germany.data germany.info germany.poly germany.spam germany
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> # Plot the Bundeslaender:
+> germany.plot(germany.info$id%/%1000,col=rep(2:8,3), legend=FALSE)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("gmult")
+> ### * gmult
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: gmult
+> ### Title: Generalized Multiplication
+> ### Aliases: gmult
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> x <- spam(1, 15, 15)
+> print(x, minimal=FALSE)
+Matrix of dimension 15x15 with (row-wise) nonzero elements:
+      1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 
+    ---------------------------------------------
+  1| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  2| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  3| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  4| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  5| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  6| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  7| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  8| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+  9| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+ 10| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+ 11| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+ 12| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+ 13| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+ 14| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+ 15| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  1  1  1  1  1  1  1  1  1  1  1  1  1  1 
+class: spam (32-bit)
+Class 'spam' (32-bit)
+> 
+> splits <- c(1, 2, 8, ncol(x)+1) # divide matrix into 9 submatrices
+> fact <- array(1:9, c(3, 3))     # multiply each submatrix with a different factor
+> oF <- gmult(x, splits, fact)
+> print(oF, minimal=FALSE)
+Matrix of dimension 15x15 with (row-wise) nonzero elements:
+      1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 
+    ---------------------------------------------
+  1| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 1  4  4  4  4  4  4  7  7  7  7  7  7  7  7 
+  2| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 2  5  5  5  5  5  5  8  8  8  8  8  8  8  8 
+  3| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 2  5  5  5  5  5  5  8  8  8  8  8  8  8  8 
+  4| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 2  5  5  5  5  5  5  8  8  8  8  8  8  8  8 
+  5| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 2  5  5  5  5  5  5  8  8  8  8  8  8  8  8 
+  6| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 2  5  5  5  5  5  5  8  8  8  8  8  8  8  8 
+  7| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 2  5  5  5  5  5  5  8  8  8  8  8  8  8  8 
+  8| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+  9| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+ 10| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+ 11| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+ 12| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+ 13| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+ 14| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+ 15| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 3  6  6  6  6  6  6  9  9  9  9  9  9  9  9 
+class: spam (32-bit)
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("grid_trace2")
+> ### * grid_trace2
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: grid_trace2
+> ### Title: Two trace plots and a scatter plot.
+> ### Aliases: grid_trace2
+> ### Keywords: plot trace plot grid
+> 
+> ### ** Examples
+> 
+> grid_trace2(runif(500), runif(500),
++             chain1_yaxis_at = seq(.2, 1, by = .2),
++             chain1_lab = "chain1", chain2_lab = "chain2",
++             main = "Uniform",
++             lwd_lines = grid::unit(.5, "mm"))
+> 
+> 
+> 
+> cleanEx()
+> nameEx("grid_zoom")
+> ### * grid_zoom
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: grid_zoom
+> ### Title: grid_zoom
+> ### Aliases: grid_zoom
+> ### Keywords: zoom_grid zoom plot grid
+> 
+> ### ** Examples
+> 
+> require(grid)
+Loading required package: grid
+> ## -- Example 1 --
+> set.seed(133)
+> grid_zoom(inputGrob = pointsGrob(runif(200), runif(200)),
++           inputViewport = viewport(name = 'main'),
++           zoom_xlim = c(.2, .3), zoom_ylim = c(.2, .3))
+> 
+> 
+> ## -- Example 2 --
+> ## initial plot
+> grid.newpage()
+> vp <- viewport(width=.8, height=.8, clip='on')
+> gt <- gTree(children=gList(polylineGrob(x=c((0:4)/10, rep(.5, 5), (10:6)/10, rep(.5, 5)),
++               y=c(rep(.5, 5), (10:6/10), rep(.5, 5), (0:4)/10),
++               id=rep(1:5, 4), default.units='native',
++               gp=gpar(col=1:5, lwd=3)),
++               pointsGrob(runif(1000), runif(1000),pch='.', gp=gpar(cex=3)),
++               rectGrob(gp=gpar(lwd=3))))
+> pushViewport(vp)
+> grid.draw(gt)
+> 
+> ## plot with zoom window
+> grid.newpage()
+> grid_zoom(inputGrob = gt,
++           inputViewport = vp,
++           x='topright', zoom_xlim=c(.6,.73), zoom_ylim=c(.3,.43),ratio=.4,
++           zoom_xaxis = NULL, zoom_gp = gpar(cex=3))
+> 
+> 
+> 
+> cleanEx()
+
+detaching ‘package:grid’
+
+> nameEx("head")
+> ### * head
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: head
+> ### Title: Return the First or Last Part of an Object
+> ### Aliases: head.spam head,spam-method head,spam.chol.NgPeyton-method
+> ###   tail.spam tail,spam-method tail,spam.chol.NgPeyton-method
+> ### Keywords: manip
+> 
+> ### ** Examples
+> 
+> head( precmat.RW2( 10))
+     [,1] [,2] [,3] [,4] [,5] [,6]
+[1,]    1   -2    1    0    0    0
+[2,]   -2    5   -4    1    0    0
+[3,]    1   -4    6   -4    1    0
+[4,]    0    1   -4    6   -4    1
+[5,]    0    0    1   -4    6   -4
+[6,]    0    0    0    1   -4    6
+> tail( precmat.season(n=10, season=3), n=4, m=10)
+      [,7] [,8] [,9] [,10]
+[7,]     3    2    1     0
+[8,]     2    3    2     1
+[9,]     1    2    2     1
+[10,]    0    1    1     1
+> 
+> 
+> 
+> cleanEx()
+> nameEx("image")
+> ### * image
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: image
+> ### Title: Display a Sparse Matrix as Color Image
+> ### Aliases: image image.spam image.spam.chol image,spam-method
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> set.seed(13)
+> 
+> smat <- spam_random(8)
+> 
+> par(mfcol=c(1,2),pty='s')
+> options(spam.imagesize=1000)
+> image(smat) # or use better color schemes
+> options(spam.imagesize=10)
+> image(smat, cex=.25)
+> 
+> smat <- spam_random(2^14, distribution=rnorm, density=1e-5, verbose=TRUE)
+Density is 1.04e-05, specified is 1e-05 (nnz=2798).
+> par(mfcol=c(1,1), mai=c(.4,.4,.1,.1), pty='s')
+> image(smat)
+> 
+> 
+> 
+> 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("import")
+> ### * import
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: import
+> ### Title: Read External Matrix Formats
+> ### Aliases: import read.MM read.HB
+> ### Keywords: IO array algebra
+> 
+> ### ** Examples
+> 
+> 
+> ## Not run: 
+> ##D image(read.MM(gzcon(url(
+> ##D   "ftp://math.nist.gov/pub/MatrixMarket2/Harwell-Boeing/bcspwr/bcspwr01.mtx.gz"))))
+> ## End(Not run)
+> 
+> ## Not run: 
+> ##D ## Datasets supplied within Matrix
+> ##D str(read.MM(system.file("external/pores_1.mtx",package = "Matrix")))
+> ##D str(read.HB(system.file("external/utm300.rua", package = "Matrix")))
+> ##D str(read.MM(system.file("external/lund_a.mtx", package = "Matrix")))
+> ##D str(read.HB(system.file("external/lund_a.rsa", package = "Matrix")))
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("isSymmetric")
+> ### * isSymmetric
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: isSymmetric
+> ### Title: Test if a Sparse Matrix is Symmetric
+> ### Aliases: isSymmetric.spam isSymmetric,spam-method
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> obj <- diag.spam(2)
+> isSymmetric(obj)
+[1] TRUE
+> 
+> obj[1,2] <- .Machine$double.eps
+> isSymmetric(obj)
+[1] TRUE
+> all.equal(obj, t(obj))
+[1] "Column-sparsity structure differ (at least 1 instance(s))"
+[2] "Row-sparsity structure differ (at least 1 instance(s))"   
+> 
+> 
+> 
+> cleanEx()
+> nameEx("kronecker")
+> ### * kronecker
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: kronecker
+> ### Title: Kronecker Products on Sparse Matrices
+> ### Aliases: kronecker.default kronecker.spam kronecker,spam,ANY-method
+> ###   kronecker,ANY,spam-method kronecker,spam,spam-method
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> # Starting with non-spam objects, we get a spam matrix
+> kronecker.spam( diag(2), array(1:4, c(2, 2)))
+     [,1] [,2] [,3] [,4]
+[1,]    1    3    0    0
+[2,]    2    4    0    0
+[3,]    0    0    1    3
+[4,]    0    0    2    4
+Class 'spam' (32-bit)
+> 
+> kronecker( diag.spam(2), array(1:4, c(2, 2)))
+     [,1] [,2] [,3] [,4]
+[1,]    1    3    0    0
+[2,]    2    4    0    0
+[3,]    0    0    1    3
+[4,]    0    0    2    4
+Class 'spam' (32-bit)
+> 
+> # Notice the preservation of sparsity structure:
+> kronecker( diag.spam(2), array(1:4, c(2, 2)), FUN="+")
+Warning: Sparseness structure of 'kronecker(X,Y)' preserved when applying 'FUN'.
+     [,1] [,2] [,3] [,4]
+[1,]    2    4    0    0
+[2,]    3    5    0    0
+[3,]    0    0    2    4
+[4,]    0    0    3    5
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("landkreis")
+> ### * landkreis
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: map.landkreis
+> ### Title: Administrative districts of Germany
+> ### Aliases: map.landkreis
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D data( Oral)
+> ##D par( mfcol=c(1,2))
+> ##D germany.plot( log( Oral$Y), legend=TRUE)
+> ##D map.landkreis( log( Oral$Y))
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("large_matrix")
+> ### * large_matrix
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: large_matrix
+> ### Title: Large 64-bit matrices require the R package 'spam64'
+> ### Aliases: large_matrix 'large matrix' large_matries 'large matries'
+> ###   64bit 64bits 'long vector' 'long vectors' spam64
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> ## Not run: 
+> ##D ## the following matrices are very large, and hence,
+> ##D ## require much memory and cpu time.
+> ##D library("spam64")
+> ##D s1 <- spam(1, ncol=2^30)        # 32-bit matrix
+> ##D s1
+> ##D 
+> ##D s2 <- cbind(s1, s1)             # 64-bit matrix
+> ##D s2
+> ##D 
+> ##D s3 <- spam(1, ncol=2^31)        # 64-bit matrix
+> ##D s3
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("lower.tri")
+> ### * lower.tri
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: lower.tri
+> ### Title: Lower and Upper Triangular Part of a Sparse Matrix
+> ### Aliases: lower.tri upper.tri lower.tri.spam upper.tri.spam
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> smat <- spam( c( 1,2,0,3,0,0,0,4,5),3)
+> upper.tri( smat)
+     [,1] [,2] [,3]
+[1,]    0    1    0
+[2,]    0    0    1
+[3,]    0    0    0
+Class 'spam' (32-bit)
+> upper.tri( smat, diag=TRUE)
+     [,1] [,2] [,3]
+[1,]    1    1    0
+[2,]    0    0    1
+[3,]    0    0    1
+Class 'spam' (32-bit)
+> 
+> options(spam.trivalues=TRUE)
+> upper.tri( smat)
+     [,1] [,2] [,3]
+[1,]    0    3    0
+[2,]    0    0    4
+[3,]    0    0    0
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("makeprec")
+> ### * makeprec
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: makeprec
+> ### Title: Create Precision Matrices
+> ### Aliases: precmat.GMRFreglat
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> as.matrix(precmat.GMRFreglat(4, 3, c(.4),         'm1p1'))
+      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+ [1,]  1.0 -0.4  0.0  0.0 -0.4  0.0  0.0  0.0  0.0   0.0   0.0   0.0
+ [2,] -0.4  1.0 -0.4  0.0  0.0 -0.4  0.0  0.0  0.0   0.0   0.0   0.0
+ [3,]  0.0 -0.4  1.0 -0.4  0.0  0.0 -0.4  0.0  0.0   0.0   0.0   0.0
+ [4,]  0.0  0.0 -0.4  1.0  0.0  0.0  0.0 -0.4  0.0   0.0   0.0   0.0
+ [5,] -0.4  0.0  0.0  0.0  1.0 -0.4  0.0  0.0 -0.4   0.0   0.0   0.0
+ [6,]  0.0 -0.4  0.0  0.0 -0.4  1.0 -0.4  0.0  0.0  -0.4   0.0   0.0
+ [7,]  0.0  0.0 -0.4  0.0  0.0 -0.4  1.0 -0.4  0.0   0.0  -0.4   0.0
+ [8,]  0.0  0.0  0.0 -0.4  0.0  0.0 -0.4  1.0  0.0   0.0   0.0  -0.4
+ [9,]  0.0  0.0  0.0  0.0 -0.4  0.0  0.0  0.0  1.0  -0.4   0.0   0.0
+[10,]  0.0  0.0  0.0  0.0  0.0 -0.4  0.0  0.0 -0.4   1.0  -0.4   0.0
+[11,]  0.0  0.0  0.0  0.0  0.0  0.0 -0.4  0.0  0.0  -0.4   1.0  -0.4
+[12,]  0.0  0.0  0.0  0.0  0.0  0.0  0.0 -0.4  0.0   0.0  -0.4   1.0
+> as.matrix(precmat.GMRFreglat(4, 3, c(.4,.3),      'm1p2'))
+      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+ [1,]  1.0 -0.4  0.0  0.0 -0.3  0.0  0.0  0.0  0.0   0.0   0.0   0.0
+ [2,] -0.4  1.0 -0.4  0.0  0.0 -0.3  0.0  0.0  0.0   0.0   0.0   0.0
+ [3,]  0.0 -0.4  1.0 -0.4  0.0  0.0 -0.3  0.0  0.0   0.0   0.0   0.0
+ [4,]  0.0  0.0 -0.4  1.0  0.0  0.0  0.0 -0.3  0.0   0.0   0.0   0.0
+ [5,] -0.3  0.0  0.0  0.0  1.0 -0.4  0.0  0.0 -0.3   0.0   0.0   0.0
+ [6,]  0.0 -0.3  0.0  0.0 -0.4  1.0 -0.4  0.0  0.0  -0.3   0.0   0.0
+ [7,]  0.0  0.0 -0.3  0.0  0.0 -0.4  1.0 -0.4  0.0   0.0  -0.3   0.0
+ [8,]  0.0  0.0  0.0 -0.3  0.0  0.0 -0.4  1.0  0.0   0.0   0.0  -0.3
+ [9,]  0.0  0.0  0.0  0.0 -0.3  0.0  0.0  0.0  1.0  -0.4   0.0   0.0
+[10,]  0.0  0.0  0.0  0.0  0.0 -0.3  0.0  0.0 -0.4   1.0  -0.4   0.0
+[11,]  0.0  0.0  0.0  0.0  0.0  0.0 -0.3  0.0  0.0  -0.4   1.0  -0.4
+[12,]  0.0  0.0  0.0  0.0  0.0  0.0  0.0 -0.3  0.0   0.0  -0.4   1.0
+> as.matrix(precmat.GMRFreglat(4, 3, c(.4,.3,.2),   'm2p3'))
+      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+ [1,]  1.0 -0.4  0.0  0.0 -0.3 -0.2  0.0  0.0  0.0   0.0   0.0   0.0
+ [2,] -0.4  1.0 -0.4  0.0 -0.2 -0.3 -0.2  0.0  0.0   0.0   0.0   0.0
+ [3,]  0.0 -0.4  1.0 -0.4  0.0 -0.2 -0.3 -0.2  0.0   0.0   0.0   0.0
+ [4,]  0.0  0.0 -0.4  1.0  0.0  0.0 -0.2 -0.3  0.0   0.0   0.0   0.0
+ [5,] -0.3 -0.2  0.0  0.0  1.0 -0.4  0.0  0.0 -0.3  -0.2   0.0   0.0
+ [6,] -0.2 -0.3 -0.2  0.0 -0.4  1.0 -0.4  0.0 -0.2  -0.3  -0.2   0.0
+ [7,]  0.0 -0.2 -0.3 -0.2  0.0 -0.4  1.0 -0.4  0.0  -0.2  -0.3  -0.2
+ [8,]  0.0  0.0 -0.2 -0.3  0.0  0.0 -0.4  1.0  0.0   0.0  -0.2  -0.3
+ [9,]  0.0  0.0  0.0  0.0 -0.3 -0.2  0.0  0.0  1.0  -0.4   0.0   0.0
+[10,]  0.0  0.0  0.0  0.0 -0.2 -0.3 -0.2  0.0 -0.4   1.0  -0.4   0.0
+[11,]  0.0  0.0  0.0  0.0  0.0 -0.2 -0.3 -0.2  0.0  -0.4   1.0  -0.4
+[12,]  0.0  0.0  0.0  0.0  0.0  0.0 -0.2 -0.3  0.0   0.0  -0.4   1.0
+> as.matrix(precmat.GMRFreglat(4, 3, c(.4,.3,.2,.1),'m2p4'))
+      [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10] [,11] [,12]
+ [1,]  1.0 -0.4  0.0  0.0 -0.3 -0.2  0.0  0.0  0.0   0.0   0.0   0.0
+ [2,] -0.4  1.0 -0.4  0.0 -0.1 -0.3 -0.2  0.0  0.0   0.0   0.0   0.0
+ [3,]  0.0 -0.4  1.0 -0.4  0.0 -0.1 -0.3 -0.2  0.0   0.0   0.0   0.0
+ [4,]  0.0  0.0 -0.4  1.0  0.0  0.0 -0.1 -0.3  0.0   0.0   0.0   0.0
+ [5,] -0.3 -0.1  0.0  0.0  1.0 -0.4  0.0  0.0 -0.3  -0.2   0.0   0.0
+ [6,] -0.2 -0.3 -0.1  0.0 -0.4  1.0 -0.4  0.0 -0.1  -0.3  -0.2   0.0
+ [7,]  0.0 -0.2 -0.3 -0.1  0.0 -0.4  1.0 -0.4  0.0  -0.1  -0.3  -0.2
+ [8,]  0.0  0.0 -0.2 -0.3  0.0  0.0 -0.4  1.0  0.0   0.0  -0.1  -0.3
+ [9,]  0.0  0.0  0.0  0.0 -0.3 -0.1  0.0  0.0  1.0  -0.4   0.0   0.0
+[10,]  0.0  0.0  0.0  0.0 -0.2 -0.3 -0.1  0.0 -0.4   1.0  -0.4   0.0
+[11,]  0.0  0.0  0.0  0.0  0.0 -0.2 -0.3 -0.1  0.0  -0.4   1.0  -0.4
+[12,]  0.0  0.0  0.0  0.0  0.0  0.0 -0.2 -0.3  0.0   0.0  -0.4   1.0
+> 
+> # up to the diagonal, the following are equivalent:
+> cleanup( precmat.IGMRFreglat(3,4) -
++              precmat.GMRFreglat(3,4,1, 'm1p1'))
+ [1] 1 2 1 2 3 2 2 3 2 1 2 1
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("mle")
+> ### * mle
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: mle
+> ### Title: Maximum likelihood estimates
+> ### Aliases: neg2loglikelihood.spam neg2loglikelihood.nomean mle.spam
+> ###   mle.nomean.spam neg2loglikelihood mle mle.nomean
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # True parameter values:
+> truebeta <- c(1,2,.2)    # beta = (intercept, linear in x, linear in y)
+> truetheta <- c(.5,2,.02) # theta = (range, sill, nugget)
+> 
+> 
+> 
+> # We now define a grid, distance matrix, and a sample:
+> x <- seq(0,1,l=5)
+> locs <- expand.grid( x, x)
+> X <- as.matrix( cbind(1,locs))  # design matrix
+> 
+> distmat <- nearest.dist( locs, upper=NULL) # distance matrix
+> Sigma <- cov.sph( distmat, truetheta)    # true covariance matrix
+> 
+> 
+> set.seed(15)
+> y <- c(rmvnorm.spam(1,X %*% truebeta,Sigma)) # construct sample
+> 
+> # Here is the negative 2 log likelihood:
+> neg2loglikelihood.spam( y, X, distmat, cov.sph,
++                        truebeta, truetheta)
+[1] 79.26271
+> 
+> # We pass now to the mle:
+> res <- mle.spam(y, X, distmat, cov.sph,
++          truebeta, truetheta,thetalower=c(0,0,0),thetaupper=c(1,Inf,Inf))
+> 
+> # Similar parameter estimates here, of course:
+> mle.nomean.spam(y-X%*%res$par[1:3], distmat, cov.sph,
++          truetheta, thetalower=c(0,0,0), thetaupper=c(1,Inf,Inf))
+$par
+[1] 0.8057742 1.6038407 0.1376179
+
+$value
+[1] 73.76311
+
+$counts
+function gradient 
+      15       15 
+
+$convergence
+[1] 0
+
+$message
+[1] "CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH"
+
+> 
+> 
+> 
+> cleanEx()
+> nameEx("nearestdist")
+> ### * nearestdist
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: nearestdist
+> ### Title: Distance Matrix Computation
+> ### Aliases: dist.spam nearest.dist distance
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> # Note that upper=T and using t(X)+X is quicker than upper=NULL;
+> #     upper=T marginally slower than upper=F.
+> 
+> # To compare nearest.dist with dist, use as.dist(...)
+> nx <- 4
+> x <- expand.grid(as.double(1:nx),as.double(1:nx))
+> sum( ( as.dist(nearest.dist( x, delta=nx*2))-
++           dist(x)                            )^2)
+[1] 0
+> 
+> # Create nearest neighbor structures:
+> par(mfcol=c(1,2))
+> x <- expand.grid(1:nx,1:(2*nx))
+> display( nearest.dist( x, delta=1))
+Warning: default value for 'cex' in 'display' might not be the optimal choice
+> x <- expand.grid(1:(2*nx),1:nx)
+> display( nearest.dist( x, delta=1))
+Warning: default value for 'cex' in 'display' might not be the optimal choice
+> 
+> 
+> 
+> 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("options")
+> ### * options
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: options
+> ### Title: Options Settings
+> ### Aliases: spam.options options.spam getOption.spam
+> ### Keywords: IO environment error print
+> 
+> ### ** Examples
+> 
+> smat <- diag.spam(1:8)
+> smat
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+[1,]    1    0    0    0    0    0    0    0
+[2,]    0    2    0    0    0    0    0    0
+[3,]    0    0    3    0    0    0    0    0
+[4,]    0    0    0    4    0    0    0    0
+[5,]    0    0    0    0    5    0    0    0
+[6,]    0    0    0    0    0    6    0    0
+[7,]    0    0    0    0    0    0    7    0
+[8,]    0    0    0    0    0    0    0    8
+Class 'spam' (32-bit)
+> options(spam.printsize=49)
+> smat
+[1] 1 2 3 4 5 6 7 8
+Class 'spam' (32-bit)
+> 
+> # All spam options:
+> op <- options()[grep("spam", names(options()))]
+> 
+> # Reset to default values:
+> options(spam.eps=.Machine$double.eps,
++         spam.drop=FALSE,
++         spam.printsize=100,
++         spam.imagesize=10000,
++         spam.cex=1200,
++         spam.structurebased=FALSE,
++         spam.inefficiencywarning=1e6,
++         spam.trivalues=FALSE,
++         spam.listmethod="PE",
++         spam.NAOK=FALSE,
++         spam.safemodevalidity=TRUE,
++         spam.dopivoting=TRUE,
++         spam.cholsymmetrycheck=TRUE,
++         spam.cholpivotcheck=TRUE,
++         spam.cholupdatesingular="warning",
++         spam.cholincreasefactor=c(1.25,1.25),
++         spam.nearestdistincreasefactor=1.25,
++         spam.nearestdistnnz=c(400^2,400))
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("ordering")
+> ### * ordering
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: ordering
+> ### Title: Extract the permutation
+> ### Aliases: ordering ordering.spam ordering-methods ordering.spam.chol
+> ###   ordering.spam.chol.NgPeyton ordering,spam-method
+> ###   ordering,matrix-method
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # Construct a pd matrix S to work with (size n)
+> n <- 100    # dimension
+> S <- .25^abs(outer(1:n,1:n,"-"))
+> S <- as.spam( S, eps=1e-4)
+> I <- diag(n)  # Identity matrix
+> 
+> cholS <- chol( S)
+> ord <- ordering(cholS)
+> iord <- ordering(cholS, inv=TRUE)
+> 
+> R <- as.spam( cholS ) # R'R = P S P', with P=I[ord,],
+>   # a permutation matrix (rows permuted).
+> RtR <- t(R) %*% R
+> 
+> # the following are equivalent:
+> as.spam( RtR -            S[ord,ord],    eps=1e-15)
+Zero matrix of dimension 100x100.
+
+Class 'spam' (32-bit)
+> as.spam( RtR[iord,iord] - S,             eps=1e-15)
+Zero matrix of dimension 100x100.
+
+Class 'spam' (32-bit)
+> as.spam( t(R[,iord]) %*% R[,iord] - S, eps=1e-15)
+Zero matrix of dimension 100x100.
+
+Class 'spam' (32-bit)
+> # we use 'eps' to avoid issues close to machine precision
+> 
+> # trivially:
+> as.spam( t(I[iord,]) - I[ord,])  # (P^-1)' = P  
+Zero matrix of dimension 100x100.
+
+Class 'spam' (32-bit)
+> as.spam( t(I[ord,]) - I[,ord])  # 
+Zero matrix of dimension 100x100.
+
+Class 'spam' (32-bit)
+> as.spam( I[iord,] - I[,ord])
+Zero matrix of dimension 100x100.
+
+Class 'spam' (32-bit)
+> as.spam( I[ord,]%*%S%*%I[,ord] - S[ord,ord] )
+Zero matrix of dimension 100x100.
+
+Class 'spam' (32-bit)
+>    # pre and post multiplication with P and P' is ordering
+> 
+> 
+> 
+> cleanEx()
+> nameEx("pad")
+> ### * pad
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: pad
+> ### Title: Padding a Sparse Matrix
+> ### Aliases: pad pad.spam pad<- pad<-.spam pad<-,spam-method
+> ###   pad<-,matrix-method
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> x <- diag(4)
+> dim(x)<-c(2,8)
+> x
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+[1,]    1    0    0    0    0    1    0    0
+[2,]    0    0    1    0    0    0    0    1
+> 
+> s <- diag.spam(4)
+> pad(s) <- c(7,3)  # any positive value can be used
+> 
+> s <- diag.spam(4)
+> pad(s) <- c(2,8)  # result is different than x
+> 
+> 
+> 
+> cleanEx()
+> nameEx("permutation")
+> ### * permutation
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: permutation
+> ### Title: Permute a Matrix
+> ### Aliases: permutation permutation.spam permutation,spam-method
+> ###   permutation,matrix-method
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> A <- spam(1:12,3)
+> P <- c(3,1,2)
+> Q <- c(2,3,1,4)
+> 
+> permutation(A,P,Q)-A[order(P),order(Q)]
+     [,1] [,2] [,3] [,4]
+[1,]    0    0    0    0
+[2,]    0    0    0    0
+[3,]    0    0    0    0
+Class 'spam' (32-bit)
+> 
+> permutation(A,P,Q,ind=TRUE)-A[P,Q]
+     [,1] [,2] [,3] [,4]
+[1,]    0    0    0    0
+[2,]    0    0    0    0
+[3,]    0    0    0    0
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("precmat")
+> ### * precmat
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: precmat
+> ### Title: IGMRF Precision Matrices
+> ### Aliases: precmat precmat.RW1 precmat.RW2 precmat.RWn precmat.season
+> ###   precmat.IGMRFreglat precmat.IGMRFirreglat
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> n <- 10
+> Q <- precmat.RW2( n)
+> # rmvnorm.prec(1, Q=Q) # does not work, because the matrix is singular.
+> 
+> Q%*%cbind(1,1:n)
+      [,1] [,2]
+ [1,]    0    0
+ [2,]    0    0
+ [3,]    0    0
+ [4,]    0    0
+ [5,]    0    0
+ [6,]    0    0
+ [7,]    0    0
+ [8,]    0    0
+ [9,]    0    0
+[10,]    0    0
+> 
+> 
+> 
+> cleanEx()
+> nameEx("print")
+> ### * print
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: print
+> ### Title: Printing and Summarizing Sparse Matrices
+> ### Aliases: print print.spam print,spam-method print.spam.chol
+> ###   print.spam.chol.NgPeyton summary.spam summary,spam-method
+> ###   summary.spam.chol summary.spam.chol.NgPeyton print_nnzpos
+> ### Keywords: hplot
+> 
+> ### ** Examples
+> 
+> set.seed(13)
+> smat <- spam_random(8)
+> par(mfcol=c(1,2),pty='s')
+> options(spam.printsize=1000)
+> print(smat)
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8]
+[1,]    0    0    0    1    1    1    1    1
+[2,]    1    1    1    0    0    0    0    0
+[3,]    0    0    0    1    1    0    1    1
+[4,]    1    0    0    0    0    1    0    0
+[5,]    1    0    1    1    1    1    0    1
+[6,]    0    0    0    1    0    0    0    0
+[7,]    0    0    0    0    1    1    1    1
+[8,]    0    1    1    0    1    0    1    1
+Class 'spam' (32-bit)
+> options(spam.printsize=10)
+> print(smat)
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+Class 'spam' (32-bit)
+> summary(smat)
+Matrix object of class 'spam' of dimension 8x8,
+    with 30 (row-wise) nonzero elements.
+    Density of the matrix is 46.9%.
+Class 'spam' (32-bit)
+> summary(smat)$nnz
+[1] 30
+> 
+> smat@entries[1:5] <- 0
+> print(smat, minimal = FALSE)
+Matrix of dimension 8x8 with (row-wise) nonzero elements:
+     1 2 3 4 5 6 7 8 
+    ----------------
+  1| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' 0 0 0 0 0 
+  2| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+1 1 1 ' ' ' ' ' 
+  3| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' 1 1 ' 1 1 
+  4| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+1 ' ' ' ' 1 ' ' 
+  5| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+1 ' 1 1 1 1 ' 1 
+  6| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' 1 ' ' ' ' 
+  7| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' ' 1 1 1 1 
+  8| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' 1 1 ' 1 ' 1 1 
+class: spam (32-bit)
+Class 'spam' (32-bit)
+> print(smat, minimal = FALSE, rowpointer = TRUE)
+Matrix of dimension 8x8 with (row-wise) nonzero elements,
+ number left of the vertical bars denote the respective rowpointer:
+     1 2 3 4 5 6 7 8 
+    ----------------
+  1| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' 0 0 0 0 0 
+  6| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+1 1 1 ' ' ' ' ' 
+  9| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' 1 1 ' 1 1 
+ 13| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+1 ' ' ' ' 1 ' ' 
+ 15| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+1 ' 1 1 1 1 ' 1 
+ 21| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' 1 ' ' ' ' 
+ 22| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' ' ' ' 1 1 1 1 
+ 26| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%1.0f'
+' 1 1 ' 1 ' 1 1 
+class: spam (32-bit)
+Class 'spam' (32-bit)
+> smat@rowpointers
+[1]  1  6  9 13 15 21 22 26 31
+> print_nnzpos(smat)
+Matrix of dimension 8x8 with (row-wise) nonzero elements:
+      1  2  3  4  5  6  7  8 
+    ------------------------
+  1| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ '  '  '  1  2  3  4  5 
+  2| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ 6  7  8  '  '  '  '  ' 
+  3| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ '  '  '  9 10  ' 11 12 
+  4| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+13  '  '  '  ' 14  '  ' 
+  5| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+15  ' 16 17 18 19  ' 20 
+  6| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ '  '  ' 21  '  '  '  ' 
+  7| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ '  '  '  ' 22 23 24 25 
+  8| Warning in sprintf(paste0("%", width, ".", digits, "f", collapse = ""),  :
+  one argument not used by format '%2.0f'
+ ' 26 27  ' 28  ' 29 30 
+class: spam (32-bit)
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("random")
+> ### * random
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: random
+> ### Title: Create Random Sparse Matrices
+> ### Aliases: spam_random
+> 
+> ### ** Examples
+> 
+> set.seed(42)
+> rspam <- spam_random(500, digits = 2, distribution = rnorm, sd = 2, mean = 10, density = .01)
+> display.spam(rspam, cex = 2)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("rgrf")
+> ### * rgrf
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rgrf
+> ### Title: Draw From a Gaussian Random Field
+> ### Aliases: rgrf rgrf.spam
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> require(fields)
+Loading required package: fields
+Loading required package: viridisLite
+Loading required package: RColorBrewer
+
+Try help(fields) to get started.
+> # Regular grid with constant mean:
+> nx <- 10
+> field <- rgrf(1, nx=nx,  Covariance="cov.wend2", theta=c(.5, 1), beta=5)
+> quilt.plot(cbind(attr(field,"locs"),z=field), nx=nx, ny=nx)
+> points(attr(field,"locs"))
+> 
+> # Irregluar grid:
+> field <- rgrf(1, nx=10, tau=0.3, Covariance="cov.mat", theta=c(.2, 1, 1.5))
+> fields::quilt.plot(attr(field,"locs"), field)
+> 
+> 
+> 
+> 
+> cleanEx()
+
+detaching ‘package:fields’, ‘package:RColorBrewer’,
+  ‘package:viridisLite’
+
+> nameEx("rmvnorm")
+> ### * rmvnorm
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rmvnorm
+> ### Title: Draw Multivariate Normals
+> ### Aliases: rmvnorm rmvnorm.spam rmvnorm.prec rmvnorm.canonical
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # Generate multivariate from a covariance inverse:
+> # (usefull for GRMF)
+> set.seed(13)
+> n <- 25    # dimension
+> N <- 1000  # sample size
+> Sigmainv <- .25^abs(outer(1:n,1:n,"-"))
+> Sigmainv <- as.spam( Sigmainv, eps=1e-4)
+> 
+> 
+> Sigma <- solve( Sigmainv)  # for verification
+> iidsample <- array(rnorm(N*n),c(n,N))
+> 
+> mvsample <- backsolve( chol(Sigmainv), iidsample)
+> norm( var(t(mvsample)) - Sigma, type="m")
+[1] 0.1326448
+> 
+> # compare with:
+> mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample, n)
+>    #### ,n as patch
+> norm( var(t(mvsample)) - Sigma, type="m")
+[1] 0.1326447
+> 
+> 
+> # 'solve' step by step:
+> b <- rnorm( n)
+> R <- chol(Sigmainv)
+> norm( backsolve( R, forwardsolve( R, b))-
++       solve( Sigmainv, b) )
+[1] 0
+> norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma )
+[1] 0
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("rmvnorm.cond")
+> ### * rmvnorm.cond
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rmvnorm.conditional
+> ### Title: Draw Conditional Multivariate Normals
+> ### Aliases: rmvnorm.cond rmvnorm.conditional rmvnorm.conditional.spam
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> set.seed(12)
+> N <- 300
+> y <- c(5, -5, -5, 5)
+> SigmaXX <- as.spam(.95^abs(outer(1:N, 1:N, "-")), eps=1e-4)
+> sel <- c(10, 100, 120, 300)        # where we observe y
+> SigmaXY <- SigmaXX[, sel]
+> SigmaYY <- SigmaXX[sel,sel] + diag.spam(.01, length(y)) # some noise
+> x <- rmvnorm.conditional(3, y, SigmaXX=SigmaXX, SigmaXY=SigmaXY,
++                          SigmaYY=SigmaYY)
+> # unconditional sample:
+> ux <- rmvnorm(1, Sigma=SigmaXX)
+> matplot(t(rbind(x, ux)), type='l', lty=1)
+> points(sel, y, pch=19)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("rmvnorm.const")
+> ### * rmvnorm.const
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rmvnorm.const
+> ### Title: Draw Constrainted Multivariate Normals
+> ### Aliases: rmvnorm.const rmvnorm.prec.const rmvnorm.canonical.const
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # to be filled in
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("rowSums")
+> ### * rowSums
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rowSums
+> ### Title: Form Row and Column Sums and Means
+> ### Aliases: rowSums.spam colSums.spam rowMeans.spam colMeans.spam rowSums
+> ###   colSums rowMeans colMeans rowSums,spam-method colSums,spam-method
+> ###   rowMeans,spam-method colMeans,spam-method
+> ### Keywords: manip
+> 
+> ### ** Examples
+> 
+> x <- spam( rnorm(20), 5, 4)
+> rowSums( x)
+[1] 0.01992536 1.04472535 0.22529172 0.77758346 1.74295162
+> c( x %*% rep(1,4))
+[1] 0.01992536 1.04472535 0.22529172 0.77758346 1.74295162
+> 
+> 
+> 
+> cleanEx()
+> nameEx("spam-class")
+> ### * spam-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: spam-class
+> ### Title: Class "spam"
+> ### Aliases: spam.class spam-class as.matrix,spam-method as.matrix.spam
+> ###   [<-,spam,ANY,ANY,ANY-method [<-,spam,matrix,matrix,ANY-method
+> ###   [<-,spam,matrix,missing,ANY-method
+> ###   [<-,spam,missing,missing,ANY-method
+> ###   [<-,spam,missing,vector,ANY-method
+> ###   [<-,spam,missing,vector,spam-method [<-,spam,spam,missing,ANY-method
+> ###   [<-,spam,vector,missing,ANY-method
+> ###   [<-,spam,vector,missing,spam-method [<-,spam,vector,vector,ANY-method
+> ###   [<-,spam,vector,vector,spam-method
+> ###   [<-,spam,missing,missing,numeric-method
+> ###   [<-,spam,missing,vector,numeric-method
+> ###   [<-,spam,vector,missing,numeric-method
+> ###   [<-,spam,vector,vector,numeric-method
+> ###   [<-,spam,matrix,missing,numeric-method
+> ###   [<-,spam,matrix,matrix,numeric-method
+> ###   [<-,spam,spam,missing,numeric-method [<-,spam,ANY-method
+> ###   [,spam,missing,missing,ANY-method [,spam,missing,vector,ANY-method
+> ###   [,spam,vector,missing,logical-method
+> ###   [,spam,vector,missing,missing-method [,spam,vector,vector,ANY-method
+> ###   [,spam,matrix,missing,missing-method
+> ###   [,spam,matrix,missing,logical-method [,spam,matrix,matrix,ANY-method
+> ###   [,spam,spam,missing,ANY-method [,spam,ANY,ANY,ANY-method
+> ###   Arith,spam,spam-method Arith,spam,ANY-method Arith,ANY,spam-method
+> ###   Compare,ANY,spam-method Compare,spam,ANY-method
+> ###   Compare,spam,spam-method !,spam-method +,spam,missing-method
+> ###   -,spam,missing-method c,spam-method t,spam-method
+> ###   length<-,spam-method length,spam-method lower.tri,spam-method
+> ###   plot,spam,missing-method plot,spam,spam-method show,spam-method
+> ###   upper.tri,spam-method
+> ### Keywords: classes
+> 
+> ### ** Examples
+> 
+> showMethods("as.spam")
+Function: as.spam (package spam)
+x="ANY"
+x="dist"
+x="integer"
+    (inherited from: x="numeric")
+x="list"
+x="matrix"
+x="numeric"
+x="spam"
+x="spam.chol.NgPeyton"
+
+> 
+> 
+> smat <- diag.spam(runif(15))
+> range(smat)
+[1] 0.0000000 0.9446753
+> cos(smat)
+  [1] 0.9649592 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+  [8] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [15] 1.0000000 1.0000000 0.9315572 1.0000000 1.0000000 1.0000000 1.0000000
+ [22] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [29] 1.0000000 1.0000000 1.0000000 1.0000000 0.8403578 1.0000000 1.0000000
+ [36] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [43] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 0.6151597
+ [50] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [57] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [64] 1.0000000 0.9797310 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [71] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [78] 1.0000000 1.0000000 1.0000000 0.6228706 1.0000000 1.0000000 1.0000000
+ [85] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+ [92] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 0.5860060 1.0000000
+ [99] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[106] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[113] 0.7895028 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[120] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[127] 1.0000000 1.0000000 0.8085491 1.0000000 1.0000000 1.0000000 1.0000000
+[134] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[141] 1.0000000 1.0000000 1.0000000 1.0000000 0.9980918 1.0000000 1.0000000
+[148] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[155] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 0.9788621
+[162] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[169] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[176] 1.0000000 0.9844543 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[183] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[190] 1.0000000 1.0000000 1.0000000 0.7731377 1.0000000 1.0000000 1.0000000
+[197] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[204] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 0.9271347 1.0000000
+[211] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[218] 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000 1.0000000
+[225] 0.7180211
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("spam-operations")
+> ### * spam-operations
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: spam-operations
+> ### Title: Basic Linear Algebra for Sparse Matrices
+> ### Aliases: Ops.spam spam.ops %*%-methods %*%,ANY,ANY-method
+> ###   %*%,spam,spam-method %*%,spam,matrix-method %*%,spam,numeric-method
+> ###   %*%,matrix,spam-method %*%,numeric,spam-method %d*%
+> ###   %d*%,spam,spam-method %d*%,spam,ANY-method %d*%,matrix,spam-method
+> ###   %d*%,matrix,ANY-method %d*%,spam,numeric-method
+> ###   %d*%,numeric,spam-method %d*%,numeric,matrix-method
+> ###   %d*%,numeric,numeric-method %d+% %d+%,spam,spam-method
+> ###   %d+%,spam,ANY-method %d+%,matrix,spam-method %d+%,matrix,ANY-method
+> ###   %d+%,spam,numeric-method %d+%,numeric,matrix-method
+> ###   %d+%,numeric,spam-method %d+%,numeric,numeric-method
+> ###   +,spam,spam-method +,matrix,spam-method +,spam,matrix-method
+> ###   +,ANY,spam-method +,spam,ANY-method -,spam,spam-method
+> ###   -,matrix,spam-method -,spam,matrix-method -,ANY,spam-method
+> ###   -,spam,ANY-method *,spam,spam-method *,ANY,spam-method
+> ###   *,spam,ANY-method /,spam,spam-method /,ANY,spam-method
+> ###   /,spam,ANY-method /,matrix,spam-method ^,spam,spam-method
+> ###   ^,ANY,spam-method ^,spam,ANY-method &,spam,ANY-method
+> ###   &,spam,spam-method &,ANY,spam-method |,spam,ANY-method
+> ###   |,ANY,spam-method |,spam,spam-method ^,spam-method %%,spam-method
+> ###   %/%,spam-method >,spam-method >=,spam-method <,spam-method
+> ###   <=,spam-method ==,spam-method !=,spam-method norm norm.spam
+> ###   norm,ANY-method norm,spam,character-method norm,spam,missing-method
+> ###   norm,numeric,missing-method norm,numeric,character-method
+> ###   norm,matrix,missing-method norm,matrix,character-method t.spam
+> ###   ncol,spam-method nrow,spam-method dim,ANY-method dim,spam-method
+> ###   [.spam [<-.spam [<-,spam,missing,missing-method
+> ###   [<-,spam,missing,vector-method [<-,spam,vector,missing-method
+> ###   [<-,spam,vector,vector-method [<-,spam,matrix,missing-method
+> ###   [<-,spam,matrix,matrix-method [<-,spam,spam,missing-method
+> ###   [<-,spam,ANY,ANY-method plot.spam subset.spam assign.spam
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # create a weight matrix and scale it:
+> ## Not run: 
+> ##D wij <- distmat
+> ##D # with distmat from a nearest.dist(..., upper=TRUE) call
+> ##D 
+> ##D n <- dim(wij)[1]
+> ##D 
+> ##D wij@entries <- kernel( wij@entries, h) # for some function kernel
+> ##D wij <- wij + t(wij) + diag.spam(n)     # adjust from diag=FALSE, upper=TRUE
+> ##D 
+> ##D sumwij <- wij %*% rep(1,n)
+> ##D     # row scaling:
+> ##D     #   wij@entries <- wij@entries/sumwij[ wij@colindices]
+> ##D     # col scaling:
+> ##D wij@entries <- wij@entries/sumwij[ rep(1:n, diff(wij@rowpointers))]
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("spam-package")
+> ### * spam-package
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: spam-package
+> ### Title: SPArse Matrix Package
+> ### Aliases: spam-package SPAM Spam '. SPAM .'
+> ### Keywords: documentation package
+> 
+> ### ** Examples
+> 
+> ## Citations:
+> ## IGNORE_RDIFF_BEGIN
+> citation('spam')
+To cite `spam` in publications use:
+
+  Furrer, R., Flury R. and Gerber, F. (2026).  spam: SPArse Matrix. R
+  package version 2.11-3.  doi: 10.32614/CRAN.package.spam, URL
+  https://CRAN.R-project.org/package=spam
+
+  Furrer, R. and Sain S. R. (2010). spam: A Sparse Matrix R Package
+  with Emphasis on MCMC Methods for Gaussian Markov Random Fields.
+  Journal of Statistical Software, 36(10), 1-25.
+  https://doi.org/10.18637/jss.v036.i10.
+
+  Gerber, F. and Furrer, R. (2015). Pitfalls in the Implementation of
+  Bayesian Hierarchical Modeling of Areal Count Data: An Illustration
+  Using BYM and Leroux Models. Journal of Statistical Software, Code
+  Snippets, 63(1), 1-32. https://doi.org/10.18637/jss.v063.c01.
+
+  Gerber, F., K. Moesinger, K. and Furrer, R. (2017). Extending R
+  packages to support 64-bit compiled code: An illustration with spam64
+  and GIMMS NDVI3g data. Computer & Geoscience 104, 109-119,
+  https://doi.org/10.1016/j.cageo.2016.11.015.
+
+To see these entries in BibTeX format, use 'print(<citation>,
+bibtex=TRUE)', 'toBibtex(.)', or set
+'options(citation.bibtex.max=999)'.
+> citation('spam', auto=TRUE)
+To cite package ‘spam’ in publications use:
+
+  Furrer R, Gerber F, Flury R (2026). _spam: SPArse Matrix_. R package
+  version 2.11-3, <https://www.math.uzh.ch/pages/spam/>.
+
+A BibTeX entry for LaTeX users is
+
+  @Manual{,
+    title = {spam: SPArse Matrix},
+    author = {Reinhard Furrer and Florian Gerber and Roman Flury},
+    year = {2026},
+    note = {R package version 2.11-3},
+    url = {https://www.math.uzh.ch/pages/spam/},
+  }
+> ## IGNORE_RDIFF_END
+> 
+> 
+> ## History of changes
+> ## Not run: 
+> ##D file.show(system.file("NEWS.md", package = "spam"))
+> ## End(Not run)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("spam-solve")
+> ### * spam-solve
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: spam-solve
+> ### Title: Linear Equation Solving for Sparse Matrices
+> ### Aliases: solve backsolve forwardsolve backsolve-methods
+> ###   backsolve,ANY-method backsolve,spam-method backsolve,matrix-method
+> ###   backsolve.spam forwardsolve-methods forwardsolve,ANY-method
+> ###   forwardsolve,spam-method forwardsolve,matrix-method forwardsolve.spam
+> ###   chol2inv chol2inv.spam chol2inv,spam-method
+> ###   chol2inv,spam.chol.NgPeyton-method solve.spam solve,ANY-method
+> ###   solve,spam-method
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # Generate multivariate form a covariance inverse:
+> # (usefull for GRMF)
+> set.seed(13)
+> n <- 25    # dimension
+> N <- 1000  # sample size
+> Sigmainv <- .25^abs(outer(1:n,1:n,"-"))
+> Sigmainv <- as.spam( Sigmainv, eps=1e-4)
+> 
+> 
+> Sigma <- solve( Sigmainv)  # for verification
+> iidsample <- array(rnorm(N*n),c(n,N))
+> 
+> mvsample <- backsolve( chol(Sigmainv), iidsample)
+> norm( var(t(mvsample)) - Sigma)
+[1] 1.049394
+> 
+> # compare with:
+> mvsample <- backsolve( chol(as.matrix( Sigmainv)), iidsample, n)
+>    #### ,n as patch
+> norm( var(t(mvsample)) - Sigma)
+[1] 1.040029
+> 
+> 
+> 
+> # 'solve' step by step:
+> b <- rnorm( n)
+> R <- chol(Sigmainv)
+> norm( backsolve( R, forwardsolve( R, b))-
++       solve( Sigmainv, b) )
+[1] 0
+> norm( backsolve( R, forwardsolve( R, diag(n)))- Sigma )
+[1] 0
+> 
+> 
+> # 'update':
+> R1 <- update( R, Sigmainv + diag.spam( n))
+> 
+> 
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("spam")
+> ### * spam
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: spam
+> ### Title: Sparse Matrix Class
+> ### Aliases: spam.creation initialize,spam-method spam spam.list
+> ###   spam.numeric spam,list-method spam,numeric-method
+> ###   as.spam,matrix-method as.spam,numeric-method as.spam,spam-method
+> ###   as.spam,dist-method as.spam,list-method as.spam as.spam.spam
+> ###   as.spam.numeric as.spam.matrix as.spam.chol.NgPeyton as.spam.dist
+> ###   as.spam.list is.spam
+> ### Keywords: algebra
+> 
+> ### ** Examples
+> 
+> # old message, do not loop, when you create a large sparse matrix
+> set.seed(13)
+> nz <- 128
+> ln <- nz^2
+> smat <- spam(0,ln,ln)
+> is <- sample(ln,nz)
+> js <- sample(ln,nz)
+> ## IGNORE_RDIFF_BEGIN
+> system.time(for (i in 1:nz) smat[is[i], js[i]] <- i)
+   user  system elapsed 
+  0.047   0.013   0.060 
+> system.time(smat[cbind(is,js)] <- 1:nz)
+   user  system elapsed 
+  0.001   0.000   0.002 
+> ## IGNORE_RDIFF_END
+> 
+> getClass("spam")
+Class "spam" [package "spam"]
+
+Slots:
+                                                      
+Name:      entries  colindices rowpointers   dimension
+Class:     numeric     numeric     numeric     numeric
+> 
+> 
+> options(spam.NAOK=TRUE)
+> as.spam(c(1, NA))
+     [,1]
+[1,]    1
+[2,]   NA
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> cleanEx()
+> nameEx("spam.chol.NgPeyton-class")
+> ### * spam.chol.NgPeyton-class
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: spam.chol.NgPeyton-class
+> ### Title: Class "spam.chol.NgPeyton"
+> ### Aliases: spam.chol.NgPeyton-class as.matrix,spam.chol.NgPeyton-method
+> ###   as.spam,spam.chol.NgPeyton-method backsolve,spam.chol.NgPeyton-method
+> ###   c,spam.chol.NgPeyton-method determinant,spam.chol.NgPeyton-method
+> ###   diag,spam.chol.NgPeyton-method diag<-,spam.chol.NgPeyton-method
+> ###   dim<-,spam.chol.NgPeyton-method dim,spam.chol.NgPeyton-method
+> ###   display,spam.chol.NgPeyton-method
+> ###   forwardsolve,spam.chol.NgPeyton-method
+> ###   image,spam.chol.NgPeyton-method length<-,spam.chol.NgPeyton-method
+> ###   length,spam.chol.NgPeyton-method ordering,spam.chol.NgPeyton-method
+> ###   print,spam.chol.NgPeyton-method show,spam.chol.NgPeyton-method
+> ###   summary,spam.chol.NgPeyton-method t,spam.chol.NgPeyton-method
+> ###   chol,spam.chol.NgPeyton-method
+> ### Keywords: classes
+> 
+> ### ** Examples
+> 
+> x <- spam( c(4,3,0,3,5,1,0,1,4),3)
+> cf <- chol( x)
+> cf
+(Upper) Cholesky factor of dimension 3x3 with 5 (row-wise) nonzero elements (
+2.42 Kb).
+    (The object is supposed to be used with: 'as.spam', 'backsolve', 'forwardsolve', etc.)
+
+Class 'spam.chol.NgPeyton'
+> as.spam( cf)
+     [,1] [,2]     [,3]
+[1,]    2    0 0.500000
+[2,]    0    2 1.500000
+[3,]    0    0 1.581139
+Class 'spam' (32-bit)
+> 
+> 
+> # Modify at own risk...
+> slotNames(cf)
+ [1] "entries"     "colindices"  "colpointers" "rowpointers" "dimension"  
+ [6] "pivot"       "invpivot"    "supernodes"  "snmember"    "memory"     
+[11] "nnzA"       
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("toeplitz")
+> ### * toeplitz
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: toeplitz
+> ### Title: Create Toeplitz Matrices
+> ### Aliases: toeplitz.spam
+> ### Keywords: array algebra
+> 
+> ### ** Examples
+> 
+> toeplitz.spam(c(1,.25,0,0,0))
+ [1] 1.00 0.25 0.25 1.00 0.25 0.25 1.00 0.25 0.25 1.00 0.25 0.25 1.00
+Class 'spam' (32-bit)
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("triplet")
+> ### * triplet
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: triplet
+> ### Title: Transform a "spam" Format to Triplets
+> ### Aliases: triplet
+> ### Keywords: array
+> 
+> ### ** Examples
+> 
+> x <- diag.spam(1:4)
+> x[2,3] <- 5
+> triplet(x)
+$indices
+     [,1] [,2]
+[1,]    1    1
+[2,]    2    2
+[3,]    2    3
+[4,]    3    3
+[5,]    4    4
+
+$values
+[1] 1 2 5 3 4
+
+> all.equal( spam( triplet(x, tri=TRUE)), x)
+[1] TRUE
+> 
+> 
+> 
+> 
+> cleanEx()
+> nameEx("validate_spam")
+> ### * validate_spam
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: validate_spam
+> ### Title: Validate a Sparse Matrix
+> ### Aliases: validate_spam
+> 
+> ### ** Examples
+> 
+> validate_spam(spam(1, 20))
+[1] TRUE
+> 
+> 
+> 
+> cleanEx()
+> nameEx("version")
+> ### * version
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: version
+> ### Title: Spam Version Information
+> ### Aliases: version spam.version spam.Version
+> ### Keywords: environment sysdata programming
+> 
+> ### ** Examples
+> 
+> spam.version$version.string
+[1] "Spam version 2.11-3 (2026-01-05)"
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  3.144 0.062 3.218 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

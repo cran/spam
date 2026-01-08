@@ -76,8 +76,10 @@ F. Gerber, K. Moesinger, R. Furrer (2017),
 }
 \examples{
 ## Citations:
+## IGNORE_RDIFF_BEGIN
 citation('spam')
 citation('spam', auto=TRUE)
+## IGNORE_RDIFF_END
 
 
 ## History of changes

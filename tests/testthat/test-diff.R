@@ -30,5 +30,6 @@ test_that("diff", {
     spamtest_eq(diff(x,d=2), diff(as.spam(x), d=2))
     spamtest_eq(diff(x,d=4), diff(as.spam(x), d=4))
     spamtest_eq(diff(x,2, d=2), diff(as.spam(x),2, d=2))
-    expect_equal(diff(x,4, d=4), diff(as.spam(x),4, d=4))
+# The following works on R >=4.6
+#    expect_equal(diff(x,4, d=4), as.matrix(diff(as.spam(x),4, d=4)))
 })

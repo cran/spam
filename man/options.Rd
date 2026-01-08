@@ -107,13 +107,13 @@
 }
 
 \examples{
-smat <- diag.spam( 1:8)
+smat <- diag.spam(1:8)
 smat
 options(spam.printsize=49)
 smat
 
-# List all spam options:
-options()[grep("spam",names(options()))]
+# All spam options:
+op <- options()[grep("spam", names(options()))]
 
 # Reset to default values:
 options(spam.eps=.Machine$double.eps,

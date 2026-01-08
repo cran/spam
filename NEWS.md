@@ -9,6 +9,29 @@ New default is `spam.eps=100*.Machine$double.eps`
 regular matrix if one of the objects is a full `spam` object.
 
 
+# spam 2.11-3
+
+INTERNAL CHANGES
+
+* Minor changes in `diff` coherent form as in `base::diff`. 
+  Patch https://bugs.r-project.org/show_bug.cgi?id=18972.
+  (flagged by testthat.
+
+# spam 2.11-2
+
+BUG FIXES
+
+* Addressed `sprintf()` warnings due to unused arguments
+  (preset in `print(, minimal=FALSE)` and `print_nnzpos()`).
+  
+
+INTERNAL CHANGES
+
+* Adding a few `IGNORE_RDIFF`s in examples.
+
+* Minor code cleaning.
+
+
 
 # spam 2.11-1
 

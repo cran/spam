@@ -11,9 +11,9 @@ options(digits = 3)
 library("spam")
 
 ## ----echo=TRUE, eval=FALSE, message=FALSE-------------------------------------
-#  install.packages("spam")
-#  
-#  library("spam")
+# install.packages("spam")
+# 
+# library("spam")
 
 ## ----trivial------------------------------------------------------------------
 Fmat <- matrix(c(3, 0, 1, 0, 2, 0, 1, 0, 3), nrow = 3, ncol = 3)

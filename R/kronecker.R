@@ -127,7 +127,7 @@ kronecker.spam <- function(X,Y,FUN = "*", make.dimnames = FALSE, ...)
         kronxy <- .newSpam( entries = FUN(z$ent1,z$ent2,...) )
     ## slot(kronxy, "entries", check=FALSE) <-  FUN(z$ent1,z$ent2,...)
     if (z$rowpointers[Xdim[1]*Ydim[1]+1]-1 < prod(Xdim,Ydim))
-      warning("Sparseness structure of 'kronecker(X,Y)' preseved when applying 'FUN'.", call. = FALSE)
+      warning("Sparseness structure of 'kronecker(X,Y)' preserved when applying 'FUN'.", call.=FALSE)
     }
     kronxy <- .newSpam(
         entries = kronxy@entries,

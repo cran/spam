@@ -30,12 +30,12 @@ Multiplying specific submatrices of a spam matrix with different factors.
 
 \examples{
 x <- spam(1, 15, 15)
-print(x, minimal = FALSE)
+print(x, minimal=FALSE)
 
-splits <- c(1,2,8,ncol(x)+1) # divide matrix into 9 submatrices
-fact <- array(1:9, c(3,3))   # multiply each submatrix with a different factor
+splits <- c(1, 2, 8, ncol(x)+1) # divide matrix into 9 submatrices
+fact <- array(1:9, c(3, 3))     # multiply each submatrix with a different factor
 oF <- gmult(x, splits, fact)
-print(oF, minimal = FALSE)
+print(oF, minimal=FALSE)
 }
 
 \author{Florian Gerber, Roman Flury}
