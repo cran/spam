@@ -1,8 +1,8 @@
 Package: spam
 Type: Package
 Title: SPArse Matrix
-Version: 2.11-3
-Date: 2026-01-05
+Version: 2.11-4
+Date: 2026-05-28
 Authors@R: c(person("Reinhard", "Furrer", role = c("aut", "cre"),
                     email = "reinhard.furrer@math.uzh.ch",
                     comment = c(ORCID = "0000-0002-6319-2332")),
@@ -50,10 +50,10 @@ Description: Set of functions for sparse matrix algebra.
     Documentation about 'spam' is provided by vignettes included in this package, see also Furrer and Sain (2010) <doi:10.18637/jss.v036.i10>; see 'citation("spam")' for details.
 LazyData: true
 License: LGPL-2 | BSD_3_clause + file LICENSE
-URL: https://www.math.uzh.ch/pages/spam/
+URL: https://www.math.uzh.ch:443/spam/
 BugReports: https://git.math.uzh.ch/reinhard.furrer/spam/-/issues
 NeedsCompilation: yes
-Packaged: 2026-01-05 16:30:12 UTC; furrer
+Packaged: 2026-05-28 14:59:09 UTC; furrer
 Author: Reinhard Furrer [aut, cre] (ORCID:
     <https://orcid.org/0000-0002-6319-2332>),
   Florian Gerber [aut] (ORCID: <https://orcid.org/0000-0001-8545-5263>),
@@ -73,4 +73,4 @@ Author: Reinhard Furrer [aut, cre] (ORCID:
   Yang Chao [ctb] (ARPACK)
 Maintainer: Reinhard Furrer <reinhard.furrer@math.uzh.ch>
 Repository: CRAN
-Date/Publication: 2026-01-08 08:40:15 UTC
+Date/Publication: 2026-05-29 16:50:02 UTC

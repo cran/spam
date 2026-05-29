@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2025-12-12 r89155) -- "Unsuffered Consequences"
-Copyright (C) 2025 The R Foundation for Statistical Computing
+R Under development (unstable) (2026-05-10 r90032) -- "Unsuffered Consequences"
+Copyright (C) 2026 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -40,7 +40,7 @@ Type 'q()' to quit R.
 > 
 > # SETUP:
 > library("spam")
-Spam version 2.11-3 (2026-01-05) is loaded.
+Spam version 2.11-4 (2026-05-28) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -253,4 +253,4 @@ default value for 'cex' in 'display' might not be the optimal choice
 > 
 > proc.time()
    user  system elapsed 
-  1.202   0.063   1.258 
+  0.796   0.038   0.829 

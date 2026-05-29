@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2025-12-12 r89155) -- "Unsuffered Consequences"
-Copyright (C) 2025 The R Foundation for Statistical Computing
+R Under development (unstable) (2026-05-10 r90032) -- "Unsuffered Consequences"
+Copyright (C) 2026 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -21,7 +21,7 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('spam')
-Spam version 2.11-3 (2026-01-05) is loaded.
+Spam version 2.11-4 (2026-05-28) is loaded.
 Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 and overview of this package.
 Help for individual functions is also obtained by adding the
@@ -98,11 +98,11 @@ The following objects are masked from ‘package:base’:
 > 
 > getGroupMembers("Math")
  [1] "abs"      "sign"     "sqrt"     "ceiling"  "floor"    "trunc"   
- [7] "cummax"   "cummin"   "cumprod"  "cumsum"   "exp"      "expm1"   
-[13] "log"      "log10"    "log2"     "log1p"    "cos"      "cosh"    
-[19] "sin"      "sinh"     "tan"      "tanh"     "acos"     "acosh"   
-[25] "asin"     "asinh"    "atan"     "atanh"    "cospi"    "sinpi"   
-[31] "tanpi"    "gamma"    "lgamma"   "digamma"  "trigamma"
+ [7] "cummax"   "cummin"   "cumprod"  "cumsum"   "cumvar"   "exp"     
+[13] "expm1"    "log"      "log10"    "log2"     "log1p"    "cos"     
+[19] "cosh"     "sin"      "sinh"     "tan"      "tanh"     "acos"    
+[25] "acosh"    "asin"     "asinh"    "atan"     "atanh"    "cospi"   
+[31] "sinpi"    "tanpi"    "gamma"    "lgamma"   "digamma"  "trigamma"
 > 
 > mat <- matrix(c( 1,2,0,3,0,0,0,4,5),3)
 > smat <- as.spam( mat)
@@ -2366,7 +2366,7 @@ Class 'spam' (32-bit)
 To cite `spam` in publications use:
 
   Furrer, R., Flury R. and Gerber, F. (2026).  spam: SPArse Matrix. R
-  package version 2.11-3.  doi: 10.32614/CRAN.package.spam, URL
+  package version 2.11-4.  doi: 10.32614/CRAN.package.spam, URL
   https://CRAN.R-project.org/package=spam
 
   Furrer, R. and Sain S. R. (2010). spam: A Sparse Matrix R Package
@@ -2391,7 +2391,7 @@ bibtex=TRUE)', 'toBibtex(.)', or set
 To cite package ‘spam’ in publications use:
 
   Furrer R, Gerber F, Flury R (2026). _spam: SPArse Matrix_. R package
-  version 2.11-3, <https://www.math.uzh.ch/pages/spam/>.
+  version 2.11-4, <https://www.math.uzh.ch/pages/spam/>.
 
 A BibTeX entry for LaTeX users is
 
@@ -2399,7 +2399,7 @@ A BibTeX entry for LaTeX users is
     title = {spam: SPArse Matrix},
     author = {Reinhard Furrer and Florian Gerber and Roman Flury},
     year = {2026},
-    note = {R package version 2.11-3},
+    note = {R package version 2.11-4},
     url = {https://www.math.uzh.ch/pages/spam/},
   }
 > ## IGNORE_RDIFF_END
@@ -2501,10 +2501,10 @@ A BibTeX entry for LaTeX users is
 > ## IGNORE_RDIFF_BEGIN
 > system.time(for (i in 1:nz) smat[is[i], js[i]] <- i)
    user  system elapsed 
-  0.047   0.013   0.060 
+  0.031   0.007   0.038 
 > system.time(smat[cbind(is,js)] <- 1:nz)
    user  system elapsed 
-  0.001   0.000   0.002 
+  0.001   0.000   0.001 
 > ## IGNORE_RDIFF_END
 > 
 > getClass("spam")
@@ -2658,7 +2658,7 @@ $values
 > ### ** Examples
 > 
 > spam.version$version.string
-[1] "Spam version 2.11-3 (2026-01-05)"
+[1] "Spam version 2.11-4 (2026-05-28)"
 > 
 > 
 > 
@@ -2667,7 +2667,7 @@ $values
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  3.144 0.062 3.218 0 0 
+Time elapsed:  2.161 0.043 2.205 0 0 
 > grDevices::dev.off()
 null device 
           1 
